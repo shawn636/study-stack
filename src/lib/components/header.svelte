@@ -4,6 +4,8 @@
 	import type Link from '$lib/models/link';
 	import { page } from '$app/stores';
 	import { Bars3 } from 'svelte-heros';
+	import { sidebarStore } from '$lib/stores/sidebar';
+	import { clickOutside } from 'svelte-use-click-outside';
 
 	const headerLinks: Array<Link> = [
 		{ name: 'Home', href: '/' },
@@ -12,7 +14,11 @@
 		{ name: 'About', href: '/about' }
 	];
 
-	let sidebarIsOpen = false;
+	const handleClickOutside = () => {
+		if ($sidebarStore == true) {
+			sidebarStore.toggle();
+		}
+	};
 </script>
 
 <div class="h-12 bg-light-blue-800 grid grid-flow-col items-center justify-items-center">
@@ -36,9 +42,13 @@
 		>
 			Get Started
 		</a>
-		<button on:click={() => (sidebarIsOpen = !sidebarIsOpen)}>
-			<Bars3 class="grid md:hidden ml-2" color="white" size="32" />
-		</button>
-		<Sidebar bind:open={sidebarIsOpen} links={headerLinks} />
+
+		<div use:clickOutside={handleClickOutside}>
+			<button on:click={sidebarStore.toggle}>
+				<Bars3 class="grid md:hidden ml-2" color="white" size="32" />
+			</button>
+
+			<Sidebar bind:open={$sidebarStore} links={headerLinks} />
+		</div>
 	</div>
 </div>

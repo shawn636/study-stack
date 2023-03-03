@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type Link from '$lib/models/link';
 
-	export let open = false;
 	export let links: Array<Link>;
+	export let open = false;
 </script>
 
-<aside class="md:hidden right-0 top-12 absolute w-64 h-full bg-blue-400" class:open>
-	<nav class="grid grid-flow-row">
+<aside class="md:hidden right-0 fixed top-12 w-48 h-full bg-light-blue-800 shadow-lg" class:open>
+	<nav class="grid grid-flow-row p-5">
 		{#each links as link}
-			<a href={link.href}>{link.name}</a>
+			<a href={'#top'} class="text-white">{link.name}</a>
 		{/each}
 	</nav>
 </aside>
