@@ -35,9 +35,9 @@
 		{/each}
 	</div>
 	<div class="justify-self-end grid grid-flow-col px-2 items-center">
-		<a class="font-semibold text-white pr-5" href="#top">Sign In</a>
+		<a class="font-semibold text-white pr-3" href="#top">Sign In</a>
 		<a
-			class="rounded-xl bg-white px-5 py-1.5 text-light-blue-900 font-semibold hover:shadow-md"
+			class="rounded-xl bg-white px-2 py-1.5 text-light-blue-900 font-semibold hover:shadow-md"
 			href="#top"
 		>
 			Get Started
