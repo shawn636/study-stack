@@ -5,10 +5,10 @@
 	export let open = false;
 </script>
 
-<aside class="md:hidden right-0 fixed top-12 w-48 h-full bg-light-blue-800 shadow-lg" class:open>
+<aside class="fixed right-0 w-48 h-full shadow-lg md:hidden top-12 bg-light-blue-800" class:open>
 	<nav class="grid grid-flow-row">
 		{#each links as link}
-			<a href={'#top'} class="text-white px-5 py-1 my-1 hover:bg-light-blue-600">{link.name}</a>
+			<a href={'#top'} class="px-5 py-1 my-1 text-white hover:bg-light-blue-600">{link.name}</a>
 		{/each}
 		<a
 			class="xs:hidden mx-5 my-2 rounded-xl bg-white px-5 py-1.5 text-center text-light-blue-900 font-semibold hover:shadow-lg transition"
@@ -17,7 +17,7 @@
 			Get Started
 		</a>
 		<a
-			class="xs:hidden mx-5 hover:text-gray-200 justify-self-center my-2 font-semibold text-white pr-5 transition"
+			class="pr-5 mx-5 my-2 font-semibold text-white xs:hidden hover:text-gray-200 justify-self-center transition"
 			href="#top"
 		>
 			Sign In

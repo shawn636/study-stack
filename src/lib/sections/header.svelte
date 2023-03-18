@@ -21,11 +21,11 @@
 	};
 </script>
 
-<div class="h-12 bg-light-blue-800 grid grid-flow-col items-center justify-items-center">
+<div class="grid items-center h-12 grid-flow-col bg-light-blue-800 justify-items-center">
 	<div class="justify-self-start">
 		<Logo />
 	</div>
-	<div class="grid-flow-col items-center hidden md:grid gap-x-5">
+	<div class="items-center hidden grid-flow-col md:grid gap-x-5">
 		{#each headerLinks as link}
 			{#if $page.url.pathname == link.href}
 				<p class="font-bold text-white">{link.name}</p>
@@ -34,8 +34,8 @@
 			{/if}
 		{/each}
 	</div>
-	<div class="justify-self-end grid grid-flow-col px-2 items-center">
-		<a class="hidden xs:block hover:text-gray-200 font-semibold text-white pr-5" href="#top"
+	<div class="grid items-center grid-flow-col px-2 justify-self-end">
+		<a class="hidden pr-5 font-semibold text-white xs:block hover:text-gray-200" href="#top"
 			>Sign In</a
 		>
 		<a
@@ -47,7 +47,7 @@
 
 		<div use:clickOutside={handleClickOutside}>
 			<button on:click={sidebarStore.toggle}>
-				<Bars3 class="grid md:hidden ml-2" color="white" size="32" />
+				<Bars3 class="grid ml-2 md:hidden" color="white" size="32" />
 			</button>
 
 			<Sidebar bind:open={$sidebarStore} links={headerLinks} />

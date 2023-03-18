@@ -1,14 +1,34 @@
 <script lang="ts">
+	import ButtonLink from '$lib/components/button-link.svelte';
+	const cta = 'Learn New Skills Online With Top ';
+	const ctaUnderline = 'Educators';
+	const subheading = `Build Skills With Courses, Certificates, 
+											and Degrees Online From World-Class 
+											Universities And Companies`;
 </script>
 
-<div class="bg-light-blue-800 h-64 p-2">
-	<p class="text-white">Content goes in here</p>
+<div class="grid justify-items-center px-5 pt-5 md:px-24 bg-light-blue-800">
+	<div class="grid h-full grid-flow-row grid-cols-6 grid-rows-4 gap-2 text-white max-w-7xl">
+		<div class="col-span-6 row-start-1 text-4xl font-semibold lg:col-span-3">
+			<span>{cta}</span>
+			<span class="underline text-safron">{ctaUnderline}</span>
+		</div>
+
+		<div class="col-span-6 row-start-2 lg:col-span-3">{subheading}</div>
+
+		<div
+			class="grid grid-flow-row col-span-6 xs:grid-flow-col row-start-3 gap-x-2 justify-self-stretch justify-items-center items-center gap-2 lg:col-span-3"
+		>
+			<ButtonLink href="/" styleOption="outline" width="48">Find Courses</ButtonLink>
+			<ButtonLink href="/" width="48">Join Now</ButtonLink>
+		</div>
+	</div>
 </div>
 <svg
 	width="1024"
 	height="56"
 	viewBox="0 0 1024 56"
-	class="fill-light-blue-800 w-full lg:h-20 z-negative"
+	class="w-full fill-light-blue-800 lg:h-20 z-negative"
 	xmlns="http://www.w3.org/2000/svg"
 	preserveAspectRatio="none"
 >
