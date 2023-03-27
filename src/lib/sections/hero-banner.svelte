@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ButtonLink from '$lib/components/button-link.svelte';
+	import HeroCollage from '$lib/components/hero-collage.svelte';
 	const cta = 'Learn New Skills Online With Top ';
 	const ctaUnderline = 'Educators';
 	const subheading = `Build Skills With Courses, Certificates, 
@@ -28,38 +29,7 @@
 		</div>
 	</div>
 
-	<div class="hidden lg:grid grid-rows-2 grid-cols-2 min-h-[290px]">
-		<div
-			class="z-10 hover:shadow-lg transition-all duration-300 hover:scale-105 left-0 shadow-md font-medium text-slate-800 bg-slate-100 w-36 h-12 row-start-3 col-start-1 rounded grid items-center justify-items-center"
-		>
-			Thing 1
-		</div>
-		<img
-			src="images/home-image-1.png"
-			alt="woman sitting down and smiling near computer"
-			class="row-start-1 row-end-4 first-letter pl-10 col-start-1 max-w-none hover:shadow-lg transition-all duration-300 hover:scale-105"
-		/>
-		<div
-			class="z-10 hover:shadow-lg transition-all duration-300 hover:scale-105 left-0 font-medium text-slate-800 bg-slate-100 w-36 h-12 row-start-2 col-start-1 col-end-3 justify-self-center rounded grid items-center justify-items-center shadow-md"
-		>
-			Thing 2
-		</div>
-		<img
-			src="images/home-image-2.png"
-			alt="man smiling with headphones drinking lemonade"
-			class="row-start-1 row-end-4 first-letter col-start-2 col-end-3 max-w-none justify-self-end hover:shadow-lg transition-all duration-300 hover:scale-105"
-		/>
-		<div
-			class="z-10 hover:shadow-lg transition-all duration-300 hover:scale-105 shadow-md left-0 font-medium ml-20 text-slate-800 bg-slate-100 w-36 h-12 row-start-4 col-start-1 col-end-3 justify-self-center rounded grid items-center justify-items-center"
-		>
-			Thing 3
-		</div>
-		<img
-			src="images/home-image-3.png"
-			alt="woman sitting down by computer with cup of tea"
-			class="row-start-3 row-end-5 first-letter col-start-2 col-end-3 max-w-none justify-self-end hover:shadow-lg transition-all duration-300 hover:scale-105"
-		/>
-	</div>
+	<HeroCollage />
 </div>
 <svg
 	width="1024"

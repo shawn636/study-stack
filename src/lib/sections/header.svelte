@@ -3,7 +3,7 @@
 	import Sidebar from '$lib/components/sidebar.svelte';
 	import type Link from '$lib/models/link';
 	import { page } from '$app/stores';
-	import { Bars3 } from 'svelte-heros';
+	import { Bars3 } from 'svelte-heros-v2';
 	import { sidebarStore } from '$lib/stores/sidebar';
 	import { clickOutside } from 'svelte-use-click-outside';
 
