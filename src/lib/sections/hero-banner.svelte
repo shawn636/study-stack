@@ -6,30 +6,46 @@
 	const subheading = `Build Skills With Courses, Certificates, 
 											and Degrees Online From World-Class 
 											Universities And Companies`;
+	const tags = ['Over 12 million students', 'More than 60,000 courses', 'Learn anything online'];
 </script>
 
-<div
-	class="grid justify-items-center gap-x-5 grid-cols-1 lg:grid-cols-[1fr_350px] px-5 pt-3 pb-7 md:px-24 bg-light-blue-800"
->
+<div class="bg-light-blue-800 grid justify-items-center">
 	<div
-		class="grid h-full grid-flow-row grid-cols-2 grid-rows-[repeat(4,auto)] gap-x-5 gap-y-5 text-white max-w-7xl"
+		class="grid justify-items-center gap-x-5 grid-cols-1 lg:grid-cols-[1fr_350px] px-5 pt-3 pb-7 md:px-24 max-w-7xl"
 	>
-		<h1 class="col-span-2 text-4xl font-semibold">
-			<span>{cta}</span>
-			<span class="underline text-safron">{ctaUnderline}</span>
-		</h1>
-
-		<p class="col-span-2 row-start-2">{subheading}</p>
-
 		<div
-			class="grid grid-row-[auto_auto] col-span-2 justify-self-center gap-y-3 gap-x-3 xs:grid-rows-[auto] xs:grid-cols-[auto_auto] lg:justify-self-start"
+			class="grid h-full grid-flow-row grid-cols-2 grid-rows-[repeat(4,auto)] gap-x-5 gap-y-5 text-white"
 		>
-			<ButtonLink href="/" styleOption="outline" width="48">Find Courses</ButtonLink>
-			<ButtonLink href="/" width="48">Join Now</ButtonLink>
-		</div>
-	</div>
+			<h1 class="col-span-2 text-4xl font-semibold">
+				<span>{cta}</span>
+				<span class="underline text-safron">{ctaUnderline}</span>
+			</h1>
 
-	<HeroCollage />
+			<p class="col-span-2 row-start-2">{subheading}</p>
+
+			<div
+				class="grid grid-row-[auto_auto] my-4 col-span-2 justify-self-center gap-y-6 gap-x-3 xs:grid-rows-[auto] xs:grid-cols-[auto_auto] lg:justify-self-start"
+			>
+				<ButtonLink href="/" styleOption="outline" width="48">Find Courses</ButtonLink>
+				<ButtonLink href="/" width="48">Join Now</ButtonLink>
+			</div>
+
+			<div
+				class="grid gap-4 col-span-2 grid-flow-row-dense md:grid-flow-col-dense items-center justify-items-center text-sm text-center"
+			>
+				{#each tags as tag}
+					<div
+						class="grid gap-x-2 grid-cols-[auto_1fr] justify-items-center items-center whitespace-nowrap"
+					>
+						<div class="w-4 h-4 bg-white rounded" />
+						<div>{tag}</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+
+		<HeroCollage />
+	</div>
 </div>
 <svg
 	width="1024"
