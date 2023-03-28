@@ -7,6 +7,9 @@ const config = {
 			fontFamily: {
 				sans: ['Inter var', ...defaultTheme.fontFamily.sans]
 			},
+			screens: {
+				'xs': '414px'
+			},
 			colors: {
 				'light-blue': '#03a9f4',
 				'light-blue-50': '#e1f5fe',
