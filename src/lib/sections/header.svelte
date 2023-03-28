@@ -3,7 +3,7 @@
 	import Sidebar from '$lib/components/sidebar.svelte';
 	import type Link from '$lib/models/link';
 	import { page } from '$app/stores';
-	import { Bars3 } from 'svelte-heros';
+	import { Bars3 } from 'svelte-heros-v2';
 	import { sidebarStore } from '$lib/stores/sidebar';
 	import { clickOutside } from 'svelte-use-click-outside';
 
@@ -21,7 +21,7 @@
 	};
 </script>
 
-<div class="items-center h-12 bg-light-blue-800 grid grid-flow-col justify-items-center">
+<div class="grid items-center h-12 grid-flow-col bg-light-blue-800 justify-items-center">
 	<div class="justify-self-start">
 		<Logo />
 	</div>
@@ -34,10 +34,12 @@
 			{/if}
 		{/each}
 	</div>
-	<div class="items-center px-2 justify-self-end grid grid-flow-col">
-		<a class="pr-3 font-semibold text-white" href="#top">Sign In</a>
+	<div class="grid items-center grid-flow-col px-2 justify-self-end">
+		<a class="hidden pr-5 font-semibold text-white xs:block hover:text-gray-200" href="#top"
+			>Sign In</a
+		>
 		<a
-			class="rounded-xl bg-white px-2 py-1.5 text-light-blue-900 font-semibold hover:shadow-md"
+			class="hidden xs:block rounded-xl bg-white px-5 py-1.5 text-light-blue-900 font-semibold hover:shadow-md"
 			href="#top"
 		>
 			Get Started
@@ -45,7 +47,7 @@
 
 		<div use:clickOutside={handleClickOutside}>
 			<button on:click={sidebarStore.toggle}>
-				<Bars3 class="ml-2 grid md:hidden" color="white" size="32" />
+				<Bars3 class="grid ml-2 md:hidden" color="white" size="32" />
 			</button>
 
 			<Sidebar bind:open={$sidebarStore} links={headerLinks} />
