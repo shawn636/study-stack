@@ -30,7 +30,7 @@
 			{#if $page.url.pathname == link.href}
 				<p class="font-bold text-white">{link.name}</p>
 			{:else}
-				<a class="text-white" href="#top">{link.name}</a>
+				<a class="text-white" href={link.href}>{link.name}</a>
 			{/if}
 		{/each}
 	</div>
