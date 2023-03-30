@@ -13,9 +13,18 @@ jobs:
       contents: read
       packages: write
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      MIGRATION_URL: ${{ secrets.MIGRATION_URL }}
     steps:
       - uses: actions/checkout@v2
       - run: npm install
+      - run: npm install prisma --save-dev
+      - run: npx prisma generate
+      - run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+          MIGRATION_URL: ${{ env.MIGRATION_URL }}
       - run: npm run build --production
       - uses: amondnet/vercel-action@v25
         with:
