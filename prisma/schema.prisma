@@ -18,6 +18,7 @@ model User {
   name      String?
   role      Role     @default(USER)
   posts     Post[]
+  age       Int?
 }
 
 model Post {
