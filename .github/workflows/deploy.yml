@@ -16,6 +16,7 @@ jobs:
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       MIGRATION_URL: ${{ secrets.MIGRATION_URL }}
+      PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
     steps:
       - uses: actions/checkout@v2
       - run: npm install
