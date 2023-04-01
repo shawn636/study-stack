@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
-      
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
@@ -32,4 +31,5 @@ jobs:
           node-version: '18.x'
       - run: npm install
       - run: npx playwright install --with-deps
+      - run: npm run build --if-present
       - run: npm run test
