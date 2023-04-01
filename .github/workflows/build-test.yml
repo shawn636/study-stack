@@ -9,6 +9,9 @@ on:
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+      
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
