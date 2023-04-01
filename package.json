@@ -27,7 +27,8 @@
 		"seed": "ts-node --esm prisma/seed.ts"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^17.5.1",
+		"@amplitude/analytics-browser": "^1.9.3",
+		"@commitlint/cli": "^17.5.0",
 		"@commitlint/config-conventional": "^17.4.4",
 		"@faker-js/faker": "^7.6.0",
 		"@playwright/test": "^1.32.1",
