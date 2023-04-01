@@ -1,14 +1,17 @@
 <script lang="ts">
 	import * as amplitude from '@amplitude/analytics-browser';
 	import '../app.css';
+	import { onMount } from 'svelte';
 
-	amplitude.init('739ec8caebbccf02c3c6f26e0657cd24', undefined, {
-		defaultTracking: {
-			sessions: true,
-			pageViews: true,
-			formInteractions: true,
-			fileDownloads: true
-		}
+	onMount(() => {
+		amplitude.init(process.env['AMPLITUDE_API_KEY'] ?? '', undefined, {
+			defaultTracking: {
+				sessions: true,
+				pageViews: true,
+				formInteractions: true,
+				fileDownloads: true
+			}
+		});
 	});
 </script>
 
