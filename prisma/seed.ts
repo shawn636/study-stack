@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import { seedCategory } from './seeds/category';
+import { seedContentType } from './seeds/content-type';
+import { seedOrganization } from './seeds/organization';
 
 const prisma = new PrismaClient();
 
 async function main() {
-	await seedCategory(prisma);
-	// await prisma.$connect()
+	await Promise.all([seedCategory(prisma), seedContentType(prisma), seedOrganization(prisma)]);
 }
 main()
 	.then(async () => {
