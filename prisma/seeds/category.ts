@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@prisma/client';
 
 export async function seedCategory(client: PrismaClient) {
-	client.category.deleteMany({});
+	await client.category.deleteMany({});
 
 	await client.category.createMany({
 		data: [
