@@ -6,7 +6,7 @@ import { seedUser } from './seeds/user';
 import { seedCourse } from './seeds/course';
 import { deleteAll } from './seeds/delete';
 import { seedLesson } from './seeds/lesson';
-// import { seedCourseContent } form './seeds/course-content';
+import { seedCourseContent } from './seeds/course-content';
 const prisma = new PrismaClient();
 
 async function main() {
@@ -16,7 +16,7 @@ async function main() {
 	await Promise.all([seedCategory(prisma), seedUser(prisma)]);
 	await seedCourse(prisma);
 	await Promise.all([seedContentType(prisma), seedLesson(prisma)]);
-	//  await seedCourseContent(prisma)
+	await seedCourseContent(prisma);
 }
 main()
 	.then(async () => {
