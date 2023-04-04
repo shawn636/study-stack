@@ -10,9 +10,9 @@ export async function seedCourseContent(client: PrismaClient) {
 
 	let contentId = 1;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	// This type declaration is only because of an error with
 	// prisma recognizing the JSON type in createMany
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const contents: any = [];
 
 	for (const lesson of lessons) {
@@ -35,14 +35,3 @@ export async function seedCourseContent(client: PrismaClient) {
 		data: contents
 	});
 }
-
-// model CourseContent {
-//   id            Int         @id @default(autoincrement())
-//   type          ContentType @relation(fields: [contentTypeId], references: [id])
-//   contentTypeId Int
-//   Lesson        Lesson?     @relation(fields: [lessonId], references: [id])
-//   lessonId      Int?
-//   data          Json?       @db.JsonB
-//   author        User        @relation(fields: [userId], references: [id])
-//   userId        Int
-// }
