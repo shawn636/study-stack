@@ -14,18 +14,16 @@ datasource db {
 // COURSE RELATED MODELS
 
 model Course {
-  id              Int           @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   title           String
   description     String
-  category        Category      @relation(fields: [categoryId], references: [id])
+  category        Category @relation(fields: [categoryId], references: [id])
   categoryId      Int
-  price           Decimal       @db.Money
-  discountedPrice Decimal?      @db.Money
+  price           Decimal  @db.Money
+  discountedPrice Decimal? @db.Money
   lessons         Lesson[]
-  instructor      User          @relation(fields: [userId], references: [id])
-  userId          Int
-  organization    Organization? @relation(fields: [organizationId], references: [id])
-  organizationId  Int?
+  instructor      User     @relation(fields: [instructorId], references: [id])
+  instructorId    Int
 }
 
 model Category {
@@ -72,9 +70,8 @@ model User {
 }
 
 model Organization {
-  id          Int      @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
   description String?
   users       User[]
-  Course      Course[]
 }

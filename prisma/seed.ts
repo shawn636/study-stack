@@ -3,12 +3,20 @@ import { seedCategory } from './seeds/category';
 import { seedContentType } from './seeds/content-type';
 import { seedOrganization } from './seeds/organization';
 import { seedUser } from './seeds/user';
-
+import { seedCourse } from './seeds/course';
+import { deleteAll } from './seeds/delete';
+import { seedLesson } from './seeds/lesson';
+// import { seedCourseContent } form './seeds/course-content';
 const prisma = new PrismaClient();
 
 async function main() {
-	await Promise.all([seedCategory(prisma), seedContentType(prisma), seedOrganization(prisma)]);
-	await seedUser(prisma);
+	await deleteAll(prisma);
+
+	await seedOrganization(prisma);
+	await Promise.all([seedCategory(prisma), seedUser(prisma)]);
+	await seedCourse(prisma);
+	await Promise.all([seedContentType(prisma), seedLesson(prisma)]);
+	//  await seedCourseContent(prisma)
 }
 main()
 	.then(async () => {

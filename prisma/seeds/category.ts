@@ -1,8 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 
 export async function seedCategory(client: PrismaClient) {
-	await client.category.deleteMany({});
-
 	await client.category.createMany({
 		data: [
 			{ title: 'Bible Study & Theology' },

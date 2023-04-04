@@ -2,14 +2,12 @@ import type { Organization, PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
 export async function seedOrganization(client: PrismaClient) {
-	await client.organization.deleteMany({});
-
-	const numOrganizations = 10;
+	const numOrganizations = 50;
 	const organizations: Organization[] = [];
 
 	for (let i = 0; i < numOrganizations; i++) {
 		const organization: Organization = {
-			id: i,
+			id: i + 1,
 			name: faker.company.name(),
 			description: faker.company.catchPhrase()
 		};
