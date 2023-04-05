@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client/edge';
 
 export async function deleteAll(client: PrismaClient) {
 	await client.courseContent.deleteMany();

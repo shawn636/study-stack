@@ -1,4 +1,4 @@
-import type { Course, PrismaClient } from '@prisma/client';
+import type { Course, PrismaClient } from '@prisma/client/edge';
 import { Prisma } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
@@ -9,7 +9,7 @@ export async function seedCourse(client: PrismaClient) {
 		client.user.findMany()
 	]);
 
-	const numCourses = 500;
+	const numCourses = 30;
 	const courses: Course[] = [];
 
 	for (let i = 0; i < numCourses; i++) {
@@ -18,7 +18,7 @@ export async function seedCourse(client: PrismaClient) {
 		const discountedPrice = price * faker.datatype.float({ min: 0.01, max: 0.99 });
 
 		const course: Course = {
-			id: i + 1,
+			id: BigInt(i + 1),
 			title: faker.lorem.sentence(),
 			description: faker.lorem.paragraphs(),
 			categoryId: faker.helpers.arrayElement(categories).id,

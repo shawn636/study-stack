@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client/edge';
 
 export async function seedContentType(client: PrismaClient) {
 	await client.contentType.createMany({

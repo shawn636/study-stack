@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider  = "cockroachdb"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
@@ -14,45 +14,45 @@ datasource db {
 // COURSE RELATED MODELS
 
 model Course {
-  id              Int      @id @default(autoincrement())
+  id              BigInt   @id @default(sequence())
   title           String
   description     String
   category        Category @relation(fields: [categoryId], references: [id])
-  categoryId      Int
-  price           Decimal  @db.Money
-  discountedPrice Decimal? @db.Money
+  categoryId      BigInt
+  price           Decimal
+  discountedPrice Decimal?
   lessons         Lesson[]
   instructor      User     @relation(fields: [instructorId], references: [id])
-  instructorId    Int
+  instructorId    BigInt
 }
 
 model Category {
-  id     Int      @id @default(autoincrement())
-  title  String   @unique
-  Course Course[]
+  id      BigInt   @id @default(sequence())
+  title   String   @unique
+  courses Course[]
 }
 
 model Lesson {
-  id       Int             @id @default(autoincrement())
+  id       BigInt          @id @default(sequence())
   title    String
   content  CourseContent[]
   Course   Course?         @relation(fields: [courseId], references: [id])
-  courseId Int?
+  courseId BigInt?
 }
 
 model CourseContent {
-  id            Int         @id @default(autoincrement())
+  id            BigInt      @id @default(sequence())
   type          ContentType @relation(fields: [contentTypeId], references: [id])
-  contentTypeId Int
+  contentTypeId BigInt
   Lesson        Lesson?     @relation(fields: [lessonId], references: [id])
-  lessonId      Int?
+  lessonId      BigInt?
   content       Json        @db.JsonB
   author        User        @relation(fields: [authorId], references: [id])
-  authorId      Int
+  authorId      BigInt
 }
 
 model ContentType {
-  id            Int             @id @default(autoincrement())
+  id            BigInt          @id @default(sequence())
   title         String          @unique
   CourseContent CourseContent[]
 }
@@ -60,17 +60,17 @@ model ContentType {
 // USER RELATED MODELS
 
 model User {
-  id             Int             @id @default(autoincrement())
+  id             BigInt          @id @default(sequence())
   fullName       String
   email          String          @unique
   Organization   Organization?   @relation(fields: [organizationId], references: [id])
-  organizationId Int?
-  CourseContent  CourseContent[]
-  Course         Course[]
+  organizationId BigInt?
+  courseContent  CourseContent[]
+  courses        Course[]
 }
 
 model Organization {
-  id          Int     @id @default(autoincrement())
+  id          BigInt  @id @default(sequence())
   name        String
   description String?
   users       User[]
