@@ -7,7 +7,7 @@ export async function seedOrganization(client: PrismaClient) {
 
 	for (let i = 0; i < numOrganizations; i++) {
 		const organization: Organization = {
-			id: BigInt(i + 1),
+			id: i + 1,
 			name: faker.company.name(),
 			description: faker.company.catchPhrase()
 		};

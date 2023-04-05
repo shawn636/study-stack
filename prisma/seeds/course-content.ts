@@ -20,7 +20,7 @@ export async function seedCourseContent(client: PrismaClient) {
 
 		for (let i = 0; i < numContent; i++) {
 			const content: CourseContent = {
-				id: BigInt(contentId),
+				id: contentId,
 				contentTypeId: faker.helpers.arrayElement(contentTypes).id,
 				lessonId: lesson.id,
 				content: JSON.parse(faker.datatype.json()) as Prisma.JsonValue,

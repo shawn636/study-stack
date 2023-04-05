@@ -11,7 +11,7 @@ export async function seedLesson(client: PrismaClient) {
 
 		for (let i = 0; i < numLessons; i++) {
 			const lesson: Lesson = {
-				id: BigInt(lessonId),
+				id: lessonId,
 				title: faker.lorem.sentence(),
 				courseId: course.id
 			};

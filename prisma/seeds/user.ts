@@ -10,7 +10,7 @@ export async function seedUser(client: PrismaClient) {
 	for (let i = 0; i < numUsers; i++) {
 		const includeOrganization = faker.datatype.boolean();
 		const user: User = {
-			id: BigInt(i + 1),
+			id: i + 1,
 			fullName: faker.name.fullName(),
 			email: faker.internet.email(),
 			organizationId: includeOrganization ? faker.helpers.arrayElement(organizations).id : null

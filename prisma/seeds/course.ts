@@ -18,7 +18,7 @@ export async function seedCourse(client: PrismaClient) {
 		const discountedPrice = price * faker.datatype.float({ min: 0.01, max: 0.99 });
 
 		const course: Course = {
-			id: BigInt(i + 1),
+			id: i + 1,
 			title: faker.lorem.sentence(),
 			description: faker.lorem.paragraphs(),
 			categoryId: faker.helpers.arrayElement(categories).id,
