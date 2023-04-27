@@ -1,4 +1,4 @@
-import type { PrismaClient, User } from '@prisma/client/edge';
+import type { PrismaClient, User } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
 export async function seedUser(client: PrismaClient) {

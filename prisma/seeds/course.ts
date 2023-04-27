@@ -1,4 +1,4 @@
-import type { Course, PrismaClient } from '@prisma/client/edge';
+import type { Course, PrismaClient } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 

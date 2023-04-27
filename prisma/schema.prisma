@@ -6,17 +6,17 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgres"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 // COURSE RELATED MODELS
 
 model Course {
   id              Int      @id @default(autoincrement())
-  title           String
-  description     String
+  title           String   @db.MediumText
+  description     String   @db.LongText
   category        Category @relation(fields: [categoryId], references: [id])
   categoryId      Int
   price           Decimal
@@ -24,12 +24,16 @@ model Course {
   lessons         Lesson[]
   instructor      User     @relation(fields: [instructorId], references: [id])
   instructorId    Int
+
+  @@index([categoryId])
+  @@index([instructorId])
 }
 
 model Category {
-  id      Int      @id @default(autoincrement())
-  title   String   @unique
-  courses Course[]
+  id       Int      @id @default(autoincrement())
+  title    String   @unique
+  img_href String
+  courses  Course[]
 }
 
 model Lesson {
@@ -38,6 +42,8 @@ model Lesson {
   content  CourseContent[]
   Course   Course?         @relation(fields: [courseId], references: [id])
   courseId Int?
+
+  @@index([courseId])
 }
 
 model CourseContent {
@@ -46,9 +52,13 @@ model CourseContent {
   contentTypeId Int
   Lesson        Lesson?     @relation(fields: [lessonId], references: [id])
   lessonId      Int?
-  content       Json        @db.JsonB
+  content       Json
   author        User        @relation(fields: [authorId], references: [id])
   authorId      Int
+
+  @@index([contentTypeId])
+  @@index([lessonId])
+  @@index([authorId])
 }
 
 model ContentType {
@@ -67,6 +77,8 @@ model User {
   organizationId Int?
   courseContent  CourseContent[]
   courses        Course[]
+
+  @@index([organizationId])
 }
 
 model Organization {

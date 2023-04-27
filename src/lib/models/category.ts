@@ -1,3 +1,5 @@
 export default interface Category {
-	name: string;
+	title: string;
+	count: number;
+	img_href: string | null;
 }

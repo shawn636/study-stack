@@ -1,4 +1,4 @@
-import type { Organization, PrismaClient } from '@prisma/client/edge';
+import type { Organization, PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
 export async function seedOrganization(client: PrismaClient) {

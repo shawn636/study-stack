@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client/edge';
+import { PrismaClient } from '@prisma/client';
 import { seedCategory } from './seeds/category';
 import { seedContentType } from './seeds/content-type';
 import { seedOrganization } from './seeds/organization';

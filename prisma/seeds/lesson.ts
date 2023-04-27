@@ -1,4 +1,4 @@
-import type { PrismaClient, Course, Lesson } from '@prisma/client/edge';
+import type { PrismaClient, Course, Lesson } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
 export async function seedLesson(client: PrismaClient) {

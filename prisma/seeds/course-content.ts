@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import type { PrismaClient, CourseContent, Prisma } from '@prisma/client/edge';
+import type { PrismaClient, CourseContent, Prisma } from '@prisma/client';
 
 export async function seedCourseContent(client: PrismaClient) {
 	const [contentTypes, lessons, authors] = await Promise.all([

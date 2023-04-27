@@ -1,30 +1,38 @@
+import { Client } from '@planetscale/database';
+
 export const config = {
 	runtime: 'edge'
 };
-import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const db = new Client({
+	url: process.env['DATABASE_URL']
+});
 
-export default async (req: Request, res: Response) => {
-	try {
-		const orderedCategories = await prisma.category.findMany({
-			select: {
-				title: true,
-				_count: {
-					select: { courses: true }
-				}
-			},
-			orderBy: {
-				courses: {
-					_count: 'desc'
-				}
-			}
-		});
-		prisma.$disconnect();
-		return new Response(orderedCategories.toString());
-	} catch (error) {
-		console.log(error);
-		prisma.$disconnect();
-		return new Response('Internal Server Error', { status: 500 });
-	}
+const GET = async () => {
+	const conn = db.connection();
+
+	const topCategories = await conn.execute(`
+		SELECT Category.title , COUNT(*) AS count
+		FROM Course JOIN Category on Course.categoryId = Category.id
+		GROUP BY categoryId
+		ORDER BY count DESC
+		LIMIT 5;`);
+
+	const json = JSON.stringify(topCategories.rows);
+
+	return new Response(json, {
+		headers: {
+			'content-type': 'application/json;charset=UTF-8',
+			'access-control-allow-origin': '*'
+		}
+	});
 };
+
+export default async function handler(req: Request) {
+	switch (req.method) {
+		case 'GET':
+			return await GET();
+		default:
+			return new Response(null, { status: 405 });
+	}
+}
