@@ -8,8 +8,13 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
+		"types": ["vitest/globals"],
+		"moduleResolution": "node",
+		"preserveValueImports": true,
+		"ignoreDeprecations": "5.0",
+		"preserveConstEnums": true,
 		"strict": true,
-		"types": ["vitest/globals"]
+		"target": "ESNext"
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//

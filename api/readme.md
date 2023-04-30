@@ -1,0 +1,1 @@
+This directory contains API Routes created though Vercel Edge Functions. These routes are mostly implemented for functions that would take advantage of Vercel's API Response Caching, at the cost of latency for the additional http request.

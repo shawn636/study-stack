@@ -1,5 +1,9 @@
 <script lang="ts">
+	import Categories from '$lib/sections/categories.svelte';
 	import HeroBanner from '$lib/sections/hero-banner.svelte';
+	import type { PageServerData } from './$types';
+
+	export let data: PageServerData;
 </script>
 
 <svelte:head>
@@ -11,3 +15,4 @@
 </svelte:head>
 
 <HeroBanner />
+<Categories categories={data.categories} />

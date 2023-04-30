@@ -6,32 +6,84 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("MIGRATION_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
+
+// COURSE RELATED MODELS
+
+model Course {
+  id              Int      @id @default(autoincrement())
+  title           String   @db.MediumText
+  description     String   @db.LongText
+  category        Category @relation(fields: [categoryId], references: [id])
+  categoryId      Int
+  price           Decimal
+  discountedPrice Decimal?
+  lessons         Lesson[]
+  instructor      User     @relation(fields: [instructorId], references: [id])
+  instructorId    Int
+
+  @@index([categoryId])
+  @@index([instructorId])
+}
+
+model Category {
+  id       Int      @id @default(autoincrement())
+  title    String   @unique
+  img_href String
+  courses  Course[]
+}
+
+model Lesson {
+  id       Int             @id @default(autoincrement())
+  title    String
+  content  CourseContent[]
+  Course   Course?         @relation(fields: [courseId], references: [id])
+  courseId Int?
+
+  @@index([courseId])
+}
+
+model CourseContent {
+  id            Int         @id @default(autoincrement())
+  type          ContentType @relation(fields: [contentTypeId], references: [id])
+  contentTypeId Int
+  Lesson        Lesson?     @relation(fields: [lessonId], references: [id])
+  lessonId      Int?
+  content       Json
+  author        User        @relation(fields: [authorId], references: [id])
+  authorId      Int
+
+  @@index([contentTypeId])
+  @@index([lessonId])
+  @@index([authorId])
+}
+
+model ContentType {
+  id            Int             @id @default(autoincrement())
+  title         String          @unique
+  CourseContent CourseContent[]
+}
+
+// USER RELATED MODELS
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
-  posts     Post[]
-  age       Int?
+  id             Int             @id @default(autoincrement())
+  fullName       String
+  email          String          @unique
+  Organization   Organization?   @relation(fields: [organizationId], references: [id])
+  organizationId Int?
+  courseContent  CourseContent[]
+  courses        Course[]
+
+  @@index([organizationId])
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  published Boolean  @default(false)
-  title     String   @db.VarChar(255)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
-}
-
-enum Role {
-  USER
-  ADMIN
+model Organization {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  users       User[]
 }
