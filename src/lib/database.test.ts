@@ -9,8 +9,7 @@ describe('database', () => {
 		expect(db).toBeTruthy();
 		const connection = db.connection();
 		expect(connection).toBeTruthy();
-		expect(connection.execute('SELECT 1 + 1 AS solution')).resolves.toEqual(
-			expect.arrayContaining([{ solution: 2 }])
-		);
+		const result = await connection.execute('SELECT 1 + 1 as solution');
+		expect(result.rows[0]).toContain({ solution: '2' });
 	});
 });

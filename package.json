@@ -3,16 +3,16 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "PUBLIC_ENV=DEV vite dev --port 5173",
-		"vercel-dev": "PUBLIC_ENV=PROD vercel dev --listen 3000 --token $VERCEL_TOKEN --yes",
+		"dev": "vite dev",
+		"vercel-dev": "vercel dev --token $VERCEL_TOKEN --yes",
 		"build": "vite build",
 		"preview": "vite preview",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"test:unit": "PUBLIC_ENV=PROD concurrently \"npm run vercel-dev\" \"vitest --run\" --kill-others -s first",
-		"test:watch": "PUBLIC_ENV=PROD concurrently \"npm run vercel-dev\" \"vitest\" --kill-others",
-		"test:coverage": "vitest run --coverage",
+		"test:unit": "concurrently \"npm run dev\" \"vitest --run\" --kill-others -s first",
+		"test:watch": "concurrently \"npm run dev\" \"vitest\" --kill-others",
+		"test:coverage": "concurrently \"npm run dev\" \"vitest run --coverage\" --kill-others -s first",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"lintfix": "prettier --plugin-search-dir . --write . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
@@ -49,6 +49,7 @@
 		"@typescript-eslint/parser": "^5.59.1",
 		"@vercel/node": "^2.14.0",
 		"@vitest/coverage-c8": "^0.29.8",
+		"@vitest/coverage-istanbul": "^0.30.1",
 		"autoprefixer": "^10.4.14",
 		"concurrently": "^8.0.1",
 		"eslint": "^8.39.0",
@@ -73,7 +74,7 @@
 		"typescript": "^5.0.4",
 		"vercel": "^28.20.0",
 		"vite": "^4.3.3",
-		"vitest": "^0.29.8"
+		"vitest": "^0.30.1"
 	},
 	"type": "module"
 }

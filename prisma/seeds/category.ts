@@ -5,7 +5,7 @@ export async function seedCategory(client: PrismaClient) {
 		data: [
 			{
 				title: 'Bible Study & Theology',
-				img_href: 'images/bible-study-theology.svg'
+				img_href: 'images/book-open.svg'
 			},
 			{
 				title: 'Biblical Languages',
