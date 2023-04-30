@@ -10,7 +10,7 @@
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"test:unit": "PUBLIC_ENV=PROD concurrently \"npm run vercel-dev\" \"vitest --run\" --kill-others",
+		"test:unit": "PUBLIC_ENV=PROD concurrently \"npm run vercel-dev\" \"vitest --run\" --kill-others -s last",
 		"test:watch": "PUBLIC_ENV=PROD concurrently \"npm run vercel-dev\" \"vitest\" --kill-others",
 		"test:coverage": "vitest run --coverage",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
