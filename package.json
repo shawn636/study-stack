@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "PUBLIC_ENV=DEV vite dev --port 5173",
-		"vercel-dev": "PUBLIC_ENV=PROD vercel dev --listen 3000 --token $VERCEL_TOKEN",
+		"vercel-dev": "PUBLIC_ENV=PROD vercel dev --listen 3000 --token $VERCEL_TOKEN --yes",
 		"build": "vite build",
 		"preview": "vite preview",
 		"test": "playwright test",
