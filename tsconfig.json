@@ -10,6 +10,8 @@
 		"sourceMap": true,
 		"types": ["vitest/globals"],
 		"moduleResolution": "node",
+		"preserveValueImports": true,
+		"ignoreDeprecations": "5.0",
 		"preserveConstEnums": true,
 		"strict": true,
 		"target": "ESNext"

@@ -1,15 +1,16 @@
 import type { PageServerLoad } from './$types';
-import { PUBLIC_BASE_URL } from '$env/static/public';
 import type Category from '$lib/models/category';
+import { ApiRouter } from '$lib/api-router';
 
 export const load = (async () => {
-	// For production, Use this version, which uses the vercel cloud function
-	// const response = await fetch(`${PUBLIC_BASE_URL}/api/top-categories`);
+	try {
+		const router = new ApiRouter();
+		const response = await fetch(router.url('top-categories'));
+		const categories: Category[] = await response.json();
 
-	// For development, Use this version, which uses the svelte api endpoint
-	const response = await fetch(`${PUBLIC_BASE_URL}/svelte/api/top-categories`);
-
-	const categories: Category[] = await response.json();
-
-	return { categories };
+		return { categories };
+	} catch (error) {
+		console.error('Error loading top categories', error);
+		return { categories: [] as Category[] };
+	}
 }) satisfies PageServerLoad;
