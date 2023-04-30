@@ -14,15 +14,15 @@ jobs:
       packages: write
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      MIGRATION_URL: ${{ secrets.MIGRATION_URL }}
+      DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
       PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+      PUBLIC_PROD_BASE_URL: "http://localhost:3000"
     steps:
       - uses: actions/checkout@v2
       - run: npm install
       - run: npm install prisma --save-dev
       - run: npx prisma generate
-      - run: npx prisma migrate deploy
+      - run: npx prisma push
         env:
           DATABASE_URL: ${{ env.DATABASE_URL }}
           MIGRATION_URL: ${{ env.MIGRATION_URL }}
