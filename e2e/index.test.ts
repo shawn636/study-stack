@@ -7,30 +7,20 @@ test('sucessfuly loads multiple categories', async ({ page }) => {
 });
 
 test('successfully loads all images', async ({ page }) => {
-	await page.waitForLoadState();
-
+	await page.goto('/');
 	const images = await page.$$('img');
 
-	for (const image of images) {
-		const imageSrc = await image.getAttribute('src');
-		const imageExists = await page.evaluate(async (src) => {
-			try {
-				if (!src) {
-					throw new Error('Image source is empty, unable to load image.');
+	await Promise.all(
+		images.map(async (img) => {
+			const src = await img.evaluate((img) => img.getAttribute('src'));
+			expect(src).toBeTruthy();
+			if (src) {
+				const response = await fetch(`http://localhost:3000/${src}`);
+				if (!response.ok) {
+					console.error(`\n[Error]: Unable to load image at ${src}\n`);
 				}
-
-				await new Promise((resolve, reject) => {
-					const img = new Image();
-					img.onload = resolve;
-					img.onerror = reject;
-					img.src = src;
-				});
-				return true;
-			} catch (err) {
-				return false;
+				expect(response).toHaveProperty('status', 200);
 			}
-		}, imageSrc);
-
-		expect(imageExists).toBe(true);
-	}
+		})
+	);
 });

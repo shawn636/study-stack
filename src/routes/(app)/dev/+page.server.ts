@@ -1,16 +1,14 @@
 import type { PageServerLoad } from './$types';
 import type Category from '$lib/models/category';
-import { ApiRouter } from '$lib/api-router';
 
-export const load = (async () => {
+export const load = (async ({ fetch }) => {
 	try {
-		const router = new ApiRouter();
-		const response = await fetch(router.url('top-categories'));
+		const response = await fetch('/api/top-categories');
 		const categories: Category[] = await response.json();
 
 		return { categories };
 	} catch (error) {
-		console.log('Error loading top categories', error);
+		console.error('Error loading top categories', error);
 		return { categories: [] as Category[] };
 	}
 }) satisfies PageServerLoad;

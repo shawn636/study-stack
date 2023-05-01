@@ -1,13 +1,10 @@
 /**
  * @vitest-environment jsdom
  */
-import { ApiRouter } from '$lib/api-router';
 import { db } from '$lib/database';
 import type Category from '$lib/models/category';
 
 describe('top-categories', () => {
-	const router = new ApiRouter();
-
 	it('should be able to communicate with database', async () => {
 		expect(db).toBeDefined();
 		expect(db).toBeTruthy();
@@ -18,7 +15,7 @@ describe('top-categories', () => {
 	});
 
 	it('should return the top 5 catgories', async () => {
-		const response = await fetch(router.url('top-categories'));
+		const response = await fetch('http://localhost:5173/api/top-categories');
 		expect(response.status).toBe(200);
 
 		// const categories: Category[] = await response.json();

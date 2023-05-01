@@ -7,7 +7,10 @@ const config: UserConfig = {
 		include: ['src/**/*.{test,spec}.{js,ts}', 'api/**/*.{test,spec}.{js,ts}'],
 		globals: true,
 		environment: 'jsdom',
-		mockReset: true
+		mockReset: true,
+		coverage: {
+			provider: 'istanbul'
+		}
 	}
 };
 
