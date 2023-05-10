@@ -9,7 +9,7 @@ export const GET = (async () => {
 		FROM Course JOIN Category on Course.categoryId = Category.id
 		GROUP BY categoryId
 		ORDER BY count DESC
-		LIMIT 5;`);
+		LIMIT 6;`);
 
 	const json = JSON.stringify(topCategories.rows);
 

@@ -9,8 +9,8 @@
 
 	const headerLinks: Array<Link> = [
 		{ name: 'Home', href: '/' },
-		{ name: 'Find Courses', href: '/find-courses' },
-		{ name: 'Create a Course', href: '/create-course' },
+		{ name: 'Find Courses', href: '/courses' },
+		{ name: 'Create a Course', href: '/courses/create' },
 		{ name: 'About', href: '/about' }
 	];
 
@@ -28,19 +28,22 @@
 	<div class="items-center hidden grid-flow-col md:grid gap-x-5">
 		{#each headerLinks as link}
 			{#if $page.url.pathname == link.href}
-				<p class="font-bold text-white">{link.name}</p>
+				<p class="font-semibold text-white">{link.name}</p>
 			{:else}
-				<a class="text-white" href={link.href}>{link.name}</a>
+				<a
+					class="text-white hover:text-slate-200 transition-all ease-in-out duration-200"
+					href={link.href}>{link.name}</a
+				>
 			{/if}
 		{/each}
 	</div>
 	<div class="grid items-center grid-flow-col px-2 justify-self-end">
-		<a class="hidden pr-5 font-semibold text-white xs:block hover:text-gray-200" href="#top"
+		<a class="hidden pr-5 font-semibold text-white xs:block hover:text-gray-200" href="/auth/login"
 			>Sign In</a
 		>
 		<a
-			class="hidden xs:block rounded-xl bg-white px-5 py-1.5 text-light-blue-900 font-semibold hover:shadow-md"
-			href="#top"
+			class="hidden xs:block rounded-xl bg-white px-5 py-1.5 text-light-blue-900 font-semibold hover:shadow-md transition-all ease-in-out duration-200"
+			href="/auth/register"
 		>
 			Get Started
 		</a>
