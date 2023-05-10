@@ -5,8 +5,10 @@
 	export let width: string | 'auto' = 'auto';
 
 	const buttonStyles = {
-		solid: 'bg-sky-900 shadow-md hover:scale-105 hover:shadow-lg transition-all duration-300',
-		outline: 'bg-transparent border-2 border-safron text-safron'
+		solid:
+			'font-medium bg-sky-900 shadow-md hover:shadow-lg transition-all ease-in-out duration-300 hover:bg-transpatent hover:bg-transparent hover:border-white hover:border-2',
+		outline:
+			'bg-transparent font-medium hover:bg-safron border-2 border-safron text-safron transition-all ease-in-out hover:text-slate-800 duration-300'
 	};
 </script>
 

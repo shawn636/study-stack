@@ -11,7 +11,7 @@
 	</div>
 
 	<div
-		class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-7xl"
+		class="grid h-36 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-6 gap-8 max-w-7xl"
 	>
 		{#each categories as category, index}
 			<span data-testid="category-card-{index}">

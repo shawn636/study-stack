@@ -26,8 +26,8 @@
 			<div
 				class="grid grid-row-[auto_auto] my-4 col-span-2 justify-self-center gap-y-6 gap-x-3 xs:grid-rows-[auto] xs:grid-cols-[auto_auto] lg:justify-self-start"
 			>
-				<ButtonLink href="/" styleOption="outline" width="48">Find Courses</ButtonLink>
-				<ButtonLink href="/" width="48">Join Now</ButtonLink>
+				<ButtonLink href="/courses" styleOption="outline" width="48">Find Courses</ButtonLink>
+				<ButtonLink href="/auth/register" width="48">Join Now</ButtonLink>
 			</div>
 
 			<div
