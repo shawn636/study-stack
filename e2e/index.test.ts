@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('sucessfuly loads multiple categories', async ({ page }) => {
 	await page.goto('/');
 	const categories = await page.$$('[data-testid^="category-card"]');
-	expect(categories.length).toBe(5);
+	expect(categories.length).toBe(6);
 });
 
 test('successfully loads all images', async ({ page }) => {
