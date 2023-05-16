@@ -1,10 +1,10 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import type { UserConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
-const config: UserConfig = {
+export default defineConfig({
 	plugins: [sveltekit()],
 	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}', 'api/**/*.{test,spec}.{js,ts}'],
+		include: ['src/**/*.{test,spec}.{js,ts}'],
 		globals: true,
 		environment: 'jsdom',
 		mockReset: true,
@@ -12,6 +12,4 @@ const config: UserConfig = {
 			provider: 'istanbul'
 		}
 	}
-};
-
-export default config;
+});

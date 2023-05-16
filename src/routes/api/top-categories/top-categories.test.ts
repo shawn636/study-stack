@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 import { db } from '$lib/database';
-import type Category from '$lib/models/category';
+// import type Category from '$lib/models/category';
 
 describe('top-categories', () => {
 	it('should be able to communicate with database', async () => {

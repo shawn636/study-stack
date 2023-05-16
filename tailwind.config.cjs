@@ -1,14 +1,15 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
-const config = {
-	content: ['./src/**/*.{html,js,svelte,ts}'],
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+	darkMode: 'class',
+	content: [
+		'./src/**/*.{html,js,svelte,ts}',
+		require('path').join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
+	],
 
 	theme: {
 		extend: {
-			fontFamily: {
-				sans: ['Inter var', ...defaultTheme.fontFamily.sans]
-			},
 			screens: {
-				'xs': '414px'
+				xs: '414px'
 			},
 			colors: {
 				'light-blue': '#03a9f4',
@@ -26,15 +27,17 @@ const config = {
 				'light-blue-200-accent': '#40c4ff',
 				'light-blue-400-accent': '#00b0ff',
 				'light-blue-700-accent': '#0091ea',
-				'carnation': '#f4665e',
+				carnation: '#f4665e',
 				'neon-carrot': '#ff922b',
-				'safron': '#ffc600',
-				'olivine': '#99b971'
+				safron: '#ffc600',
+				olivine: '#99b971'
 			}
 		}
 	},
 
-	plugins: []
+	plugins: [
+		require('@tailwindcss/forms'),
+		require('@tailwindcss/typography'),
+		...require('@skeletonlabs/skeleton/tailwind/skeleton.cjs')()
+	]
 };
-
-module.exports = config;
