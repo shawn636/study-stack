@@ -1,90 +1,49 @@
 <script lang="ts">
-	import { afterNavigate } from '$app/navigation';
+	import Fa from 'svelte-fa';
+	import { faGoogle, faFacebook, faApple } from '@fortawesome/free-brands-svg-icons';
 
-	let email = '';
 	let name = '';
-	let previousPage = '/';
-	let backMessage: 'Go Back' | 'Home' = 'Home';
-	afterNavigate(({ from }) => {
-		const prev = from?.url.pathname ?? '/';
-		if (['/', '/auth/login', '/auth/register'].includes(prev)) {
-			previousPage = '/';
-			backMessage = 'Home';
-		} else {
-			previousPage = prev;
-			backMessage = 'Go Back';
-		}
-	});
+	let email = '';
 </script>
 
 <div class="text-center w-64">
 	<div class="py-5">
-		<h1 class="text-3xl font-semibold">Welcome</h1>
+		<h1 class="h1 font-semibold">Welcome</h1>
 		<p class="text-xs text-slate-500">Please enter your details below</p>
 	</div>
-	<div class="grid grid-flow-row text-md gap-y-4">
-		<input
-			type="text"
-			placeholder="Name"
-			bind:value={name}
-			class="bg-slate-100 placeholder-gray-500 px-2 py-1 rounded-md"
-		/>
-		<input
-			type="email"
-			placeholder="Email"
-			bind:value={email}
-			class="bg-slate-100 placeholder-gray-500 px-2 py-1 rounded-md"
-		/>
+	<form>
+		<div class="grid grid-flow-row text-md gap-y-4">
+			<input type="text" placeholder="Name" bind:value={name} class="input" />
+			<input type="email" placeholder="Email" bind:value={email} class="input" />
+			<button class="btn variant-filled-secondary font-medium">Continue</button>
+		</div>
 
-		<button
-			class="bg-amber-400 rounded-lg py-1 text-md font-medium text-slate-900 hover:shadow-md hover:scale-105 transition-all duration-300 ease-in-out"
-			>Continue</button
-		>
-	</div>
+		<div class="grid grid-cols-[1fr_auto_1fr] items-center py-5">
+			<hr />
+			<p class="text-sm px-2 font-semibold uppercase text-surface-500 dark:text-surface-400">or</p>
+			<hr />
+		</div>
 
-	<div class="grid grid-cols-[1fr_auto_1fr] items-center py-5">
-		<div class="border-b border-slate-300 my-5 border-1" />
-		<p class="text-sm text-slate-600 text-center w-10 font-semibold justify-self-center">OR</p>
-		<div class="border-b border-slate-300 my-5 border-1" />
-	</div>
+		<div class="grid grid-flow-row gap-y-3">
+			<button type="button" class="btn variant-soft">
+				<Fa icon={faGoogle} size="20" />
+				<span>Sign up with Google</span>
+			</button>
 
-	<div class="grid grid-flow-row gap-y-3">
-		<button
-			class="rounded-lg border-slate-300 border py-2 text-md font-semibold text-slate-900 hover:border-2 transition-all duration-300 ease-in-out hover:scale-105"
-		>
-			<div class="grid justify-items-center">
-				<div class="flex grid-cols-[auto_1fr] justify-items-center items-center">
-					<img src="/images/google.svg" alt="Google logo" class="w-5 h-5 mx-2 my-0" />
-					<div>Sign up with Google</div>
-				</div>
-			</div>
-		</button>
+			<button type="button" class="btn variant-soft">
+				<Fa icon={faFacebook} size="20" />
+				<span>Sign up with Facebook</span>
+			</button>
 
-		<button
-			class="rounded-lg border-slate-300 border py-2 text-md font-semibold text-slate-900 0 hover:border-2 transition-all duration-300 ease-in-out hover:scale-105"
-		>
-			<div class="grid justify-items-center">
-				<div class="flex grid-cols-[auto_1fr] justify-items-center items-center">
-					<img src="/images/facebook.svg" alt="Google logo" class="w-5 h-5 mx-2" />
-					<div>Sign up with Facebook</div>
-				</div>
-			</div>
-		</button>
-
-		<button
-			class="rounded-lg border-slate-300 border py-2 text-md font-semibold text-slate-900 0 hover:border-2 transition-all duration-300 ease-in-out hover:scale-105"
-		>
-			<div class="grid justify-items-center">
-				<div class="flex grid-cols-[auto_1fr] justify-items-center items-center">
-					<img src="/images/apple.svg" alt="Google logo" class="w-5 h-5 mx-2" />
-					<div>Sign up with Apple</div>
-				</div>
-			</div>
-		</button>
-	</div>
+			<button type="button" class="btn variant-soft">
+				<Fa icon={faApple} size="20" />
+				<span>Sign up with Apple</span>
+			</button>
+		</div>
+	</form>
 	<p class="text-sm py-2 text-slate-500">
 		Already have an account? <a
-			class="text-light-blue-800 font-semibold hover:text-light-blue-700"
+			class="text-primary-500 font-semibold hover:text-primary-600"
 			href="/auth/login">Sign in</a
 		>
 	</p>

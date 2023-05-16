@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Logo from '$lib/components/logo.svelte';
-	import { AppShell, LightSwitch } from '@skeletonlabs/skeleton';
+	import { AppShell } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
 	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 </script>

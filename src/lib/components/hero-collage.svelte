@@ -36,9 +36,11 @@
 			<span class="text-sm text-light-blue-800 font-medium">Jack Matheusen</span>
 			<span class="text-slate-400 text-sm font-normal">Biblical Studies</span>
 			<span class="grid grid-cols-5 gap-x-0.5 justify-items-start">
-				{#each { length: 5 } as _, i}
-					<Fa icon={faStar} size="10" class="text-secondary-500" />
-				{/each}
+				<Fa icon={faStar} size="10" class="text-secondary-500" />
+				<Fa icon={faStar} size="10" class="text-secondary-500" />
+				<Fa icon={faStar} size="10" class="text-secondary-500" />
+				<Fa icon={faStar} size="10" class="text-secondary-500" />
+				<Fa icon={faStar} size="10" class="text-secondary-500" />
 			</span>
 		</div>
 	</div>

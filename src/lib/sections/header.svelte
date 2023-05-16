@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Logo from '$lib/components/logo.svelte';
 	import { page } from '$app/stores';
-	import { AppBar, LightSwitch } from '@skeletonlabs/skeleton';
+	import { AppBar } from '@skeletonlabs/skeleton';
 	import { drawerStore } from '@skeletonlabs/skeleton';
 	import { headerLinks } from '$lib/header-links';
 	import Fa from 'svelte-fa';
@@ -39,7 +39,6 @@
 	</div>
 	<svelte:fragment slot="trail">
 		<div class="grid items-center grid-flow-col px-2 justify-self-end gap-x-4">
-			<LightSwitch />
 			<a class="btn variant-soft" href="/auth/login">Sign In</a>
 			<a class="btn variant-filled" href="/auth/register"> Get Started </a>
 		</div>
