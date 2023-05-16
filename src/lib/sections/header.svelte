@@ -6,6 +6,7 @@
 	import { headerLinks } from '$lib/header-links';
 	import Fa from 'svelte-fa';
 	import { faBars } from '@fortawesome/free-solid-svg-icons';
+	import { LightSwitch } from '@skeletonlabs/skeleton';
 </script>
 
 <AppBar
@@ -28,7 +29,7 @@
 			<a href="/"><Logo color="black" /></a>
 		</div>
 	</svelte:fragment>
-	<div class="items-center hidden grid-flow-col lg:grid gap-x-5">
+	<div class="items-center hidden grid-flow-col lg:grid">
 		{#each headerLinks as link}
 			{#if $page.url.pathname == link.href}
 				<a class="btn font-semibold" href={link.href}>{link.name}</a>

@@ -8,7 +8,6 @@
 	import * as amplitude from '@amplitude/analytics-browser';
 	import { onMount } from 'svelte';
 	import { PUBLIC_AMPLITUDE_API_KEY } from '$env/static/public';
-	import { autoModeWatcher } from '@skeletonlabs/skeleton';
 
 	onMount(() => {
 		amplitude.init(PUBLIC_AMPLITUDE_API_KEY, undefined, {
@@ -21,9 +20,5 @@
 		});
 	});
 </script>
-
-<svelte:head
-	>{@html `<script>${autoModeWatcher.toString()} autoModeWatcher();</script>`}</svelte:head
->
 
 <slot />
