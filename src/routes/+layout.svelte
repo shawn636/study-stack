@@ -1,8 +1,14 @@
 <script lang="ts">
+	// The ordering of these imports is critical to your app working properly
+	import '../theme.postcss';
+	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
+	import '@skeletonlabs/skeleton/styles/skeleton.css';
+	// Most of your app wide CSS should be put in this file
+	import '../app.postcss';
 	import * as amplitude from '@amplitude/analytics-browser';
-	import '../app.css';
 	import { onMount } from 'svelte';
 	import { PUBLIC_AMPLITUDE_API_KEY } from '$env/static/public';
+	// import { autoModeWatcher } from '@skeletonlabs/skeleton';
 
 	onMount(() => {
 		amplitude.init(PUBLIC_AMPLITUDE_API_KEY, undefined, {
@@ -15,5 +21,9 @@
 		});
 	});
 </script>
+
+<!-- <svelte:head
+	>{@html `<script>${autoModeWatcher.toString()} autoModeWatcher();</script>`}</svelte:head
+> -->
 
 <slot />

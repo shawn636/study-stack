@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { ChevronLeft } from 'svelte-heros-v2';
 	import { afterNavigate } from '$app/navigation';
 
 	let email = '';
@@ -19,12 +18,13 @@
 </script>
 
 <div class="z-10 absolute top-2 left-2 text-sm text-slate-500 hover:text-slate-700">
-	<a href={previousPage}
-		><ChevronLeft
+	<a href={previousPage}>
+		<!-- <ChevronLeft
 			class="w-4 h-4 mr-1 text-center flex items-center"
 			strokeWidth="2"
-		/>{backMessage}</a
-	>
+		/> -->
+		{backMessage}
+	</a>
 </div>
 
 <div class="text-center w-64">

@@ -1,59 +1,47 @@
 <script lang="ts">
 	import Logo from '$lib/components/logo.svelte';
-	import Sidebar from '$lib/components/sidebar.svelte';
-	import type Link from '$lib/models/link';
 	import { page } from '$app/stores';
-	import { Bars3 } from 'svelte-heros-v2';
-	import { sidebarStore } from '$lib/stores/sidebar';
-	import { clickOutside } from 'svelte-use-click-outside';
-
-	const headerLinks: Array<Link> = [
-		{ name: 'Home', href: '/' },
-		{ name: 'Find Courses', href: '/courses' },
-		{ name: 'Create a Course', href: '/courses/create' },
-		{ name: 'About', href: '/about' }
-	];
-
-	const handleClickOutside = () => {
-		if ($sidebarStore == true) {
-			sidebarStore.toggle();
-		}
-	};
+	import { AppBar, LightSwitch } from '@skeletonlabs/skeleton';
+	import { drawerStore } from '@skeletonlabs/skeleton';
+	import { headerLinks } from '$lib/header-links';
+	import Fa from 'svelte-fa';
+	import { faBars } from '@fortawesome/free-solid-svg-icons';
 </script>
 
-<div class="grid items-center h-12 grid-flow-col bg-light-blue-800 justify-items-center">
-	<div class="justify-self-start">
-		<Logo />
-	</div>
-	<div class="items-center hidden grid-flow-col md:grid gap-x-5">
+<AppBar
+	background="bg-surface-100 dark:bg-surface-800"
+	gridColumns="grid-cols-3"
+	slotDefault="place-self-center"
+	slotTrail="place-content-end"
+	shadow="shadow-xl"
+>
+	<svelte:fragment slot="lead">
+		<div class="flex">
+			<button
+				class="btn outline-none"
+				on:click={() => {
+					drawerStore.open();
+				}}
+			>
+				<Fa icon={faBars} size="24" />
+			</button>
+			<a href="/"><Logo color="black" /></a>
+		</div>
+	</svelte:fragment>
+	<div class="items-center hidden grid-flow-col lg:grid gap-x-5">
 		{#each headerLinks as link}
 			{#if $page.url.pathname == link.href}
-				<p class="font-semibold text-white">{link.name}</p>
+				<a class="btn font-semibold" href={link.href}>{link.name}</a>
 			{:else}
-				<a
-					class="text-white hover:text-slate-200 transition-all ease-in-out duration-200"
-					href={link.href}>{link.name}</a
-				>
+				<a class="btn" href={link.href}>{link.name}</a>
 			{/if}
 		{/each}
 	</div>
-	<div class="grid items-center grid-flow-col px-2 justify-self-end">
-		<a class="hidden pr-5 font-semibold text-white xs:block hover:text-gray-200" href="/auth/login"
-			>Sign In</a
-		>
-		<a
-			class="hidden xs:block rounded-xl bg-white px-5 py-1.5 text-light-blue-900 font-semibold hover:shadow-md transition-all ease-in-out duration-200"
-			href="/auth/register"
-		>
-			Get Started
-		</a>
-
-		<div use:clickOutside={handleClickOutside}>
-			<button on:click={sidebarStore.toggle}>
-				<Bars3 class="grid ml-2 md:hidden" color="white" size="32" />
-			</button>
-
-			<Sidebar bind:open={$sidebarStore} links={headerLinks} />
+	<svelte:fragment slot="trail">
+		<div class="grid items-center grid-flow-col px-2 justify-self-end">
+			<LightSwitch />
+			<a class="btn" href="/auth/login">Sign In</a>
+			<a class="btn variant-filled-primary" href="/auth/register"> Get Started </a>
 		</div>
-	</div>
-</div>
+	</svelte:fragment>
+</AppBar>

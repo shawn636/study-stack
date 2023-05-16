@@ -5,7 +5,8 @@ const config: PlaywrightTestConfig = {
 		command: 'npm run vercel-dev',
 		port: 3000
 	},
-	testDir: 'e2e'
+	testDir: 'e2e',
+	testMatch: /(.+\.)?(test|spec)\.[jt]s/
 };
 
 export default config;

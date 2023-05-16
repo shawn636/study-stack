@@ -1,37 +1,28 @@
 <script lang="ts">
-	import type Link from '$lib/models/link';
+	import { Drawer, drawerStore } from '@skeletonlabs/skeleton';
+	import { page } from '$app/stores';
+	import { headerLinks } from '$lib/header-links';
 
-	export let links: Array<Link>;
-	export let open = false;
+	$: classesActive = (href: string) =>
+		href === $page.url.pathname ? '!bg-primary-500 !text-white' : '';
 </script>
 
-<aside class="fixed right-0 w-48 h-full shadow-lg md:hidden top-12 bg-light-blue-800" class:open>
-	<nav class="grid grid-flow-row">
-		{#each links as link}
-			<a href={'#top'} class="px-5 py-1 my-1 text-white hover:bg-light-blue-600">{link.name}</a>
-		{/each}
-		<a
-			class="xs:hidden mx-5 my-2 rounded-xl bg-white px-5 py-1.5 text-center text-light-blue-900 font-semibold hover:shadow-lg transition"
-			href="#top"
-		>
-			Get Started
-		</a>
-		<a
-			class="pr-5 mx-5 my-2 font-semibold text-white xs:hidden hover:text-gray-200 justify-self-center transition"
-			href="#top"
-		>
-			Sign In
-		</a>
-	</nav>
-</aside>
-
-<style>
-	aside {
-		right: -100%;
-
-		transition: right 0.3s ease-in-out;
-	}
-	.open {
-		right: 0;
-	}
-</style>
+<Drawer width="w-64">
+	<div class="container p-4 space-y-4">
+		<nav class="list-nav">
+			<ul>
+				{#each headerLinks as link}
+					<li>
+						<a
+							on:click={drawerStore.close}
+							href={link.href}
+							class="flex-auto {classesActive(link.href)}">{link.name}</a
+						>
+					</li>
+				{/each}
+			</ul>
+		</nav>
+		<a href="/auth/login" class="btn variant-soft w-full"> Sign In </a>
+		<a href="/auth/register" class="btn variant-filled w-full"> Register </a>
+	</div>
+</Drawer>

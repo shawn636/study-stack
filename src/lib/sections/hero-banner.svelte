@@ -9,7 +9,7 @@
 	const tags = ['Over 12 million students', 'More than 60,000 courses', 'Learn anything online'];
 </script>
 
-<div class="bg-light-blue-800 grid justify-items-center">
+<div class="bg-primary-500 dark:bg-primary-700 grid justify-items-center">
 	<div
 		class="grid justify-items-center gap-x-5 grid-cols-1 lg:grid-cols-[1fr_350px] px-5 pt-3 pb-7 md:px-24 max-w-7xl"
 	>
@@ -18,7 +18,7 @@
 		>
 			<h1 class="col-span-2 text-4xl font-semibold">
 				<span>{cta}</span>
-				<span class="underline text-safron">{ctaUnderline}</span>
+				<span class="underline text-secondary-500">{ctaUnderline}</span>
 			</h1>
 
 			<p class="col-span-2 row-start-2">{subheading}</p>
@@ -51,7 +51,7 @@
 	width="1024"
 	height="56"
 	viewBox="0 0 1024 56"
-	class="w-full fill-light-blue-800 lg:h-20 z-negative"
+	class="w-full fill-primary-500 dark:fill-primary-700 lg:h-20 z-negative"
 	xmlns="http://www.w3.org/2000/svg"
 	preserveAspectRatio="none"
 >
