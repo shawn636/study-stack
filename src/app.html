@@ -3,8 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
-		<meta name="theme-color" content="#0377BD" />
-		
+
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<!-- FIXME -->
 		<!-- <link rel="manifest" href="/manifest.json" /> -->
@@ -13,7 +12,7 @@
 
 		%sveltekit.head%
 	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+	<body data-sveltekit-preload-data="hover" data-theme="equipped">
+		<div style="display: contents" class="h-full overflow-hidden">%sveltekit.body%</div>
 	</body>
 </html>
