@@ -12,3 +12,4 @@ vite.config.ts.timestamp-*w
 coverage
 *.nnb
 test-results
+*.icloud
