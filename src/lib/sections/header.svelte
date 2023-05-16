@@ -38,10 +38,10 @@
 		{/each}
 	</div>
 	<svelte:fragment slot="trail">
-		<div class="grid items-center grid-flow-col px-2 justify-self-end">
+		<div class="grid items-center grid-flow-col px-2 justify-self-end gap-x-4">
 			<LightSwitch />
-			<a class="btn" href="/auth/login">Sign In</a>
-			<a class="btn variant-filled-primary" href="/auth/register"> Get Started </a>
+			<a class="btn variant-soft" href="/auth/login">Sign In</a>
+			<a class="btn variant-filled" href="/auth/register"> Get Started </a>
 		</div>
 	</svelte:fragment>
 </AppBar>

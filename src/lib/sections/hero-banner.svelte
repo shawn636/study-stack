@@ -1,5 +1,4 @@
 <script lang="ts">
-	import ButtonLink from '$lib/components/button-link.svelte';
 	import HeroCollage from '$lib/components/hero-collage.svelte';
 	const cta = 'Learn New Skills Online With Top ';
 	const ctaUnderline = 'Educators';
@@ -30,8 +29,6 @@
 					>Find Courses</a
 				>
 				<a href="/auth/login" class="btn btn-lg variant-filled-secondary">Find Courses</a>
-				<!-- <ButtonLink href="/courses" styleOption="outline" width="48">Find Courses</ButtonLink> -->
-				<!-- <ButtonLink href="/auth/register" width="48">Join Now</ButtonLink> -->
 			</div>
 
 			<div
