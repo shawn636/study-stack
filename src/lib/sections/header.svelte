@@ -6,7 +6,6 @@
 	import { headerLinks } from '$lib/header-links';
 	import Fa from 'svelte-fa';
 	import { faBars } from '@fortawesome/free-solid-svg-icons';
-	import { LightSwitch } from '@skeletonlabs/skeleton';
 </script>
 
 <AppBar
@@ -39,7 +38,7 @@
 		{/each}
 	</div>
 	<svelte:fragment slot="trail">
-		<div class="grid items-center grid-flow-col px-2 justify-self-end gap-x-4">
+		<div class="hidden sm:grid items-center grid-flow-col px-2 justify-self-end gap-x-4">
 			<a class="btn variant-soft" href="/auth/login">Sign In</a>
 			<a class="btn variant-filled" href="/auth/register"> Get Started </a>
 		</div>
