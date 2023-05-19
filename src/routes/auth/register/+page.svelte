@@ -65,10 +65,11 @@
 	};
 </script>
 
-<form>
+<form class="h-full grid items-center w-full" id="register-form">
 	{#if currFormIndex == 0}
 		<div
-			class="top-1/2"
+			class="grid justify-items-center items-center h-full row-start-1 row-end-2 col-start-1 col-end-2"
+			id="main"
 			in:fly={{
 				x: transitionTo === 'right' ? '100%' : '-100%',
 				duration: transitionDuration,
@@ -81,7 +82,7 @@
 				easing: cubicInOut
 			}}
 		>
-			<div class="grid grid-items-center items-center">
+			<div class="grid items-center">
 				<a
 					href="/"
 					class="btn btn-iconn text-surface-700 dark:text-surface-300 justify-start flex items-center text-center gap-1 p-1"
@@ -89,7 +90,7 @@
 					<Fa icon={faChevronLeft} />
 					Home
 				</a>
-				<div class="card shadow-lg p-10">
+				<div class="card shadow-lg p-10 w-[360px] grid justify-items-center">
 					<div class="text-center w-64">
 						<!-- Header -->
 						<div class="py-5">
@@ -151,7 +152,7 @@
 		</div>
 	{:else}
 		<div
-			class="top-1/2"
+			class="grid justify-items-center items-center h-full row-start-1 row-end-2 col-start-1 col-end-2"
 			in:fly={{
 				x: transitionTo === 'right' ? '100%' : '-100%',
 				duration: transitionDuration,
@@ -172,7 +173,13 @@
 					<Fa icon={faChevronLeft} />
 					Home
 				</a>
-				<div class="card shadow-lg p-10">
+				<div class="card shadow-lg p-10 w-[360px] grid justify-items-center">
+					<!-- Header -->
+					<div class="py-5">
+						<h1 class="h1 font-semibold">Welcome</h1>
+						<p class="text-xs text-slate-500">Please enter your details below</p>
+					</div>
+					<!-- Form 2 -->
 					<div class="grid grid-flow-row text-md gap-y-4">
 						<input
 							type="password"
