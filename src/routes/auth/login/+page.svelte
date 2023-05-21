@@ -1,54 +1,163 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
 	import { faGoogle, faFacebook, faApple } from '@fortawesome/free-brands-svg-icons';
+	import { faChevronLeft, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+	import { object, string, ref } from 'yup';
+	import { fly, slide } from 'svelte/transition';
+	import { cubicInOut } from 'svelte/easing';
+	import { createForm } from 'svelte-forms-lib';
 
-	let email = '';
-	let password = '';
+	// Form Validation
+	const { form, errors, isValid, touched, handleChange, handleSubmit } = createForm({
+		initialValues: {
+			email: '',
+			password: ''
+		},
+		validationSchema: object().shape({
+			email: string().required('Please enter your email address.'),
+			password: string().required('Please enter your password.')
+		}),
+		onSubmit: (values) => {
+			alert(JSON.stringify(values));
+		}
+	});
+
+	// Form Transitions
+	const transitionDuration = 300;
 </script>
 
-<div class="card shadow-lg p-10">
-	<div class="text-center w-64">
-		<div class="py-5">
-			<h1 class="h1 font-semibold">Welcome back</h1>
-			<p class="text-xs text-slate-500">Please enter your details below</p>
-		</div>
-		<form>
-			<div class="grid grid-flow-row text-md gap-y-4">
-				<input type="email" placeholder="Email" bind:value={email} class="input" />
-				<input type="password" placeholder="Password" bind:value={password} class="input" />
-				<button class="btn variant-filled-secondary font-medium">Sign in</button>
-			</div>
-
-			<div class="grid grid-cols-[1fr_auto_1fr] items-center py-5">
-				<hr />
-				<p class="text-sm px-2 font-semibold uppercase text-surface-500 dark:text-surface-400">
-					or
-				</p>
-				<hr />
-			</div>
-
-			<div class="grid grid-flow-row gap-y-3">
-				<button type="button" class="btn variant-soft">
-					<Fa icon={faGoogle} size="20" />
-					<span>Sign in with Google</span>
-				</button>
-
-				<button type="button" class="btn variant-soft">
-					<Fa icon={faFacebook} size="20" />
-					<span>Sign in with Facebook</span>
-				</button>
-
-				<button type="button" class="btn variant-soft">
-					<Fa icon={faApple} size="20" />
-					<span>Sign in with Apple</span>
-				</button>
-			</div>
-		</form>
-		<p class="text-sm py-2 text-slate-500">
-			Don't have an account? <a
-				class="text-primary-500 font-semibold hover:text-primary-600"
-				href="/auth/register">Sign up</a
+<form class="h-full grid items-center w-full" id="register-form" on:submit={handleSubmit}>
+	<div
+		class="grid justify-items-center items-center h-full row-start-1 row-end-2 col-start-1 col-end-2"
+		id="main"
+		in:fly={{
+			x: '-100%',
+			duration: transitionDuration,
+			delay: transitionDuration,
+			easing: cubicInOut
+		}}
+		out:fly={{
+			x: '100%',
+			duration: transitionDuration,
+			easing: cubicInOut
+		}}
+	>
+		<div class="grid items-center">
+			<a
+				href="/"
+				class="btn btn-iconn text-surface-700 dark:text-surface-300 justify-start flex items-center text-center gap-1 p-1"
 			>
-		</p>
+				<Fa icon={faChevronLeft} />
+				Home
+			</a>
+			<div class="card shadow-lg p-10 grid justify-items-center max-w-[400px]">
+				<div class="text-center">
+					<!-- Header -->
+					<div class="py-5">
+						<h1 class="h1 font-semibold">Welcome Back to Equipped</h1>
+						<p class="text-xs text-slate-500">Please enter your details below</p>
+					</div>
+
+					<div class="grid grid-flow-row text-md gap-y-4">
+						<div>
+							<input
+								type="text"
+								name="email"
+								placeholder="Email"
+								class="input
+										{$errors.email ? 'border-error-500' : ''}
+										{!$errors.email && $touched.email ? 'border-success-700' : ''}"
+								on:change={handleChange}
+								on:blur={handleChange}
+								bind:value={$form.email}
+							/>
+							{#if $errors.email}
+								<div
+									class="flex items-center gap-x-1"
+									in:slide|local={{
+										duration: 300,
+										easing: cubicInOut
+									}}
+									out:slide|local={{
+										duration: 300,
+										easing: cubicInOut
+									}}
+								>
+									<Fa icon={faCircleExclamation} size="16" class="text-error-500" />
+									<small class="text-error-500">{$errors.email}</small>
+								</div>
+							{/if}
+						</div>
+
+						<input
+							type="password"
+							name="password"
+							placeholder="Password"
+							on:change={handleChange}
+							on:blur={handleChange}
+							bind:value={$form.password}
+							class="input
+										{$errors.password ? 'border-error-500' : ''}
+										{!$errors.password && $touched.password ? 'border-success-700' : ''}"
+						/>
+						{#if $errors.password}
+							<div
+								class="flex items-center gap-x-1"
+								in:slide|local={{
+									duration: 300,
+									easing: cubicInOut
+								}}
+								out:slide|local={{
+									duration: 300,
+									easing: cubicInOut
+								}}
+							>
+								<Fa icon={faCircleExclamation} size="16" class="text-error-500" />
+								<small class="text-error-500">{$errors.password}</small>
+							</div>
+						{/if}
+						<button
+							type="submit"
+							aria-label="continue"
+							class="btn variant-filled-secondary font-medium">Continue</button
+						>
+					</div>
+
+					<!-- Divider -->
+
+					<div class="grid grid-cols-[1fr_auto_1fr] items-center py-5">
+						<hr />
+						<p class="text-sm px-2 font-semibold uppercase text-surface-500 dark:text-surface-400">
+							or
+						</p>
+						<hr />
+					</div>
+
+					<!-- OAuth Buttons -->
+					<div class="grid grid-flow-row gap-y-3">
+						<button type="button" class="btn variant-soft">
+							<Fa icon={faGoogle} size="20" />
+							<span>Sign in with Google</span>
+						</button>
+
+						<button type="button" class="btn variant-soft">
+							<Fa icon={faFacebook} size="20" />
+							<span>Sign in with Facebook</span>
+						</button>
+
+						<button type="button" class="btn variant-soft">
+							<Fa icon={faApple} size="20" />
+							<span>Sign in with Apple</span>
+						</button>
+					</div>
+					<p class="text-sm py-2 text-slate-500">
+						Don't have an account? <a
+							class="text-primary-500 font-semibold hover:text-primary-600"
+							href="/auth/register">Sign up</a
+						>
+					</p>
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
+</form>

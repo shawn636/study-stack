@@ -3,6 +3,8 @@
 	import { cubicInOut } from 'svelte/easing';
 	import Fa from 'svelte-fa';
 	import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+	import { createForm } from 'svelte-forms-lib';
+	import { object, string, ref } from 'yup';
 
 	let cards = [1, 2];
 
@@ -10,10 +12,35 @@
 	let prevCardIndex = 0;
 	$: transitionTo = currCardIndex > prevCardIndex ? 'left' : 'right';
 
-	let name = '';
-	let email = '';
-	let password1 = '';
-	let password2 = '';
+	// let name = '';
+	// let email = '';
+	// let password1 = '';
+	// let password2 = '';
+
+	const { form, errors, touched, handleChange, handleSubmit } = createForm({
+		initialValues: {
+			name: '',
+			email: '',
+			password1: '',
+			password2: ''
+		},
+		validationSchema: object().shape({
+			name: string().required(),
+			email: string().email().required(),
+			password1: string()
+				.min(8)
+				.matches(/[a-z]/, 'Password must contain a lowercase letter')
+				.matches(/[A-Z]/, 'Password must contain an uppercase letter')
+				.matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain a special symbol')
+				.required(),
+			password2: string()
+				.oneOf([ref('password1')], 'Passwords must match')
+				.required()
+		}),
+		onSubmit: (values) => {
+			alert(JSON.stringify(values));
+		}
+	});
 
 	const nextCard = () => {
 		if (currCardIndex < cards.length - 1) {
@@ -26,11 +53,6 @@
 			prevCardIndex = currCardIndex;
 			currCardIndex--;
 		}
-	};
-
-	$: isDirty = (form: 1 | 2) => {
-		if (form === 1) return name !== '' && email !== '';
-		return name !== '' && email !== '' && password1 !== '' && password2 !== '';
 	};
 </script>
 
@@ -70,7 +92,7 @@
 
 			<!-- First Form -->
 
-			<form>
+			<form on:submit={handleSubmit}>
 				{#if currCardIndex == 0}
 					<div
 						class="card p-10 space-y-4"
@@ -87,8 +109,30 @@
 						}}
 					>
 						<h3 class="h3">Form 1</h3>
-						<input type="text" class="input" placeholder="Name" bind:value={name} />
-						<input type="email" class="input" placeholder="Email" bind:value={email} />
+						<input
+							type="text"
+							class="input"
+							name="name"
+							placeholder="Name"
+							on:change={handleChange}
+							on:blur={handleChange}
+							bind:value={$form.name}
+						/>
+						{#if $errors.name}
+							<small>{$errors.name}</small>
+						{/if}
+						<input
+							type="email"
+							class="input"
+							name="email"
+							placeholder="Email"
+							on:change={handleChange}
+							on:blur={handleChange}
+							bind:value={$form.email}
+						/>
+						{#if $errors.email}
+							<small>{$errors.email}</small>
+						{/if}
 						<button
 							type="button"
 							on:click={previousCard}
@@ -99,9 +143,10 @@
 						</button>
 						<button
 							type="button"
-							on:click={nextCard}
+							on:click={() => {
+								if ($touched.name && $touched.email && !$errors.name && !$errors.email) nextCard();
+							}}
 							class="btn variant-filled-primary"
-							disabled={!isDirty(1)}
 						>
 							Continue
 						</button>
@@ -126,15 +171,27 @@
 						<input
 							type="password"
 							class="input"
+							name="password1"
 							placeholder="Enter a password"
-							bind:value={password1}
+							on:change={handleChange}
+							on:blur={handleChange}
+							bind:value={$form.password1}
 						/>
+						{#if $errors.password1}
+							<small>{$errors.password1}</small>
+						{/if}
 						<input
 							type="password"
 							class="input"
+							name="password2"
 							placeholder="Confirm your password"
-							bind:value={password2}
+							on:change={handleChange}
+							on:blur={handleChange}
+							bind:value={$form.password2}
 						/>
+						{#if $errors.password2}
+							<small>{$errors.password2}</small>
+						{/if}
 						<button type="button" on:click={previousCard} class="btn variant-filled-surface">
 							Go Back
 						</button>
