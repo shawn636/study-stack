@@ -22,6 +22,9 @@ devDependencies:
   '@fortawesome/free-solid-svg-icons':
     specifier: ^6.4.0
     version: 6.4.0
+  '@lucia-auth/adapter-mysql':
+    specifier: ^1.1.1
+    version: 1.1.1(@planetscale/database@1.7.0)(lucia-auth@1.6.0)
   '@planetscale/database':
     specifier: ^1.7.0
     version: 1.7.0
@@ -100,6 +103,9 @@ devDependencies:
   lint-staged:
     specifier: ^13.2.2
     version: 13.2.2
+  lucia-auth:
+    specifier: ^1.6.0
+    version: 1.6.0
   postcss:
     specifier: ^8.4.23
     version: 8.4.23
@@ -2420,6 +2426,22 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
+  /@lucia-auth/adapter-mysql@1.1.1(@planetscale/database@1.7.0)(lucia-auth@1.6.0):
+    resolution: {integrity: sha512-br+/OBDNJ+eRc6RrZnnC20ef+2VEMrXFxNYvsbryPw64ito7vg40STblpENdjJF0o4R10mjWTO43wQ+56jyXLA==}
+    peerDependencies:
+      '@planetscale/database': ^1.0.0
+      lucia-auth: ^1.4.0
+      mysql2: ^3.0.0
+    peerDependenciesMeta:
+      '@planetscale/database':
+        optional: true
+      mysql2:
+        optional: true
+    dependencies:
+      '@planetscale/database': 1.7.0
+      lucia-auth: 1.6.0
+    dev: true
+
   /@mapbox/node-pre-gyp@1.0.10:
     resolution: {integrity: sha512-4ySo4CjzStuprMwk35H5pPbkymjv1SF3jGLj6rAHp/xT/RF7TL7bd9CTm1xDY49K2qF7jmR/g7k+SkLETP6opA==}
     hasBin: true
@@ -3897,7 +3919,7 @@ packages:
     dependencies:
       caniuse-lite: 1.0.30001488
       electron-to-chromium: 1.4.402
-      node-releases: 2.0.10
+      node-releases: 2.0.11
       update-browserslist-db: 1.0.11(browserslist@4.21.5)
     dev: true
 
@@ -6952,6 +6974,10 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
+  /lucia-auth@1.6.0:
+    resolution: {integrity: sha512-LDk191i/b8ARy+m24CJEd4DbAPeXDOIMVEzSNq/beHSKHqyAAn96E/kcKnDW/8ts4pDQtVT2UTjpJgZRIeNIpw==}
+    dev: true
+
   /lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
@@ -7703,8 +7729,8 @@ packages:
     hasBin: true
     dev: true
 
-  /node-releases@2.0.10:
-    resolution: {integrity: sha512-5GFldHPXVG/YZmFzJvKK2zDSzPKhEp0+ZR5SVaoSag9fsL5YgHbUHDfnG5494ISANDcK4KwPXAx2xqVEydmd7w==}
+  /node-releases@2.0.11:
+    resolution: {integrity: sha512-+M0PwXeU80kRohZ3aT4J/OnR+l9/KD2nVLNNoRgFtnf+umQVFdGBAO2N8+nCnEi0xlh/Wk3zOGC+vNNx+uM79Q==}
     dev: true
 
   /nopt@5.0.0:

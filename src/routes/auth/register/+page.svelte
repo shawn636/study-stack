@@ -11,6 +11,9 @@
 	import { fly, slide } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
 	import { createForm } from 'svelte-forms-lib';
+	import { ProgressRadial } from '@skeletonlabs/skeleton';
+	import { redirect } from '@sveltejs/kit';
+	import { goto } from '$app/navigation';
 
 	// Controls
 	let showPassword1 = false;
@@ -51,17 +54,58 @@
 				.oneOf([ref('password1')], 'Passwords should match.')
 				.required('Please confirm your password.')
 		}),
-		onSubmit: (values) => {
-			alert(JSON.stringify(values));
+		onSubmit: async (values) => {
+			isSubmitting = true;
+			const res = await submitForm(values);
+			isSubmitting = false;
+
+			const responseText = await res?.text();
+			const succeeded = res?.ok;
+
+			if (succeeded) {
+				submissionError = 'Nailed it!';
+				goto('/');
+			} else {
+				submissionError = responseText ?? 'An error occurred. Please try again.';
+			}
 		}
 	});
+
+	let isSubmitting = false;
+	let submissionError: string | null = null;
+
+	const submitForm = async (
+		values: {
+			name: string;
+			email: string;
+			password1: string;
+			password2: string;
+		} | null
+	) => {
+		if (values) {
+			const formData = new FormData();
+			formData.append('name', values.name);
+			formData.append('email', values.email);
+			formData.append('password1', values.password1);
+			formData.append('password2', values.password2);
+
+			const res = await fetch('/auth/register', {
+				method: 'POST',
+				body: formData
+			});
+
+			return res;
+		}
+
+		return null;
+	};
 
 	// Form Transitions
 	const transitionDuration = 300;
 	const formCount = 2;
 
 	let currFormIndex = 0;
-	let prevFormIndex = 0; // to determine transition animation dir\
+	let prevFormIndex = 0; // to determine transition animation dir
 
 	$: transitionTo = currFormIndex > prevFormIndex ? 'right' : 'left';
 
@@ -86,6 +130,10 @@
 		}
 	};
 </script>
+
+{#if submissionError}
+	<p>{submissionError}</p>
+{/if}
 
 <form class="h-full grid items-center w-full" id="register-form" on:submit={handleSubmit}>
 	{#if currFormIndex == 0}
@@ -367,9 +415,15 @@
 						{/if}
 						<button
 							type="submit"
-							class="btn variant-filled-secondary font-medium"
-							disabled={!$isValid}>Submit</button
+							class="btn variant-filled-secondary font-medium flex gap-2"
+							disabled={!$isValid || isSubmitting}
 						>
+							{#if isSubmitting}
+								<ProgressRadial width="w-6" stroke={100} />
+							{:else}
+								Submit
+							{/if}
+						</button>
 						<button type="button" on:click={prevForm} class="btn variant-filled-surface font-medium"
 							>Go Back</button
 						>
