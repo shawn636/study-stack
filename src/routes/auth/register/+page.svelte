@@ -5,14 +5,15 @@
 		faChevronLeft,
 		faCircleExclamation,
 		faEye,
-		faEyeSlash
+		faEyeSlash,
+		faExclamationTriangle,
+		faCircleCheck
 	} from '@fortawesome/free-solid-svg-icons';
 	import { object, string, ref } from 'yup';
 	import { fly, slide } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
 	import { createForm } from 'svelte-forms-lib';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
-	import { redirect } from '@sveltejs/kit';
 	import { goto } from '$app/navigation';
 
 	// Controls
@@ -59,18 +60,30 @@
 			const res = await submitForm(values);
 			isSubmitting = false;
 
-			const responseText = await res?.text();
-			const succeeded = res?.ok;
+			if (res) {
+				const data = await res.json();
 
-			if (succeeded) {
-				submissionError = 'Nailed it!';
-				goto('/');
+				if (res?.status == 200) {
+					showSuccess = true;
+					await new Promise<void>((resolve) => setTimeout(resolve, 600));
+					goto('/');
+				} else {
+					console.log(data.error.message);
+					if (data.error.message.includes('already in use')) {
+						prevFormIndex = currFormIndex;
+						currFormIndex = 0;
+						$errors.email = 'This email is already in use.';
+					} else {
+						submissionError = 'An unknown error occurred. Please try again.';
+					}
+				}
 			} else {
-				submissionError = responseText ?? 'An error occurred. Please try again.';
+				submissionError = 'An error occurred. Please try again.';
 			}
 		}
 	});
 
+	let showSuccess = false;
 	let isSubmitting = false;
 	let submissionError: string | null = null;
 
@@ -130,10 +143,6 @@
 		}
 	};
 </script>
-
-{#if submissionError}
-	<p>{submissionError}</p>
-{/if}
 
 <form class="h-full grid items-center w-full" id="register-form" on:submit={handleSubmit}>
 	{#if currFormIndex == 0}
@@ -429,6 +438,42 @@
 						>
 					</div>
 				</div>
+				{#if submissionError}
+					<div
+						class="alert variant-ghost-error mt-4"
+						in:slide|local={{
+							duration: 300,
+							easing: cubicInOut
+						}}
+						out:slide|local={{
+							duration: 300,
+							easing: cubicInOut
+						}}
+					>
+						<Fa icon={faExclamationTriangle} size="16" />
+						<div class="alert-message">
+							<p>{submissionError}</p>
+						</div>
+					</div>
+				{/if}
+				{#if showSuccess}
+					<div
+						class="alert variant-ghost-success mt-4"
+						in:slide|local={{
+							duration: 300,
+							easing: cubicInOut
+						}}
+						out:slide|local={{
+							duration: 300,
+							easing: cubicInOut
+						}}
+					>
+						<Fa icon={faCircleCheck} />
+						<div class="alert-message">
+							<p>Account created successfully</p>
+						</div>
+					</div>
+				{/if}
 			</div>
 		</div>
 	{/if}

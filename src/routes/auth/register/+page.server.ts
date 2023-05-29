@@ -2,7 +2,8 @@ import { auth } from '$lib/server/lucia';
 import type { Actions } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { fail } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+import { LuciaError } from 'lucia-auth';
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
@@ -41,12 +42,21 @@ export const actions: Actions = {
 				});
 				const session = await auth.createSession(user.userId);
 				locals.auth.setSession(session);
-			} catch (error) {
-				console.log(error);
-				return fail(400);
+			} catch (e: unknown) {
+				handleError(e);
 			}
 		}
 	}
+};
+
+const handleError = (e: unknown) => {
+	if (e instanceof LuciaError && e.message === 'AUTH_DUPLICATE_KEY_ID') {
+		throw error(400, 'The email provided is already in use.');
+	} else if (e instanceof Error && e.message.toLowerCase().includes('duplicate entry')) {
+		throw error(400, 'The email provided is already in use.');
+	}
+	console.log(e);
+	throw error(500, 'An unknown error ocurred, please try again later.');
 };
 
 export const load: PageServerLoad = async ({ locals }) => {
