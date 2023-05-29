@@ -3,12 +3,16 @@
 	import Header from '$lib/sections/header.svelte';
 	import Footer from '$lib/sections/footer.svelte';
 	import { AppShell } from '@skeletonlabs/skeleton';
+	import type { LayoutServerData } from './$types';
+
+	export let data: LayoutServerData;
+	$: username = JSON.stringify(data.user?.username, null);
 </script>
 
-<Sidebar />
+<Sidebar {username} />
 <AppShell slotPageFooter="bg-surface-100 dark:bg-surface-700">
 	<svelte:fragment slot="header">
-		<Header />
+		<Header {username} />
 	</svelte:fragment>
 
 	<slot />

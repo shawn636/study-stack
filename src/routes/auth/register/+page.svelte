@@ -57,6 +57,7 @@
 		}),
 		onSubmit: async (values) => {
 			isSubmitting = true;
+			submissionError = null;
 			const res = await submitForm(values);
 			isSubmitting = false;
 

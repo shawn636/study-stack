@@ -9,36 +9,18 @@ export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const form = await request.formData();
 
-		const name = form.get('name');
 		const email = form.get('email');
-		const password1 = form.get('password1');
-		const password2 = form.get('password2');
+		const password = form.get('password');
 
 		// Validate inputs on server
 
-		if (
-			typeof name !== 'string' ||
-			typeof email !== 'string' ||
-			typeof password1 !== 'string' ||
-			typeof password2 !== 'string'
-		) {
+		if (typeof email !== 'string' || typeof password !== 'string') {
 			return fail(400);
 		} else {
 			try {
-				const password = password1;
 				const username = email;
-
-				const user = await auth.createUser({
-					primaryKey: {
-						providerId: 'username',
-						providerUserId: username,
-						password
-					},
-					attributes: {
-						username
-					}
-				});
-				const session = await auth.createSession(user.userId);
+				const key = await auth.useKey('username', username, password);
+				const session = await auth.createSession(key.userId);
 				locals.auth.setSession(session);
 			} catch (e: unknown) {
 				handleError(e);
@@ -48,11 +30,13 @@ export const actions: Actions = {
 };
 
 const handleError = (e: unknown) => {
-	if (e instanceof LuciaError && e.message === 'AUTH_DUPLICATE_KEY_ID') {
-		throw error(400, 'The email provided is already in use.');
-	} else if (e instanceof Error && e.message.toLowerCase().includes('duplicate entry')) {
-		throw error(400, 'The email provided is already in use.');
+	if (e instanceof LuciaError) {
+		if (e.message === 'AUTH_INVALID_PASSWORD' || e.message === 'AUTH_INVALID_KEY_ID') {
+			console.log(e.message);
+			throw error(400, 'The username or password entered is incorrect.');
+		}
 	}
+
 	console.log(e);
 	throw error(500, 'An unknown error ocurred, please try again later.');
 };

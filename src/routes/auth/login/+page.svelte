@@ -1,11 +1,18 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
 	import { faGoogle, faFacebook, faApple } from '@fortawesome/free-brands-svg-icons';
-	import { faChevronLeft, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faChevronLeft,
+		faCircleExclamation,
+		faExclamationTriangle,
+		faCircleCheck
+	} from '@fortawesome/free-solid-svg-icons';
 	import { object, string, ref } from 'yup';
 	import { fly, slide } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
 	import { createForm } from 'svelte-forms-lib';
+	import { ProgressRadial } from '@skeletonlabs/skeleton';
+	import { goto } from '$app/navigation';
 
 	// Form Validation
 	const { form, errors, isValid, touched, handleChange, handleSubmit } = createForm({
@@ -14,13 +21,63 @@
 			password: ''
 		},
 		validationSchema: object().shape({
-			email: string().required('Please enter your email address.'),
+			email: string()
+				.email('Oops! The email you entered is invalid.')
+				.matches(
+					/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+					'Oops! The email you entered is invalid.'
+				)
+				.required('Please enter your email address.'),
 			password: string().required('Please enter your password.')
 		}),
-		onSubmit: (values) => {
-			alert(JSON.stringify(values));
+		onSubmit: async (values) => {
+			isSubmitting = true;
+			submissionError = null;
+			const res = await submitForm(values);
+			isSubmitting = false;
+
+			if (res) {
+				const data = await res.json();
+
+				if (res?.status == 200) {
+					showSuccess = true;
+					await new Promise<void>((resolve) => setTimeout(resolve, 600));
+					goto('/');
+				} else {
+					submissionError = data.error.message;
+					console.log(data.error.message);
+				}
+			} else {
+				submissionError = 'An error occurred. Please try again.';
+			}
 		}
 	});
+
+	let showSuccess = false;
+	let isSubmitting = false;
+	let submissionError: string | null = null;
+
+	const submitForm = async (
+		values: {
+			email: string;
+			password: string;
+		} | null
+	) => {
+		if (values) {
+			const formData = new FormData();
+			formData.append('email', values.email);
+			formData.append('password', values.password);
+
+			const res = await fetch('/auth/login', {
+				method: 'POST',
+				body: formData
+			});
+
+			return res;
+		}
+
+		return null;
+	};
 
 	// Form Transitions
 	const transitionDuration = 300;
@@ -31,13 +88,13 @@
 		class="grid justify-items-center items-center h-full row-start-1 row-end-2 col-start-1 col-end-2"
 		id="main"
 		in:fly={{
-			x: '-100%',
+			x: '100%',
 			duration: transitionDuration,
 			delay: transitionDuration,
 			easing: cubicInOut
 		}}
 		out:fly={{
-			x: '100%',
+			x: '-100%',
 			duration: transitionDuration,
 			easing: cubicInOut
 		}}
@@ -50,18 +107,18 @@
 				<Fa icon={faChevronLeft} />
 				Home
 			</a>
-			<div class="card shadow-lg p-10 grid justify-items-center max-w-[400px]">
+			<div class="card shadow-lg p-10 w-full grid justify-items-center">
 				<div class="text-center">
 					<!-- Header -->
 					<div class="py-5">
-						<h1 class="h1 font-semibold">Welcome Back to Equipped</h1>
+						<h1 class="h1 font-semibold">Welcome to Equipped</h1>
 						<p class="text-xs text-slate-500">Please enter your details below</p>
 					</div>
 
 					<div class="grid grid-flow-row text-md gap-y-4">
 						<div>
 							<input
-								type="text"
+								type="email"
 								name="email"
 								placeholder="Email"
 								class="input
@@ -119,8 +176,50 @@
 						<button
 							type="submit"
 							aria-label="continue"
-							class="btn variant-filled-secondary font-medium">Continue</button
+							class="btn variant-filled-secondary font-medium"
 						>
+							{#if isSubmitting}
+								<ProgressRadial width="w-6" stroke={100} />
+							{:else}
+								Submit
+							{/if}
+						</button>
+						{#if submissionError}
+							<div
+								class="alert variant-ghost-error mt-4"
+								in:slide|local={{
+									duration: 300,
+									easing: cubicInOut
+								}}
+								out:slide|local={{
+									duration: 300,
+									easing: cubicInOut
+								}}
+							>
+								<Fa icon={faExclamationTriangle} size="16" />
+								<div class="alert-message">
+									<p>{submissionError}</p>
+								</div>
+							</div>
+						{/if}
+						{#if showSuccess}
+							<div
+								class="alert variant-ghost-success mt-4"
+								in:slide|local={{
+									duration: 300,
+									easing: cubicInOut
+								}}
+								out:slide|local={{
+									duration: 300,
+									easing: cubicInOut
+								}}
+							>
+								<Fa icon={faCircleCheck} />
+								<div class="alert-message">
+									<p>Account created successfully</p>
+								</div>
+							</div>
+						{/if}
 					</div>
 
 					<!-- Divider -->
@@ -137,17 +236,17 @@
 					<div class="grid grid-flow-row gap-y-3">
 						<button type="button" class="btn variant-soft">
 							<Fa icon={faGoogle} size="20" />
-							<span>Sign in with Google</span>
+							<span>Sign up with Google</span>
 						</button>
 
 						<button type="button" class="btn variant-soft">
 							<Fa icon={faFacebook} size="20" />
-							<span>Sign in with Facebook</span>
+							<span>Sign up with Facebook</span>
 						</button>
 
 						<button type="button" class="btn variant-soft">
 							<Fa icon={faApple} size="20" />
-							<span>Sign in with Apple</span>
+							<span>Sign up with Apple</span>
 						</button>
 					</div>
 					<p class="text-sm py-2 text-slate-500">

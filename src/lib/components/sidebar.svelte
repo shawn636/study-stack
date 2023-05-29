@@ -6,6 +6,7 @@
 
 	$: classesActive = (href: string) =>
 		href === $page.url.pathname ? '!bg-primary-500 !text-white' : '';
+	export let username: string | null;
 </script>
 
 <Drawer width="w-64">
@@ -24,8 +25,12 @@
 					{/each}
 				</ul>
 			</nav>
-			<a href="/auth/login" class="btn variant-soft w-full"> Sign In </a>
-			<a href="/auth/register" class="btn variant-filled w-full"> Register </a>
+			{#if username}
+				<p>Welcome {username}</p>
+			{:else}
+				<a href="/auth/login" class="btn variant-soft w-full"> Sign In </a>
+				<a href="/auth/register" class="btn variant-filled w-full"> Register </a>
+			{/if}
 		</div>
 		<LightSwitch rounded="rounded-full justify-self-end self-end" />
 	</div>
