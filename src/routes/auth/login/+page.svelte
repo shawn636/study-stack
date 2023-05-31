@@ -15,7 +15,7 @@
 	import { goto } from '$app/navigation';
 
 	// Form Validation
-	const { form, errors, isValid, touched, handleChange, handleSubmit } = createForm({
+	const { form, errors, validateField, touched, handleChange, handleSubmit } = createForm({
 		initialValues: {
 			email: '',
 			password: ''
@@ -31,6 +31,9 @@
 			password: string().required('Please enter your password.')
 		}),
 		onSubmit: async (values) => {
+			validateField('email');
+			validateField('password');
+
 			isSubmitting = true;
 			submissionError = null;
 			const res = await submitForm(values);
@@ -107,12 +110,12 @@
 				<Fa icon={faChevronLeft} />
 				Home
 			</a>
-			<div class="card shadow-lg p-10 w-full grid justify-items-center">
+			<div class="card shadow-lg p-10 w-[360px] grid justify-items-center">
 				<div class="text-center">
 					<!-- Header -->
 					<div class="py-5">
-						<h1 class="h1 font-semibold">Welcome to Equipped</h1>
-						<p class="text-xs text-slate-500">Please enter your details below</p>
+						<h2 class="h2 font-semibold">Welcome to Equipped</h2>
+						<p class="text-xs my-2 text-slate-500">Please enter your details below</p>
 					</div>
 
 					<div class="grid grid-flow-row text-md gap-y-4">
@@ -216,7 +219,7 @@
 							>
 								<Fa icon={faCircleCheck} />
 								<div class="alert-message">
-									<p>Account created successfully</p>
+									<p>Login Successful</p>
 								</div>
 							</div>
 						{/if}

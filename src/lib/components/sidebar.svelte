@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { Drawer, drawerStore } from '@skeletonlabs/skeleton';
 	import { page } from '$app/stores';
-	import { headerLinks } from '$lib/header-links';
+	import { getHeaderLinks } from '$lib/header-links';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 
 	$: classesActive = (href: string) =>
 		href === $page.url.pathname ? '!bg-primary-500 !text-white' : '';
+
 	export let username: string | null;
+	$: headerLinks = getHeaderLinks(username == null ? false : true);
 </script>
 
 <Drawer width="w-64">

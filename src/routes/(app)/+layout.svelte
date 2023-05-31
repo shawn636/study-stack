@@ -6,13 +6,13 @@
 	import type { LayoutServerData } from './$types';
 
 	export let data: LayoutServerData;
-	$: username = JSON.stringify(data.user?.username, null);
+	$: email = JSON.stringify(data.user?.email, null);
 </script>
 
-<Sidebar {username} />
+<Sidebar username={email} />
 <AppShell slotPageFooter="bg-surface-100 dark:bg-surface-700">
 	<svelte:fragment slot="header">
-		<Header {username} />
+		<Header username={email} />
 	</svelte:fragment>
 
 	<slot />

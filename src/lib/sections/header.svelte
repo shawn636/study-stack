@@ -3,11 +3,12 @@
 	import { page } from '$app/stores';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { drawerStore } from '@skeletonlabs/skeleton';
-	import { headerLinks } from '$lib/header-links';
+	import { getHeaderLinks } from '$lib/header-links';
 	import Fa from 'svelte-fa';
 	import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 	export let username: string | null;
+	$: headerLinks = getHeaderLinks(username == null ? false : true);
 </script>
 
 <AppBar

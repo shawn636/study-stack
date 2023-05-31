@@ -18,8 +18,7 @@ export const actions: Actions = {
 			return fail(400);
 		} else {
 			try {
-				const username = email;
-				const key = await auth.useKey('username', username, password);
+				const key = await auth.useKey('email', email, password);
 				const session = await auth.createSession(key.userId);
 				locals.auth.setSession(session);
 			} catch (e: unknown) {
@@ -31,7 +30,11 @@ export const actions: Actions = {
 
 const handleError = (e: unknown) => {
 	if (e instanceof LuciaError) {
-		if (e.message === 'AUTH_INVALID_PASSWORD' || e.message === 'AUTH_INVALID_KEY_ID') {
+		if (
+			e.message === 'AUTH_INVALID_PASSWORD' ||
+			e.message === 'AUTH_INVALID_KEY_ID' ||
+			e.message === 'AUTH_INVALID_USER_ID'
+		) {
 			console.log(e.message);
 			throw error(400, 'The username or password entered is incorrect.');
 		}

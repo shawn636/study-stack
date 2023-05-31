@@ -12,9 +12,10 @@
 	import { object, string, ref } from 'yup';
 	import { fly, slide } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
-	import { createForm } from 'svelte-forms-lib';
+	import { createForm, key } from 'svelte-forms-lib';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
+	import { registrationForm } from '$lib/schema/registration-form';
 
 	// Controls
 	let showPassword1 = false;
@@ -28,34 +29,30 @@
 		showPassword2 = !showPassword2;
 	};
 
+	const handleKeyDown = (event: KeyboardEvent) => {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+			nextForm();
+		}
+	};
+
 	// Form Validation
-	const { form, errors, isValid, touched, handleChange, handleSubmit } = createForm({
+	const { form, errors, validateField, isValid, touched, handleChange, handleSubmit } = createForm({
 		initialValues: {
 			name: '',
 			email: '',
 			password1: '',
 			password2: ''
 		},
-		validationSchema: object().shape({
-			name: string().required('Please enter your name.'),
-			email: string()
-				.email('Oops! The email you entered is invalid.')
-				.matches(
-					/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-					'Oops! The email you entered is invalid.'
-				)
-				.required('Please enter your email address.'),
-			password1: string()
-				.min(8, 'Password should have at least 8 characters')
-				.matches(/[a-z]/, 'Password should contain a lowercase letter')
-				.matches(/[A-Z]/, 'Password should contain an uppercase letter')
-				.matches(/[0-9]/, 'Password should contain a number')
-				.required('Please enter your password.'),
-			password2: string()
-				.oneOf([ref('password1')], 'Passwords should match.')
-				.required('Please confirm your password.')
-		}),
+		validationSchema: registrationForm,
 		onSubmit: async (values) => {
+			validateField('name');
+			validateField('email');
+			validateField('password1');
+			validateField('password2');
+			if ($errors.name || $errors.email || $errors.password1 || $errors.password2) {
+				return;
+			}
 			isSubmitting = true;
 			submissionError = null;
 			const res = await submitForm(values);
@@ -74,6 +71,8 @@
 						prevFormIndex = currFormIndex;
 						currFormIndex = 0;
 						$errors.email = 'This email is already in use.';
+					} else if (data.error.message.includes('data provided is invalid')) {
+						submissionError = 'It looks like the data you provided is invalid. Please try again.';
 					} else {
 						submissionError = 'An unknown error occurred. Please try again.';
 					}
@@ -124,6 +123,8 @@
 	$: transitionTo = currFormIndex > prevFormIndex ? 'right' : 'left';
 
 	const nextForm = () => {
+		validateField('name');
+		validateField('email');
 		if (!$touched.name) {
 			$errors.name = 'Please enter your name.';
 		}
@@ -170,12 +171,12 @@
 					<Fa icon={faChevronLeft} />
 					Home
 				</a>
-				<div class="card shadow-lg p-10 w-full grid justify-items-center">
+				<div class="card shadow-lg p-10 w-[360px] grid justify-items-center">
 					<div class="text-center">
 						<!-- Header -->
-						<div class="py-5">
-							<h1 class="h1 font-semibold">Welcome to Equipped</h1>
-							<p class="text-xs text-slate-500">Please enter your details below</p>
+						<div class="pb-5">
+							<h2 class="h2 font-semibold">Welcome to Equipped</h2>
+							<p class="text-xs mt-4 text-slate-500">Please enter your details below</p>
 						</div>
 
 						<div class="grid grid-flow-row text-md gap-y-4">
@@ -190,6 +191,7 @@
 									on:change={handleChange}
 									on:blur={handleChange}
 									bind:value={$form.name}
+									on:keydown={handleKeyDown}
 								/>
 								{#if $errors.name}
 									<div
@@ -216,6 +218,7 @@
 								on:change={handleChange}
 								on:blur={handleChange}
 								bind:value={$form.email}
+								on:keydown={handleKeyDown}
 								class="input
 										{$errors.email ? 'border-error-500' : ''}
 										{!$errors.email && $touched.name ? 'border-success-700' : ''}"
@@ -309,7 +312,7 @@
 				<div class="card shadow-lg p-10 w-[360px] grid justify-items-center">
 					<!-- Header -->
 					<div class="py-5">
-						<h1 class="h1 font-semibold">Select a password</h1>
+						<h2 class="h2 font-semibold text-center">Choose a password</h2>
 					</div>
 					<!-- Form 2 -->
 					<div class="grid w-full grid-flow-row text-md gap-y-4 justify-items-stretch">
@@ -423,11 +426,7 @@
 								<small class="text-error-500">{$errors.password2}</small>
 							</div>
 						{/if}
-						<button
-							type="submit"
-							class="btn variant-filled-secondary font-medium flex gap-2"
-							disabled={!$isValid || isSubmitting}
-						>
+						<button type="submit" class="btn variant-filled-secondary font-medium flex gap-2">
 							{#if isSubmitting}
 								<ProgressRadial width="w-6" stroke={100} />
 							{:else}
@@ -441,7 +440,7 @@
 				</div>
 				{#if submissionError}
 					<div
-						class="alert variant-ghost-error mt-4"
+						class="alert variant-ghost-error mt-4 items-center w-[360px]"
 						in:slide|local={{
 							duration: 300,
 							easing: cubicInOut
@@ -451,15 +450,23 @@
 							easing: cubicInOut
 						}}
 					>
-						<Fa icon={faExclamationTriangle} size="16" />
-						<div class="alert-message">
-							<p>{submissionError}</p>
+						<div class="grid grid-cols-[auto_1fr] gap-x-4 w-ful h-full items-center">
+							<Fa
+								icon={faExclamationTriangle}
+								size="16"
+								class="row-start-1 row-end-2 col-start-1 col-end-2"
+							/>
+							<div
+								class="alert-message grid items-center h-fullrow-start-1 row-end-2 col-start-2 col-end-3"
+							>
+								<p>{submissionError}</p>
+							</div>
 						</div>
 					</div>
 				{/if}
 				{#if showSuccess}
 					<div
-						class="alert variant-ghost-success mt-4"
+						class="alert variant-ghost-success mt-4 w-[360px]"
 						in:slide|local={{
 							duration: 300,
 							easing: cubicInOut
@@ -469,9 +476,11 @@
 							easing: cubicInOut
 						}}
 					>
-						<Fa icon={faCircleCheck} />
-						<div class="alert-message">
-							<p>Account created successfully</p>
+						<div class="grid grid-cols-[auto_1fr] gap-x-4 w-ful h-full items-center">
+							<Fa icon={faCircleCheck} />
+							<div class="alert-message">
+								<p>Account created successfully</p>
+							</div>
 						</div>
 					</div>
 				{/if}

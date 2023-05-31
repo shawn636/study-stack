@@ -69,18 +69,6 @@ model ContentType {
 
 // USER RELATED MODELS
 
-model User {
-  id             Int             @id @default(autoincrement())
-  fullName       String
-  email          String          @unique
-  Organization   Organization?   @relation(fields: [organizationId], references: [id])
-  organizationId Int?
-  courseContent  CourseContent[]
-  courses        Course[]
-
-  @@index([organizationId])
-}
-
 model Organization {
   id          Int     @id @default(autoincrement())
   name        String
@@ -88,12 +76,30 @@ model Organization {
   users       User[]
 }
 
+model User {
+  id             Int             @id @default(autoincrement())
+  auth_user_id   String          @unique
+  name           String
+  email          String          @unique
+  Organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  organizationId Int?
+  courseContent  CourseContent[]
+  courses        Course[]
+  AuthUser       AuthUser?
+
+  @@index([organizationId])
+  @@index([auth_user_id])
+}
+
 model AuthUser {
   id          String        @id @unique
-  username    String        @unique
+  user_id     Int?          @unique
+  User        User?         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  email       String        @unique
   AuthSession AuthSession[]
   AuthKey     AuthKey[]
 
+  @@index([user_id])
   @@map("auth_user")
 }
 
