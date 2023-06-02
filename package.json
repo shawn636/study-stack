@@ -32,7 +32,7 @@
 		"@amplitude/analytics-browser": "^1.10.4",
 		"@commitlint/cli": "^17.6.5",
 		"@commitlint/config-conventional": "^17.6.5",
-		"@faker-js/faker": "^7.6.0",
+		"@faker-js/faker": "^8.0.2",
 		"@floating-ui/dom": "^1.2.7",
 		"@fortawesome/free-brands-svg-icons": "^6.4.0",
 		"@fortawesome/free-solid-svg-icons": "^6.4.0",
