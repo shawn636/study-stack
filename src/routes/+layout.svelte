@@ -8,10 +8,6 @@
 	import * as amplitude from '@amplitude/analytics-browser';
 	import { onMount } from 'svelte';
 	import { PUBLIC_AMPLITUDE_API_KEY } from '$env/static/public';
-	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
-	import { storePopup } from '@skeletonlabs/skeleton';
-
-	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
 	onMount(() => {
 		amplitude.init(PUBLIC_AMPLITUDE_API_KEY, undefined, {

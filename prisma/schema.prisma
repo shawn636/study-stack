@@ -69,59 +69,21 @@ model ContentType {
 
 // USER RELATED MODELS
 
+model User {
+  id             Int             @id @default(autoincrement())
+  fullName       String
+  email          String          @unique
+  Organization   Organization?   @relation(fields: [organizationId], references: [id])
+  organizationId Int?
+  courseContent  CourseContent[]
+  courses        Course[]
+
+  @@index([organizationId])
+}
+
 model Organization {
   id          Int     @id @default(autoincrement())
   name        String
   description String?
   users       User[]
-}
-
-model User {
-  id             Int             @id @default(autoincrement())
-  auth_user_id   String          @unique
-  name           String
-  email          String          @unique
-  Organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  organizationId Int?
-  courseContent  CourseContent[]
-  courses        Course[]
-  AuthUser       AuthUser?
-
-  @@index([organizationId])
-  @@index([auth_user_id])
-}
-
-model AuthUser {
-  id          String        @id @unique
-  user_id     Int?          @unique
-  User        User?         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  email       String        @unique
-  AuthSession AuthSession[]
-  AuthKey     AuthKey[]
-
-  @@index([user_id])
-  @@map("auth_user")
-}
-
-model AuthSession {
-  id             String   @id @unique
-  user_id        String
-  active_expires BigInt
-  idle_expires   BigInt
-  auth_user      AuthUser @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@index([user_id])
-  @@map("auth_session")
-}
-
-model AuthKey {
-  id              String   @id @unique
-  hashed_password String?
-  user_id         String
-  primary_key     Boolean
-  expires         BigInt?
-  auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
-
-  @@index([user_id])
-  @@map("auth_key")
 }
