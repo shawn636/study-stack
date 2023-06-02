@@ -2,8 +2,6 @@
 node_modules
 /build
 /.svelte-kit
-/.vercel
-coverage/
 /package
 .env
 .env.*
