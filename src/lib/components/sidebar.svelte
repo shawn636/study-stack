@@ -3,12 +3,13 @@
 	import { page } from '$app/stores';
 	import { getHeaderLinks } from '$lib/header-links';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
+	import type User from '$lib/models/user';
 
 	$: classesActive = (href: string) =>
 		href === $page.url.pathname ? '!bg-primary-500 !text-white' : '';
 
-	export let username: string | null;
-	$: headerLinks = getHeaderLinks(username == null ? false : true);
+	export let user: User | undefined | null = null;
+	$: headerLinks = getHeaderLinks(user == null ? false : true);
 </script>
 
 <Drawer width="w-64">
@@ -27,8 +28,8 @@
 					{/each}
 				</ul>
 			</nav>
-			{#if username}
-				<p>Welcome {username}</p>
+			{#if user}
+				<p>Welcome {user.name}</p>
 			{:else}
 				<a href="/auth/login" class="btn variant-soft w-full"> Sign In </a>
 				<a href="/auth/register" class="btn variant-filled w-full"> Register </a>

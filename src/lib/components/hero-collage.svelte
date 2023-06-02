@@ -5,11 +5,11 @@
 
 <div class="hidden lg:grid grid-rows-2 grid-cols-2">
 	<div
-		class="z-10 self-center grid-cols-[auto_1fr] px-4 py-3 gap-x-2 text-light-blue-800 hover:shadow-lg transition-all duration-300 hover:scale-105 left-0 shadow-md font-medium bg-slate-100 row-start-1 row-end-3 col-start-1 col-end-3 rounded grid items-center justify-items-start w-48 h-16"
+		class="z-[1] self-center grid-cols-[auto_1fr] px-4 py-3 gap-x-2 text-light-blue-800 hover:shadow-lg transition-all duration-300 hover:scale-105 left-0 shadow-md font-medium bg-slate-100 row-start-1 row-end-3 col-start-1 col-end-3 rounded grid items-center justify-items-start w-48 h-16"
 	>
 		<Fa
 			icon={faBriefcase}
-			class="z-10 justify-self-center row-start-1 col-start-1 items-center justify-items-center"
+			class="z-[1] justify-self-center row-start-1 col-start-1 items-center justify-items-center"
 			size="20"
 		/>
 
@@ -25,7 +25,7 @@
 		class="row-start-1 row-end-3 first-letter col-start-1 max-w-none hover:shadow-lg transition-all duration-300 hover:scale-105 ml-3"
 	/>
 	<div
-		class="z-10 px-4 h-16 w-48 mt-14 gap-2 ml-32 grid-cols-[auto_1fr] hover:shadow-lg transition-all duration-300 hover:scale-105 left-0 font-medium text-slate-800 bg-slate-100 row-start-1 col-start-1 col-end-3 justify-self-center rounded grid items-center justify-items-center shadow-md"
+		class=" z-[1] px-4 h-16 w-48 mt-14 gap-2 ml-32 grid-cols-[auto_1fr] hover:shadow-lg transition-all duration-300 hover:scale-105 left-0 font-medium text-slate-800 bg-slate-100 row-start-1 col-start-1 col-end-3 justify-self-center rounded grid items-center justify-items-center shadow-md"
 	>
 		<img
 			src="images/home-profile-image-4-optimized.png"
@@ -50,7 +50,7 @@
 		class="row-start-1 row-end-2 first-letter col-start-2 col-end-3 max-w-none justify-self-end hover:shadow-lg transition-all duration-300 hover:scale-105"
 	/>
 	<div
-		class="z-10 h-16 w-52 mb-6 self-end grid-flow-row grid-rows-[35px_10px] grid-cols-[10px_1fr] grid items-center justify-items-start hover:shadow-lg transition-all duration-300 hover:scale-105 shadow-md bg-slate-100 row-start-2 col-start-1 col-end-3 justify-self-center rounded text-center"
+		class="z-[1] h-16 w-52 mb-6 self-end grid-flow-row grid-rows-[35px_10px] grid-cols-[10px_1fr] grid items-center justify-items-start hover:shadow-lg transition-all duration-300 hover:scale-105 shadow-md bg-slate-100 row-start-2 col-start-1 col-end-3 justify-self-center rounded text-center"
 	>
 		<Fa
 			icon={faCheck}

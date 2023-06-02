@@ -9,10 +9,9 @@
 		faExclamationTriangle,
 		faCircleCheck
 	} from '@fortawesome/free-solid-svg-icons';
-	import { object, string, ref } from 'yup';
 	import { fly, slide } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
-	import { createForm, key } from 'svelte-forms-lib';
+	import { createForm } from 'svelte-forms-lib';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	import { registrationForm } from '$lib/schema/registration-form';
@@ -37,7 +36,7 @@
 	};
 
 	// Form Validation
-	const { form, errors, validateField, isValid, touched, handleChange, handleSubmit } = createForm({
+	const { form, errors, validateField, touched, handleChange, handleSubmit } = createForm({
 		initialValues: {
 			name: '',
 			email: '',

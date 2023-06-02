@@ -4,42 +4,62 @@ import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { LuciaError } from 'lucia-auth';
+import { loginForm } from '$lib/schema/login-form';
+import { ValidationError } from 'yup';
+import { errorPadding } from '$lib/server/util';
+
+interface FormData {
+	email: string;
+	password: string;
+}
+
+const createUser = async (values: FormData) => {
+	const password = values.password;
+	const email = values.email;
+
+	const key = await auth.useKey('email', email, password);
+
+	return key.userId;
+};
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const form = await request.formData();
 
-		const email = form.get('email');
-		const password = form.get('password');
+		const values: FormData = {
+			email: form.get('email') as string,
+			password: form.get('password') as string
+		};
 
-		// Validate inputs on server
+		values.email = values.email.trim().toLowerCase();
+		values.password = values.password.trim();
 
-		if (typeof email !== 'string' || typeof password !== 'string') {
-			return fail(400);
-		} else {
-			try {
-				const key = await auth.useKey('email', email, password);
-				const session = await auth.createSession(key.userId);
+		try {
+			await loginForm.validate(values, { abortEarly: false });
+			const userId = await createUser(values);
+
+			if (userId) {
+				const session = await auth.createSession(userId);
 				locals.auth.setSession(session);
-			} catch (e: unknown) {
-				handleError(e);
 			}
+		} catch (e: unknown) {
+			await errorPadding();
+			handleError(e);
 		}
 	}
 };
 
 const handleError = (e: unknown) => {
-	if (e instanceof LuciaError) {
-		if (
-			e.message === 'AUTH_INVALID_PASSWORD' ||
-			e.message === 'AUTH_INVALID_KEY_ID' ||
-			e.message === 'AUTH_INVALID_USER_ID'
-		) {
-			console.log(e.message);
-			throw error(400, 'The username or password entered is incorrect.');
-		}
+	if (
+		e instanceof LuciaError &&
+		(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
+	) {
+		throw error(400, 'The email or password provided is incorrect.');
+	} else if (e instanceof ValidationError) {
+		throw error(400, 'The data provided is invalid. Please try again.');
+	} else if (e instanceof Error && e.message.toLowerCase().includes('duplicate entry')) {
+		throw error(400, 'The email provided is already in use.');
 	}
-
 	console.log(e);
 	throw error(500, 'An unknown error ocurred, please try again later.');
 };

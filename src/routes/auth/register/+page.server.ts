@@ -7,6 +7,7 @@ import { LuciaError } from 'lucia-auth';
 import { db } from '$lib/database';
 import { registrationForm } from '$lib/schema/registration-form';
 import { ValidationError } from 'yup';
+import { errorPadding } from '$lib/server/util';
 
 interface FormData {
 	name: string;
@@ -62,6 +63,7 @@ export const actions: Actions = {
 				locals.auth.setSession(session);
 			}
 		} catch (e: unknown) {
+			await errorPadding();
 			handleError(e);
 		}
 	}

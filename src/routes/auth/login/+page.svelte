@@ -7,12 +7,12 @@
 		faExclamationTriangle,
 		faCircleCheck
 	} from '@fortawesome/free-solid-svg-icons';
-	import { object, string, ref } from 'yup';
 	import { fly, slide } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
 	import { createForm } from 'svelte-forms-lib';
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
+	import { loginForm } from '$lib/schema/login-form';
 
 	// Form Validation
 	const { form, errors, validateField, touched, handleChange, handleSubmit } = createForm({
@@ -20,16 +20,7 @@
 			email: '',
 			password: ''
 		},
-		validationSchema: object().shape({
-			email: string()
-				.email('Oops! The email you entered is invalid.')
-				.matches(
-					/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-					'Oops! The email you entered is invalid.'
-				)
-				.required('Please enter your email address.'),
-			password: string().required('Please enter your password.')
-		}),
+		validationSchema: loginForm,
 		onSubmit: async (values) => {
 			validateField('email');
 			validateField('password');
@@ -189,7 +180,7 @@
 						</button>
 						{#if submissionError}
 							<div
-								class="alert variant-ghost-error mt-4"
+								class="alert variant-ghost-error mt-4 items-center"
 								in:slide|local={{
 									duration: 300,
 									easing: cubicInOut
@@ -199,9 +190,17 @@
 									easing: cubicInOut
 								}}
 							>
-								<Fa icon={faExclamationTriangle} size="16" />
-								<div class="alert-message">
-									<p>{submissionError}</p>
+								<div class="grid grid-cols-[auto_1fr] gap-x-4 w-ful h-full items-center">
+									<Fa
+										icon={faExclamationTriangle}
+										size="16"
+										class="row-start-1 row-end-2 col-start-1 col-end-2"
+									/>
+									<div
+										class="alert-message grid items-center h-fullrow-start-1 row-end-2 col-start-2 col-end-3"
+									>
+										<p>{submissionError}</p>
+									</div>
 								</div>
 							</div>
 						{/if}
