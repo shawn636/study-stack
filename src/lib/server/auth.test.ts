@@ -2,9 +2,14 @@
  * @vitest-environment jsdom
  */
 import { db } from '$lib/database';
-import { createUser, login, getAllSessions, getUser } from '$lib/server/auth';
-import { create } from 'domain';
-// import type Category from '$lib/models/category';
+import {
+	createUser,
+	login,
+	getAllSessions,
+	logout,
+	logoutAll,
+	validateSession
+} from '$lib/server/auth';
 
 const accounts = [
 	{
@@ -30,6 +35,12 @@ const accounts = [
 		name: 'Jane Smith',
 		password: 'testytesttest123',
 		hashedPassword: '$2b$10$o8FwYlkExQif5OT9oeyuX.LRrm8YsUqvkFqhlUMJ1lTND2fEQ3AXC'
+	},
+	{
+		email: 'superfakeemail@suspicious.net',
+		name: 'Leroy Jenkinsonsmithers',
+		password: 'IHonestlyHaveNoIdeaWhatImDoing',
+		hashedPassword: '$2b$10$Gb6Lf7yunn/XrGThk3jtFevdApUjpUh9DOIN1cyxbgwNOWWckvj5S'
 	}
 ];
 
@@ -129,5 +140,76 @@ describe('auth', () => {
 		expect(() => login(accounts[act_idx].email, accounts[act_idx].password)).rejects.toThrow(
 			'AUTH_INVALID_CREDENTIALS'
 		);
+	});
+
+	it('should be able to remove one or multiple sessions and validate existing sessions', async () => {
+		const act_idx = 4;
+		const user_id = await createUser(
+			accounts[act_idx].email,
+			accounts[act_idx].password,
+			accounts[act_idx].name
+		);
+		expect(user_id).toBeDefined();
+
+		const session_id_1 = await login(accounts[act_idx].email, accounts[act_idx].password);
+		expect(session_id_1).toBeDefined();
+
+		let all_sessions_results = await getAllSessions(user_id);
+		expect(all_sessions_results).toBeTruthy();
+		expect(all_sessions_results.length).toBe(1);
+		expect(all_sessions_results.includes(session_id_1)).toBe(true);
+
+		let session_id_1_is_valid = await validateSession(session_id_1);
+		expect(session_id_1_is_valid).toBe(true);
+
+		const session_id_2 = await login(accounts[act_idx].email, accounts[act_idx].password);
+		expect(session_id_2).toBeDefined();
+
+		all_sessions_results = await getAllSessions(user_id);
+		expect(all_sessions_results).toBeTruthy();
+		expect(all_sessions_results.length).toBe(2);
+		expect(
+			[session_id_1, session_id_2].every((session_id) => all_sessions_results.includes(session_id))
+		).toBe(true);
+
+		let session_id_2_is_valid = await validateSession(session_id_2);
+		expect(session_id_2_is_valid).toBe(true);
+
+		const session_id_3 = await login(accounts[act_idx].email, accounts[act_idx].password);
+		expect(session_id_3).toBeDefined();
+
+		all_sessions_results = await getAllSessions(user_id);
+		expect(all_sessions_results).toBeTruthy();
+		expect(all_sessions_results.length).toBe(3);
+		expect(
+			[session_id_1, session_id_2, session_id_3].every((session_id) =>
+				all_sessions_results.includes(session_id)
+			)
+		).toBe(true);
+
+		let session_id_3_is_valid = await validateSession(session_id_3);
+		expect(session_id_3_is_valid).toBe(true);
+
+		await logout(session_id_2);
+
+		session_id_2_is_valid = await validateSession(session_id_2);
+		expect(session_id_2_is_valid).toBe(false);
+
+		all_sessions_results = await getAllSessions(user_id);
+		expect(all_sessions_results).toBeTruthy();
+		expect(all_sessions_results.length).toBe(2);
+		expect(
+			[session_id_1, session_id_3].every((session_id) => all_sessions_results.includes(session_id))
+		).toBe(true);
+
+		await logoutAll(user_id);
+		all_sessions_results = await getAllSessions(user_id);
+		expect(all_sessions_results).toBeTruthy();
+		expect(all_sessions_results.length).toBe(0);
+
+		session_id_1_is_valid = await validateSession(session_id_1);
+		expect(session_id_1_is_valid).toBe(false);
+		session_id_3_is_valid = await validateSession(session_id_3);
+		expect(session_id_3_is_valid).toBe(false);
 	});
 });

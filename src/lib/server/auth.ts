@@ -122,3 +122,57 @@ export const login = async (email: string, password: string): Promise<string> =>
 
 	return sessionId;
 };
+
+export const logout = async (session_id: string): Promise<void> => {
+	const conn = db.connection();
+	const select_query = 'SELECT id FROM auth_session WHERE id = ?';
+	const select_result = await conn.execute(select_query, [session_id]);
+
+	if (select_result.rows.length !== 1) {
+		console.error('Session not found');
+		throw Error('AUTH_INVALID_SESSION');
+	}
+
+	const delete_session_query = 'DELETE FROM auth_session WHERE id = ?';
+	const result = await conn.execute(delete_session_query, [session_id]);
+
+	if (result.rowsAffected === 0) {
+		console.error('Unable to delete session');
+		throw Error('DB_DELETE_FAILED');
+	}
+
+	return;
+};
+
+export const logoutAll = async (auth_user_id: string): Promise<void> => {
+	const conn = db.connection();
+	const find_user_query = 'SELECT id FROM auth_user WHERE id = ?';
+	const find_user_result = await conn.execute(find_user_query, [auth_user_id]);
+	if (find_user_result.rows.length !== 1) {
+		console.error('User not found');
+		throw Error('AUTH_INVALID_SESSION');
+	}
+
+	const find_sessions_query = 'SELECT id FROM auth_session WHERE auth_user_id = ?';
+	const find_sessions_result = await conn.execute(find_sessions_query, [auth_user_id]);
+	if (find_sessions_result.rows.length === 0) {
+		console.error('No sessions found for User');
+		throw Error('AUTH_INVALID_SESSION');
+	}
+
+	const delete_sessions_query = 'DELETE FROM auth_session WHERE auth_user_id = ?';
+	const delete_sessions_result = await conn.execute(delete_sessions_query, [auth_user_id]);
+	if (delete_sessions_result.rowsAffected === 0) {
+		console.error('Unable to delete sessions');
+		throw Error('DB_DELETE_FAILED');
+	}
+
+	return;
+};
+
+export const validateSession = async (session_id: string): Promise<boolean> => {
+	const conn = db.connection();
+	const query = 'SELECT id FROM auth_session WHERE id = ?';
+	const result = await conn.execute(query, [session_id]);
+	return result.rows.length === 1;
+};
