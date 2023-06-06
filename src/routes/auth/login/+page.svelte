@@ -13,6 +13,9 @@
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	import { loginForm } from '$lib/schema/login-form';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	// Form Validation
 	const { form, errors, validateField, touched, handleChange, handleSubmit } = createForm({
@@ -35,7 +38,6 @@
 
 				if (res?.status == 200) {
 					showSuccess = true;
-					await new Promise<void>((resolve) => setTimeout(resolve, 600));
 					goto('/');
 				} else {
 					submissionError = data.error.message;
@@ -64,7 +66,10 @@
 
 			const res = await fetch('/auth/login', {
 				method: 'POST',
-				body: formData
+				body: formData,
+				headers: {
+					'x-csrf-token': data.csrf_token ?? ''
+				}
 			});
 
 			return res;

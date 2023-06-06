@@ -6,6 +6,7 @@ const config = {
 	preprocess: [vitePreprocess()],
 
 	kit: {
+		csrf: false,
 		adapter: adapter({
 			runtime: 'edge',
 			split: true

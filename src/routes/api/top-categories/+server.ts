@@ -16,7 +16,7 @@ export const GET = (async () => {
 	return new Response(json, {
 		headers: {
 			'content-type': 'application/json;charset=UTF-8',
-			'access-control-allow-origin': '*'
+			'access-control-allow-origin': '*' // CORS
 		}
 	});
 }) satisfies RequestHandler;

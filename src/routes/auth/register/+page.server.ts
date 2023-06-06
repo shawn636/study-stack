@@ -8,6 +8,7 @@ import { db } from '$lib/database';
 import { registrationForm } from '$lib/schema/registration-form';
 import { ValidationError } from 'yup';
 import { errorPadding } from '$lib/server/util';
+import { csrf } from '$lib/server/csrf';
 
 interface FormData {
 	name: string;
@@ -47,6 +48,12 @@ export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const form = await request.formData();
 
+		const token = request.headers.get('x-csrf-token') as string;
+		const valid_token = await csrf.validateToken(token);
+		if (!valid_token) {
+			throw error(403, 'Cross-site form submissions are forbidden.');
+		}
+
 		const values: FormData = {
 			name: form.get('name') as string,
 			email: form.get('email') as string,
@@ -81,7 +88,9 @@ const handleError = (e: unknown) => {
 	throw error(500, 'An unknown error ocurred, please try again later.');
 };
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, cookies }) => {
 	const session = await locals.auth.validate();
 	if (session) throw redirect(302, '/');
+	const csrf_token = await cookies.get('csrf-token');
+	return { csrf_token };
 };

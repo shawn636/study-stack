@@ -15,6 +15,9 @@
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	import { registrationForm } from '$lib/schema/registration-form';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	// Controls
 	let showPassword1 = false;
@@ -103,7 +106,10 @@
 
 			const res = await fetch('/auth/register', {
 				method: 'POST',
-				body: formData
+				body: formData,
+				headers: {
+					'x-csrf-token': data.csrf_token ?? ''
+				}
 			});
 
 			return res;

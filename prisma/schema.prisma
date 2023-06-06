@@ -104,24 +104,28 @@ model AuthUser {
 }
 
 model AuthSession {
-  id             String   @id @unique
-  user_id        String
-  active_expires BigInt
-  idle_expires   BigInt
-  auth_user      AuthUser @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id           String   @id @unique
+  auth_user_id String
+  expires      DateTime
+  auth_user    AuthUser @relation(fields: [auth_user_id], references: [id], onDelete: Cascade)
 
-  @@index([user_id])
+  @@index([auth_user_id])
   @@map("auth_session")
 }
 
 model AuthKey {
   id              String   @id @unique
   hashed_password String?
-  user_id         String
-  primary_key     Boolean
-  expires         BigInt?
-  auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  auth_user_id    String
+  auth_user       AuthUser @relation(references: [id], fields: [auth_user_id], onDelete: Cascade)
 
-  @@index([user_id])
+  @@index([auth_user_id])
   @@map("auth_key")
+}
+
+model CSRFToken {
+  token   String @id @unique
+  expires BigInt
+
+  @@map("csrf_token")
 }

@@ -3,17 +3,21 @@
 	import Header from '$lib/sections/header.svelte';
 	import Footer from '$lib/sections/footer.svelte';
 	import { AppShell } from '@skeletonlabs/skeleton';
-	import type { LayoutServerData } from './$types';
+	import type { LayoutData } from './$types';
 	import type User from '$lib/models/user';
 
-	export let data: LayoutServerData;
+	export let data: LayoutData;
 	$: user = data.user as User;
 </script>
 
 <Sidebar {user} />
 <AppShell slotPageFooter="bg-surface-100 dark:bg-surface-700">
 	<svelte:fragment slot="header">
-		<Header {user} />
+		<Header
+			{user}
+			csrf_token={data.csrf_token ?? 'null'}
+			sessionId={data.session?.sessionId ?? null}
+		/>
 	</svelte:fragment>
 
 	<slot />

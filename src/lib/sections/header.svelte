@@ -10,6 +10,8 @@
 	import { goto } from '$app/navigation';
 
 	export let user: User | undefined | null = null;
+	export let sessionId: string | null = null;
+	export let csrf_token: string;
 
 	const initials = (name: string) => {
 		const names = name.split(' ');
@@ -18,7 +20,11 @@
 
 	const signOut = async () => {
 		const res = await fetch('/auth/logout', {
-			method: 'POST'
+			method: 'POST',
+			body: JSON.stringify({ sessionId: sessionId }),
+			headers: {
+				'x-csrf-token': csrf_token
+			}
 		});
 		if (res.status == 200) {
 			goto('/auth/login');

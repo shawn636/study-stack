@@ -13,3 +13,4 @@ coverage
 *.nnb
 test-results
 *.icloud
+/notebooks

@@ -2,9 +2,9 @@ import type { LayoutServerLoad } from './$types';
 import { db } from '$lib/database';
 import type User from '$lib/models/user';
 
-export const load = (async ({ locals }) => {
+export const load = (async ({ locals, cookies }) => {
 	const { user, session } = await locals.auth.validateUser();
-
+	const csrf_token = cookies.get('csrf-token');
 	if (user) {
 		const conn = db.connection();
 		try {
@@ -14,12 +14,11 @@ export const load = (async ({ locals }) => {
 			);
 			if (user_result.rows.length === 1) {
 				const user_object: User = user_result.rows[0] as User;
-				return { user: user_object };
+				return { user: user_object, session, csrf_token };
 			}
 		} catch (e: unknown) {
 			console.error('Unable to logged in User from database.');
 		}
 	}
-
-	return { user, session };
+	return { user, session, csrf_token };
 }) satisfies LayoutServerLoad;
