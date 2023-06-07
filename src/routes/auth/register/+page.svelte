@@ -15,9 +15,6 @@
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	import { registrationForm } from '$lib/schema/registration-form';
-	import type { PageData } from './$types';
-
-	export let data: PageData;
 
 	// Controls
 	let showPassword1 = false;
@@ -41,10 +38,10 @@
 	// Form Validation
 	const { form, errors, validateField, touched, handleChange, handleSubmit } = createForm({
 		initialValues: {
-			name: '',
-			email: '',
-			password1: '',
-			password2: ''
+			name: 'Shawn Long',
+			email: 'shawn.long@haventoday.org',
+			password1: 'Jesus1st!',
+			password2: 'Jesus1st!'
 		},
 		validationSchema: registrationForm,
 		onSubmit: async (values) => {
@@ -106,10 +103,7 @@
 
 			const res = await fetch('/auth/register', {
 				method: 'POST',
-				body: formData,
-				headers: {
-					'x-csrf-token': data.csrf_token ?? ''
-				}
+				body: formData
 			});
 
 			return res;

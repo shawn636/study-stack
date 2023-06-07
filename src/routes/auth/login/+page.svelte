@@ -15,8 +15,6 @@
 	import { loginForm } from '$lib/schema/login-form';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
-
 	// Form Validation
 	const { form, errors, validateField, touched, handleChange, handleSubmit } = createForm({
 		initialValues: {
@@ -66,10 +64,7 @@
 
 			const res = await fetch('/auth/login', {
 				method: 'POST',
-				body: formData,
-				headers: {
-					'x-csrf-token': data.csrf_token ?? ''
-				}
+				body: formData
 			});
 
 			return res;

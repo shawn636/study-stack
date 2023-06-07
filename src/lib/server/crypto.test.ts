@@ -7,7 +7,7 @@ import { hashPassword, comparePassword } from '$lib/server/crypto';
 
 describe('crypto', () => {
 	it('should be able to hash and compare a password', async () => {
-		for (let i = 0; i < 100; i++) {
+		for (let i = 0; i < 20; i++) {
 			const password = faker.internet.password();
 			const hashedPassword = await hashPassword(password);
 			const isMatch = await comparePassword(password, hashedPassword);

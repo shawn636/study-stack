@@ -13,11 +13,7 @@
 <Sidebar {user} />
 <AppShell slotPageFooter="bg-surface-100 dark:bg-surface-700">
 	<svelte:fragment slot="header">
-		<Header
-			{user}
-			csrf_token={data.csrf_token ?? 'null'}
-			sessionId={data.session?.sessionId ?? null}
-		/>
+		<Header {user} />
 	</svelte:fragment>
 
 	<slot />

@@ -1,5 +1,5 @@
 import { PEPPER } from '$env/static/private';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 export const hashPassword = async (password: string): Promise<string> => {
 	const salt = await bcrypt.genSalt();

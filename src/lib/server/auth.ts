@@ -1,6 +1,10 @@
 import { hashPassword, comparePassword } from '$lib/server/crypto';
 import { v4 } from 'uuid';
 import { db } from '$lib/database';
+import type { Cookies } from '@sveltejs/kit';
+import type User from '$lib/models/user';
+
+const COOKIE_NAME = 'auth_session';
 
 const emailExists = async (email: string): Promise<boolean> => {
 	const conn = db.connection();
@@ -10,7 +14,7 @@ const emailExists = async (email: string): Promise<boolean> => {
 	return parseInt(record_count.count) > 0;
 };
 
-export const getAllSessions = async (user_id: string): Promise<string[]> => {
+const getAllSessions = async (user_id: string): Promise<string[]> => {
 	const conn = db.connection();
 	const query = 'SELECT id FROM auth_session WHERE auth_user_id = ?';
 	const { rows } = await conn.execute(query, [user_id]);
@@ -18,19 +22,31 @@ export const getAllSessions = async (user_id: string): Promise<string[]> => {
 	return sessions.map((session) => session.id);
 };
 
-export const getUser = async (email: string): Promise<string> => {
+const getUser = async (session_id: string): Promise<User> => {
+	const valid_session = await validateSession(session_id);
+	if (!valid_session) {
+		console.error('Invalid session');
+		throw Error('AUTH_INVALID_SESSION');
+	}
+
 	const conn = db.connection();
-	const query = 'SELECT id FROM auth_user WHERE email = ?';
-	const { rows } = await conn.execute(query, [email]);
-	const user = rows[0] as { id: string };
-	return user.id as string;
+
+	const query = `SELECT User.id as id, User.email as email, User.name as name
+											FROM auth_session JOIN User on auth_session.auth_user_id = User.auth_user_id 
+											WHERE auth_session.id = ?`;
+
+	const { rows } = await conn.execute(query, [session_id]);
+	const user = rows[0] as User;
+
+	if (!user) {
+		console.error('Unable to find user');
+		throw Error('DB_SELECT_FAILED');
+	}
+
+	return user;
 };
 
-export const createUser = async (
-	email: string,
-	password: string,
-	name: string
-): Promise<string> => {
+const createUser = async (email: string, password: string, name: string): Promise<string> => {
 	const email_exists = await emailExists(email);
 
 	if (email_exists) {
@@ -72,7 +88,7 @@ export const createUser = async (
 	return user_id;
 };
 
-export const login = async (email: string, password: string): Promise<string> => {
+const login = async (email: string, password: string): Promise<string> => {
 	const conn = db.connection();
 	const getAuthUser = 'SELECT id FROM auth_user WHERE email = ?';
 	const authUserResult = await conn.execute(getAuthUser, [email]);
@@ -123,7 +139,7 @@ export const login = async (email: string, password: string): Promise<string> =>
 	return sessionId;
 };
 
-export const logout = async (session_id: string): Promise<void> => {
+const logout = async (session_id: string): Promise<void> => {
 	const conn = db.connection();
 	const select_query = 'SELECT id FROM auth_session WHERE id = ?';
 	const select_result = await conn.execute(select_query, [session_id]);
@@ -144,7 +160,7 @@ export const logout = async (session_id: string): Promise<void> => {
 	return;
 };
 
-export const logoutAll = async (auth_user_id: string): Promise<void> => {
+const logoutAll = async (auth_user_id: string): Promise<void> => {
 	const conn = db.connection();
 	const find_user_query = 'SELECT id FROM auth_user WHERE id = ?';
 	const find_user_result = await conn.execute(find_user_query, [auth_user_id]);
@@ -170,9 +186,71 @@ export const logoutAll = async (auth_user_id: string): Promise<void> => {
 	return;
 };
 
-export const validateSession = async (session_id: string): Promise<boolean> => {
+const validateSession = async (session_id: string): Promise<boolean> => {
 	const conn = db.connection();
 	const query = 'SELECT id FROM auth_session WHERE id = ?';
 	const result = await conn.execute(query, [session_id]);
 	return result.rows.length === 1;
+};
+
+const getSession = (cookies: Cookies): string | undefined => {
+	return cookies.get(COOKIE_NAME);
+};
+
+const validateCookies = async (cookies: Cookies): Promise<boolean> => {
+	const session_id = cookies.get(COOKIE_NAME);
+	if (session_id === undefined) {
+		return false;
+	}
+	return await validateSession(session_id);
+};
+
+const setSessionCookie = (session_id: string, cookies: Cookies): Cookies => {
+	cookies.set(COOKIE_NAME, session_id, {
+		httpOnly: true,
+		secure: true,
+		sameSite: 'strict',
+		path: '/',
+		maxAge: 60 * 60 * 24 * 30
+	});
+
+	return cookies;
+};
+
+const deleteSessionCookie = (cookies: Cookies): Cookies => {
+	cookies.set(COOKIE_NAME, 'null', {
+		httpOnly: true,
+		secure: true,
+		sameSite: 'strict',
+		path: '/',
+		maxAge: 0
+	});
+	return cookies;
+};
+
+const validateAndSetCookie = async (session_id: string, cookies: Cookies): Promise<Cookies> => {
+	const isValid = await validateSession(session_id);
+
+	if (!isValid) {
+		console.error('Invalid Session');
+		return cookies;
+	}
+
+	return setSessionCookie(session_id, cookies);
+};
+
+export const auth = {
+	emailExists,
+	getAllSessions,
+	getUser,
+	createUser,
+	login,
+	logout,
+	logoutAll,
+	validateSession,
+	validateAndSetCookie,
+	setSessionCookie,
+	validateCookies,
+	getSession,
+	deleteSessionCookie
 };

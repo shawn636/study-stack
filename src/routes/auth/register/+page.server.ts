@@ -1,14 +1,12 @@
-import { auth } from '$lib/server/lucia';
+import { auth } from '$lib/server/auth';
+import { csrf } from '$lib/server/csrf';
+
 import type { Actions } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
-import { LuciaError } from 'lucia-auth';
-import { db } from '$lib/database';
 import { registrationForm } from '$lib/schema/registration-form';
-import { ValidationError } from 'yup';
 import { errorPadding } from '$lib/server/util';
-import { csrf } from '$lib/server/csrf';
 
 interface FormData {
 	name: string;
@@ -17,42 +15,10 @@ interface FormData {
 	password2: string;
 }
 
-const createUser = async (values: FormData) => {
-	const password = values.password1;
-	const email = values.email;
-
-	const user = await auth.createUser({
-		primaryKey: {
-			providerId: 'email',
-			providerUserId: values.email,
-			password
-		},
-		attributes: {
-			email
-		}
-	});
-	try {
-		const conn = db.connection();
-		const query = `INSERT INTO User (auth_user_id, email, organizationId, name) VALUES (?, ?, NULL, ?);`;
-		await conn.execute(query, [user.userId, values.email, values.name]);
-	} catch (e: unknown) {
-		await auth.deleteUser(user.userId);
-		await auth.deleteDeadUserSessions(user.userId);
-		throw e;
-	}
-
-	return user.userId;
-};
-
 export const actions: Actions = {
-	default: async ({ request, locals }) => {
+	default: async ({ request, cookies }) => {
+		await csrf.validateCookies(cookies);
 		const form = await request.formData();
-
-		const token = request.headers.get('x-csrf-token') as string;
-		const valid_token = await csrf.validateToken(token);
-		if (!valid_token) {
-			throw error(403, 'Cross-site form submissions are forbidden.');
-		}
 
 		const values: FormData = {
 			name: form.get('name') as string,
@@ -62,13 +28,13 @@ export const actions: Actions = {
 		};
 
 		try {
-			await registrationForm.validate(values, { abortEarly: false });
-			const userId = await createUser(values);
+			await registrationForm.validate(values, { abortEarly: true });
+			await auth.createUser(values.email, values.password1, values.name);
+			const session_id = await auth.login(values.email, values.password1);
 
-			if (userId) {
-				const session = await auth.createSession(userId);
-				locals.auth.setSession(session);
-			}
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			cookies = auth.setSessionCookie(session_id, cookies);
+			console.log('Successfully logged in and set cookie');
 		} catch (e: unknown) {
 			await errorPadding();
 			handleError(e);
@@ -77,20 +43,13 @@ export const actions: Actions = {
 };
 
 const handleError = (e: unknown) => {
-	if (e instanceof LuciaError && e.message === 'AUTH_DUPLICATE_KEY_ID') {
-		throw error(400, 'The email provided is already in use.');
-	} else if (e instanceof ValidationError) {
-		throw error(400, 'The data provided is invalid. Please try again.');
-	} else if (e instanceof Error && e.message.toLowerCase().includes('duplicate entry')) {
-		throw error(400, 'The email provided is already in use.');
+	if (e instanceof Error) {
+		console.log(e.message);
 	}
-	console.log(e);
 	throw error(500, 'An unknown error ocurred, please try again later.');
 };
 
-export const load: PageServerLoad = async ({ locals, cookies }) => {
-	const session = await locals.auth.validate();
-	if (session) throw redirect(302, '/');
-	const csrf_token = await cookies.get('csrf-token');
-	return { csrf_token };
+export const load: PageServerLoad = async ({ cookies }) => {
+	const signed_in = await auth.validateCookies(cookies);
+	if (signed_in) throw redirect(302, '/');
 };

@@ -9,9 +9,7 @@
 	import type User from '$lib/models/user';
 	import { goto } from '$app/navigation';
 
-	export let user: User | undefined | null = null;
-	export let sessionId: string | null = null;
-	export let csrf_token: string;
+	export let user: User | undefined;
 
 	const initials = (name: string) => {
 		const names = name.split(' ');
@@ -20,13 +18,10 @@
 
 	const signOut = async () => {
 		const res = await fetch('/auth/logout', {
-			method: 'POST',
-			body: JSON.stringify({ sessionId: sessionId }),
-			headers: {
-				'x-csrf-token': csrf_token
-			}
+			method: 'POST'
 		});
 		if (res.status == 200) {
+			console.log(res.status);
 			goto('/auth/login');
 		}
 	};
