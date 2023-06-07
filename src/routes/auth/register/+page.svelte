@@ -38,10 +38,10 @@
 	// Form Validation
 	const { form, errors, validateField, touched, handleChange, handleSubmit } = createForm({
 		initialValues: {
-			name: 'Shawn Long',
-			email: 'shawn.long@haventoday.org',
-			password1: 'Jesus1st!',
-			password2: 'Jesus1st!'
+			name: '',
+			email: '',
+			password1: '',
+			password2: ''
 		},
 		validationSchema: registrationForm,
 		onSubmit: async (values) => {

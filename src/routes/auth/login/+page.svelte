@@ -13,7 +13,6 @@
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	import { loginForm } from '$lib/schema/login-form';
-	import type { PageData } from './$types';
 
 	// Form Validation
 	const { form, errors, validateField, touched, handleChange, handleSubmit } = createForm({
@@ -38,6 +37,9 @@
 					showSuccess = true;
 					goto('/');
 				} else {
+					if (data.error.message.includes('Invalid credentials')) {
+						submissionError = 'The email or password you entered is incorrect.';
+					}
 					submissionError = data.error.message;
 					console.log(data.error.message);
 				}

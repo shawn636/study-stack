@@ -6,6 +6,7 @@ import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { loginForm } from '$lib/schema/login-form';
 import { errorPadding } from '$lib/server/util';
+import { ValidationError } from 'yup';
 
 interface FormData {
 	email: string;
@@ -39,13 +40,10 @@ export const actions: Actions = {
 };
 
 const handleError = (e: unknown) => {
-	console.log('Error occurred while authenticating user.');
-	console.log(e);
-	console.log('\n\n');
-	if (e instanceof Error) {
-		console.log(e.message);
-	}
-	throw error(500, 'An unknown error ocurred, please try again later.');
+	if (e instanceof ValidationError) throw error(400, 'data provided is invalid');
+	else if (!(e instanceof Error))
+		throw error(500, 'An unknown error ocurred, please try again later.');
+	if (e.message === 'AUTH_INVALID_CREDENTIALS') throw error(400, 'Invalid credentials.');
 };
 
 export const load: PageServerLoad = async ({ cookies }) => {

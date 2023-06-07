@@ -208,7 +208,7 @@ const validateCookies = async (cookies: Cookies): Promise<boolean> => {
 const setSessionCookie = (session_id: string, cookies: Cookies): Cookies => {
 	cookies.set(COOKIE_NAME, session_id, {
 		httpOnly: true,
-		secure: true,
+		secure: false,
 		sameSite: 'strict',
 		path: '/',
 		maxAge: 60 * 60 * 24 * 30
@@ -220,7 +220,7 @@ const setSessionCookie = (session_id: string, cookies: Cookies): Cookies => {
 const deleteSessionCookie = (cookies: Cookies): Cookies => {
 	cookies.set(COOKIE_NAME, 'null', {
 		httpOnly: true,
-		secure: true,
+		secure: false,
 		sameSite: 'strict',
 		path: '/',
 		maxAge: 0
