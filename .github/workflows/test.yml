@@ -1,40 +1,40 @@
 name: Test
 
 on:
-  pull_request:
-    branches: ['preview', 'main']
-  push:
-    branches: ['preview', 'main']
+    pull_request:
+        branches: ['preview', 'main']
+    push:
+        branches: ['preview', 'main']
 
 jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    env:
-      PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
-      DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-      - run: npm install
-      - run: npm run build --if-present
-      - run: npm run test:unit
+    unit-tests:
+        runs-on: ubuntu-latest
+        env:
+            PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+            DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+            VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '18.x'
+            - run: npm install
+            - run: npm run build --if-present
+            - run: npm run test:unit
 
-  end-to-end:
-    runs-on: ubuntu-latest
-    env:
-      PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
-      DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-      - run: npm install
-      - run: npx playwright install --with-deps
-      - run: npm run build --if-present
-      - run: npm run test
+    end-to-end:
+        runs-on: ubuntu-latest
+        env:
+            PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+            DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+            VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: '18.x'
+            - run: npm install
+            - run: npx playwright install --with-deps
+            - run: npm run build --if-present
+            - run: npm run test

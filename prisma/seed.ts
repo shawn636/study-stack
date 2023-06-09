@@ -10,20 +10,20 @@ import { seedCourseContent } from './seeds/course-content';
 const prisma = new PrismaClient();
 
 async function main() {
-	await deleteAll(prisma);
+    await deleteAll(prisma);
 
-	await seedOrganization(prisma);
-	await Promise.all([seedCategory(prisma), seedUser(prisma)]);
-	await seedCourse(prisma);
-	await Promise.all([seedContentType(prisma), seedLesson(prisma)]);
-	await seedCourseContent(prisma);
+    await seedOrganization(prisma);
+    await Promise.all([seedCategory(prisma), seedUser(prisma)]);
+    await seedCourse(prisma);
+    await Promise.all([seedContentType(prisma), seedLesson(prisma)]);
+    await seedCourseContent(prisma);
 }
 main()
-	.then(async () => {
-		await prisma.$disconnect();
-	})
-	.catch(async (e) => {
-		console.error(e);
-		await prisma.$disconnect();
-		process.exit(1);
-	});
+    .then(async () => {
+        await prisma.$disconnect();
+    })
+    .catch(async (e) => {
+        console.error(e);
+        await prisma.$disconnect();
+        process.exit(1);
+    });
