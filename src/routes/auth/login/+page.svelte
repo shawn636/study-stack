@@ -79,7 +79,12 @@
     const transitionDuration = 300;
 </script>
 
-<form class="h-full grid items-center w-full" id="register-form" on:submit={handleSubmit}>
+<form
+    class="h-full grid items-center w-full"
+    id="register-form"
+    on:submit={handleSubmit}
+    data-test-id="sign-in-form"
+>
     <div
         class="grid justify-items-center items-center h-full row-start-1 row-end-2 col-start-1 col-end-2"
         id="main"
@@ -107,7 +112,7 @@
                 <div class="text-center">
                     <!-- Header -->
                     <div class="py-5">
-                        <h2 class="h2 font-semibold">Welcome to Equipped</h2>
+                        <h2 class="h2 font-semibold">Welcome</h2>
                         <p class="text-xs my-2 text-slate-500">Please enter your details below</p>
                     </div>
 

@@ -146,7 +146,12 @@
     };
 </script>
 
-<form class="h-full grid items-center w-full" id="register-form" on:submit={handleSubmit}>
+<form
+    class="h-full grid items-center w-full"
+    id="register-form"
+    on:submit={handleSubmit}
+    data-test-id="sign-up-form"
+>
     {#if currFormIndex == 0}
         <div
             class="grid justify-items-center items-center h-full row-start-1 row-end-2 col-start-1 col-end-2"

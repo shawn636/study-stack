@@ -14,6 +14,7 @@ export const registrationForm = object().shape({
         .matches(/[a-z]/, 'Password should contain a lowercase letter')
         .matches(/[A-Z]/, 'Password should contain an uppercase letter')
         .matches(/[0-9]/, 'Password should contain a number')
+        .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password should contain a special character')
         .required('Please enter your password.'),
     password2: string()
         .oneOf([ref('password1')], 'Passwords should match.')

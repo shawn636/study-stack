@@ -15,6 +15,7 @@
         "codegen": "concurrently \"npm run vercel-dev\" \"playwright codegen\" --kill-others",
         "test:ui": "concurrently \"npm run vercel-dev\" \"playwright test --ui\" --kill-others",
         "test:coverage": "concurrently \"npm run vercel-dev\" \"vitest run --coverage\" --kill-others -s first",
+        "test:results": "npx playwright show-report e2e/test-results",
         "lint": "prettier --plugin-search-dir . --check . && eslint .",
         "lintfix": "prettier --plugin-search-dir . --write . && eslint .",
         "format": "prettier --plugin-search-dir . --write .",
