@@ -3,8 +3,9 @@ import { v4 } from 'uuid';
 import { db } from '$lib/database';
 import type { Cookies } from '@sveltejs/kit';
 import type User from '$lib/models/user';
+import { dev } from '$app/environment';
 
-const COOKIE_NAME = 'auth_session';
+export const COOKIE_NAME = 'auth_session';
 
 const emailExists = async (email: string): Promise<boolean> => {
     const conn = db.connection();
@@ -239,6 +240,27 @@ const validateAndSetCookie = async (session_id: string, cookies: Cookies): Promi
     return setSessionCookie(session_id, cookies);
 };
 
+const deleteUserIfExists = async (email: string): Promise<void> => {
+    if (!dev) {
+        console.error('Unable to delete user outside of dev mode');
+        return;
+    }
+
+    const conn = db.connection();
+
+    const result = await conn.execute('SELECT id FROM auth_user WHERE email = ?', [email]);
+    const result_obj = result.rows[0] as { id: string | undefined };
+
+    if (result_obj?.id !== undefined) {
+        await conn.execute('DELETE FROM auth_user WHERE id = ?', [result_obj.id]);
+        await conn.execute('DELETE FROM auth_key WHERE auth_user_id = ?', [result_obj.id]);
+        await conn.execute('DELETE FROM auth_session WHERE auth_user_id = ?', [result_obj.id]);
+        await conn.execute('DELETE FROM User WHERE auth_user_id = ?', [result_obj.id]);
+    }
+
+    return;
+};
+
 export const auth = {
     emailExists,
     getAllSessions,
@@ -252,5 +274,6 @@ export const auth = {
     setSessionCookie,
     validateCookies,
     getSession,
-    deleteSessionCookie
+    deleteSessionCookie,
+    deleteUserIfExists
 };

@@ -10,10 +10,28 @@ const config: PlaywrightTestConfig = defineConfig({
         baseURL: 'http://localhost:3000'
     },
     projects: [
-        { name: 'chromium', use: { ...devices['Desktop Chrome'] }, grep: /(desktop|all)/ },
+        {
+            name: 'Google Chrome',
+            use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+            grep: /(desktop|all)/
+        },
+        {
+            name: 'Microsoft Edge',
+            use: { channel: 'msedge' },
+            grep: /(desktop|all)/
+        },
         { name: 'firefox', use: { ...devices['Desktop Firefox'] }, grep: /(desktop|all)/ },
         { name: 'webkit', use: { ...devices['Desktop Safari'] }, grep: /(desktop|all)/ },
-        { name: 'Safari(Mobile)', use: { ...devices['iPhone 13'] }, grep: /(mobile|all)/ }
+        {
+            name: 'Mobile Chrome',
+            use: { ...devices['Pixel 5'] },
+            grep: /(mobile|all)/
+        },
+        {
+            name: 'Mobile Safari',
+            use: { ...devices['iPhone 13'] },
+            grep: /(mobile|all)/
+        }
     ],
     webServer: {
         command: 'npm run vercel-dev',

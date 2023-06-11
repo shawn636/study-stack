@@ -2,7 +2,7 @@ import { db } from '$lib/database';
 import { v4 as uuidv4 } from 'uuid';
 import type { Cookies } from '@sveltejs/kit';
 
-const COOKIE_NAME = 'x-csrf-token';
+export const COOKIE_NAME = 'x-csrf-token';
 
 const validateToken = async (token: string) => {
     const conn = db.connection();

@@ -36,5 +36,6 @@ jobs:
                   node-version: '18.x'
             - run: npm install
             - run: npx playwright install --with-deps
+            - run: npx playwright install msedge
             - run: npm run build --if-present
             - run: npm run test
