@@ -13,6 +13,7 @@ jobs:
             PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
             DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+            PEPPER: ${{ secrets.PEPPER }}
         steps:
             - uses: actions/checkout@v3
             - name: Use Node.js
@@ -29,6 +30,7 @@ jobs:
             PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
             DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+            PEPPER: ${{ secrets.PEPPER }}
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
