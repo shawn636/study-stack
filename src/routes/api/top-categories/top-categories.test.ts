@@ -14,7 +14,7 @@ describe('top-categories', () => {
         expect(conn).toBeTruthy();
     });
 
-    it('should return the top 5 catgories', async () => {
+    it('should return the top 6 catgories', async () => {
         const response = await fetch('http://localhost:3000/api/top-categories');
         expect(response.status).toBe(200);
 
