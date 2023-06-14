@@ -1,8 +1,7 @@
 <script lang="ts">
     import { Drawer, drawerStore } from '@skeletonlabs/skeleton';
     import { page } from '$app/stores';
-    import { getHeaderLinks } from '$lib/header-links';
-    import { LightSwitch } from '@skeletonlabs/skeleton';
+    import { getHeaderLinks } from '$lib/stores/links';
     import type User from '$lib/models/user';
 
     $: classesActive = (href: string) =>
@@ -28,13 +27,10 @@
                     {/each}
                 </ul>
             </nav>
-            {#if user}
-                <p>Welcome {user.name}</p>
-            {:else}
+            {#if !user}
                 <a href="/auth/login" class="btn variant-soft w-full"> Sign In </a>
                 <a href="/auth/register" class="btn variant-filled w-full"> Register </a>
             {/if}
         </div>
-        <LightSwitch rounded="rounded-full justify-self-end self-end" />
     </div>
 </Drawer>

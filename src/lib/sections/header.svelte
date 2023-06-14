@@ -3,7 +3,7 @@
     import { page } from '$app/stores';
     import { AppBar, Avatar, popup } from '@skeletonlabs/skeleton';
     import { drawerStore } from '@skeletonlabs/skeleton';
-    import { getHeaderLinks } from '$lib/header-links';
+    import { getHeaderLinks } from '$lib/stores/links';
     import Fa from 'svelte-fa';
     import { faBars } from '@fortawesome/free-solid-svg-icons';
     import type User from '$lib/models/user';

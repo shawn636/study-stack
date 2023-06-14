@@ -16,16 +16,15 @@ interface Account {
 const accounts: Account[] = new Array(5).fill(null).map(() => {
     return {
         email: faker.internet.email(),
-        password: faker.internet.password(),
+        password: faker.internet.password() + 'Aa1!',
         name: faker.name.fullName()
     } as Account;
 });
 
-describe('login', () => {
+describe('register', () => {
     beforeAll(async () => {
         for (const account of accounts) {
             await auth.deleteUserIfExists(account.email);
-            await auth.createUser(account.email, account.password, account.name);
         }
     });
     afterAll(async () => {
@@ -42,17 +41,19 @@ describe('login', () => {
         expect(conn).toBeTruthy();
     });
 
-    it('should successfully login', async () => {
+    it('should successfully create account and create cookie', async () => {
         for (const account of accounts) {
             const form_data = new FormData();
             form_data.append('email', account.email);
-            form_data.append('password', account.password);
+            form_data.append('password1', account.password);
+            form_data.append('password2', account.password);
+            form_data.append('name', account.name);
 
             const csrf_token = await csrf.generateToken();
             const headers = new Headers();
             headers.append(CSRF_COOKIE_NAME, csrf_token ?? '');
 
-            const res = await fetch('http://localhost:3000/auth/login', {
+            const res = await fetch('http://localhost:3000/auth/register', {
                 method: 'POST',
                 body: form_data,
                 headers
