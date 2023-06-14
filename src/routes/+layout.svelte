@@ -10,7 +10,7 @@
     import { PUBLIC_AMPLITUDE_API_KEY } from '$env/static/public';
     import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
     import { storePopup } from '@skeletonlabs/skeleton';
-    import { autoModeWatcher } from '@skeletonlabs/skeleton';
+    import { setModeCurrent } from '@skeletonlabs/skeleton';
     storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
     onMount(() => {
@@ -22,11 +22,26 @@
                 fileDownloads: true
             }
         });
-    });
-</script>
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        mediaQuery.addEventListener('change', updateTheme);
+        updateTheme();
 
-<svelte:head>
-    {@html `<script>${autoModeWatcher.toString()} autoModeWatcher();</script>`}
-</svelte:head>
+        return () => {
+            mediaQuery.removeEventListener('change', updateTheme);
+        };
+    });
+
+    const updateTheme = () => {
+        const color_pref = localStorage.getItem('color-theme');
+        const prefers_dark =
+            !('color-theme' in localStorage) &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (color_pref === 'dark' || prefers_dark) {
+            setModeCurrent(false);
+        } else {
+            setModeCurrent(true);
+        }
+    };
+</script>
 
 <slot />
