@@ -30,11 +30,12 @@
 </script>
 
 <AppBar
-    background="bg-surface-100 dark:bg-surface-800"
+    background="bg-primary-500 dark:bg-primary-700"
     gridColumns="grid-cols-3"
     slotDefault="place-self-center"
     slotTrail="place-content-end"
-    shadow="shadow-xl"
+    padding="px-5"
+    class="text-white"
 >
     <svelte:fragment slot="lead">
         <div class="flex">
@@ -73,8 +74,16 @@
             </div>
         {:else}
             <div class="hidden sm:grid items-center grid-flow-col px-2 justify-self-end gap-x-4">
-                <a class="btn variant-soft" href="/auth/login">Sign In</a>
-                <a class="btn variant-filled" href="/auth/register"> Get Started </a>
+                <a
+                    class="text-white hover:anchor transition-all hover:text-white"
+                    href="/auth/login">Sign In</a
+                >
+                <a
+                    class="btn btn-sm variant-filled bg-white text-primary-600 hover:shadow-md hover:scale-105"
+                    href="/auth/register"
+                >
+                    Get Started
+                </a>
             </div>
         {/if}
     </svelte:fragment>

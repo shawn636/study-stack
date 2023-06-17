@@ -1,7 +1,9 @@
 <script lang="ts">
     import Fa from 'svelte-fa';
-    import { faStar } from '@fortawesome/free-solid-svg-icons';
+    import { faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
+    import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
     import { faFileLines, faClock, faBarChart } from '@fortawesome/free-regular-svg-icons';
+    import { Avatar } from '@skeletonlabs/skeleton';
 
     const title = 'The Book of John';
     const rating_avg = 3.5;
@@ -11,9 +13,10 @@
     const est_time_hr = 3;
     const est_time_min = 56;
     const difficulty = 'Beginner';
-    const instructor_name = 'Paul Sasis';
-    // const price_orig = 249.99;
+    const instructor_name = 'Paul John Matthew Sasis';
+    const price_orig = 249.99;
     const price_curr = 179.99;
+    let toggled = false;
 </script>
 
 <div class="grid grid-flow-row rounded-md p-4 gap-y-2">
@@ -60,10 +63,38 @@
     <hr class="mx-2" />
 
     <!-- Instructor (Below) -->
-    <div class="grid grid-flow-col items-center justify-items-start">
-        <div class="rounded-full w-6 h-6 placeholder" />
-        <p class="text-sm text-gray-500 font-light">{instructor_name}</p>
-        <p class="justify-self-end">{price_curr}</p>
+    <div class="px-2 grid grid-flow-col items-center justify-items-start">
+        <div class="flex flex-flow-col items-center gap-x-1">
+            <Avatar class="w-8" initials="" />
+            <p class="text-sm text-gray-500 font-light">{instructor_name}</p>
+        </div>
     </div>
     <!-- Instructor (Above) -->
+
+    <!-- Actions (Below) -->
+    <div
+        class="grid grid-rows-1 grid-cols-[auto_1fr] justify-items-start w-full items-center text-center"
+    >
+        <div class="grid grid-rows-2 items-center max-w-min">
+            <p class="text-sm text-gray-500 font-light line-through">${price_orig}</p>
+            <p class="text-lg font-medium">${price_curr}</p>
+        </div>
+        <div class="grid grid-cols-[1fr_auto] justify-self-end gap-x-2 items-center">
+            <button
+                type="button"
+                class="btn-icon variant-filled bg-slate-300 btn-icon-sm"
+                on:click={() => (toggled = !toggled)}
+            >
+                {#if toggled}
+                    <Fa icon={faHeartOutline} class="text-lg text-surface-800" />
+                {:else}
+                    <Fa icon={faHeart} class="text-lg text-red-500" />
+                {/if}
+            </button>
+            <button class="btn btn-sm variant-filled-secondary justify-self-end">
+                Enroll Now
+            </button>
+        </div>
+    </div>
+    <!-- Actions (Above) -->
 </div>

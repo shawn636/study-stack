@@ -6,7 +6,7 @@
 
 <a
     href="/categories"
-    class="card card-hover w-40 h-full grid grid-flow-row text-center justify-items-center p-4 items-center"
+    class="card card-hover bg-surface-50 w-40 h-full grid grid-flow-row text-center justify-items-center p-4 items-center ring-0"
 >
     <div class="rounded-full bg-white grid justify-items-center items-center m-0 p-0 shadow-sm">
         <img src={category.img_href} alt={category.title} class="w-20 h-20 p-4 m-0" />
