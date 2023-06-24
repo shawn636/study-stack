@@ -14,18 +14,26 @@ datasource db {
 // COURSE RELATED MODELS
 
 model Course {
-  id              Int      @id @default(autoincrement())
-  title           String   @db.MediumText
-  description     String   @db.LongText
-  category        Category @relation(fields: [categoryId], references: [id])
-  categoryId      Int
-  price           Decimal
-  discountedPrice Decimal?
-  lessons         Lesson[]
-  instructor      User     @relation(fields: [instructorId], references: [id])
-  instructorId    Int
-  difficulty      String
-  img_href        String
+  id                     Int      @id @default(autoincrement())
+  title                  String   @db.MediumText
+  description            String   @db.LongText
+  category               String
+  Category               Category @relation(fields: [categoryId], references: [id])
+  categoryId             Int
+  current_price          Decimal
+  original_price         Decimal
+  lessons                Lesson[]
+  instructor             String
+  Instructor             User     @relation(fields: [instructorId], references: [id])
+  organization           String?
+  instructorId           Int
+  difficulty             String
+  img_href               String
+  estimated_time_hours   Int
+  estimated_time_minutes Int
+  lesson_cnt             Int
+  rating_cnt             Int
+  rating_avg             Float
 
   @@index([categoryId])
   @@index([instructorId])

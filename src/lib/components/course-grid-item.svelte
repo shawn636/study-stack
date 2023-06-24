@@ -1,33 +1,22 @@
 <script lang="ts">
     import Fa from 'svelte-fa';
-    import { faStar, faHeart, faCircle } from '@fortawesome/free-solid-svg-icons';
-    import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
+    import { faStar, faStarHalfAlt, faHeart, faCircle } from '@fortawesome/free-solid-svg-icons';
+    import {
+        faStar as faStarOutline,
+        faHeart as faHeartOutline
+    } from '@fortawesome/free-regular-svg-icons';
     import { faFileLines, faClock } from '@fortawesome/free-regular-svg-icons';
     import Image from '$lib/components/image.svelte';
     import type Course from '$lib/models/course';
-
-    // const title = 'The Book of John';
-    const rating_avg = 3.5;
-    const rating_avg_rounded = Math.ceil(rating_avg);
-    const rating_cnt = 100;
-
-    const lesson_cnt = 18;
-    const est_time_hr = 12;
-    const est_time_min = 56;
-
-    // const difficulty = 'Beginner';
-    // const instructor_name = 'Paul John Matthew Sasis';
-    // const price_orig = 249.99;
-    // const price_curr = 179.99;
+    import { Ratings } from '@skeletonlabs/skeleton';
 
     export let course: Course;
-
-    // const img_src = 'images/course-image.webp';
+    $: rating_avg_rounded = Math.round(course.rating_avg * 2) / 2;
 
     let toggled = false;
 
     const handleToggle = () => {
-        // if not logged in, redirect to login page
+        // TODO:if not logged in, redirect to login page
         toggled = !toggled;
     };
 </script>
@@ -47,14 +36,19 @@
         <div
             class="flex flex-flow-col px-2 justify-items-center items-center gap-x-2 text-sm font-medium text"
         >
-            <p class="text-secondary-600">{rating_avg}</p>
-            {#each [1, 2, 3, 4, 5] as i}
-                <Fa
-                    icon={faStar}
-                    class="text-xs {i <= rating_avg_rounded ? 'text-yellow-500' : 'text-gray-300'}"
-                />
-            {/each}
-            <p class="text-xs text-gray-400">({rating_cnt})</p>
+            <p class="text-secondary-600">{course.rating_avg}</p>
+            <Ratings value={rating_avg_rounded} max={5}>
+                <svelte:fragment slot="empty">
+                    <Fa icon={faStarOutline} class="text-yellow-500" />
+                </svelte:fragment>
+                <svelte:fragment slot="half">
+                    <Fa icon={faStarHalfAlt} class="text-yellow-500" />
+                </svelte:fragment>
+                <svelte:fragment slot="full">
+                    <Fa icon={faStar} class="text-yellow-500" />
+                </svelte:fragment>
+            </Ratings>
+            <p class="text-xs text-gray-400">({course.rating_cnt})</p>
         </div>
     </div>
     <!-- Ratings (Above) -->
@@ -69,11 +63,13 @@
     >
         <span class="flex flex-flow-col items-center gap-x-1">
             <Fa icon={faFileLines} class="text-xs" />
-            <p class="whitespace-nowrap">{lesson_cnt} Lessons</p>
+            <p class="whitespace-nowrap">{course.lesson_cnt} Lessons</p>
         </span>
         <span class="flex flex-flow-col items-center gap-x-1">
             <Fa icon={faClock} class="text-xs" />
-            <p class="whitespace-nowrap">{est_time_hr}h {est_time_min}m</p>
+            <p class="whitespace-nowrap">
+                {course.estimated_time_hours}h {course.estimated_time_minutes}m
+            </p>
         </span>
     </div>
     <!-- Course Stats (Above) -->
@@ -92,9 +88,14 @@
 
         <div class="grid grid-rows-[1fr_1fr]">
             <div class=" grid grid-flow-col justify-items-end h-min grid-cols-[1fr_auto] gap-2">
-                <p class="line-through text-gray-400">${Number(course.price).toFixed(2)}</p>
+                {#if course.current_price < course.original_price}
+                    <p class="line-through text-gray-400">
+                        ${Number(course.current_price).toFixed(2)}
+                    </p>
+                {/if}
+
                 <p class="text-gray-600 font-semibold">
-                    ${Number(course.discountedPrice).toFixed(2)}
+                    ${Number(course.original_price).toFixed(2)}
                 </p>
             </div>
             <div class="grid grid-cols-[1fr_auto] justify-items-end">
