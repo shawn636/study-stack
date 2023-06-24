@@ -9,6 +9,8 @@ export async function seedCourse(client: PrismaClient) {
         client.user.findMany()
     ]);
 
+    const difficulties = ['Beginner', 'Intermediate', 'Advanced'];
+
     const numCourses = 30;
     const courses: Course[] = [];
 
@@ -24,7 +26,9 @@ export async function seedCourse(client: PrismaClient) {
             categoryId: faker.helpers.arrayElement(categories).id,
             price: new Prisma.Decimal(price),
             discountedPrice: isDiscounted ? new Prisma.Decimal(discountedPrice) : null,
-            instructorId: faker.helpers.arrayElement(users).id
+            instructorId: faker.helpers.arrayElement(users).id,
+            difficulty: faker.helpers.arrayElement(difficulties),
+            img_href: 'images/course-image.webp'
         };
 
         courses.push(course);

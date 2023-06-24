@@ -5,7 +5,7 @@
     import { AppShell } from '@skeletonlabs/skeleton';
     import type { LayoutData } from './$types';
     import type User from '$lib/models/user';
-    import { scrollPosition, scrollHandler } from '$lib/stores/scroll';
+    import { scrollHandler } from '$lib/stores/scroll';
 
     export let data: LayoutData;
     $: user = data.user as User;

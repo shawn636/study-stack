@@ -24,6 +24,8 @@ model Course {
   lessons         Lesson[]
   instructor      User     @relation(fields: [instructorId], references: [id])
   instructorId    Int
+  difficulty      String
+  img_href        String
 
   @@index([categoryId])
   @@index([instructorId])

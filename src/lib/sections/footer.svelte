@@ -133,7 +133,7 @@
     <!-- Only for > sm breakpoints -->
     <!-- Link Columns (Below) -->
     <div
-        class="grid grid-flow-col grid-cols-3 lg:grid-cols-4 grid-rows-[1fr_auto] lg:grid-rows-1 font-light text-md justify-items-center gap-y-8"
+        class="hidden md:grid grid-flow-col grid-cols-3 lg:grid-cols-4 grid-rows-[1fr_auto] lg:grid-rows-1 font-light text-md justify-items-center gap-y-8"
     >
         <!-- CATEOGIRIES -->
         <div class="row-start-1 row-end-2">

@@ -31,11 +31,12 @@
             <div
                 class="grid grid-row-[auto_auto] my-4 col-span-2 justify-self-center gap-y-6 gap-x-3 xs:grid-rows-[auto] xs:grid-cols-[auto_auto] lg:justify-self-start"
             >
-                <a
-                    href="/auth/register"
-                    class="btn btn-lg variant-ringed-secondary text-secondary-500">Find Courses</a
+                <a href="/courses" class="btn btn-lg variant-ringed-secondary text-secondary-500"
+                    >Find Courses</a
                 >
-                <a href="/auth/login" class="btn btn-lg variant-filled-secondary">Find Courses</a>
+                <a href="/auth/register" class="btn btn-lg variant-filled-secondary"
+                    >Join For Free</a
+                >
             </div>
 
             <div

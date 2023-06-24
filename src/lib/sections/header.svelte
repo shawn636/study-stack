@@ -1,7 +1,7 @@
 <script lang="ts">
     import Logo from '$lib/components/logo.svelte';
     import { page } from '$app/stores';
-    import { AppBar, Avatar, popup } from '@skeletonlabs/skeleton';
+    import { AppBar, Avatar, popup, type DrawerSettings } from '@skeletonlabs/skeleton';
     import { drawerStore } from '@skeletonlabs/skeleton';
     import { getHeaderLinks } from '$lib/stores/links';
     import Fa from 'svelte-fa';
@@ -27,6 +27,11 @@
     };
 
     $: headerLinks = getHeaderLinks(user == null ? false : true);
+
+    const drawerSettings: DrawerSettings = {
+        id: 'sidebar',
+        position: 'left'
+    };
 </script>
 
 <AppBar
@@ -42,7 +47,7 @@
             <button
                 class="btn outline-none"
                 on:click={() => {
-                    drawerStore.open();
+                    drawerStore.open(drawerSettings);
                 }}
             >
                 <Fa icon={faBars} size="24" />
