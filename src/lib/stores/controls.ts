@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-export const sortByValues = ['Most Popular', 'Newest', 'Highest Rated'];
+export const sortByValues = ['Relevance', 'Highest Rated', 'Lowest Price'];
 export const DisplayValues = ['Grid', 'List'];
 
 const createSortByStore = () => {

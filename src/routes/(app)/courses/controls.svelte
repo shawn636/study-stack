@@ -13,10 +13,12 @@
         id: 'control-center',
         position: 'right'
     };
+
+    export let handleKeydown: (e: KeyboardEvent) => void;
 </script>
 
 <div class="grid grid-cols-[1fr_auto] md:grid-flow-col items-center gap-x-1 md:gap-x-2">
-    <SearchBar />
+    <SearchBar {handleKeydown} />
 
     <!-- Options -->
     <button

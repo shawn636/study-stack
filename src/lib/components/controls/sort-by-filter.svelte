@@ -4,7 +4,7 @@
     import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
     import { sortBy, sortByValues } from '$lib/stores/controls';
 
-    let sortByValue = 'Most Popular';
+    let sortByValue = 'Relevance';
 
     $: {
         sortBy.set(sortByValue);

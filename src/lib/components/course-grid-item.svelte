@@ -21,7 +21,9 @@
     };
 </script>
 
-<div class="grid grid-flow-row rounded-md p-1 gap-y-2 min-w-[240px] max-w-[240px] min-h-[300px]">
+<div
+    class="grid grid-flow-row rounded-md p-1 gap-y-2 min-w-[240px] max-w-[240px] min-h-[300px] content-visibility-auto"
+>
     <Image
         src={course.img_href}
         alt="an open bible"

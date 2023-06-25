@@ -24,4 +24,4 @@ fi
 
 
 # Execute All Scripts
-source ./prisma/scripts/course_title_fulltext/apply.sh
+source ./prisma/scripts/course_fulltext/apply.sh
