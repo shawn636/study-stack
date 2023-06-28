@@ -5,13 +5,14 @@
     import { AppShell } from '@skeletonlabs/skeleton';
     import type { LayoutData } from './$types';
     import type User from '$lib/models/user';
+    import { scrollHandler } from '$lib/stores/scroll';
 
     export let data: LayoutData;
     $: user = data.user as User;
 </script>
 
 <Sidebar {user} />
-<AppShell slotPageFooter="bg-surface-100 dark:bg-surface-700">
+<AppShell slotPageFooter="bg-surface-100 dark:bg-surface-700" on:scroll={scrollHandler}>
     <svelte:fragment slot="header">
         <Header {user} />
     </svelte:fragment>

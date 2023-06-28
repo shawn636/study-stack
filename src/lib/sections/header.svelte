@@ -1,7 +1,7 @@
 <script lang="ts">
     import Logo from '$lib/components/logo.svelte';
     import { page } from '$app/stores';
-    import { AppBar, Avatar, popup } from '@skeletonlabs/skeleton';
+    import { AppBar, Avatar, popup, type DrawerSettings } from '@skeletonlabs/skeleton';
     import { drawerStore } from '@skeletonlabs/skeleton';
     import { getHeaderLinks } from '$lib/stores/links';
     import Fa from 'svelte-fa';
@@ -27,21 +27,27 @@
     };
 
     $: headerLinks = getHeaderLinks(user == null ? false : true);
+
+    const drawerSettings: DrawerSettings = {
+        id: 'sidebar',
+        position: 'left'
+    };
 </script>
 
 <AppBar
-    background="bg-surface-100 dark:bg-surface-800"
+    background="bg-primary-500 dark:bg-primary-700"
     gridColumns="grid-cols-3"
     slotDefault="place-self-center"
     slotTrail="place-content-end"
-    shadow="shadow-xl"
+    padding="px-5"
+    class="text-white"
 >
     <svelte:fragment slot="lead">
         <div class="flex">
             <button
                 class="btn outline-none"
                 on:click={() => {
-                    drawerStore.open();
+                    drawerStore.open(drawerSettings);
                 }}
             >
                 <Fa icon={faBars} size="24" />
@@ -73,8 +79,16 @@
             </div>
         {:else}
             <div class="hidden sm:grid items-center grid-flow-col px-2 justify-self-end gap-x-4">
-                <a class="btn variant-soft" href="/auth/login">Sign In</a>
-                <a class="btn variant-filled" href="/auth/register"> Get Started </a>
+                <a
+                    class="text-white hover:anchor transition-all hover:text-white"
+                    href="/auth/login">Sign In</a
+                >
+                <a
+                    class="btn btn-sm variant-filled bg-white text-primary-600 hover:shadow-md hover:scale-105"
+                    href="/auth/register"
+                >
+                    Get Started
+                </a>
             </div>
         {/if}
     </svelte:fragment>

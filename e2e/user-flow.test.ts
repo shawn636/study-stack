@@ -11,7 +11,7 @@ const ACCOUNTS = [
         pass: faker.internet.password(8, false, /[a-z]/, 'Aa1!')
     },
     {
-        name: faker.name.fullName(),
+        name: 's' + faker.name.fullName(),
         email: faker.internet.email(),
         pass: faker.internet.password(8, false, /[a-z]/, 'Aa1!')
     }

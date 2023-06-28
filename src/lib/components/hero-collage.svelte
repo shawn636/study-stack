@@ -22,7 +22,7 @@
         </div>
     </div>
     <img
-        src="images/home-image-1.png"
+        src="images/home-image-1-optimized.webp"
         alt="woman sitting down and smiling near computer"
         class="row-start-1 row-end-3 first-letter col-start-1 max-w-none hover:shadow-lg transition-all duration-300 hover:scale-105 ml-3"
     />
@@ -30,7 +30,7 @@
         class=" z-[1] px-4 h-16 w-48 mt-14 gap-2 ml-32 grid-cols-[auto_1fr] hover:shadow-lg transition-all duration-300 hover:scale-105 left-0 font-medium text-slate-800 bg-slate-100 row-start-1 col-start-1 col-end-3 justify-self-center rounded grid items-center justify-items-center shadow-md"
     >
         <img
-            src="images/home-profile-image-4-optimized.png"
+            src="images/home-profile-image-4-optimized.webp"
             alt="profile of man smiling"
             class="col-start-1 row-start-1"
         />
@@ -47,7 +47,7 @@
         </div>
     </div>
     <img
-        src="images/home-image-2.png"
+        src="images/home-image-2-optimized.webp"
         alt="man smiling with headphones drinking lemonade"
         class="row-start-1 row-end-2 first-letter col-start-2 col-end-3 max-w-none justify-self-end hover:shadow-lg transition-all duration-300 hover:scale-105"
     />
@@ -68,7 +68,7 @@
     </div>
 
     <img
-        src="images/home-image-3.png"
+        src="images/home-image-3-optimized.webp"
         alt="woman sitting down by computer with cup of tea"
         class="row-start-1 row-end-3 col-start-2 col-end-3 max-w-none justify-self-end hover:shadow-lg transition-all duration-300 hover:scale-105 mt-36 mb-12"
     />
