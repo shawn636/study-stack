@@ -3,11 +3,14 @@
     import Fa from 'svelte-fa';
     import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
     import { sortBy, sortByValues } from '$lib/stores/controls';
+    import { createEventDispatcher } from 'svelte';
 
+    const dispatch = createEventDispatcher();
     let sortByValue = 'Relevance';
 
     $: {
         sortBy.set(sortByValue);
+        dispatch('change');
     }
 </script>
 

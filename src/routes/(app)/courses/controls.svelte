@@ -1,6 +1,7 @@
 <script lang="ts">
     import Fa from 'svelte-fa';
     import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+    import { createEventDispatcher } from 'svelte';
 
     import type { DrawerSettings } from '@skeletonlabs/skeleton';
     import { drawerStore } from '@skeletonlabs/skeleton';
@@ -9,9 +10,15 @@
     import DisplaySwitch from '$lib/components/controls/display-switch.svelte';
     import Filter from '$lib/components/controls/filter.svelte';
 
+    const dispatch = createEventDispatcher();
+
     const settings: DrawerSettings = {
         id: 'control-center',
         position: 'right'
+    };
+
+    const handleChange = () => {
+        dispatch('change');
     };
 
     export let handleKeydown: (e: KeyboardEvent) => void;
@@ -29,7 +36,7 @@
         <Fa icon={faEllipsisV} />
     </button>
 
-    <SortByFilter />
+    <SortByFilter on:change={handleChange} />
 
     <DisplaySwitch />
 
