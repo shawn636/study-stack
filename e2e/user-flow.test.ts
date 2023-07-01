@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 import { faker } from '@faker-js/faker';
 import { auth } from './utils/auth';
-import { initials } from './utils/user';
 
 const ACCOUNTS = [
     {
@@ -47,9 +46,7 @@ test.describe('all-user-flow', async () => {
         await page.waitForLoadState('domcontentloaded');
         expect(page).toHaveURL('/');
 
-        const user_initials = initials(name);
-
-        await page.getByRole('button').filter({ hasText: user_initials }).click();
+        await page.getByTestId('profile-button').click();
         await expect(page.getByText(name)).toBeVisible();
         await expect(page.getByText(email)).toBeVisible();
         await page.getByRole('button', { name: 'Sign Out' }).click();
@@ -181,9 +178,7 @@ test.describe('all-user-flow', async () => {
         await page.waitForTimeout(3000);
         expect(page).toHaveURL('/');
 
-        const user_initials = initials(name);
-
-        await page.getByRole('button').filter({ hasText: user_initials }).click();
+        await page.getByTestId('profile-button').click();
         await expect(page.getByText(name)).toBeVisible();
         await expect(page.getByText(email)).toBeVisible();
     });

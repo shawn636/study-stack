@@ -1,5 +1,7 @@
 <script lang="ts">
     import HeroCollage from '$lib/components/hero-collage.svelte';
+    import { scrollPosition } from '$lib/stores/scroll';
+
     const cta = 'Learn New Skills Online With Top ';
     const ctaUnderline = 'Educators';
     const subheading = `Build Skills With Courses, Certificates, 
@@ -8,7 +10,11 @@
     const tags = ['Over 12 million students', 'More than 60,000 courses', 'Learn anything online'];
 </script>
 
-<div class="bg-primary-500 dark:bg-primary-700 grid justify-items-center">
+{#if $scrollPosition < 0}
+    <div class="absolute bg-primary-500 dark:bg-primary-700 h-64 w-full -z-10" />
+{/if}
+
+<div class="bg-primary-500 dark:bg-primary-700 text-white grid justify-items-center z-10">
     <div
         class="grid justify-items-center gap-x-5 grid-cols-1 lg:grid-cols-[1fr_350px] px-5 pt-3 pb-7 md:px-24 max-w-7xl"
     >
@@ -25,11 +31,12 @@
             <div
                 class="grid grid-row-[auto_auto] my-4 col-span-2 justify-self-center gap-y-6 gap-x-3 xs:grid-rows-[auto] xs:grid-cols-[auto_auto] lg:justify-self-start"
             >
-                <a
-                    href="/auth/register"
-                    class="btn btn-lg variant-ringed-secondary text-secondary-500">Find Courses</a
+                <a href="/courses" class="btn btn-lg variant-ringed-secondary text-secondary-500"
+                    >Find Courses</a
                 >
-                <a href="/auth/login" class="btn btn-lg variant-filled-secondary">Find Courses</a>
+                <a href="/auth/register" class="btn btn-lg variant-filled-secondary"
+                    >Join For Free</a
+                >
             </div>
 
             <div
