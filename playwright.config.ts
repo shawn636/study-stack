@@ -6,6 +6,7 @@ const config: PlaywrightTestConfig = defineConfig({
     outputDir: 'e2e/artifacts',
     testMatch: /(.+\.)?(test|spec)\.[jt]s/,
     fullyParallel: false,
+    workers: 1,
     use: {
         baseURL: 'http://localhost:3000'
     },
