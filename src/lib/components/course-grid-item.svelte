@@ -82,7 +82,6 @@
         <!-- Instructor Row-->
         <div class="px-2 grid grid-flow-col items-center justify-items-start">
             <div class="flex flex-flow-col items-center gap-x-1">
-                <!-- <Avatar class="w-8" initials="" /> -->
                 <Fa icon={faCircle} class="text-2xl text-surface-400" />
                 <p class="text-sm text-gray-500 font-light">{course.instructor}</p>
             </div>

@@ -18,7 +18,7 @@
         <Header {user} />
     </svelte:fragment>
 
-    <svelte:fragment slot="sidebarLeft">
+    <!-- <svelte:fragment slot="sidebarLeft">
         <nav class="list-nav bg-surface-100 dark:bg-surface-900/70 h-full p-2">
             {#each links as link}
                 <a href={link.href} class="list-nav-item">
@@ -31,9 +31,9 @@
                 </a>
             {/each}
         </nav>
-    </svelte:fragment>
+    </svelte:fragment> -->
 
-    <div class="p-4">
+    <div class="p-4 bg-surface-50 h-full dark:bg-surface-900">
         <slot />
     </div>
 </AppShell>
