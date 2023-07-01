@@ -5,7 +5,13 @@
     import { drawerStore } from '@skeletonlabs/skeleton';
     import { getHeaderLinks } from '$lib/stores/links';
     import Fa from 'svelte-fa';
-    import { faBars } from '@fortawesome/free-solid-svg-icons';
+    import {
+        faBars,
+        faChevronDown,
+        faGear,
+        faDoorOpen,
+        faHouse
+    } from '@fortawesome/free-solid-svg-icons';
     import type User from '$lib/models/user';
     import { goto } from '$app/navigation';
 
@@ -67,16 +73,90 @@
     <svelte:fragment slot="trail">
         {#if user}
             <button
-                class="btn btn-icon"
+                class="btn h-10 variant-filled shadow-md px-2 bg-white text-surface-700 font-semibold text-sm dark:bg-surface-700 dark:text-surface-50"
                 data-testid="profile-button"
-                use:popup={{ event: 'click', target: 'profile', placement: 'bottom' }}
+                use:popup={{
+                    event: 'click',
+                    target: 'profile',
+                    placement: 'bottom-end',
+                    middleware: {
+                        offset: {
+                            mainAxis: 10,
+                            crossAxis: -10
+                        }
+                    }
+                }}
             >
-                <Avatar initials={initials(user.name)} />
+                <Avatar initials={initials(user.name)} width="h-8" />
+                <span>{user.name}</span>
+                <Fa icon={faChevronDown} size="12" class="text-surface-700 dark:text-white" />
             </button>
-            <div class="card w-64 p-4 grid grid-flow-row rounded-xl shadow-xl" data-popup="profile">
-                <p class="font-bold">{user.name}</p>
-                <p>{user.email}</p>
-                <button class="btn variant-filled" on:click={signOut}>Sign Out</button>
+            <div
+                class="card w-64 p-4 grid grid-flow-row rounded-xl shadow-xl text-surface-800 bg-white dark:text-white"
+                data-popup="profile"
+            >
+                <nav class="list-nav grid grid-flow-row grid-cols-[1fr] p-0">
+                    <ul>
+                        <!-- Profile item -->
+                        <li>
+                            <a href="/account">
+                                <div
+                                    class="grid grid-cols-[auto_1fr] grid-rows-[1fr_1fr] gap-x-2 items-center"
+                                >
+                                    <div class="row-start-1 row-end-3 col-start-1">
+                                        <Avatar initials={initials(user.name)} width="h-8" />
+                                    </div>
+                                    <span class="text-sm row-start-1 font-semibold"
+                                        >{user.name}</span
+                                    >
+                                    <span
+                                        class="text-xs row-start-2 text-gray-500 dark:text-gray-400"
+                                        >{user.email}</span
+                                    >
+                                </div>
+                            </a>
+                        </li>
+
+                        <hr />
+
+                        <!-- Students -->
+                        <p class="text-sm font-semibold">Students</p>
+
+                        <li>
+                            <a href="/home">
+                                <Fa
+                                    icon={faHouse}
+                                    size="20"
+                                    class="text-gray-500 dark:text-gray-200"
+                                />
+                                <span>Home</span>
+                            </a>
+                        </li>
+
+                        <!-- Settings -->
+                        <li>
+                            <a href="/">
+                                <Fa
+                                    icon={faGear}
+                                    size="20"
+                                    class="text-gray-500 dark:text-gray-200"
+                                />
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <!-- Sign Out -->
+                        <li>
+                            <button class="w-full" on:click={signOut}>
+                                <Fa
+                                    icon={faDoorOpen}
+                                    size="20"
+                                    class="text-gray-500 dark:text-gray-200"
+                                />
+                                <span>Sign Out</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         {:else}
             <div class="hidden sm:grid items-center grid-flow-col px-2 justify-self-end gap-x-4">
