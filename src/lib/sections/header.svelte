@@ -68,6 +68,7 @@
         {#if user}
             <button
                 class="btn btn-icon"
+                data-testid="profile-button"
                 use:popup={{ event: 'click', target: 'profile', placement: 'bottom' }}
             >
                 <Avatar initials={initials(user.name)} />
