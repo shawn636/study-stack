@@ -233,9 +233,11 @@
                                     easing: cubicInOut
                                 }}
                             >
-                                <Fa icon={faCircleCheck} />
-                                <div class="alert-message">
-                                    <p>Login Successful</p>
+                                <div
+                                    class="alert-message grid items-center grid-flow-col gap-x-2 text-center"
+                                >
+                                    <Fa icon={faCircleCheck} />
+                                    <p class="pb-1">Login Successful</p>
                                 </div>
                             </div>
                         {/if}
