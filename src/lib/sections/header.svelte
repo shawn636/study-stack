@@ -73,7 +73,7 @@
     <svelte:fragment slot="trail">
         {#if user}
             <button
-                class="btn h-10 variant-filled shadow-md px-2 bg-white text-surface-700 font-semibold text-sm dark:bg-surface-700 dark:text-surface-50"
+                class="btn h-10 variant-filled shadow-sm px-2 bg-white text-surface-700 font-semibold text-sm dark:bg-surface-700 dark:text-surface-50 rounded-full xs:rounded-md grid grid-flow-col items-center p-0 m-0 gap-x-1 w-min"
                 data-testid="profile-button"
                 use:popup={{
                     event: 'click',
@@ -87,9 +87,20 @@
                     }
                 }}
             >
-                <Avatar initials={initials(user.name)} width="h-8" />
-                <span>{user.name}</span>
-                <Fa icon={faChevronDown} size="12" class="text-surface-700 dark:text-white" />
+                <Avatar initials={initials(user.name)} width="h-8" class="hidden xs:block" />
+                <div class="h-8 w-4 relative flex justify-center items-center">
+                    <span
+                        class="absolute block xs:hidden text-center top-1/2 transform -translate-y-1/2 right-0.5"
+                    >
+                        {initials(user.name)}
+                    </span>
+                </div>
+                <span class="hidden xs:block">{user.name}</span>
+                <Fa
+                    icon={faChevronDown}
+                    size="12"
+                    class="text-surface-700 dark:text-white hidden xs:block"
+                />
             </button>
             <div
                 class="card w-64 p-4 grid grid-flow-row rounded-xl shadow-xl text-surface-800 bg-white dark:text-white"
