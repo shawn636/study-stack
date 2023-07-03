@@ -84,7 +84,7 @@
         "ts-interface-checker": "^1.0.2",
         "ts-node": "^10.9.1",
         "tslib": "^2.6.0",
-        "typescript": "^5.1.5",
+        "typescript": "^5.1.6",
         "uuid": "^9.0.0",
         "vercel": "^30.2.3",
         "vite": "^4.3.9",
