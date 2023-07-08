@@ -147,6 +147,7 @@ model User {
   Organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   organizationId Int?
   phone_number   String?
+  photo_url      String?
   state          String?
 
   @@index([auth_user_id])
