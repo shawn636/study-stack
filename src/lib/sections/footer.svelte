@@ -66,6 +66,7 @@
                     required
                 />
                 <button
+                    aria-label="Submit Email Address"
                     type="button"
                     class="btn font-medium rounded-l-none rounded-r-full variant-filled-secondary"
                     >Submit</button
@@ -186,6 +187,7 @@
                         required
                     />
                     <button
+                        aria-label="Submit Email Address"
                         type="button"
                         class="btn font-medium rounded-l-none rounded-r-full variant-filled-secondary active:scale-100"
                         >Submit</button

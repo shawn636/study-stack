@@ -5,6 +5,7 @@
 </script>
 
 <button
+    aria-label="Filter"
     type="button"
     class="btn btn-sm first:items-center justify-center gap-2 variant-ghost-primary text-primary-700 dark:text-primary-400 hidden md:flex"
     use:popup={{

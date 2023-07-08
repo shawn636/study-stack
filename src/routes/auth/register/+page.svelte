@@ -280,17 +280,32 @@
 
                         <!-- OAuth Buttons -->
                         <div class="grid grid-flow-row gap-y-3">
-                            <button type="button" class="btn variant-soft">
+                            <button
+                                disabled
+                                type="button"
+                                class="btn variant-soft"
+                                aria-label="Sign up with Google"
+                            >
                                 <Fa icon={faGoogle} size="20" />
                                 <span>Sign up with Google</span>
                             </button>
 
-                            <button type="button" class="btn variant-soft">
+                            <button
+                                disabled
+                                type="button"
+                                class="btn variant-soft"
+                                aria-label="Sign up with Facebook"
+                            >
                                 <Fa icon={faFacebook} size="20" />
                                 <span>Sign up with Facebook</span>
                             </button>
 
-                            <button type="button" class="btn variant-soft">
+                            <button
+                                disabled
+                                type="button"
+                                class="btn variant-soft"
+                                aria-label="Sign up with Apple"
+                            >
                                 <Fa icon={faApple} size="20" />
                                 <span>Sign up with Apple</span>
                             </button>
@@ -348,6 +363,7 @@
                                     required
                                 />
                                 <button
+                                    aria-label="Toggle password visibility"
                                     type="button"
                                     on:click={toggleShow1}
                                     class="btn-icon rounded-l-none rounded-r-lg variant-filled-primary"
@@ -367,6 +383,7 @@
                                     required
                                 />
                                 <button
+                                    aria-label="Toggle password visibility"
                                     type="button"
                                     on:click={toggleShow1}
                                     class="btn-icon rounded-l-none rounded-r-lg variant-filled-primary"
@@ -403,6 +420,7 @@
                                     required
                                 />
                                 <button
+                                    aria-label="Toggle password confirmation visibility"
                                     type="button"
                                     on:click={toggleShow2}
                                     class="btn-icon rounded-l-none rounded-r-lg variant-filled-primary"
@@ -422,6 +440,7 @@
                                     required
                                 />
                                 <button
+                                    aria-label="Toggle password confirmation visibility"
                                     type="button"
                                     on:click={toggleShow2}
                                     class="btn-icon rounded-l-none rounded-r-lg variant-filled-primary"
@@ -446,6 +465,7 @@
                             </div>
                         {/if}
                         <button
+                            aria-label="Submit form"
                             type="submit"
                             class="btn variant-filled-secondary font-medium flex gap-2"
                         >
@@ -456,6 +476,7 @@
                             {/if}
                         </button>
                         <button
+                            aria-label="Go back"
                             type="button"
                             on:click={prevForm}
                             class="btn variant-filled-surface font-medium">Go Back</button

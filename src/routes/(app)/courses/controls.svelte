@@ -29,6 +29,7 @@
 
     <!-- Options -->
     <button
+        aria-label="Options"
         type="button"
         class="btn-icon text-gray-500 w-min pl-4 md:hidden"
         on:click={() => drawerStore.open(settings)}

@@ -100,10 +100,14 @@
                 </p>
             </div>
             <div class="grid grid-cols-[1fr_auto] justify-items-end">
-                <button class="btn-icon btn-icon-sm" on:click={handleToggle}>
+                <button
+                    class="btn-icon btn-icon-sm"
+                    on:click={handleToggle}
+                    aria-label="Toggle Favorite"
+                >
                     <Fa icon={toggled ? faHeart : faHeartOutline} class="text-pink-500" />
                 </button>
-                <button class="btn btn-sm variant-filled-secondary">
+                <button class="btn btn-sm variant-filled-secondary" aria-label="Enroll">
                     <p class="text-sm font-medium">Enroll Now</p>
                 </button>
             </div>

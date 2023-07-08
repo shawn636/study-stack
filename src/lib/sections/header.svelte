@@ -51,6 +51,7 @@
     <svelte:fragment slot="lead">
         <div class="flex">
             <button
+                aria-label="Toggle sidebar"
                 class="btn outline-none"
                 on:click={() => {
                     drawerStore.open(drawerSettings);
@@ -73,6 +74,7 @@
     <svelte:fragment slot="trail">
         {#if user}
             <button
+                aria-label="Profile"
                 class="btn h-10 variant-filled shadow-sm px-2 bg-white text-surface-700 font-semibold text-sm dark:bg-surface-700 dark:text-surface-50 rounded-full xs:rounded-md grid grid-flow-col items-center p-0 m-0 gap-x-1 w-min"
                 data-testid="profile-button"
                 use:popup={{
@@ -157,7 +159,7 @@
                         </li>
                         <!-- Sign Out -->
                         <li>
-                            <button class="w-full" on:click={signOut}>
+                            <button aria-label="Sign Out" class="w-full" on:click={signOut}>
                                 <Fa
                                     icon={faDoorOpen}
                                     size="20"

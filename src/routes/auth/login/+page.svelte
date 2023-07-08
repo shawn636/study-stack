@@ -257,19 +257,34 @@
 
                     <!-- OAuth Buttons -->
                     <div class="grid grid-flow-row gap-y-3">
-                        <button type="button" class="btn variant-soft">
+                        <button
+                            disabled
+                            type="button"
+                            class="btn variant-soft"
+                            aria-label="Sign in with Google"
+                        >
                             <Fa icon={faGoogle} size="20" />
-                            <span>Sign up with Google</span>
+                            <span>Sign in with Google</span>
                         </button>
 
-                        <button type="button" class="btn variant-soft">
+                        <button
+                            disabled
+                            type="button"
+                            class="btn variant-soft"
+                            aria-label="Sign in with Facebook"
+                        >
                             <Fa icon={faFacebook} size="20" />
-                            <span>Sign up with Facebook</span>
+                            <span>Sign in with Facebook</span>
                         </button>
 
-                        <button type="button" class="btn variant-soft">
+                        <button
+                            disabled
+                            type="button"
+                            class="btn variant-soft"
+                            aria-label="Sign in with Apple"
+                        >
                             <Fa icon={faApple} size="20" />
-                            <span>Sign up with Apple</span>
+                            <span>Sign in with Apple</span>
                         </button>
                     </div>
                     <p class="text-sm py-2 text-slate-500">

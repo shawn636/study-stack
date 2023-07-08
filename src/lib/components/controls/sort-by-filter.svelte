@@ -17,6 +17,7 @@
 <div class="hidden md:grid grid-flow-col items-center w-min gap-2">
     <aside class="whitespace-nowrap">Sort by:</aside>
     <button
+        aria-label="Sort by"
         type="button"
         class="btn btn-sm variant-soft-surface w-32"
         use:popup={{

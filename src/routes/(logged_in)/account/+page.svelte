@@ -153,12 +153,14 @@
     {#if edit_mode}
         <div class="grid grid-flow-col gap-x-2 items-center justify-self-end">
             <button
+                aria-label="Cancel Changes"
                 class="btn btn-sm mt-4 justify-self-end text-gray-700 dark:text-gray-500"
                 on:click={cancelChanges}
             >
                 Cancel
             </button>
             <button
+                aria-label="Save Changes"
                 class="btn btn-sm variant-filled-primary mt-4 justify-self-end"
                 on:click={saveChanges}
             >
@@ -167,6 +169,7 @@
         </div>
     {:else}
         <button
+            aria-label="Edit Profile"
             class="btn btn-sm variant-soft mt-4 justify-self-end"
             on:click={() => {
                 edit_mode = !edit_mode;
