@@ -14,7 +14,7 @@
     import { createForm } from 'svelte-forms-lib';
     import { ProgressRadial } from '@skeletonlabs/skeleton';
     import { goto } from '$app/navigation';
-    import { registrationForm } from '$lib/schema/registration-form';
+    import { registrationForm } from './registration-form-schema';
 
     // Controls
     let showPassword1 = false;

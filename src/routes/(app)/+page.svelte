@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Categories from '$lib/sections/categories.svelte';
-    import HeroBanner from '$lib/sections/hero-banner.svelte';
+    import Categories from './categories.svelte';
+    import HeroBanner from './hero-banner.svelte';
     import type { PageServerData } from './$types';
     export let data: PageServerData;
 </script>

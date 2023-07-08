@@ -1,7 +1,7 @@
 <script lang="ts">
     import Sidebar from '$lib/components/sidebar.svelte';
-    import Header from '$lib/sections/header.svelte';
-    import Footer from '$lib/sections/footer.svelte';
+    import Header from '$lib/components/header.svelte';
+    import Footer from '$lib/components/footer.svelte';
     import { AppShell } from '@skeletonlabs/skeleton';
     import type { LayoutData } from './$types';
     import type User from '$lib/models/user';

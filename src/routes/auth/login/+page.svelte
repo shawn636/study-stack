@@ -12,7 +12,7 @@
     import { createForm } from 'svelte-forms-lib';
     import { ProgressRadial } from '@skeletonlabs/skeleton';
     import { goto } from '$app/navigation';
-    import { loginForm } from '$lib/schema/login-form';
+    import { loginForm } from './login-form-schema';
 
     // Form Validation
     const { form, errors, validateField, touched, handleChange, handleSubmit } = createForm({
