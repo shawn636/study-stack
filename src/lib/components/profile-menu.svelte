@@ -4,7 +4,7 @@
     import { Avatar, popup } from '@skeletonlabs/skeleton';
     import { initials } from '$lib/client/util';
     import Fa from 'svelte-fa';
-    import { faChevronDown, faGear, faDoorOpen, faHouse } from '@fortawesome/free-solid-svg-icons';
+    import { faChevronDown, faDoorOpen, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';
     import { goto } from '$app/navigation';
 
     export let user: User;
@@ -20,6 +20,7 @@
     };
 </script>
 
+<!-- Profile Button -->
 <button
     aria-label="Profile"
     class="btn h-10 variant-filled shadow-sm px-2 bg-white text-surface-700 font-semibold text-sm dark:bg-surface-700 dark:text-surface-50 rounded-full xs:rounded-md grid grid-flow-col items-center p-0 m-0 gap-x-1 w-min"
@@ -47,29 +48,25 @@
     <span class="hidden xs:block">{user.name}</span>
     <Fa icon={faChevronDown} size="12" class="text-surface-700 dark:text-white hidden xs:block" />
 </button>
+
+<!-- Pop Up Menu -->
 <div
     class="card w-64 p-4 grid grid-flow-row rounded-xl shadow-xl text-surface-800 bg-white dark:text-white"
     data-popup="profile"
 >
-    <nav class="list-nav grid grid-flow-row grid-cols-[1fr] p-0">
+    <nav class="list-nav grid grid-flow-row grid-cols-[1fr] p-0 gap-y-2">
+        <!-- Profile Summary -->
+        <div class="grid grid-cols-[auto_1fr] grid-rows-[1fr_1fr] gap-x-2 items-center">
+            <div class="row-start-1 row-end-3 col-start-1">
+                <Avatar initials={initials(user.name)} width="h-8" />
+            </div>
+            <span class="text-sm row-start-1 font-semibold">{user.name}</span>
+            <span class="text-xs row-start-2 text-gray-500 dark:text-gray-400">{user.email}</span>
+        </div>
+
+        <hr />
+
         <ul>
-            <!-- Profile item -->
-            <li>
-                <a href="/account">
-                    <div class="grid grid-cols-[auto_1fr] grid-rows-[1fr_1fr] gap-x-2 items-center">
-                        <div class="row-start-1 row-end-3 col-start-1">
-                            <Avatar initials={initials(user.name)} width="h-8" />
-                        </div>
-                        <span class="text-sm row-start-1 font-semibold">{user.name}</span>
-                        <span class="text-xs row-start-2 text-gray-500 dark:text-gray-400"
-                            >{user.email}</span
-                        >
-                    </div>
-                </a>
-            </li>
-
-            <hr />
-
             <!-- Students -->
             <p class="text-sm font-semibold">Students</p>
 
@@ -82,9 +79,9 @@
 
             <!-- Settings -->
             <li>
-                <a href="/">
-                    <Fa icon={faGear} size="20" class="text-gray-500 dark:text-gray-200" />
-                    <span>Settings</span>
+                <a href="/account">
+                    <Fa icon={faUser} size="20" class="text-gray-500 dark:text-gray-200" />
+                    <span>My Account</span>
                 </a>
             </li>
             <!-- Sign Out -->
