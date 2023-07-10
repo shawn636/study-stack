@@ -37,7 +37,7 @@
         "@commitlint/cli": "^17.6.6",
         "@commitlint/config-conventional": "^17.6.6",
         "@faker-js/faker": "^7.6.0",
-        "@floating-ui/dom": "^1.4.2",
+        "@floating-ui/dom": "^1.4.4",
         "@fortawesome/free-brands-svg-icons": "^6.4.0",
         "@fortawesome/free-regular-svg-icons": "^6.4.0",
         "@fortawesome/free-solid-svg-icons": "^6.4.0",
