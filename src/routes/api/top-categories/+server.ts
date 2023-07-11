@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types';
-import { db } from '$lib/database';
+import { db } from '$lib/server/database';
 
 export const GET = (async () => {
     const conn = db.connection();

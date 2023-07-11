@@ -31,7 +31,7 @@
     <button
         aria-label="Options"
         type="button"
-        class="btn-icon text-gray-500 w-min pl-4 md:hidden"
+        class="pl-4 text-gray-500 btn-icon w-min md:hidden"
         on:click={() => drawerStore.open(settings)}
     >
         <Fa icon={faEllipsisV} />

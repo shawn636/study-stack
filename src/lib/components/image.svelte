@@ -91,7 +91,7 @@
             <div
                 class={'text-center text-gray-400 dark:text-gray-500 grid items-center justify-items-center h-full'}
             >
-                <p class="dark:text-white text-gray-700">Image failed to load</p>
+                <p class="text-gray-700 dark:text-white">Image failed to load</p>
             </div>
         </div>
     {:else}

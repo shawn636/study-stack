@@ -55,7 +55,7 @@
     };
 </script>
 
-<div class="grid p-5 gap-y-4 justify-items-center">
+<div class="p-5 grid gap-y-4 justify-items-center">
     <div class="container max-w-5xl grid gap-y-4">
         <h1 class="text-lg font-bold">Find a Course</h1>
 
@@ -77,8 +77,8 @@
                 {/each}
             </div>
         {:else if data.courses.length === 0}
-            <div class="grid mt-8 mb-6 justify-items-center items-center content-visibility-auto">
-                <div class="card p-4 flex flex-flow-col items-center gap-x-2">
+            <div class="items-center mt-8 mb-6 grid justify-items-center content-visibility-auto">
+                <div class="flex items-center p-4 card flex-flow-col gap-x-2">
                     <Fa icon={faBinoculars} class="text-xl" />
                     <span>No courses found</span>
                 </div>

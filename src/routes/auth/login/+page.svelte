@@ -80,13 +80,13 @@
 </script>
 
 <form
-    class="h-full grid items-center w-full"
+    class="items-center w-full h-full grid"
     id="register-form"
     on:submit={handleSubmit}
     data-test-id="sign-in-form"
 >
     <div
-        class="grid justify-items-center items-center h-full row-start-1 row-end-2 col-start-1 col-end-2"
+        class="items-center h-full grid justify-items-center row-start-1 row-end-2 col-start-1 col-end-2"
         id="main"
         in:fly={{
             x: '100%',
@@ -100,10 +100,10 @@
             easing: cubicInOut
         }}
     >
-        <div class="grid items-center">
+        <div class="items-center grid">
             <a
                 href="/"
-                class="btn btn-iconn text-surface-700 dark:text-surface-300 justify-start flex items-center text-center gap-1 p-1"
+                class="flex items-center justify-start p-1 text-center btn btn-iconn text-surface-700 dark:text-surface-300 gap-1"
             >
                 <Fa icon={faChevronLeft} />
                 Home
@@ -112,8 +112,8 @@
                 <div class="text-center">
                     <!-- Header -->
                     <div class="py-5">
-                        <h2 class="h2 font-semibold">Welcome</h2>
-                        <p class="text-xs my-2 text-slate-500">Please enter your details below</p>
+                        <h2 class="font-semibold h2">Welcome</h2>
+                        <p class="my-2 text-xs text-slate-500">Please enter your details below</p>
                     </div>
 
                     <div class="grid grid-flow-row text-md gap-y-4">
@@ -185,7 +185,7 @@
                         <button
                             type="submit"
                             aria-label="continue"
-                            class="btn variant-filled-secondary font-medium"
+                            class="font-medium btn variant-filled-secondary"
                         >
                             {#if isSubmitting}
                                 <ProgressRadial width="w-6" stroke={100} />
@@ -195,7 +195,7 @@
                         </button>
                         {#if submissionError}
                             <div
-                                class="alert variant-ghost-error mt-4 items-center"
+                                class="items-center mt-4 alert variant-ghost-error"
                                 in:slide|local={{
                                     duration: 300,
                                     easing: cubicInOut
@@ -214,7 +214,7 @@
                                         class="row-start-1 row-end-2 col-start-1 col-end-2"
                                     />
                                     <div
-                                        class="alert-message grid items-center h-fullrow-start-1 row-end-2 col-start-2 col-end-3"
+                                        class="items-center alert-message grid h-fullrow-start-1 row-end-2 col-start-2 col-end-3"
                                     >
                                         <p>{submissionError}</p>
                                     </div>
@@ -223,7 +223,7 @@
                         {/if}
                         {#if showSuccess}
                             <div
-                                class="alert variant-ghost-success mt-4"
+                                class="mt-4 alert variant-ghost-success"
                                 in:slide|local={{
                                     duration: 300,
                                     easing: cubicInOut
@@ -234,7 +234,7 @@
                                 }}
                             >
                                 <div
-                                    class="alert-message grid items-center grid-flow-col gap-x-2 text-center"
+                                    class="items-center text-center alert-message grid grid-flow-col gap-x-2"
                                 >
                                     <Fa icon={faCircleCheck} />
                                     <p class="pb-1">Login Successful</p>
@@ -248,7 +248,7 @@
                     <div class="grid grid-cols-[1fr_auto_1fr] items-center py-5">
                         <hr />
                         <p
-                            class="text-sm px-2 font-semibold uppercase text-surface-500 dark:text-surface-400"
+                            class="px-2 text-sm font-semibold uppercase text-surface-500 dark:text-surface-400"
                         >
                             or
                         </p>
@@ -287,9 +287,9 @@
                             <span>Sign in with Apple</span>
                         </button>
                     </div>
-                    <p class="text-sm py-2 text-slate-500">
+                    <p class="py-2 text-sm text-slate-500">
                         Don't have an account? <a
-                            class="text-primary-500 font-semibold hover:text-primary-600"
+                            class="font-semibold text-primary-500 hover:text-primary-600"
                             href="/auth/register">Sign up</a
                         >
                     </p>

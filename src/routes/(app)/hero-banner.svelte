@@ -11,17 +11,17 @@
 </script>
 
 {#if $scrollPosition < 0}
-    <div class="absolute bg-primary-500 dark:bg-primary-700 h-64 w-full -z-10" />
+    <div class="absolute w-full h-64 bg-primary-500 dark:bg-primary-700 -z-10" />
 {/if}
 
-<div class="bg-primary-500 dark:bg-primary-700 text-white grid justify-items-center z-10">
+<div class="z-10 text-white bg-primary-500 dark:bg-primary-700 grid justify-items-center">
     <div
         class="grid justify-items-center gap-x-5 grid-cols-1 lg:grid-cols-[1fr_350px] px-5 pt-3 pb-7 md:px-24 max-w-7xl"
     >
         <div
             class="grid h-full grid-flow-row grid-cols-2 grid-rows-[repeat(4,auto)] gap-x-5 gap-y-5 text-white"
         >
-            <h1 class="col-span-2 text-4xl font-semibold">
+            <h1 class="text-4xl font-semibold col-span-2">
                 <span>{cta}</span>
                 <span class="underline text-secondary-500">{ctaUnderline}</span>
             </h1>
@@ -40,7 +40,7 @@
             </div>
 
             <div
-                class="grid gap-4 col-span-2 grid-flow-row-dense md:grid-flow-col-dense items-center justify-items-center text-sm text-center"
+                class="items-center text-sm text-center grid gap-4 col-span-2 grid-flow-row-dense md:grid-flow-col-dense justify-items-center"
             >
                 {#each tags as tag}
                     <div

@@ -14,12 +14,12 @@
     }
 </script>
 
-<div class="hidden md:grid grid-flow-col items-center w-min gap-2">
+<div class="items-center hidden md:grid grid-flow-col w-min gap-2">
     <aside class="whitespace-nowrap">Sort by:</aside>
     <button
         aria-label="Sort by"
         type="button"
-        class="btn btn-sm variant-soft-surface w-32"
+        class="w-32 btn btn-sm variant-soft-surface"
         use:popup={{
             event: 'click',
             target: 'sortby',
@@ -32,9 +32,9 @@
     </button>
 
     <!-- Popup -->
-    <div class="grid grid-flow-row rounded-xl shadow-xl" data-popup="sortby">
+    <div class="shadow-xl grid grid-flow-row rounded-xl" data-popup="sortby">
         <RadioGroup
-            class="card grid grid-flow-row rounded-xl shadow-xl border-none p-2"
+            class="p-2 border-none shadow-xl card grid grid-flow-row rounded-xl"
             data-popup="sortby"
             display="flex-col"
             rounded="rounded-container-token"

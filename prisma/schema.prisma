@@ -137,7 +137,7 @@ model User {
   area_code      String?
   AuthUser       AuthUser?
   auth_user_id   String          @unique
-  bio            String?
+  bio            String?         @db.LongText
   city           String?
   country_code   String?
   courseContent  CourseContent[]

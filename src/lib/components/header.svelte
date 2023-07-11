@@ -31,7 +31,7 @@
         <div class="flex">
             <button
                 aria-label="Toggle sidebar"
-                class="btn outline-none"
+                class="outline-none btn"
                 on:click={() => {
                     drawerStore.open(drawerSettings);
                 }}
@@ -44,7 +44,7 @@
     <div class="items-center hidden grid-flow-col lg:grid">
         {#each headerLinks as link}
             {#if $page.url.pathname == link.href}
-                <a class="btn font-semibold" href={link.href}>{link.name}</a>
+                <a class="font-semibold btn" href={link.href}>{link.name}</a>
             {:else}
                 <a class="btn" href={link.href}>{link.name}</a>
             {/if}
@@ -54,13 +54,13 @@
         {#if user}
             <ProfileMenu {user} />
         {:else}
-            <div class="hidden sm:grid items-center grid-flow-col px-2 justify-self-end gap-x-4">
+            <div class="items-center hidden px-2 sm:grid grid-flow-col justify-self-end gap-x-4">
                 <a
                     class="text-white hover:anchor transition-all hover:text-white"
                     href="/auth/login">Sign In</a
                 >
                 <a
-                    class="btn btn-sm variant-filled bg-white text-primary-600 hover:shadow-md hover:scale-105"
+                    class="bg-white btn btn-sm variant-filled text-primary-600 hover:shadow-md hover:scale-105"
                     href="/auth/register"
                 >
                     Get Started

@@ -1,23 +1,29 @@
 <script lang="ts">
-    import { Avatar } from '@skeletonlabs/skeleton';
     import type { PageServerData } from './$types';
+    import type { ToastSettings } from '@skeletonlabs/skeleton';
+    import { Avatar, toastStore, ProgressRadial } from '@skeletonlabs/skeleton';
     import Fa from 'svelte-fa';
     import { faEnvelope, faPhone, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
     import { onMount } from 'svelte';
-    import { formatPhoneNumber } from '$lib/client/util';
-
-    export let data: PageServerData;
-    let edit_mode = false;
-    let phone = formatPhoneNumber('9512158574');
-    let bio = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. ';
-    let city = '';
-    let state = '';
+    import { formatPhoneNumber, initials as getInitials } from '$lib/client/util';
 
     export let original_data: PageServerData;
-    let original_phone = phone;
-    let original_bio = bio;
-    let original_city = city;
-    let original_state = state;
+    export let data: PageServerData;
+    $: phone = formatPhoneNumber((data.user.area_code ?? '') + (data.user.phone_number ?? ''));
+
+    let edit_mode = false;
+    let is_loading = false;
+
+    const error_toast: ToastSettings = {
+        message: 'There was an error saving your changes.',
+        background: 'bg-error-500',
+        classes: 'text-white'
+    };
+
+    const success_toast: ToastSettings = {
+        message: 'Your changes have been saved.',
+        background: 'bg-success-600'
+    };
 
     onMount(() => {
         original_data = data;
@@ -33,67 +39,97 @@
 
     const cancelChanges = () => {
         data = original_data;
-
-        // These are only necessary because I haven't added those fields to the db yet
-        // Once they're added, all the needed data will be under data.user
-        phone = original_phone;
-        bio = original_bio;
-        city = original_city;
-        state = original_state;
-
         edit_mode = false;
     };
 
-    const saveChanges = () => {
-        // TODO: Call API to send changes to the server
+    const saveChanges = async () => {
+        is_loading = true;
 
-        original_data = data;
+        const phone_temp = phone.replace(/\s/g, '');
 
-        // These are only necessary because I haven't added those fields to the db yet
-        // Once they're added, all the needed data will be under data.user
-        original_phone = phone;
-        original_bio = bio;
-        original_city = city;
-        original_state = state;
+        const user = {
+            id: data.user.id,
+            email: data.user.email,
+            name: data.user.name,
+            country_code: '+1',
+            area_code: phone_temp.slice(0, 3) === '' ? null : phone_temp.slice(0, 3),
+            phone_number: phone_temp.slice(3, 10) === '' ? null : phone_temp.slice(3, 10),
+            bio: data.user.bio === '' ? null : data.user.bio,
+            city: data.user.city === '' ? null : data.user.city,
+            state: data.user.state === '' ? null : data.user.state,
+            photo_url: data.user.photo_url === '' ? null : data.user.photo_url
+        };
 
-        edit_mode = !edit_mode;
+        const response = await fetch('/api/user', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user
+            })
+        });
+
+        if (response.status === 200) {
+            original_data = data;
+
+            const phone_temp = phone.replace(/\s/g, '');
+            original_data.user.area_code = phone_temp.slice(0, 3);
+            original_data.user.phone_number = phone_temp.slice(3, 10);
+            is_loading = false;
+            toastStore.trigger(success_toast);
+
+            is_loading = false;
+            edit_mode = !edit_mode;
+        } else {
+            is_loading = false;
+            toastStore.trigger(error_toast);
+        }
     };
 
-    $: initials = data.user.name
-        .split(' ')
-        .map((n) => n[0])
-        .join('');
+    $: initials = getInitials(data.user.name);
 </script>
 
 <div class="grid items-center justify-items-center md:p-6">
-    <div class="card grid grid-flow-row gap-y-4 shadow p-6 bg-white container max-w-5xl">
+    <div
+        class="container grid max-w-sm grid-flow-row p-6 bg-white shadow card gap-y-4 md:max-w-5xl"
+    >
         <!-- Name Block -->
-        <div class="grid grid-flow-row gap-y-2 items-center justify-items-center">
-            <Avatar {initials} />
-            <h1 class="text-2xl font-bold">{data.user.name}</h1>
+        <div class="grid justify-items-center">
+            <div
+                class="grid grid-flow-row items-center justify-items-center md:grid-flow-col md:justify-items-start md:grid-cols-[auto_1fr] gap-x-2"
+            >
+                <Avatar {initials} />
+                <h1 class="text-2xl font-bold">{data.user.name}</h1>
+            </div>
+        </div>
+        <div class="hidden md:block">
+            <hr class="min-w-full mt-4" />
+        </div>
+
+        <div class="grid grid-rows-2 md:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-0">
             <!-- Email -->
-            <div class="grid grid-flow-col min-w-full items-center gap-x-2 text-gray-500">
-                <div class="relative">
+            <div class="grid items-center min-w-full text-gray-500">
+                <div class="relative min-w-full">
                     <Fa
                         icon={faEnvelope}
-                        class="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400"
+                        class="absolute text-gray-400 transform -translate-y-1/2 left-2 top-1/2"
                     />
                     <input
                         disabled={!edit_mode}
                         name="email"
                         value={data.user.email}
-                        class="pl-8 border shadow-sm rounded-md p-1 text-gray-700 min-w-full disabled:bg-surface-50 disabled:text-black dark:disabled:bg-surface-900 dark:disabled:border-none dark:disabled:text-gray-50 dark:bg-surface-700 dark:border-surface-900 dark:border-none dark:text-gray-200"
+                        class="w-full p-1 pl-8 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
                     />
                 </div>
             </div>
+
             <!-- Phone -->
-            <div
-                class="grid grid-flow-col grid-cols-[auto_1fr] items-center gap-x-2 text-gray-500 min-w-full"
-            >
+            <div class="grid items-center min-w-full text-gray-500 gap-x-2">
                 <div class="relative min-w-full">
                     <Fa
                         icon={faPhone}
-                        class="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400"
+                        class="absolute text-gray-400 transform -translate-y-1/2 left-2 top-1/2"
                     />
                     <input
                         disabled={!edit_mode}
@@ -102,81 +138,89 @@
                         id="phone-input"
                         maxlength="12"
                         on:input={updatePhoneNumber}
-                        class="border border-surface-100 shadow-sm rounded-md pl-8 p-1 text-gray-700 min-w-full disabled:bg-surface-50 disabled:text-black dark:disabled:bg-surface-900 dark:disabled:border-none dark:disabled:text-gray-50 dark:bg-surface-700 dark:border-surface-900 dark:border-none dark:text-gray-200"
+                        class="w-full p-1 pl-8 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
                     />
                 </div>
             </div>
-        </div>
 
-        <hr class="min-w-full mt-4" />
-
-        <div class="grid grid-flow-row gap-y-1 items-center justify-items-center">
-            <!-- Bio -->
-            <div
-                class="grid grid-flow-col grid-cols-[auto_1fr] items-center gap-x-2 text-gray-500 min-w-full"
-            >
-                <div class="min-w-full">
-                    <p class="dark:text-gray-400 text-gray-600 h-auto font-bold">Bio</p>
-                    <textarea
-                        disabled={!edit_mode}
-                        value={bio}
-                        id="phone-input"
-                        class="border border-surface-100 shadow-sm rounded-md p-2 text-gray-700 min-w-full resize-none h-24 disabled:bg-surface-50 disabled:text-black dark:disabled:bg-surface-900 dark:disabled:border-none dark:disabled:text-gray-50 dark:bg-surface-700 dark:border-surface-900 dark:border-none dark:text-gray-200"
-                    />
-                </div>
+            <div class="md:hidden">
+                <hr class="min-w-full mt-4" />
             </div>
 
             <!-- City -->
             <div class="min-w-full">
-                <p class="dark:text-gray-400 text-gray-600 h-auto font-bold">City</p>
+                <p class="h-auto font-bold text-gray-600 dark:text-gray-400">City</p>
                 <input
                     disabled={!edit_mode}
-                    value={city}
+                    bind:value={data.user.city}
                     id="phone-input"
-                    class="border border-surface-100 shadow-sm rounded-md pl-2 p-1 text-gray-700 min-w-full disabled:bg-surface-50 disabled:text-black dark:disabled:bg-surface-900 dark:disabled:border-none dark:disabled:text-gray-50 dark:bg-surface-700 dark:border-surface-900 dark:border-none dark:text-gray-200"
+                    class="w-full p-1 pl-2 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
                 />
             </div>
 
             <!-- State -->
             <div class="min-w-full">
-                <p class="dark:text-gray-400 text-gray-600 h-auto font-bold">State</p>
+                <p class="h-auto font-bold text-gray-600 dark:text-gray-400">State</p>
                 <input
                     disabled={!edit_mode}
-                    value={state}
+                    bind:value={data.user.state}
                     id="phone-input"
-                    class="border border-surface-100 pl-2 shadow-sm rounded-md p-1 text-gray-700 min-w-full disabled:bg-surface-50 disabled:text-black dark:disabled:bg-surface-900 dark:disabled:border-none dark:disabled:text-gray-50 dark:bg-surface-700 dark:border-surface-900 dark:border-none dark:text-gray-200"
+                    class="w-full p-1 pl-2 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
                 />
+            </div>
+        </div>
+
+        <div class="grid items-center grid-flow-row gap-y-1 justify-items-center">
+            <!-- Bio -->
+            <div
+                class="grid grid-flow-col grid-cols-[auto_1fr] items-center gap-x-2 text-gray-500 min-w-full"
+            >
+                <div class="min-w-full">
+                    <p class="h-auto font-bold text-gray-600 dark:text-gray-400">Bio</p>
+                    <textarea
+                        disabled={!edit_mode}
+                        bind:value={data.user.bio}
+                        id="phone-input"
+                        class="w-full h-24 min-w-full p-1 pl-2 text-gray-700 border rounded-md shadow-sm resize-none border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
+                    />
+                </div>
             </div>
         </div>
     </div>
 
-    {#if edit_mode}
-        <div class="grid grid-flow-col gap-x-2 items-center justify-self-end">
+    <div class="grid w-full px-4 justify-items-end max-w-screen-xs md:max-w-5xl">
+        {#if edit_mode}
+            <div class="grid items-center grid-flow-col gap-x-2 justify-self-end">
+                <button
+                    aria-label="Cancel Changes"
+                    class="mt-4 text-gray-700 btn btn-sm justify-self-end dark:text-gray-500"
+                    on:click={cancelChanges}
+                >
+                    Cancel
+                </button>
+                <button
+                    disabled={is_loading}
+                    aria-label="Save Changes"
+                    class="grid items-center grid-flow-col mt-4 btn btn-sm variant-filled-primary justify-self-end gap-x-2"
+                    on:click={saveChanges}
+                >
+                    {#if is_loading}
+                        <ProgressRadial width="w-6" stroke={100} />
+                    {/if}
+                    Save Changes
+                </button>
+            </div>
+        {:else}
             <button
-                aria-label="Cancel Changes"
-                class="btn btn-sm mt-4 justify-self-end text-gray-700 dark:text-gray-500"
-                on:click={cancelChanges}
+                aria-label="Edit Profile"
+                class="mt-4 btn btn-sm variant-soft justify-self-end"
+                on:click={() => {
+                    edit_mode = !edit_mode;
+                }}
             >
-                Cancel
+                <Fa icon={faPenToSquare} class="mr-2" />
+                Edit Profile
             </button>
-            <button
-                aria-label="Save Changes"
-                class="btn btn-sm variant-filled-primary mt-4 justify-self-end"
-                on:click={saveChanges}
-            >
-                Save Changes
-            </button>
-        </div>
-    {:else}
-        <button
-            aria-label="Edit Profile"
-            class="btn btn-sm variant-soft mt-4 justify-self-end"
-            on:click={() => {
-                edit_mode = !edit_mode;
-            }}
-        >
-            <Fa icon={faPenToSquare} class="mr-2" />
-            Edit Profile
-        </button>
-    {/if}
+        {/if}
+    </div>
 </div>

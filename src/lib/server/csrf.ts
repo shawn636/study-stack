@@ -1,4 +1,4 @@
-import { db } from '$lib/database';
+import { db } from '$lib/server/database';
 import { v4 as uuidv4 } from 'uuid';
 import type { Cookies } from '@sveltejs/kit';
 

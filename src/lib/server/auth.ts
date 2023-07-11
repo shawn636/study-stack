@@ -1,6 +1,6 @@
 import { hashPassword, comparePassword } from '$lib/server/crypto';
 import { v4 } from 'uuid';
-import { db } from '$lib/database';
+import { db } from '$lib/server/database';
 import type { Cookies } from '@sveltejs/kit';
 import type User from '$lib/models/user';
 import { dev } from '$app/environment';
@@ -32,9 +32,12 @@ const getUser = async (session_id: string): Promise<User> => {
 
     const conn = db.connection();
 
-    const query = `SELECT User.id as id, User.email as email, User.name as name
-                                            FROM auth_session JOIN User on auth_session.auth_user_id = User.auth_user_id 
-                                            WHERE auth_session.id = ?`;
+    const query = `SELECT User.id as id, User.email as email, User.name as name,
+                   User.country_code as country_code, User.area_code as area_code,
+                   User.phone_number as phone_number, User.bio as bio, User.city as city,
+                   User.state as state, User.photo_url as photo_url
+                   FROM auth_session JOIN User on auth_session.auth_user_id = User.auth_user_id 
+                   WHERE auth_session.id = ?`;
 
     const { rows } = await conn.execute(query, [session_id]);
     const user = rows[0] as User;
@@ -45,6 +48,30 @@ const getUser = async (session_id: string): Promise<User> => {
     }
 
     return user;
+};
+
+const getUserId = async (session_id: string): Promise<string> => {
+    const valid_session = await validateSession(session_id);
+    if (!valid_session) {
+        console.error('Invalid session');
+        throw Error('AUTH_INVALID_SESSION');
+    }
+
+    const conn = db.connection();
+
+    const query = `SELECT User.id as id
+                   FROM auth_session JOIN User on auth_session.auth_user_id = User.auth_user_id 
+                   WHERE auth_session.id = ?`;
+
+    const { rows } = await conn.execute(query, [session_id]);
+    const result = rows[0] as { id: string };
+
+    if (!result) {
+        console.error('Unable to find user');
+        throw Error('DB_SELECT_FAILED');
+    }
+
+    return result.id;
 };
 
 const createUser = async (email: string, password: string, name: string): Promise<string> => {
@@ -265,6 +292,7 @@ export const auth = {
     emailExists,
     getAllSessions,
     getUser,
+    getUserId,
     createUser,
     login,
     logout,

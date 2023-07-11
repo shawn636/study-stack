@@ -6,12 +6,12 @@
 <AppShell
     slotSidebarRight="bg-gradient-to-tr from-primary-700 to-primary-500 w-64 hidden md:block rounded-l-3xl shadow-xl"
 >
-    <div class="container grid grid-flow-row justify-items-center items-center h-full">
+    <div class="container items-center h-full grid grid-flow-row justify-items-center">
         <slot />
     </div>
 
     <svelte:fragment slot="sidebarRight">
-        <div class="grid justify-items-center items-center h-full">
+        <div class="items-center h-full grid justify-items-center">
             <Logo layout="vertical" />
         </div>
     </svelte:fragment>

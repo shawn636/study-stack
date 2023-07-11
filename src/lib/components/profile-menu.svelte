@@ -23,7 +23,7 @@
 <!-- Profile Button -->
 <button
     aria-label="Profile"
-    class="btn h-10 variant-filled shadow-sm px-2 bg-white text-surface-700 font-semibold text-sm dark:bg-surface-700 dark:text-surface-50 rounded-full xs:rounded-md grid grid-flow-col items-center p-0 m-0 gap-x-1 w-min"
+    class="items-center h-10 p-0 px-2 m-0 text-sm font-semibold bg-white rounded-full btn variant-filled shadow-sm text-surface-700 dark:bg-surface-700 dark:text-surface-50 xs:rounded-md grid grid-flow-col gap-x-1 w-min"
     data-testid="profile-button"
     use:popup={{
         event: 'click',
@@ -38,7 +38,7 @@
     }}
 >
     <Avatar initials={initials(user.name)} width="h-8" class="hidden xs:block" />
-    <div class="h-8 w-4 relative flex justify-center items-center">
+    <div class="relative flex items-center justify-center w-4 h-8">
         <span
             class="absolute block xs:hidden text-center top-1/2 transform -translate-y-1/2 right-0.5"
         >
@@ -46,12 +46,12 @@
         </span>
     </div>
     <span class="hidden xs:block">{user.name}</span>
-    <Fa icon={faChevronDown} size="12" class="text-surface-700 dark:text-white hidden xs:block" />
+    <Fa icon={faChevronDown} size="12" class="hidden text-surface-700 dark:text-white xs:block" />
 </button>
 
 <!-- Pop Up Menu -->
 <div
-    class="card w-64 p-4 grid grid-flow-row rounded-xl shadow-xl text-surface-800 bg-white dark:text-white"
+    class="w-64 p-4 bg-white shadow-xl card grid grid-flow-row rounded-xl text-surface-800 dark:text-white"
     data-popup="profile"
 >
     <nav class="list-nav grid grid-flow-row grid-cols-[1fr] p-0 gap-y-2">
@@ -60,8 +60,8 @@
             <div class="row-start-1 row-end-3 col-start-1">
                 <Avatar initials={initials(user.name)} width="h-8" />
             </div>
-            <span class="text-sm row-start-1 font-semibold">{user.name}</span>
-            <span class="text-xs row-start-2 text-gray-500 dark:text-gray-400">{user.email}</span>
+            <span class="text-sm font-semibold row-start-1">{user.name}</span>
+            <span class="text-xs text-gray-500 row-start-2 dark:text-gray-400">{user.email}</span>
         </div>
 
         <hr />

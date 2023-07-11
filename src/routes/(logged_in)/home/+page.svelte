@@ -9,9 +9,9 @@
     <div class="grid grid-flow-row gap-1">
         <h3>My Courses</h3>
         <div class="flex flex-flow-col gap-10">
-            <div class="placeholder w-20 h-20" />
-            <div class="placeholder w-20 h-20" />
-            <div class="placeholder w-20 h-20" />
+            <div class="w-20 h-20 placeholder" />
+            <div class="w-20 h-20 placeholder" />
+            <div class="w-20 h-20 placeholder" />
         </div>
     </div>
 </div>
