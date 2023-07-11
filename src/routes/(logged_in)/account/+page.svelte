@@ -1,15 +1,17 @@
 <script lang="ts">
     import type { PageServerData } from './$types';
     import type { ToastSettings } from '@skeletonlabs/skeleton';
-    import { Avatar, toastStore, ProgressRadial } from '@skeletonlabs/skeleton';
+    import { toastStore, ProgressRadial } from '@skeletonlabs/skeleton';
     import Fa from 'svelte-fa';
     import { faEnvelope, faPhone, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
     import { onMount } from 'svelte';
     import { formatPhoneNumber, initials as getInitials } from '$lib/client/util';
+    import Avatar from '$lib/components/avatar.svelte';
 
     export let original_data: PageServerData;
     export let data: PageServerData;
     $: phone = formatPhoneNumber((data.user.area_code ?? '') + (data.user.phone_number ?? ''));
+    let profile_img_input: HTMLInputElement;
 
     let edit_mode = false;
     let is_loading = false;
@@ -87,6 +89,33 @@
         }
     };
 
+    const onFileSelected = async (
+        event: Event & { currentTarget: EventTarget & HTMLInputElement }
+    ) => {
+        if (event.currentTarget && event.currentTarget.files) {
+            let image = event.currentTarget.files[0];
+            let reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = async () => {
+                const formData = new FormData();
+                formData.append('profile_photo', image);
+                formData.append('user_id', data.user.id);
+
+                const response = await fetch('/api/user/photo', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.status === 200) {
+                    const data = await response.json();
+                    const profile_url = data.url;
+
+                    data.user.photo_url = profile_url;
+                }
+            };
+        }
+    };
+
     $: initials = getInitials(data.user.name);
 </script>
 
@@ -99,7 +128,23 @@
             <div
                 class="grid grid-flow-row items-center justify-items-center md:grid-flow-col md:justify-items-start md:grid-cols-[auto_1fr] gap-x-2"
             >
-                <Avatar {initials} />
+                <input
+                    type="file"
+                    bind:this={profile_img_input}
+                    on:change={(event) => {
+                        onFileSelected(event);
+                    }}
+                    accept=".jpg, .jpeg, .png"
+                    style="display: none;"
+                />
+                <Avatar
+                    {initials}
+                    photo_url="images/home-image-2-optimized.webp"
+                    edit_function={() => {
+                        profile_img_input.click();
+                    }}
+                />
+
                 <h1 class="text-2xl font-bold">{data.user.name}</h1>
             </div>
         </div>

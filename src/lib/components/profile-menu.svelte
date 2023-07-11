@@ -23,7 +23,7 @@
 <!-- Profile Button -->
 <button
     aria-label="Profile"
-    class="items-center h-10 p-0 px-2 m-0 text-sm font-semibold bg-white rounded-full btn variant-filled shadow-sm text-surface-700 dark:bg-surface-700 dark:text-surface-50 xs:rounded-md grid grid-flow-col gap-x-1 w-min"
+    class="grid items-center h-10 grid-flow-col p-0 px-2 m-0 text-sm font-semibold bg-white rounded-full shadow-sm btn variant-filled text-surface-700 dark:bg-surface-700 dark:text-surface-50 xs:rounded-md gap-x-1 w-min"
     data-testid="profile-button"
     use:popup={{
         event: 'click',
@@ -37,31 +37,29 @@
         }
     }}
 >
-    <Avatar initials={initials(user.name)} width="h-8" class="hidden xs:block" />
-    <div class="relative flex items-center justify-center w-4 h-8">
-        <span
-            class="absolute block xs:hidden text-center top-1/2 transform -translate-y-1/2 right-0.5"
-        >
-            {initials(user.name)}
-        </span>
-    </div>
+    <Avatar initials={initials(user.name)} width="w-8" class="hidden xs:block" />
     <span class="hidden xs:block">{user.name}</span>
     <Fa icon={faChevronDown} size="12" class="hidden text-surface-700 dark:text-white xs:block" />
 </button>
 
 <!-- Pop Up Menu -->
 <div
-    class="w-64 p-4 bg-white shadow-xl card grid grid-flow-row rounded-xl text-surface-800 dark:text-white"
+    class="grid w-64 grid-flow-row p-4 bg-white shadow-xl card rounded-xl text-surface-800 dark:text-white"
     data-popup="profile"
 >
     <nav class="list-nav grid grid-flow-row grid-cols-[1fr] p-0 gap-y-2">
         <!-- Profile Summary -->
         <div class="grid grid-cols-[auto_1fr] grid-rows-[1fr_1fr] gap-x-2 items-center">
-            <div class="row-start-1 row-end-3 col-start-1">
-                <Avatar initials={initials(user.name)} width="h-8" />
+            <div class="col-start-1 row-start-1 row-end-3">
+                <Avatar
+                    initials={initials(user.name)}
+                    width="w-8"
+                    height="h-8"
+                    text_style="text-sm"
+                />
             </div>
-            <span class="text-sm font-semibold row-start-1">{user.name}</span>
-            <span class="text-xs text-gray-500 row-start-2 dark:text-gray-400">{user.email}</span>
+            <span class="row-start-1 text-sm font-semibold">{user.name}</span>
+            <span class="row-start-2 text-xs text-gray-500 dark:text-gray-400">{user.email}</span>
         </div>
 
         <hr />

@@ -2,7 +2,7 @@ import type { RequestHandler } from './$types';
 import { db } from '$lib/server/database';
 import { csrf } from '$lib/server/csrf';
 
-export const GET = (async () => {
+export const GET = (async ({ cookies }) => {
     const conn = db.connection();
     await csrf.validateCookies(cookies);
 

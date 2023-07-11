@@ -25,7 +25,7 @@ export const PUT = (async ({ cookies, request }) => {
         }
 
         const query =
-            'UPDATE User SET email = ?, name = ?, country_code = ?, area_code = ?, phone_number = ?, bio = ?, city = ?, state = ?, photo_url = ? WHERE id = ?';
+            'UPDATE User SET email = ?, name = ?, country_code = ?, area_code = ?, phone_number = ?, bio = ?, city = ?, state = ? WHERE id = ?';
 
         const conn = db.connection();
         await conn.execute(query, [
@@ -37,7 +37,6 @@ export const PUT = (async ({ cookies, request }) => {
             user.bio,
             user.city,
             user.state,
-            user.photo_url,
             user_id
         ]);
     } catch (e) {
