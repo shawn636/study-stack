@@ -3,7 +3,8 @@ import { auth } from '$lib/server/auth';
 import { redirect } from '@sveltejs/kit';
 import type User from '$lib/models/user';
 
-export const load = (async ({ cookies }) => {
+export const load = (async ({ cookies, parent }) => {
+    await parent();
     const session_id = auth.getSession(cookies);
     const is_valid = await auth.validateSession(session_id ?? '');
     let user: User | undefined;

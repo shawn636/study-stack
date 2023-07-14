@@ -65,16 +65,16 @@ model Course {
   id Int @id @default(autoincrement())
 
   category               String
-  Category               Category @relation(fields: [categoryId], references: [id])
+  Category               Category        @relation(fields: [categoryId], references: [id])
   categoryId             Int
   current_price          Decimal
-  description            String   @db.LongText
+  description            String          @db.LongText
   difficulty             String
   estimated_time_hours   Int
   estimated_time_minutes Int
   img_href               String
   instructor             String
-  Instructor             User     @relation(fields: [instructorId], references: [id])
+  Instructor             User            @relation(fields: [instructorId], references: [id])
   instructorId           Int
   lesson_cnt             Int
   lessons                Lesson[]
@@ -82,7 +82,8 @@ model Course {
   organization           String?
   rating_avg             Float
   rating_cnt             Int
-  title                  String   @db.MediumText
+  title                  String          @db.MediumText
+  CourseProgres          CourseProgres[]
 
   @@index([categoryId])
   @@index([instructorId])
@@ -102,6 +103,18 @@ model CourseContent {
   @@index([authorId])
   @@index([contentTypeId])
   @@index([lessonId])
+}
+
+model CourseProgres {
+  user_id           Int
+  users             User   @relation(fields: [user_id], references: [id])
+  lessons_completed Int
+  course_id         Int
+  courses           Course @relation(fields: [course_id], references: [id])
+
+  @@id([user_id, course_id])
+  @@index([user_id])
+  @@index([course_id])
 }
 
 model CSRFToken {
@@ -149,6 +162,7 @@ model User {
   phone_number   String?
   photo_url      String?
   state          String?
+  CourseProgres  CourseProgres[]
 
   @@index([auth_user_id])
   @@index([organizationId])

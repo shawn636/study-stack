@@ -23,7 +23,7 @@
 <!-- Profile Button -->
 <button
     aria-label="Profile"
-    class="grid items-center h-10 grid-flow-col p-0 px-2 m-0 text-sm font-semibold bg-white rounded-full shadow-sm btn variant-filled text-surface-700 dark:bg-surface-700 dark:text-surface-50 xs:rounded-md gap-x-1 w-min"
+    class="grid items-center h-10 grid-flow-col p-0 px-2 m-0 text-sm font-semibold bg-white shadow-sm btn variant-filled text-surface-700 dark:bg-surface-700 dark:text-surface-50 xs:rounded-md gap-x-1 w-min"
     data-testid="profile-button"
     use:popup={{
         event: 'click',
@@ -37,9 +37,9 @@
         }
     }}
 >
-    <Avatar initials={initials(user.name)} width="w-8" class="hidden xs:block" />
+    <Avatar initials={initials(user.name)} width="w-8" />
     <span class="hidden xs:block">{user.name}</span>
-    <Fa icon={faChevronDown} size="12" class="hidden text-surface-700 dark:text-white xs:block" />
+    <Fa icon={faChevronDown} size="12" class="text-surface-700 dark:text-white xs:block" />
 </button>
 
 <!-- Pop Up Menu -->
@@ -58,8 +58,13 @@
                     text_style="text-sm"
                 />
             </div>
-            <span class="row-start-1 text-sm font-semibold">{user.name}</span>
-            <span class="row-start-2 text-xs text-gray-500 dark:text-gray-400">{user.email}</span>
+            <span class="row-start-1 text-sm font-semibold" data-testid="profile-popup-name"
+                >{user.name}</span
+            >
+            <span
+                class="row-start-2 text-xs text-gray-500 dark:text-gray-400"
+                data-testid="profile-popup-email">{user.email}</span
+            >
         </div>
 
         <hr />
