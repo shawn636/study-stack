@@ -7,6 +7,12 @@ import { dev } from '$app/environment';
 
 export const COOKIE_NAME = 'auth_session';
 
+/**
+ * Checks if an email already exists in the database.
+ *
+ * @param {string} email - The email to check.
+ * @returns {Promise<boolean>} A Promise that resolves to true if the email exists, false otherwise.
+ */
 const emailExists = async (email: string): Promise<boolean> => {
     const conn = db.connection();
     const query = `SELECT COUNT(*) AS count FROM auth_user WHERE email = ?;`;
@@ -15,6 +21,12 @@ const emailExists = async (email: string): Promise<boolean> => {
     return parseInt(record_count.count) > 0;
 };
 
+/**
+ * Retrieves all session IDs associated with a user.
+ *
+ * @param {string} user_id - The ID of the user.
+ * @returns {Promise<string[]>} A Promise that resolves to an array of session IDs.
+ */
 const getAllSessions = async (user_id: string): Promise<string[]> => {
     const conn = db.connection();
     const query = 'SELECT id FROM auth_session WHERE auth_user_id = ?';
@@ -23,6 +35,13 @@ const getAllSessions = async (user_id: string): Promise<string[]> => {
     return sessions.map((session) => session.id);
 };
 
+/**
+ * Retrieves user information based on a session ID.
+ *
+ * @param {string} session_id - The ID of the session.
+ * @returns {Promise<User>} A Promise that resolves to a User object.
+ * @throws {Error} Throws an error if the session is invalid or the user cannot be found.
+ */
 const getUser = async (session_id: string): Promise<User> => {
     const valid_session = await validateSession(session_id);
     if (!valid_session) {
@@ -50,6 +69,13 @@ const getUser = async (session_id: string): Promise<User> => {
     return user;
 };
 
+/**
+ * Retrieves the user ID associated with a session ID.
+ *
+ * @param {string} session_id - The ID of the session.
+ * @returns {Promise<string>} A Promise that resolves to the user ID.
+ * @throws {Error} Throws an error if the session is invalid or the user cannot be found.
+ */
 const getUserId = async (session_id: string): Promise<string> => {
     const valid_session = await validateSession(session_id);
     if (!valid_session) {
@@ -74,6 +100,15 @@ const getUserId = async (session_id: string): Promise<string> => {
     return result.id;
 };
 
+/**
+ * Creates a new user with the provided email, password, and name.
+ *
+ * @param {string} email - The email of the new user.
+ * @param {string} password - The password of the new user.
+ * @param {string} name - The name of the new user.
+ * @returns {Promise<string>} A Promise that resolves to the auth_user_id of the created user.
+ * @throws {Error} Throws an error if the email already exists or the user creation fails.
+ */
 const createUser = async (email: string, password: string, name: string): Promise<string> => {
     const email_exists = await emailExists(email);
 
@@ -116,6 +151,14 @@ const createUser = async (email: string, password: string, name: string): Promis
     return user_id;
 };
 
+/**
+ * Authenticates a user with the provided email and password.
+ *
+ * @param {string} email - The email of the user to authenticate.
+ * @param {string} password - The password of the user to authenticate.
+ * @returns {Promise<string>} A Promise that resolves to the session ID of the authenticated user.
+ * @throws {Error} Throws an error if the email or password is invalid, or session creation fails.
+ */
 const login = async (email: string, password: string): Promise<string> => {
     const conn = db.connection();
     const getAuthUser = 'SELECT id FROM auth_user WHERE email = ?';
@@ -167,6 +210,13 @@ const login = async (email: string, password: string): Promise<string> => {
     return sessionId;
 };
 
+/**
+ * Logs out a user by deleting the session associated with the provided session ID.
+ *
+ * @param {string} session_id - The ID of the session to log out.
+ * @returns {Promise<void>} A Promise that resolves when the logout is successful.
+ * @throws {Error} Throws an error if the session is invalid or deletion fails.
+ */
 const logout = async (session_id: string): Promise<void> => {
     const conn = db.connection();
     const select_query = 'SELECT id FROM auth_session WHERE id = ?';
@@ -188,6 +238,13 @@ const logout = async (session_id: string): Promise<void> => {
     return;
 };
 
+/**
+ * Logs out all sessions associated with a user.
+ *
+ * @param {string} auth_user_id - The ID of the user to log out.
+ * @returns {Promise<void>} A Promise that resolves when all sessions are successfully logged out.
+ * @throws {Error} Throws an error if the user or sessions are not found, or deletion fails.
+ */
 const logoutAll = async (auth_user_id: string): Promise<void> => {
     const conn = db.connection();
     const find_user_query = 'SELECT id FROM auth_user WHERE id = ?';
@@ -214,6 +271,12 @@ const logoutAll = async (auth_user_id: string): Promise<void> => {
     return;
 };
 
+/**
+ * Validates if a session ID is valid.
+ *
+ * @param {string} session_id - The ID of the session to validate.
+ * @returns {Promise<boolean>} A Promise that resolves to true if the session is valid, false otherwise.
+ */
 const validateSession = async (session_id: string): Promise<boolean> => {
     const conn = db.connection();
     const query = 'SELECT id FROM auth_session WHERE id = ?';
@@ -221,10 +284,22 @@ const validateSession = async (session_id: string): Promise<boolean> => {
     return result.rows.length === 1;
 };
 
+/**
+ * Retrieves the session ID from cookies.
+ *
+ * @param {Cookies} cookies - The cookies object.
+ * @returns {string | undefined} The session ID if found in cookies, undefined otherwise.
+ */
 const getSession = (cookies: Cookies): string | undefined => {
     return cookies.get(COOKIE_NAME);
 };
 
+/**
+ * Validates if the session ID stored in cookies is valid.
+ *
+ * @param {Cookies} cookies - The cookies object.
+ * @returns {Promise<boolean>} A Promise that resolves to true if the session is valid, false otherwise.
+ */
 const validateCookies = async (cookies: Cookies): Promise<boolean> => {
     const session_id = cookies.get(COOKIE_NAME);
     if (session_id === undefined) {
@@ -233,6 +308,13 @@ const validateCookies = async (cookies: Cookies): Promise<boolean> => {
     return await validateSession(session_id);
 };
 
+/**
+ * Sets the session ID as a cookie.
+ *
+ * @param {string} session_id - The session ID to set as a cookie.
+ * @param {Cookies} cookies - The cookies object.
+ * @returns {Cookies} The updated cookies object.
+ */
 const setSessionCookie = (session_id: string, cookies: Cookies): Cookies => {
     cookies.set(COOKIE_NAME, session_id, {
         httpOnly: true,
@@ -245,6 +327,12 @@ const setSessionCookie = (session_id: string, cookies: Cookies): Cookies => {
     return cookies;
 };
 
+/**
+ * Deletes the session ID cookie.
+ *
+ * @param {Cookies} cookies - The cookies object.
+ * @returns {Cookies} The updated cookies object.
+ */
 const deleteSessionCookie = (cookies: Cookies): Cookies => {
     cookies.set(COOKIE_NAME, 'null', {
         httpOnly: true,
@@ -256,6 +344,13 @@ const deleteSessionCookie = (cookies: Cookies): Cookies => {
     return cookies;
 };
 
+/**
+ * Validates the session ID and sets it as a cookie if valid.
+ *
+ * @param {string} session_id - The session ID to validate and set as a cookie.
+ * @param {Cookies} cookies - The cookies object.
+ * @returns {Promise<Cookies>} A Promise that resolves to the updated cookies object.
+ */
 const validateAndSetCookie = async (session_id: string, cookies: Cookies): Promise<Cookies> => {
     const isValid = await validateSession(session_id);
 
@@ -267,6 +362,12 @@ const validateAndSetCookie = async (session_id: string, cookies: Cookies): Promi
     return setSessionCookie(session_id, cookies);
 };
 
+/**
+ * Deletes a user and associated data if it exists (dev mode only).
+ *
+ * @param {string} email - The email of the user to delete.
+ * @returns {Promise<void>} A Promise that resolves when the user is successfully deleted.
+ */
 const deleteUserIfExists = async (email: string): Promise<void> => {
     if (!dev) {
         console.error('Unable to delete user outside of dev mode');
@@ -288,6 +389,9 @@ const deleteUserIfExists = async (email: string): Promise<void> => {
     return;
 };
 
+/**
+ * Exposes the authentication-related functions as properties of the 'auth' object.
+ */
 export const auth = {
     emailExists,
     getAllSessions,

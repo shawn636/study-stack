@@ -4,6 +4,12 @@ import type { Cookies } from '@sveltejs/kit';
 
 export const COOKIE_NAME = 'x-csrf-token';
 
+/**
+ * Validates if a CSRF token is valid and not expired.
+ *
+ * @param {string} token - The CSRF token to validate.
+ * @returns {Promise<boolean>} A Promise that resolves to true if the token is valid, false otherwise.
+ */
 const validateToken = async (token: string) => {
     const conn = db.connection();
     try {
@@ -18,6 +24,11 @@ const validateToken = async (token: string) => {
     }
 };
 
+/**
+ * Generates a new CSRF token and stores it in the database.
+ *
+ * @returns {Promise<string | null>} A Promise that resolves to the generated CSRF token, or null if insertion fails.
+ */
 const generateToken = async () => {
     const newToken: string = uuidv4();
     const conn = db.connection();
@@ -34,6 +45,13 @@ const generateToken = async () => {
     }
 };
 
+/**
+ * Sets the CSRF token as a cookie.
+ *
+ * @param {string} token - The CSRF token to set as a cookie.
+ * @param {Cookies} cookies - The cookies object.
+ * @returns {Cookies} The updated cookies object.
+ */
 const setCookie = (token: string, cookies: Cookies): Cookies => {
     cookies.set(COOKIE_NAME, token, {
         httpOnly: true,
@@ -45,6 +63,12 @@ const setCookie = (token: string, cookies: Cookies): Cookies => {
     return cookies;
 };
 
+/**
+ * Validates the CSRF token stored in cookies and sets a new token if invalid or missing.
+ *
+ * @param {Cookies} cookies - The cookies object.
+ * @returns {Promise<Cookies>} A Promise that resolves to the updated cookies object.
+ */
 const validateAndSetCookie = async (cookies: Cookies): Promise<Cookies> => {
     const token = cookies.get(COOKIE_NAME);
     const is_valid = await validateToken(token ?? '');
@@ -60,6 +84,13 @@ const validateAndSetCookie = async (cookies: Cookies): Promise<Cookies> => {
     return cookies;
 };
 
+/**
+ * Validates the CSRF token stored in cookies.
+ *
+ * @param {Cookies} cookies - The cookies object.
+ * @returns {Promise<void>} A Promise that resolves when the token is valid.
+ * @throws {Error} Throws an error if the token is missing or invalid.
+ */
 const validateCookies = async (cookies: Cookies): Promise<void> => {
     const token = cookies.get(COOKIE_NAME) as string;
 
@@ -76,6 +107,9 @@ const validateCookies = async (cookies: Cookies): Promise<void> => {
     return;
 };
 
+/**
+ * Exposes the CSRF-related functions as properties of the 'csrf' object.
+ */
 export const csrf = {
     validateToken,
     generateToken,
