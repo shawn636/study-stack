@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types';
-import { db } from '$lib/database';
+import { db } from '$lib/server/database';
 import { error } from '@sveltejs/kit';
 import type Course from '$lib/models/course';
 import { csrf } from '$lib/server/csrf';

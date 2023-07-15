@@ -12,7 +12,7 @@
 </script>
 
 <Drawer width="w-64">
-    <div class="grid h-full p-4">
+    <div class="h-full p-4 grid">
         <div class="container space-y-4">
             {#if $drawerStore.id == 'sidebar'}
                 <nav class="list-nav">
@@ -29,8 +29,8 @@
                     </ul>
                 </nav>
                 {#if !user}
-                    <a href="/auth/login" class="btn variant-soft w-full"> Sign In </a>
-                    <a href="/auth/register" class="btn variant-filled w-full"> Register </a>
+                    <a href="/auth/login" class="w-full btn variant-soft"> Sign In </a>
+                    <a href="/auth/register" class="w-full btn variant-filled"> Register </a>
                 {/if}
             {/if}
         </div>

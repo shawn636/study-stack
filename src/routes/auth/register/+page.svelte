@@ -14,7 +14,7 @@
     import { createForm } from 'svelte-forms-lib';
     import { ProgressRadial } from '@skeletonlabs/skeleton';
     import { goto } from '$app/navigation';
-    import { registrationForm } from '$lib/schema/registration-form';
+    import { registrationForm } from './registration-form-schema';
 
     // Controls
     let showPassword1 = false;
@@ -147,14 +147,14 @@
 </script>
 
 <form
-    class="h-full grid items-center w-full"
+    class="items-center w-full h-full grid"
     id="register-form"
     on:submit={handleSubmit}
     data-test-id="sign-up-form"
 >
     {#if currFormIndex == 0}
         <div
-            class="grid justify-items-center items-center h-full row-start-1 row-end-2 col-start-1 col-end-2"
+            class="items-center h-full grid justify-items-center row-start-1 row-end-2 col-start-1 col-end-2"
             id="main"
             in:fly={{
                 x: transitionTo === 'right' ? '100%' : '-100%',
@@ -168,10 +168,10 @@
                 easing: cubicInOut
             }}
         >
-            <div class="grid items-center">
+            <div class="items-center grid">
                 <a
                     href="/"
-                    class="btn btn-iconn text-surface-700 dark:text-surface-300 justify-start flex items-center text-center gap-1 p-1"
+                    class="flex items-center justify-start p-1 text-center btn btn-iconn text-surface-700 dark:text-surface-300 gap-1"
                 >
                     <Fa icon={faChevronLeft} />
                     Home
@@ -180,8 +180,8 @@
                     <div class="text-center">
                         <!-- Header -->
                         <div class="pb-5">
-                            <h2 class="h2 font-semibold">Welcome to Equipped</h2>
-                            <p class="text-xs mt-4 text-slate-500">
+                            <h2 class="font-semibold h2">Welcome to Equipped</h2>
+                            <p class="mt-4 text-xs text-slate-500">
                                 Please enter your details below
                             </p>
                         </div>
@@ -262,7 +262,7 @@
                                 type="button"
                                 aria-label="continue"
                                 on:click={nextForm}
-                                class="btn variant-filled-secondary font-medium">Continue</button
+                                class="font-medium btn variant-filled-secondary">Continue</button
                             >
                         </div>
 
@@ -271,7 +271,7 @@
                         <div class="grid grid-cols-[1fr_auto_1fr] items-center py-5">
                             <hr />
                             <p
-                                class="text-sm px-2 font-semibold uppercase text-surface-500 dark:text-surface-400"
+                                class="px-2 text-sm font-semibold uppercase text-surface-500 dark:text-surface-400"
                             >
                                 or
                             </p>
@@ -280,24 +280,39 @@
 
                         <!-- OAuth Buttons -->
                         <div class="grid grid-flow-row gap-y-3">
-                            <button type="button" class="btn variant-soft">
+                            <button
+                                disabled
+                                type="button"
+                                class="btn variant-soft"
+                                aria-label="Sign up with Google"
+                            >
                                 <Fa icon={faGoogle} size="20" />
                                 <span>Sign up with Google</span>
                             </button>
 
-                            <button type="button" class="btn variant-soft">
+                            <button
+                                disabled
+                                type="button"
+                                class="btn variant-soft"
+                                aria-label="Sign up with Facebook"
+                            >
                                 <Fa icon={faFacebook} size="20" />
                                 <span>Sign up with Facebook</span>
                             </button>
 
-                            <button type="button" class="btn variant-soft">
+                            <button
+                                disabled
+                                type="button"
+                                class="btn variant-soft"
+                                aria-label="Sign up with Apple"
+                            >
                                 <Fa icon={faApple} size="20" />
                                 <span>Sign up with Apple</span>
                             </button>
                         </div>
-                        <p class="text-sm py-2 text-slate-500">
+                        <p class="py-2 text-sm text-slate-500">
                             Already have an account? <a
-                                class="text-primary-500 font-semibold hover:text-primary-600"
+                                class="font-semibold text-primary-500 hover:text-primary-600"
                                 href="/auth/login">Sign in</a
                             >
                         </p>
@@ -307,7 +322,7 @@
         </div>
     {:else}
         <div
-            class="grid justify-items-center items-center h-full row-start-1 row-end-2 col-start-1 col-end-2"
+            class="items-center h-full grid justify-items-center row-start-1 row-end-2 col-start-1 col-end-2"
             in:fly={{
                 x: transitionTo === 'right' ? '100%' : '-100%',
                 duration: transitionDuration,
@@ -323,7 +338,7 @@
             <div class="grid grid-items-center">
                 <a
                     href="/"
-                    class="btn btn-iconn text-surface-700 dark:text-surface-300 justify-start flex items-center text-center gap-1 p-1"
+                    class="flex items-center justify-start p-1 text-center btn btn-iconn text-surface-700 dark:text-surface-300 gap-1"
                 >
                     <Fa icon={faChevronLeft} />
                     Home
@@ -331,10 +346,10 @@
                 <div class="card shadow-lg p-10 w-[360px] grid justify-items-center">
                     <!-- Header -->
                     <div class="py-5">
-                        <h2 class="h2 font-semibold text-center">Choose a password</h2>
+                        <h2 class="font-semibold text-center h2">Choose a password</h2>
                     </div>
                     <!-- Form 2 -->
-                    <div class="grid w-full grid-flow-row text-md gap-y-4 justify-items-stretch">
+                    <div class="w-full grid grid-flow-row text-md gap-y-4 justify-items-stretch">
                         {#if showPassword1}
                             <div class="flex">
                                 <input
@@ -344,13 +359,14 @@
                                     on:change={handleChange}
                                     on:blur={handleChange}
                                     bind:value={$form.password1}
-                                    class="input rounded-r-none"
+                                    class="rounded-r-none input"
                                     required
                                 />
                                 <button
+                                    aria-label="Toggle password visibility"
                                     type="button"
                                     on:click={toggleShow1}
-                                    class="btn-icon rounded-l-none rounded-r-lg variant-filled-primary"
+                                    class="rounded-l-none rounded-r-lg btn-icon variant-filled-primary"
                                     ><Fa icon={faEyeSlash} size="16" /></button
                                 >
                             </div>
@@ -363,13 +379,14 @@
                                     on:change={handleChange}
                                     on:blur={handleChange}
                                     bind:value={$form.password1}
-                                    class="input rounded-r-none"
+                                    class="rounded-r-none input"
                                     required
                                 />
                                 <button
+                                    aria-label="Toggle password visibility"
                                     type="button"
                                     on:click={toggleShow1}
-                                    class="btn-icon rounded-l-none rounded-r-lg variant-filled-primary"
+                                    class="rounded-l-none rounded-r-lg btn-icon variant-filled-primary"
                                     ><Fa icon={faEye} size="16" /></button
                                 >
                             </div>
@@ -399,13 +416,14 @@
                                     on:change={handleChange}
                                     on:blur={handleChange}
                                     bind:value={$form.password2}
-                                    class="input rounded-r-none"
+                                    class="rounded-r-none input"
                                     required
                                 />
                                 <button
+                                    aria-label="Toggle password confirmation visibility"
                                     type="button"
                                     on:click={toggleShow2}
-                                    class="btn-icon rounded-l-none rounded-r-lg variant-filled-primary"
+                                    class="rounded-l-none rounded-r-lg btn-icon variant-filled-primary"
                                     ><Fa icon={faEyeSlash} size="16" /></button
                                 >
                             </div>
@@ -418,13 +436,14 @@
                                     on:change={handleChange}
                                     on:blur={handleChange}
                                     bind:value={$form.password2}
-                                    class="input rounded-r-none"
+                                    class="rounded-r-none input"
                                     required
                                 />
                                 <button
+                                    aria-label="Toggle password confirmation visibility"
                                     type="button"
                                     on:click={toggleShow2}
-                                    class="btn-icon rounded-l-none rounded-r-lg variant-filled-primary"
+                                    class="rounded-l-none rounded-r-lg btn-icon variant-filled-primary"
                                     ><Fa icon={faEye} size="16" /></button
                                 >
                             </div>
@@ -446,8 +465,9 @@
                             </div>
                         {/if}
                         <button
+                            aria-label="Submit form"
                             type="submit"
-                            class="btn variant-filled-secondary font-medium flex gap-2"
+                            class="flex font-medium btn variant-filled-secondary gap-2"
                         >
                             {#if isSubmitting}
                                 <ProgressRadial width="w-6" stroke={100} />
@@ -456,9 +476,10 @@
                             {/if}
                         </button>
                         <button
+                            aria-label="Go back"
                             type="button"
                             on:click={prevForm}
-                            class="btn variant-filled-surface font-medium">Go Back</button
+                            class="font-medium btn variant-filled-surface">Go Back</button
                         >
                     </div>
                 </div>
@@ -481,7 +502,7 @@
                                 class="row-start-1 row-end-2 col-start-1 col-end-2"
                             />
                             <div
-                                class="alert-message grid items-center h-fullrow-start-1 row-end-2 col-start-2 col-end-3"
+                                class="items-center alert-message grid h-fullrow-start-1 row-end-2 col-start-2 col-end-3"
                             >
                                 <p>{submissionError}</p>
                             </div>

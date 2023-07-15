@@ -1,10 +1,10 @@
 import type { RequestHandler } from './$types';
-import { db } from '$lib/database';
-// import { csrf } from '$lib/server/csrf';
+import { db } from '$lib/server/database';
+import { csrf } from '$lib/server/csrf';
 
-export const GET = (async () => {
+export const GET = (async ({ cookies }) => {
     const conn = db.connection();
-    // await csrf.validateCookies(cookies);
+    await csrf.validateCookies(cookies);
 
     const courses = await conn.execute(`SELECT * FROM Course LIMIT 20;`);
 

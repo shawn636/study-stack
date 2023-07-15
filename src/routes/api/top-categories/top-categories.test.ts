@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import { db } from '$lib/database';
+import { db } from '$lib/server/database';
 import type Category from '$lib/models/category';
 
 describe('top-categories', () => {

@@ -34,9 +34,9 @@
     <!-- <div class="w-[232px] h-[139px] placeholder animate-pulse" /> -->
 
     <!-- Ratings (Below)-->
-    <div class="grid justify-items-start items-center">
+    <div class="items-center grid justify-items-start">
         <div
-            class="flex flex-flow-col px-2 justify-items-center items-center gap-x-2 text-sm font-medium text"
+            class="flex items-center px-2 text-sm font-medium flex-flow-col justify-items-center gap-x-2 text"
         >
             <p class="text-secondary-600">{course.rating_avg}</p>
             <Ratings value={rating_avg_rounded} max={5}>
@@ -61,13 +61,13 @@
 
     <!-- Course Stats (Below) -->
     <div
-        class="grid grid-flow-row grid-cols-2 px-2 justify-items-start gap-y-1 items-center gap-x-2 text-sm font-thin text-gray-500"
+        class="items-center px-2 text-sm font-thin text-gray-500 grid grid-flow-row grid-cols-2 justify-items-start gap-y-1 gap-x-2"
     >
-        <span class="flex flex-flow-col items-center gap-x-1">
+        <span class="flex items-center flex-flow-col gap-x-1">
             <Fa icon={faFileLines} class="text-xs" />
             <p class="whitespace-nowrap">{course.lesson_cnt} Lessons</p>
         </span>
-        <span class="flex flex-flow-col items-center gap-x-1">
+        <span class="flex items-center flex-flow-col gap-x-1">
             <Fa icon={faClock} class="text-xs" />
             <p class="whitespace-nowrap">
                 {course.estimated_time_hours}h {course.estimated_time_minutes}m
@@ -80,31 +80,34 @@
 
     <div class="grid grid-flow-col grid-cols-[1fr_1fr]">
         <!-- Instructor Row-->
-        <div class="px-2 grid grid-flow-col items-center justify-items-start">
-            <div class="flex flex-flow-col items-center gap-x-1">
-                <!-- <Avatar class="w-8" initials="" /> -->
+        <div class="items-center px-2 grid grid-flow-col justify-items-start">
+            <div class="flex items-center flex-flow-col gap-x-1">
                 <Fa icon={faCircle} class="text-2xl text-surface-400" />
-                <p class="text-sm text-gray-500 font-light">{course.instructor}</p>
+                <p class="text-sm font-light text-gray-500">{course.instructor}</p>
             </div>
         </div>
 
         <div class="grid grid-rows-[1fr_1fr]">
             <div class=" grid grid-flow-col justify-items-end h-min grid-cols-[1fr_auto] gap-2">
                 {#if course.current_price < course.original_price}
-                    <p class="line-through text-gray-400">
+                    <p class="text-gray-400 line-through">
                         ${Number(course.current_price).toFixed(2)}
                     </p>
                 {/if}
 
-                <p class="text-gray-600 font-semibold">
+                <p class="font-semibold text-gray-600">
                     ${Number(course.original_price).toFixed(2)}
                 </p>
             </div>
             <div class="grid grid-cols-[1fr_auto] justify-items-end">
-                <button class="btn-icon btn-icon-sm" on:click={handleToggle}>
+                <button
+                    class="btn-icon btn-icon-sm"
+                    on:click={handleToggle}
+                    aria-label="Toggle Favorite"
+                >
                     <Fa icon={toggled ? faHeart : faHeartOutline} class="text-pink-500" />
                 </button>
-                <button class="btn btn-sm variant-filled-secondary">
+                <button class="btn btn-sm variant-filled-secondary" aria-label="Enroll">
                     <p class="text-sm font-medium">Enroll Now</p>
                 </button>
             </div>

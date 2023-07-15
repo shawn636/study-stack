@@ -7,135 +7,163 @@ generator client {
 
 datasource db {
   provider     = "mysql"
-  url          = env("DATABASE_URL")
   relationMode = "prisma"
-}
-
-// COURSE RELATED MODELS
-
-model Course {
-  id                     Int      @id @default(autoincrement())
-  title                  String   @db.MediumText
-  description            String   @db.LongText
-  category               String
-  Category               Category @relation(fields: [categoryId], references: [id])
-  categoryId             Int
-  current_price          Decimal
-  original_price         Decimal
-  lessons                Lesson[]
-  instructor             String
-  Instructor             User     @relation(fields: [instructorId], references: [id])
-  organization           String?
-  instructorId           Int
-  difficulty             String
-  img_href               String
-  estimated_time_hours   Int
-  estimated_time_minutes Int
-  lesson_cnt             Int
-  rating_cnt             Int
-  rating_avg             Float
-
-  @@index([categoryId])
-  @@index([instructorId])
-}
-
-model Category {
-  id       Int      @id @default(autoincrement())
-  title    String   @unique
-  img_href String
-  courses  Course[]
-}
-
-model Lesson {
-  id       Int             @id @default(autoincrement())
-  title    String
-  content  CourseContent[]
-  Course   Course?         @relation(fields: [courseId], references: [id])
-  courseId Int?
-
-  @@index([courseId])
-}
-
-model CourseContent {
-  id            Int         @id @default(autoincrement())
-  type          ContentType @relation(fields: [contentTypeId], references: [id])
-  contentTypeId Int
-  Lesson        Lesson?     @relation(fields: [lessonId], references: [id])
-  lessonId      Int?
-  content       Json
-  author        User        @relation(fields: [authorId], references: [id])
-  authorId      Int
-
-  @@index([contentTypeId])
-  @@index([lessonId])
-  @@index([authorId])
-}
-
-model ContentType {
-  id            Int             @id @default(autoincrement())
-  title         String          @unique
-  CourseContent CourseContent[]
-}
-
-// USER RELATED MODELS
-
-model Organization {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  users       User[]
-}
-
-model User {
-  id             Int             @id @default(autoincrement())
-  auth_user_id   String          @unique
-  name           String
-  email          String          @unique
-  Organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  organizationId Int?
-  courseContent  CourseContent[]
-  courses        Course[]
-  AuthUser       AuthUser?
-
-  @@index([organizationId])
-  @@index([auth_user_id])
-}
-
-model AuthUser {
-  id          String        @id @unique
-  user_id     Int?          @unique
-  User        User?         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  email       String        @unique
-  AuthSession AuthSession[]
-  AuthKey     AuthKey[]
-
-  @@index([user_id])
-  @@map("auth_user")
-}
-
-model AuthSession {
-  id           String   @id @unique
-  auth_user_id String
-  expires      DateTime
-  auth_user    AuthUser @relation(fields: [auth_user_id], references: [id], onDelete: Cascade)
-
-  @@index([auth_user_id])
-  @@map("auth_session")
+  url          = env("DATABASE_URL")
 }
 
 model AuthKey {
-  id              String   @id @unique
-  hashed_password String?
-  auth_user_id    String
+  id String @id @unique
+
   auth_user       AuthUser @relation(references: [id], fields: [auth_user_id], onDelete: Cascade)
+  auth_user_id    String
+  hashed_password String?
 
   @@index([auth_user_id])
   @@map("auth_key")
 }
 
+model AuthSession {
+  id String @id @unique
+
+  auth_user    AuthUser @relation(fields: [auth_user_id], references: [id], onDelete: Cascade)
+  auth_user_id String
+  expires      DateTime
+
+  @@index([auth_user_id])
+  @@map("auth_session")
+}
+
+model AuthUser {
+  id String @id @unique
+
+  AuthKey     AuthKey[]
+  AuthSession AuthSession[]
+  email       String        @unique
+  User        User?         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id     Int?          @unique
+
+  @@index([user_id])
+  @@map("auth_user")
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+
+  courses  Course[]
+  img_href String
+  title    String   @unique
+}
+
+model ContentType {
+  id Int @id @default(autoincrement())
+
+  CourseContent CourseContent[]
+  title         String          @unique
+}
+
+model Course {
+  id Int @id @default(autoincrement())
+
+  category               String
+  Category               Category        @relation(fields: [categoryId], references: [id])
+  categoryId             Int
+  current_price          Decimal
+  description            String          @db.LongText
+  difficulty             String
+  estimated_time_hours   Int
+  estimated_time_minutes Int
+  img_href               String
+  instructor             String
+  Instructor             User            @relation(fields: [instructorId], references: [id])
+  instructorId           Int
+  lesson_cnt             Int
+  lessons                Lesson[]
+  original_price         Decimal
+  organization           String?
+  rating_avg             Float
+  rating_cnt             Int
+  title                  String          @db.MediumText
+  CourseProgres          CourseProgres[]
+
+  @@index([categoryId])
+  @@index([instructorId])
+}
+
+model CourseContent {
+  id Int @id @default(autoincrement())
+
+  author        User        @relation(fields: [authorId], references: [id])
+  authorId      Int
+  content       Json
+  contentTypeId Int
+  Lesson        Lesson?     @relation(fields: [lessonId], references: [id])
+  lessonId      Int?
+  type          ContentType @relation(fields: [contentTypeId], references: [id])
+
+  @@index([authorId])
+  @@index([contentTypeId])
+  @@index([lessonId])
+}
+
+model CourseProgres {
+  user_id           Int
+  users             User   @relation(fields: [user_id], references: [id])
+  lessons_completed Int
+  course_id         Int
+  courses           Course @relation(fields: [course_id], references: [id])
+
+  @@id([user_id, course_id])
+  @@index([user_id])
+  @@index([course_id])
+}
+
 model CSRFToken {
-  token   String @id @unique
+  token String @id @unique
+
   expires BigInt
 
   @@map("csrf_token")
+}
+
+model Lesson {
+  id Int @id @default(autoincrement())
+
+  content  CourseContent[]
+  Course   Course?         @relation(fields: [courseId], references: [id])
+  courseId Int?
+  title    String
+
+  @@index([courseId])
+}
+
+model Organization {
+  id Int @id @default(autoincrement())
+
+  description String?
+  name        String
+  users       User[]
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  area_code      String?
+  AuthUser       AuthUser?
+  auth_user_id   String          @unique
+  bio            String?         @db.LongText
+  city           String?
+  country_code   String?
+  courseContent  CourseContent[]
+  courses        Course[]
+  email          String          @unique
+  name           String
+  Organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  organizationId Int?
+  phone_number   String?
+  photo_url      String?
+  state          String?
+  CourseProgres  CourseProgres[]
+
+  @@index([auth_user_id])
+  @@index([organizationId])
 }

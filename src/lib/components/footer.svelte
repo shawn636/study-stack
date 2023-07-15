@@ -11,36 +11,36 @@
     import { scrollPosition, pageHeight } from '$lib/stores/scroll';
 </script>
 
-<div class="bg-gray-800 p-4 sm:p-10 text-white w-full">
+<div class="w-full p-4 text-white bg-gray-800 sm:p-10">
     <!-- Logo and Social Media Bar (Below) -->
     <div class="grid grid-rows sm:grid-cols-[auto_1fr] justify-items-center items-center">
         <Logo />
         <div
-            class="sm:justify-self-end grid grid-flow-row sm:grid-flow-col gap-y-2 sm:gap-x-2 items-center"
+            class="items-center sm:justify-self-end grid grid-flow-row sm:grid-flow-col gap-y-2 sm:gap-x-2"
         >
             <aside class="font-light">Follow Us On Social Media</aside>
-            <div class=" grid grid-flow-col items-center">
+            <div class="items-center grid grid-flow-col">
                 <a
                     href="https://www.facebook.com/"
-                    class="rounded-full p-1 hover:bg-primary-800 w-8 h-8 grid items-center justify-items-center"
+                    class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
                     <Fa icon={faFacebookF} size="20" />
                 </a>
                 <a
                     href="https://www.twitter.com/"
-                    class="rounded-full p-1 hover:bg-primary-800 w-8 h-8 grid items-center justify-items-center"
+                    class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
                     <Fa icon={faTwitter} size="20" />
                 </a>
                 <a
                     href="https://www.instagram.com/"
-                    class="rounded-full p-1 hover:bg-primary-800 w-8 h-8 grid items-center justify-items-center"
+                    class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
                     <Fa icon={faInstagram} size="20" />
                 </a>
                 <a
                     href="https://www.linkedin.com/"
-                    class="rounded-full p-1 hover:bg-primary-800 w-8 h-8 grid items-center justify-items-center"
+                    class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
                     <Fa icon={faLinkedinIn} size="20" />
                 </a>
@@ -53,8 +53,8 @@
 
     <!-- Only visible for sm brekpoint or below -->
     <!-- Contact Us Box (Below) -->
-    <div class="sm:hidden pt-2 pb-4 grid grid-flow-row">
-        <p class="uppercase pb-2 pl-4 font-semibold">Get In Touch</p>
+    <div class="pt-2 pb-4 sm:hidden grid grid-flow-row">
+        <p class="pb-2 pl-4 font-semibold uppercase">Get In Touch</p>
         <p class="pl-4">Don't worry, we don't send spam.</p>
         <div class="relative mt-2">
             <div class="flex">
@@ -66,8 +66,9 @@
                     required
                 />
                 <button
+                    aria-label="Submit Email Address"
                     type="button"
-                    class="btn font-medium rounded-l-none rounded-r-full variant-filled-secondary"
+                    class="font-medium rounded-l-none rounded-r-full btn variant-filled-secondary"
                     >Submit</button
                 >
             </div>
@@ -137,7 +138,7 @@
     >
         <!-- CATEOGIRIES -->
         <div class="row-start-1 row-end-2">
-            <h4 class="uppercase h4 grid pb-2">Categories</h4>
+            <h4 class="pb-2 uppercase h4 grid">Categories</h4>
             <ul class="grid gap-y-1">
                 <li><a href="/">Biblical Studies</a></li>
                 <li><a href="/">Theology & Doctrine</a></li>
@@ -149,7 +150,7 @@
         </div>
         <!-- ABOUT -->
         <div class="row-start-1 row-end-2">
-            <h4 class="uppercase h4 pb-2 grid">About</h4>
+            <h4 class="pb-2 uppercase h4 grid">About</h4>
             <ul class="grid gap-y-1">
                 <li><a href="/about">About Us</a></li>
                 <li><a href="/">Learner Stories</a></li>
@@ -161,7 +162,7 @@
         </div>
         <!-- SUPPORT -->
         <div class="row-start-1 row-end-2">
-            <h4 class="uppercase h4 grid pb-2">Support</h4>
+            <h4 class="pb-2 uppercase h4 grid">Support</h4>
             <ul class="grid gap-y-1">
                 <li><a href="/">Documentation</a></li>
                 <li><a href="/">FAQs</a></li>
@@ -174,7 +175,7 @@
         <div
             class="row-start-2 row-span-1 col-start-1 col-span-2 lg:row-start-1 lg:col-start-4 lg:col-span-1 justify-self-start"
         >
-            <p class="uppercase pb-2 pl-4 font-semibold">Get In Touch</p>
+            <p class="pb-2 pl-4 font-semibold uppercase">Get In Touch</p>
             <p class="pl-4">Don't worry, we don't send spam.</p>
             <div class="relative mt-2">
                 <div class="flex">
@@ -186,8 +187,9 @@
                         required
                     />
                     <button
+                        aria-label="Submit Email Address"
                         type="button"
-                        class="btn font-medium rounded-l-none rounded-r-full variant-filled-secondary active:scale-100"
+                        class="font-medium rounded-l-none rounded-r-full btn variant-filled-secondary active:scale-100"
                         >Submit</button
                     >
                 </div>
@@ -201,5 +203,5 @@
 </div>
 
 {#if $scrollPosition > $pageHeight}
-    <div class="absolute bottom-0 bg-gray-800 h-64 w-full -z-10" />
+    <div class="absolute bottom-0 w-full h-64 bg-gray-800 -z-10" />
 {/if}

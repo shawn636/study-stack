@@ -4,7 +4,7 @@
 
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/svelte';
-import Header from '$lib/sections/header.svelte';
+import Header from '$lib/components/header.svelte';
 import type { Subscriber } from 'svelte/store';
 
 // setupTest.js for Vitest

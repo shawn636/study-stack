@@ -4,7 +4,7 @@ import type { Actions } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
-import { loginForm } from '$lib/schema/login-form';
+import { loginForm } from './login-form-schema';
 import { errorPadding } from '$lib/server/util';
 import { ValidationError } from 'yup';
 

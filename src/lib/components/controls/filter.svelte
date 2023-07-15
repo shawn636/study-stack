@@ -5,8 +5,9 @@
 </script>
 
 <button
+    aria-label="Filter"
     type="button"
-    class="btn btn-sm first:items-center justify-center gap-2 variant-ghost-primary text-primary-700 dark:text-primary-400 hidden md:flex"
+    class="justify-center hidden btn btn-sm first:items-center gap-2 variant-ghost-primary text-primary-700 dark:text-primary-400 md:flex"
     use:popup={{
         event: 'click',
         target: 'filter',
@@ -17,6 +18,6 @@
     <p>Filter</p>
 </button>
 
-<div class="card p-4" data-popup="filter">
+<div class="p-4 card" data-popup="filter">
     <!-- INSERT FILTERS HERE -->
 </div>

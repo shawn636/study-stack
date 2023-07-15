@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import { db } from '$lib/database';
+import { db } from '$lib/server/database';
 import { faker } from '@faker-js/faker';
 import { auth, COOKIE_NAME as AUTH_COOKIE_NAME } from '$lib/server/auth';
 import { csrf, COOKIE_NAME as CSRF_COOKIE_NAME } from '$lib/server/csrf';

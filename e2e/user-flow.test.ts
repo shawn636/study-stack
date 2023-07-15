@@ -47,8 +47,8 @@ test.describe('all-user-flow', async () => {
         expect(page).toHaveURL('/');
 
         await page.getByTestId('profile-button').click();
-        await expect(page.getByText(name)).toBeVisible();
-        await expect(page.getByText(email)).toBeVisible();
+        await expect(page.getByTestId('profile-popup-name')).toBeVisible();
+        await expect(page.getByTestId('profile-popup-email')).toBeVisible();
         await page.getByRole('button', { name: 'Sign Out' }).click();
     });
 
@@ -179,7 +179,7 @@ test.describe('all-user-flow', async () => {
         expect(page).toHaveURL('/');
 
         await page.getByTestId('profile-button').click();
-        await expect(page.getByText(name)).toBeVisible();
-        await expect(page.getByText(email)).toBeVisible();
+        await expect(page.getByTestId('profile-popup-name')).toBeVisible();
+        await expect(page.getByTestId('profile-popup-email')).toBeVisible();
     });
 });

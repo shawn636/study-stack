@@ -9,7 +9,7 @@
 </script>
 
 <RadioGroup
-    class="text-slate-500 dark:text-slate-400 hidden md:flex w-min"
+    class="hidden text-slate-500 dark:text-slate-400 md:flex w-min"
     rounded="rounded-lg"
     border="border-none"
     background="bg-surface-50 dark:bg-surface-800"
@@ -24,7 +24,7 @@
             />
         </svg>
     </RadioItem>
-    <RadioItem bind:group={displayValue} name="sort-by" value="List" label="list" class="h-6 top-0">
+    <RadioItem bind:group={displayValue} name="sort-by" value="List" label="list" class="top-0 h-6">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4">
             <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
             <path
