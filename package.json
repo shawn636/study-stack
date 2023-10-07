@@ -72,7 +72,7 @@
         "jsdom": "^21.1.2",
         "lint-staged": "^13.2.3",
         "module-alias": "^2.2.3",
-        "postcss": "^8.4.25",
+        "postcss": "^8.4.31",
         "prettier": "^2.8.8",
         "prettier-plugin-svelte": "^2.10.1",
         "prisma": "^4.16.2",
