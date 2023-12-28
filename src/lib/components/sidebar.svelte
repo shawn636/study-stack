@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { Drawer, drawerStore } from '@skeletonlabs/skeleton';
+    import { Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
     import { page } from '$app/stores';
     import { getHeaderLinks } from '$lib/stores/links';
     import type User from '$lib/models/user';
 
+    const drawerStore = getDrawerStore();
     $: classesActive = (href: string) =>
         href === $page.url.pathname ? '!bg-primary-500 !text-white' : '';
 

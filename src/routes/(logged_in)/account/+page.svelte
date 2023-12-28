@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { PageServerData } from './$types';
     import type { ToastSettings } from '@skeletonlabs/skeleton';
-    import { toastStore, ProgressRadial } from '@skeletonlabs/skeleton';
+    import { getToastStore, ProgressRadial } from '@skeletonlabs/skeleton';
     import Fa from 'svelte-fa';
     import { faEnvelope, faPhone, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
     import { onMount } from 'svelte';
@@ -10,6 +10,8 @@
 
     export let original_data: PageServerData;
     export let data: PageServerData;
+
+    const toastStore = getToastStore();
     $: phone = formatPhoneNumber((data.user.area_code ?? '') + (data.user.phone_number ?? ''));
     let profile_img_input: HTMLInputElement;
 
