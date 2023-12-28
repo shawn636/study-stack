@@ -30,7 +30,6 @@
         <p>{sortByValue}</p>
         <Fa icon={faChevronDown} class="ml-2" />
     </button>
-
     <!-- Popup -->
     <div class="shadow-xl grid grid-flow-row rounded-xl" data-popup="sortby">
         <RadioGroup
