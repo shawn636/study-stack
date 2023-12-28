@@ -28,13 +28,13 @@
     use:popup={{
         event: 'click',
         target: 'profile',
-        placement: 'bottom-end',
-        middleware: {
-            offset: {
-                mainAxis: 10,
-                crossAxis: -10
-            }
-        }
+        placement: 'bottom-end'
+        // middleware: {
+        //     offset: {
+        //         mainAxis: 10,
+        //         crossAxis: -10
+        //     }
+        // }
     }}
 >
     <Avatar initials={initials(user.name)} width="w-8" />

@@ -4,7 +4,7 @@
 
     import Sidebar from '$lib/components/sidebar.svelte';
     import Header from '$lib/components/header.svelte';
-    import Footer from '$lib/components/footer.svelte';
+    // import Footer from '$lib/components/footer.svelte';
     import { AppShell, Toast } from '@skeletonlabs/skeleton';
     import { scrollHandler } from '$lib/stores/scroll';
 
@@ -21,7 +21,7 @@
 
     <slot />
 
-    <svelte:fragment slot="pageFooter">
+    <!-- <svelte:fragment slot="pageFooter">
         <Footer />
-    </svelte:fragment>
+    </svelte:fragment> -->
 </AppShell>

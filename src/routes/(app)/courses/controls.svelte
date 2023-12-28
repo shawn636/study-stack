@@ -4,13 +4,14 @@
     import { createEventDispatcher } from 'svelte';
 
     import type { DrawerSettings } from '@skeletonlabs/skeleton';
-    import { drawerStore } from '@skeletonlabs/skeleton';
+    import { getDrawerStore } from '@skeletonlabs/skeleton';
     import SearchBar from '$lib/components/controls/search-bar.svelte';
     import SortByFilter from '$lib/components/controls/sort-by-filter.svelte';
     import DisplaySwitch from '$lib/components/controls/display-switch.svelte';
     import Filter from '$lib/components/controls/filter.svelte';
 
     const dispatch = createEventDispatcher();
+    const drawerStore = getDrawerStore();
 
     const settings: DrawerSettings = {
         id: 'control-center',

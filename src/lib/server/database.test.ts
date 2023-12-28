@@ -10,6 +10,8 @@ describe('database', () => {
         const connection = db.connection();
         expect(connection).toBeTruthy();
         const result = await connection.execute('SELECT 1 + 1 as solution');
-        expect(result.rows[0]).toContain({ solution: '2' });
+
+        const solution = parseInt(result.rows[0].solution) || null;
+        expect(solution).toBe(2);
     });
 });

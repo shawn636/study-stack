@@ -2,7 +2,7 @@
     import Logo from '$lib/components/logo.svelte';
     import { page } from '$app/stores';
     import { AppBar, type DrawerSettings } from '@skeletonlabs/skeleton';
-    import { drawerStore } from '@skeletonlabs/skeleton';
+    import { getDrawerStore } from '@skeletonlabs/skeleton';
     import { getHeaderLinks } from '$lib/stores/links';
     import ProfileMenu from '$lib/components/profile-menu.svelte';
     import Fa from 'svelte-fa';
@@ -13,6 +13,7 @@
 
     $: headerLinks = getHeaderLinks(user == null ? false : true);
 
+    const drawerStore = getDrawerStore();
     const drawerSettings: DrawerSettings = {
         id: 'sidebar',
         position: 'left'

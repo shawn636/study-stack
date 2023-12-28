@@ -16,3 +16,4 @@ e2e/artifacts
 *.icloud
 /notebooks
 .vscode
+vite.config.ts.timestamp-*
