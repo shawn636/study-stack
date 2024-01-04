@@ -10,7 +10,7 @@ export const POST = (async ({ cookies, request }) => {
     const session_id = auth.getSession(cookies);
 
     if (!session_id) {
-        throw error(401, 'You are not logged in.');
+        error(401, 'You are not logged in.');
     }
 
     try {
@@ -23,7 +23,7 @@ export const POST = (async ({ cookies, request }) => {
         const profile_photo = formData.get('profile_photo') as File;
 
         if (String(user_id) !== String(user_id_from_request)) {
-            throw error(403, 'You are not authorized to update this user.');
+            error(403, 'You are not authorized to update this user.');
         }
 
         console.log(`Photo Uploaded: ${profile_photo.name}`);
@@ -40,7 +40,7 @@ export const POST = (async ({ cookies, request }) => {
         console.log(result.rows);
     } catch (e) {
         console.log(e);
-        throw error(500, 'Unable to update due to server error.');
+        error(500, 'Unable to update due to server error.');
     }
 
     return new Response(null, {

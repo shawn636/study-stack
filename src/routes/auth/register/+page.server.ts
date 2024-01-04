@@ -47,15 +47,15 @@ const handleError = (e: unknown) => {
     // console.log(e)
     if (e instanceof ValidationError) {
         console.log(e.message);
-        throw error(400, 'data provided is invalid');
+        error(400, 'data provided is invalid');
     } else if (!(e instanceof Error))
-        throw error(500, 'An unknown error ocurred, please try again later.');
-    if (e.message === 'AUTH_DUPLICATE_EMAIL') throw error(400, 'This email is already in use.');
+        error(500, 'An unknown error ocurred, please try again later.');
+    if (e.message === 'AUTH_DUPLICATE_EMAIL') error(400, 'This email is already in use.');
 
-    throw error(500, 'An unknown error occurred. Please try again.');
+    error(500, 'An unknown error occurred. Please try again.');
 };
 
 export const load: PageServerLoad = async ({ cookies }) => {
     const signed_in = await auth.validateCookies(cookies);
-    if (signed_in) throw redirect(302, '/');
+    if (signed_in) redirect(302, '/');
 };

@@ -14,13 +14,13 @@ export const GET = (async ({ params, url, cookies }) => {
     let expand_query = url.searchParams.get('expand_query') ?? 'false';
 
     if (!['relevance', 'highest_rated', 'lowest_price'].includes(sort_by)) {
-        throw error(400, 'Invalid sort_by parameter');
+        error(400, 'Invalid sort_by parameter');
     }
 
     try {
         expand_query = JSON.parse(expand_query);
     } catch (e) {
-        throw error(400, 'Invalid expand_query parameter');
+        error(400, 'Invalid expand_query parameter');
     }
 
     const search_query = `
