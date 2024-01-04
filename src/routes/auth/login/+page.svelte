@@ -88,13 +88,13 @@
     <div
         class="items-center h-full grid justify-items-center row-start-1 row-end-2 col-start-1 col-end-2"
         id="main"
-        in:fly={{
+        in:fly|global={{
             x: '100%',
             duration: transitionDuration,
             delay: transitionDuration,
             easing: cubicInOut
         }}
-        out:fly={{
+        out:fly|global={{
             x: '-100%',
             duration: transitionDuration,
             easing: cubicInOut
@@ -134,11 +134,11 @@
                             {#if $errors.email}
                                 <div
                                     class="flex items-center gap-x-1"
-                                    in:slide|local={{
+                                    in:slide={{
                                         duration: 300,
                                         easing: cubicInOut
                                     }}
-                                    out:slide|local={{
+                                    out:slide={{
                                         duration: 300,
                                         easing: cubicInOut
                                     }}
@@ -169,11 +169,11 @@
                         {#if $errors.password}
                             <div
                                 class="flex items-center gap-x-1"
-                                in:slide|local={{
+                                in:slide={{
                                     duration: 300,
                                     easing: cubicInOut
                                 }}
-                                out:slide|local={{
+                                out:slide={{
                                     duration: 300,
                                     easing: cubicInOut
                                 }}
@@ -196,11 +196,11 @@
                         {#if submissionError}
                             <div
                                 class="items-center mt-4 alert variant-ghost-error"
-                                in:slide|local={{
+                                in:slide={{
                                     duration: 300,
                                     easing: cubicInOut
                                 }}
-                                out:slide|local={{
+                                out:slide={{
                                     duration: 300,
                                     easing: cubicInOut
                                 }}
@@ -224,11 +224,11 @@
                         {#if showSuccess}
                             <div
                                 class="mt-4 alert variant-ghost-success"
-                                in:slide|local={{
+                                in:slide={{
                                     duration: 300,
                                     easing: cubicInOut
                                 }}
-                                out:slide|local={{
+                                out:slide={{
                                     duration: 300,
                                     easing: cubicInOut
                                 }}
