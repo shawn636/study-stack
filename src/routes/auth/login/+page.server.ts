@@ -40,13 +40,12 @@ export const actions: Actions = {
 };
 
 const handleError = (e: unknown) => {
-    if (e instanceof ValidationError) throw error(400, 'data provided is invalid');
-    else if (!(e instanceof Error))
-        throw error(500, 'An unknown error ocurred, please try again later.');
-    if (e.message === 'AUTH_INVALID_CREDENTIALS') throw error(400, 'Invalid credentials.');
+    if (e instanceof ValidationError) error(400, 'data provided is invalid');
+    else if (!(e instanceof Error)) error(500, 'An unknown error ocurred, please try again later.');
+    if (e.message === 'AUTH_INVALID_CREDENTIALS') error(400, 'Invalid credentials.');
 };
 
 export const load: PageServerLoad = async ({ cookies }) => {
     const signed_in = await auth.validateCookies(cookies);
-    if (signed_in) throw redirect(302, '/');
+    if (signed_in) redirect(302, '/');
 };

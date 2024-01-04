@@ -13,7 +13,7 @@ export const load = (async ({ cookies, parent }) => {
         user = await auth.getUser(session_id);
     } else {
         cookies = auth.deleteSessionCookie(cookies);
-        throw redirect(302, '/auth/login');
+        redirect(302, '/auth/login');
     }
     return { user };
 }) satisfies PageServerLoad;

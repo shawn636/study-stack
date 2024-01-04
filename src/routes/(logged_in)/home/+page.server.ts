@@ -8,7 +8,7 @@ export const load = (async ({ cookies, parent }) => {
     const is_valid = await auth.validateSession(session_id ?? '');
     if (!is_valid) {
         cookies = auth.deleteSessionCookie(cookies);
-        throw redirect(302, '/auth/login');
+        redirect(302, '/auth/login');
     } else {
         const user = await auth.getUser(session_id ?? '');
         return { user };

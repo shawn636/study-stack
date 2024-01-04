@@ -11,7 +11,7 @@ export const PUT = (async ({ cookies, request }) => {
     const session_id = auth.getSession(cookies);
 
     if (!session_id) {
-        throw error(401, 'You are not logged in.');
+        error(401, 'You are not logged in.');
     }
 
     const [user_id, data] = await Promise.all([auth.getUserId(session_id), request.json()]);
@@ -21,7 +21,7 @@ export const PUT = (async ({ cookies, request }) => {
     const user_id_from_request = data.user.id;
 
     if (user_id !== user_id_from_request) {
-        throw error(403, 'You are not authorized to update this user.');
+        error(403, 'You are not authorized to update this user.');
     }
 
     try {
@@ -43,7 +43,7 @@ export const PUT = (async ({ cookies, request }) => {
     } catch (e) {
         console.log(e);
 
-        throw error(500, 'Unable to update due to server error.');
+        error(500, 'Unable to update due to server error.');
     }
 
     return new Response(null, {
