@@ -7,7 +7,7 @@ export async function seedLesson(client: PrismaClient) {
 
     let lessonId = 1;
     for (const course of courses) {
-        const numLessons = faker.datatype.number({ min: 0, max: 10 });
+        const numLessons = faker.number.int({ min: 0, max: 10 });
 
         for (let i = 0; i < numLessons; i++) {
             const lesson: Lesson = {

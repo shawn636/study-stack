@@ -17,7 +17,7 @@ const accounts: Account[] = new Array(5).fill(null).map(() => {
     return {
         email: faker.internet.email(),
         password: faker.internet.password(),
-        name: faker.name.fullName()
+        name: faker.person.fullName()
     } as Account;
 });
 
