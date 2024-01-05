@@ -36,3 +36,56 @@ jobs:
                   vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
                   vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
                   working-directory: ./
+    deploy-new:
+        runs-on: ubuntu-latest
+        env:
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            MIGRATION_URL: ${{ secrets.MIGRATION_URL }}
+            PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+            PEPPER: ${{ secrets.PEPPER }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '18.x'
+
+            - uses: pnpm/action-setup@v2
+              name: Install pnpm
+              with:
+                version: 8
+                run_install: false
+            
+            - name: Get pnpm store directory
+              shell: bash
+              run: |
+                echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+            
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                path: ${{ env.STORE_PATH }}
+                key: ${{ runner.os }}-pnpm-store-
+            - name: Install dependencies
+              run: pnpm install
+            
+            - name: Prisma generate
+              run: pnpm exec prisma generate
+              env:
+                  DATABASE_URL: ${{ env.DATABASE_URL }}
+                  MIGRATION_URL: ${{ env.MIGRATION_URL }}
+                  PEPPER: ${{ env.PEPPER }}
+
+            - name: Build
+              run: pnpm build:production
+            
+            - name: Deploy to Vercel
+              uses: amondnet/vercel-action@v25
+              with:
+                vercel-token: ${{ secrets.VERCEL_TOKEN }}
+                vercel-args: '--prod'
+                vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+                vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+                working-directory: ./

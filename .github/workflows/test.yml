@@ -15,15 +15,36 @@ jobs:
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
             PEPPER: ${{ secrets.PEPPER }}
         steps:
-            - uses: actions/checkout@v3
-            - name: Use Node.js
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Install Node.js
               uses: actions/setup-node@v3
               with:
                   node-version: '18.x'
-            - run: npm install
-            - run: npm run build --if-present
-            - run: npm run test:unit
+            - uses: pnpm/action-setup@v2
+              name: Install pnpm
+              with:
+                version: 8
+                run_install: false
+            
+            - name: Get pnpm store directory
+              shell: bash
+              run: |
+                echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+            
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                path: ${{ env.STORE_PATH }}
+                key: ${{ runner.os }}-pnpm-store-
+            - name: Install dependencies
+              run: pnpm install
+            
+            - name: Build
+              run: pnpm build:production
 
+            - name: Run Unit tests
+              run: pnpm test:unit
     end-to-end:
         runs-on: ubuntu-latest
         env:
@@ -32,12 +53,39 @@ jobs:
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
             PEPPER: ${{ secrets.PEPPER }}
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Install Node.js
+              uses: actions/setup-node@v3
               with:
                   node-version: '18.x'
-            - run: npm install
-            - run: npx playwright install --with-deps
-            - run: npx playwright install msedge
-            - run: npm run build --if-present
-            - run: npm run test
+            - uses: pnpm/action-setup@v2
+              name: Install pnpm
+              with:
+                version: 8
+                run_install: false
+            
+            - name: Get pnpm store directory
+              shell: bash
+              run: |
+                echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+            
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                path: ${{ env.STORE_PATH }}
+                key: ${{ runner.os }}-pnpm-store-
+            - name: Install dependencies
+              run: pnpm install
+            
+            - name: Install Playwright
+              run: pnpm exec playwright install --with-deps
+            
+            - name: Install Edge for Playwright
+              run: pnpm exec playwright install msedge
+            
+            - name: Build
+              run: pnpm build:production
+            
+            - name: Run End to End tests
+              run: pnpm test
