@@ -5,14 +5,24 @@ import { auth } from './utils/auth';
 
 const ACCOUNTS = [
     {
-        name: faker.name.fullName(),
+        name: faker.person.fullName(),
         email: faker.internet.email(),
-        pass: faker.internet.password(8, false, /[a-z]/, 'Aa1!')
+        pass: faker.internet.password({
+            length: 8,
+            memorable: false,
+            pattern: /[a-z]/,
+            prefix: 'Aa1!'
+        })
     },
     {
         name: faker.name.fullName(),
         email: faker.internet.email(),
-        pass: faker.internet.password(8, false, /[a-z]/, 'Aa1!')
+        pass: faker.internet.password({
+            length: 8,
+            memorable: false,
+            pattern: /[a-z]/,
+            prefix: 'Aa1!'
+        })
     }
 ];
 

@@ -19,7 +19,7 @@ export async function seedCourse(client: PrismaClient) {
     for (let i = 0; i < numCourses; i++) {
         const isDiscounted = faker.datatype.boolean();
         const price = parseFloat(faker.finance.amount(0.01, 1000.0, 2));
-        const discountedPrice = price * faker.datatype.float({ min: 0.01, max: 0.99 });
+        const discountedPrice = price * faker.number.float({ min: 0.01, max: 0.99 });
 
         const category = faker.helpers.arrayElement(categories);
         const instructor = faker.helpers.arrayElement(users);
@@ -47,11 +47,11 @@ export async function seedCourse(client: PrismaClient) {
             organization: has_org ? organization : null,
             difficulty: faker.helpers.arrayElement(difficulties),
             img_href: 'images/course-image.webp',
-            estimated_time_hours: faker.datatype.number({ min: 0, max: 100 }),
-            estimated_time_minutes: faker.datatype.number({ min: 0, max: 59 }),
+            estimated_time_hours: faker.number.int({ min: 0, max: 100 }),
+            estimated_time_minutes: faker.number.int({ min: 0, max: 59 }),
             lesson_cnt: lesson_cnt,
-            rating_cnt: faker.datatype.number({ min: 0, max: 1000 }),
-            rating_avg: faker.datatype.float({ min: 0, max: 5 })
+            rating_cnt: faker.number.int({ min: 0, max: 1000 }),
+            rating_avg: faker.number.float({ min: 0, max: 5 })
         };
 
         courses.push(course);
