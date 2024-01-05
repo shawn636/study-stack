@@ -15,7 +15,7 @@ const ACCOUNTS = [
         })
     },
     {
-        name: faker.name.fullName(),
+        name: faker.person.fullName(),
         email: faker.internet.email(),
         pass: faker.internet.password({
             length: 8,
