@@ -38,7 +38,7 @@
         <div
             class="flex items-center px-2 text-sm font-medium flex-flow-col justify-items-center gap-x-2 text"
         >
-            <p class="text-secondary-600">{course.rating_avg}</p>
+            <p class="text-secondary-600">{Math.round(course.rating_avg * 100) / 100}</p>
             <Ratings value={rating_avg_rounded} max={5}>
                 <svelte:fragment slot="empty">
                     <Fa icon={faStarOutline} class="text-yellow-500" />
