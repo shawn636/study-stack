@@ -39,7 +39,7 @@
 >
     <Avatar initials={initials(user.name)} width="w-8" />
     <span class="hidden xs:block">{user.name}</span>
-    <Fa icon={faChevronDown} size="12" class="text-surface-700 dark:text-white xs:block" />
+    <Fa icon={faChevronDown} size="sm" class="text-surface-700 dark:text-white xs:block" />
 </button>
 
 <!-- Pop Up Menu -->
@@ -75,7 +75,7 @@
 
             <li>
                 <a href="/home">
-                    <Fa icon={faHouse} size="20" class="text-gray-500 dark:text-gray-200" />
+                    <Fa icon={faHouse} size="lg" class="text-gray-500 dark:text-gray-200" />
                     <span>Home</span>
                 </a>
             </li>
@@ -83,14 +83,14 @@
             <!-- Settings -->
             <li>
                 <a href="/account">
-                    <Fa icon={faUser} size="20" class="text-gray-500 dark:text-gray-200" />
+                    <Fa icon={faUser} size="lg" class="text-gray-500 dark:text-gray-200" />
                     <span>My Account</span>
                 </a>
             </li>
             <!-- Sign Out -->
             <li>
                 <button aria-label="Sign Out" class="w-full" on:click={signOut}>
-                    <Fa icon={faDoorOpen} size="20" class="text-gray-500 dark:text-gray-200" />
+                    <Fa icon={faDoorOpen} size="lg" class="text-gray-500 dark:text-gray-200" />
                     <span>Sign Out</span>
                 </button>
             </li>

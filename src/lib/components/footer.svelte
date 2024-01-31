@@ -24,25 +24,25 @@
                     href="https://www.facebook.com/"
                     class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
-                    <Fa icon={faFacebookF} size="20" />
+                    <Fa icon={faFacebookF} size="lg" />
                 </a>
                 <a
                     href="https://www.twitter.com/"
                     class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
-                    <Fa icon={faTwitter} size="20" />
+                    <Fa icon={faTwitter} size="lg" />
                 </a>
                 <a
                     href="https://www.instagram.com/"
                     class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
-                    <Fa icon={faInstagram} size="20" />
+                    <Fa icon={faInstagram} size="lg" />
                 </a>
                 <a
                     href="https://www.linkedin.com/"
                     class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
-                    <Fa icon={faLinkedinIn} size="20" />
+                    <Fa icon={faLinkedinIn} size="lg" />
                 </a>
             </div>
         </div>

@@ -18,7 +18,7 @@ export async function seedCourse(client: PrismaClient) {
 
     for (let i = 0; i < numCourses; i++) {
         const isDiscounted = faker.datatype.boolean();
-        const price = parseFloat(faker.finance.amount(0.01, 1000.0, 2));
+        const price = parseFloat(faker.finance.amount({ min: 0.01, max: 1000.0, dec: 2 }));
         const discountedPrice = price * faker.number.float({ min: 0.01, max: 0.99 });
 
         const category = faker.helpers.arrayElement(categories);

@@ -8,6 +8,7 @@ import { equippedTheme } from './equipped-theme';
 
 const config = {
     darkMode: 'class',
+    mode: 'jit',
     content: [
         './src/**/*.{html,js,svelte,ts}',
         join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')

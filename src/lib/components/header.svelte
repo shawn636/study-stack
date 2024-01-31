@@ -37,7 +37,7 @@
                     drawerStore.open(drawerSettings);
                 }}
             >
-                <Fa icon={faBars} size="24" />
+                <Fa icon={faBars} size="lg" />
             </button>
             <a href="/"><Logo color="black" /></a>
         </div>
