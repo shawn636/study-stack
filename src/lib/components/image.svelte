@@ -80,7 +80,6 @@
         if (observer) {
             observer.disconnect();
         }
-        URL.revokeObjectURL(imageUrl);
     });
 </script>
 
