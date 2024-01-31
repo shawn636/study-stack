@@ -17,11 +17,16 @@
     let class_string = '';
     export { class_string as class };
     export let color = '!bg-surface-200 !dark:bg-surface-500';
+
+    $: container_base_class = `grid items-center ${width} ${height} ${text_style} ${font_style} rounded-full justify-items-center ${color} ${class_string}`;
+    $: image_base_class = `object-cover ${width} ${height} border border-gray-200 rounded-full shadow-sm dark:border-gray-800`;
 </script>
 
 <div class="relative inline-block">
     <div
-        class="grid items-center {width} {height} {text_style} {font_style} rounded-full justify-items-center {color} {class_string}"
+        class={container_base_class}
+        role="button"
+        tabindex="0"
         on:mouseenter={() => {
             show_edit_photo_overlay = true;
         }}
@@ -34,16 +39,12 @@
                 class="absolute inset-0 flex items-center justify-center transition-all duration-200 ease-in-out rounded-full opacity-0 bg-surface-500/10 dark:bg-surface-700 dark:hover:bg-surface-900/70 hover:bg-surface-500/80 hover:opacity-100"
             >
                 <button class="w-full btn-icon" on:click={edit_function}>
-                    <Fa icon={faPenToSquare} class="z-10 w-4 text-white }" />
+                    <Fa icon={faPenToSquare} size="lg" class="z-10 text-white" />
                 </button>
             </div>
         {/if}
         {#if photo_url}
-            <img
-                src={photo_url}
-                alt="avatar"
-                class="object-cover {width} {height} border border-gray-200 rounded-full shadow-sm dark:border-gray-800"
-            />
+            <img src={photo_url} alt="avatar" class={image_base_class} />
         {:else}
             {initials}
         {/if}

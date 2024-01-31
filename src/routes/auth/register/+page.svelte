@@ -31,6 +31,8 @@
     const handleKeyDown = (event: KeyboardEvent) => {
         if (event.key === 'Enter') {
             event.preventDefault();
+            (event.target as HTMLInputElement).blur();
+            console.log('enter key pressed');
             nextForm();
         }
     };
@@ -123,18 +125,37 @@
     $: transitionTo = currFormIndex > prevFormIndex ? 'right' : 'left';
 
     const nextForm = () => {
+        console.log('Validating inputs');
         validateField('name');
         validateField('email');
+        console.log('inputs validated');
         if (!$touched.name) {
+            console.log('name not touched');
             $errors.name = 'Please enter your name.';
+        } else {
+            console.log('name touched');
         }
         if (!$touched.email) {
+            console.log('email not touched');
             $errors.email = 'Please enter your email address.';
+        } else {
+            console.log('email touched');
         }
 
         if (!$errors.name && !$errors.email && currFormIndex < formCount - 1) {
+            console.log('no errors and not last form');
             prevFormIndex = currFormIndex;
             currFormIndex++;
+        } else {
+            if ($errors.name) {
+                console.log(`Name error: ${$errors.name}`);
+            }
+            if ($errors.email) {
+                console.log(`Email error: ${$errors.email}`);
+            }
+            if (currFormIndex >= formCount - 1) {
+                console.log('last form');
+            }
         }
     };
 
@@ -171,6 +192,7 @@
             <div class="items-center grid">
                 <a
                     href="/"
+                    tabindex="0"
                     class="flex items-center justify-start p-1 text-center btn btn-iconn text-surface-700 dark:text-surface-300 gap-1"
                 >
                     <Fa icon={faChevronLeft} />
@@ -190,6 +212,7 @@
                             <div>
                                 <input
                                     type="text"
+                                    tabindex="0"
                                     name="name"
                                     placeholder="Name"
                                     class="input
@@ -216,7 +239,7 @@
                                     >
                                         <Fa
                                             icon={faCircleExclamation}
-                                            size="16"
+                                            size="sm"
                                             class="text-error-500"
                                         />
                                         <small class="text-error-500">{$errors.name}</small>
@@ -252,7 +275,7 @@
                                 >
                                     <Fa
                                         icon={faCircleExclamation}
-                                        size="16"
+                                        size="sm"
                                         class="text-error-500"
                                     />
                                     <small class="text-error-500">{$errors.email}</small>
@@ -260,6 +283,7 @@
                             {/if}
                             <button
                                 type="button"
+                                tabindex="0"
                                 aria-label="continue"
                                 on:click={nextForm}
                                 class="font-medium btn variant-filled-secondary">Continue</button
@@ -286,7 +310,7 @@
                                 class="btn variant-soft"
                                 aria-label="Sign up with Google"
                             >
-                                <Fa icon={faGoogle} size="20" />
+                                <Fa icon={faGoogle} size="lg" />
                                 <span>Sign up with Google</span>
                             </button>
 
@@ -296,7 +320,7 @@
                                 class="btn variant-soft"
                                 aria-label="Sign up with Facebook"
                             >
-                                <Fa icon={faFacebook} size="20" />
+                                <Fa icon={faFacebook} size="lg" />
                                 <span>Sign up with Facebook</span>
                             </button>
 
@@ -306,13 +330,14 @@
                                 class="btn variant-soft"
                                 aria-label="Sign up with Apple"
                             >
-                                <Fa icon={faApple} size="20" />
+                                <Fa icon={faApple} size="lg" />
                                 <span>Sign up with Apple</span>
                             </button>
                         </div>
                         <p class="py-2 text-sm text-slate-500">
                             Already have an account? <a
                                 class="font-semibold text-primary-500 hover:text-primary-600"
+                                tabindex="0"
                                 href="/auth/login">Sign in</a
                             >
                         </p>
@@ -338,6 +363,7 @@
             <div class="grid grid-items-center">
                 <a
                     href="/"
+                    tabindex="0"
                     class="flex items-center justify-start p-1 text-center btn btn-iconn text-surface-700 dark:text-surface-300 gap-1"
                 >
                     <Fa icon={faChevronLeft} />
@@ -364,16 +390,18 @@
                                 />
                                 <button
                                     aria-label="Toggle password visibility"
+                                    tabindex="0"
                                     type="button"
                                     on:click={toggleShow1}
                                     class="rounded-l-none rounded-r-lg btn-icon variant-filled-primary"
-                                    ><Fa icon={faEyeSlash} size="16" /></button
+                                    ><Fa icon={faEyeSlash} size="sm" class="text-white" /></button
                                 >
                             </div>
                         {:else}
                             <div class="flex">
                                 <input
                                     type="password"
+                                    tabindex="0"
                                     name="password1"
                                     placeholder="Enter a password"
                                     on:change={handleChange}
@@ -385,15 +413,16 @@
                                 <button
                                     aria-label="Toggle password visibility"
                                     type="button"
+                                    tabindex="0"
                                     on:click={toggleShow1}
                                     class="rounded-l-none rounded-r-lg btn-icon variant-filled-primary"
-                                    ><Fa icon={faEye} size="16" /></button
+                                    ><Fa icon={faEye} size="sm" class="text-white" /></button
                                 >
                             </div>
                         {/if}
                         {#if $errors.password1}
                             <div
-                                class="flex items-center gap-x-1"
+                                class="flex items-center gap-x-1 text-white"
                                 in:slide={{
                                     duration: 300,
                                     easing: cubicInOut
@@ -403,7 +432,7 @@
                                     easing: cubicInOut
                                 }}
                             >
-                                <Fa icon={faCircleExclamation} size="16" class="text-error-500" />
+                                <Fa icon={faCircleExclamation} size="sm" class="text-error-500" />
                                 <small class="text-error-500">{$errors.password1}</small>
                             </div>
                         {/if}
@@ -422,9 +451,10 @@
                                 <button
                                     aria-label="Toggle password confirmation visibility"
                                     type="button"
+                                    tabindex="0"
                                     on:click={toggleShow2}
-                                    class="rounded-l-none rounded-r-lg btn-icon variant-filled-primary"
-                                    ><Fa icon={faEyeSlash} size="16" /></button
+                                    class="rounded-l-none rounded-r-lg btn-icon variant-filled-primary text-white"
+                                    ><Fa icon={faEyeSlash} size="sm" class="text-white" /></button
                                 >
                             </div>
                         {:else}
@@ -441,10 +471,11 @@
                                 />
                                 <button
                                     aria-label="Toggle password confirmation visibility"
+                                    tabindex="0"
                                     type="button"
                                     on:click={toggleShow2}
                                     class="rounded-l-none rounded-r-lg btn-icon variant-filled-primary"
-                                    ><Fa icon={faEye} size="16" /></button
+                                    ><Fa icon={faEye} size="sm" class="text-white" /></button
                                 >
                             </div>
                         {/if}
@@ -460,12 +491,13 @@
                                     easing: cubicInOut
                                 }}
                             >
-                                <Fa icon={faCircleExclamation} size="16" class="text-error-500" />
+                                <Fa icon={faCircleExclamation} size="sm" class="text-error-500" />
                                 <small class="text-error-500">{$errors.password2}</small>
                             </div>
                         {/if}
                         <button
                             aria-label="Submit form"
+                            tabindex="0"
                             type="submit"
                             class="flex font-medium btn variant-filled-secondary gap-2"
                         >
@@ -478,6 +510,7 @@
                         <button
                             aria-label="Go back"
                             type="button"
+                            tabindex="0"
                             on:click={prevForm}
                             class="font-medium btn variant-filled-surface">Go Back</button
                         >
@@ -498,7 +531,7 @@
                         <div class="grid grid-cols-[auto_1fr] gap-x-4 w-ful h-full items-center">
                             <Fa
                                 icon={faExclamationTriangle}
-                                size="16"
+                                size="sm"
                                 class="row-start-1 row-end-2 col-start-1 col-end-2"
                             />
                             <div

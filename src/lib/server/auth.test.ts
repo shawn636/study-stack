@@ -49,7 +49,7 @@ describe('auth', () => {
         const deleteAuthUser = 'DELETE FROM auth_user WHERE email = ?';
         const deleteUser = 'DELETE FROM User WHERE email = ?';
 
-        return Promise.all(
+        await Promise.all(
             accounts.map(async (account) => {
                 const del_auth_user = await conn.execute(deleteAuthUser, [account.email]);
                 const del_user = await conn.execute(deleteUser, [account.email]);
@@ -58,6 +58,8 @@ describe('auth', () => {
                 );
             })
         );
+
+        return async () => Promise.resolve();
     }, 20000);
 
     it('should create a valid user from createUser()', async () => {

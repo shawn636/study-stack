@@ -1,11 +1,15 @@
 <script lang="ts">
+    import type { CssClasses } from '@skeletonlabs/skeleton';
     import { onMount, onDestroy, afterUpdate } from 'svelte';
 
     export let src: string;
     export let alt: string;
 
-    export let width: string;
-    export let height: string;
+    // export let widthUnits: number;
+    // export let heightUnits: number;
+
+    export let width: CssClasses;
+    export let height: CssClasses;
 
     export let error = false;
 
@@ -18,6 +22,11 @@
     let observer: IntersectionObserver;
     let componentRef: HTMLDivElement;
     let load_image_called = false;
+
+    $: container_base_class = `${width} ${height}`;
+    $: image_loaded_base_class = `object-cover object-center ${width} ${height} ${class_string}`;
+    $: image_error_base_class = `placeholder ${width} ${height}`;
+    $: image_loading_base_class = `placeholder animate-pulse asbolute ${width} ${height}`;
 
     const loadWorker = async () => {
         const ImageWorker = await import('$lib/workers/image.worker?worker');
@@ -75,19 +84,11 @@
     });
 </script>
 
-<div bind:this={componentRef}>
+<div bind:this={componentRef} class={container_base_class}>
     {#if imageUrl}
-        <img
-            src={imageUrl}
-            role="presentation"
-            {alt}
-            {width}
-            {height}
-            style={`width: ${width}px; height: ${height}px`}
-            class={class_string}
-        />
+        <img src={imageUrl} role="presentation" {alt} class={image_loaded_base_class} />
     {:else if error}
-        <div class={'placeholder'} style={`width: ${width}px; height: ${height}px`}>
+        <div class={image_error_base_class}>
             <div
                 class={'text-center text-gray-400 dark:text-gray-500 grid items-center justify-items-center h-full'}
             >
@@ -95,9 +96,6 @@
             </div>
         </div>
     {:else}
-        <div
-            class={'placeholder animate-pulse asbolute  '}
-            style={`width: ${width}px; height: ${height}px`}
-        />
+        <div class={image_loading_base_class} />
     {/if}
 </div>

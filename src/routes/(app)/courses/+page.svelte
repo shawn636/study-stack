@@ -1,9 +1,6 @@
 <script lang="ts">
-    import Controls from './controls.svelte';
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
-    import { search } from '$lib/stores/controls';
-    import { sortBy } from '$lib/stores/controls';
     import Fa from 'svelte-fa';
     import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
     import type { PageData } from './$types';
@@ -11,7 +8,7 @@
     let is_loading = false;
     export let data: PageData;
 
-    const getCourses = async (
+    const _getCourses = async (
         query: string | undefined = undefined,
         sort_by: string | undefined = undefined,
         expand_query: boolean | undefined = undefined
@@ -43,32 +40,15 @@
             }
         }
     };
-
-    // Search Options
-    $: sort_by = $sortBy.toLowerCase().replace(/\s/g, '_');
-    const expand_query = true;
-
-    const handleKeydown = async (e: KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            data.courses = await getCourses($search, sort_by, expand_query);
-        }
-    };
 </script>
 
 <div class="p-5 grid gap-y-4 justify-items-center">
     <div class="container max-w-5xl grid gap-y-4">
         <h1 class="text-lg font-bold">Find a Course</h1>
 
-        <Controls
-            {handleKeydown}
-            on:change={async () => {
-                await getCourses();
-            }}
-        />
-
         {#if is_loading}
             <div
-                class="grid grid-flow-row justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-4 content-visibility-auto"
+                class="grid grid-flow-row justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-y-4 content-visibility-auto"
             >
                 {#each Array(20) as _}
                     <div class="!-z-20">
@@ -85,7 +65,7 @@
             </div>
         {:else}
             <div
-                class="grid grid-flow-row justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-4"
+                class="grid grid-flow-row justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-y-4"
             >
                 {#each data.courses as course}
                     <CourseGridItem {course} />

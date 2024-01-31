@@ -120,6 +120,7 @@
                         <div>
                             <input
                                 type="email"
+                                tabindex="0"
                                 name="email"
                                 placeholder="Email"
                                 class="input
@@ -145,7 +146,7 @@
                                 >
                                     <Fa
                                         icon={faCircleExclamation}
-                                        size="16"
+                                        size="sm"
                                         class="text-error-500"
                                     />
                                     <small class="text-error-500">{$errors.email}</small>
@@ -155,6 +156,7 @@
 
                         <input
                             type="password"
+                            tabindex="0"
                             name="password"
                             placeholder="Password"
                             on:change={handleChange}
@@ -178,12 +180,13 @@
                                     easing: cubicInOut
                                 }}
                             >
-                                <Fa icon={faCircleExclamation} size="16" class="text-error-500" />
+                                <Fa icon={faCircleExclamation} size="sm" class="text-error-500" />
                                 <small class="text-error-500">{$errors.password}</small>
                             </div>
                         {/if}
                         <button
                             type="submit"
+                            tabindex="0"
                             aria-label="continue"
                             class="font-medium btn variant-filled-secondary"
                         >
@@ -210,7 +213,7 @@
                                 >
                                     <Fa
                                         icon={faExclamationTriangle}
-                                        size="16"
+                                        size="sm"
                                         class="row-start-1 row-end-2 col-start-1 col-end-2"
                                     />
                                     <div
@@ -263,7 +266,7 @@
                             class="btn variant-soft"
                             aria-label="Sign in with Google"
                         >
-                            <Fa icon={faGoogle} size="20" />
+                            <Fa icon={faGoogle} size="lg" />
                             <span>Sign in with Google</span>
                         </button>
 
@@ -273,7 +276,7 @@
                             class="btn variant-soft"
                             aria-label="Sign in with Facebook"
                         >
-                            <Fa icon={faFacebook} size="20" />
+                            <Fa icon={faFacebook} size="lg" />
                             <span>Sign in with Facebook</span>
                         </button>
 
@@ -283,7 +286,7 @@
                             class="btn variant-soft"
                             aria-label="Sign in with Apple"
                         >
-                            <Fa icon={faApple} size="20" />
+                            <Fa icon={faApple} size="lg" />
                             <span>Sign in with Apple</span>
                         </button>
                     </div>

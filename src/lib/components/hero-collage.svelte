@@ -10,7 +10,7 @@
         <Fa
             icon={faBriefcase}
             class="z-[1] justify-self-center row-start-1 col-start-1 items-center justify-items-center"
-            size="20"
+            size="lg"
         />
 
         <div
@@ -38,11 +38,11 @@
             <span class="text-sm font-medium text-light-blue-800">Jack Matheusen</span>
             <span class="text-sm font-normal text-slate-400">Biblical Studies</span>
             <span class="grid grid-cols-5 gap-x-0.5 justify-items-start">
-                <Fa icon={faStar} size="10" class="text-secondary-500" />
-                <Fa icon={faStar} size="10" class="text-secondary-500" />
-                <Fa icon={faStar} size="10" class="text-secondary-500" />
-                <Fa icon={faStar} size="10" class="text-secondary-500" />
-                <Fa icon={faStar} size="10" class="text-secondary-500" />
+                <Fa icon={faStar} size="xs" class="text-secondary-500" />
+                <Fa icon={faStar} size="xs" class="text-secondary-500" />
+                <Fa icon={faStar} size="xs" class="text-secondary-500" />
+                <Fa icon={faStar} size="xs" class="text-secondary-500" />
+                <Fa icon={faStar} size="xs" class="text-secondary-500" />
             </span>
         </div>
     </div>
@@ -56,7 +56,7 @@
     >
         <Fa
             icon={faCheck}
-            size="24"
+            size="1.5x"
             class="relative self-start p-1 m-0 text-white bg-green-500 rounded-full shadow-md -top-3 -left-3 justify-self-start row-start-1 row-end-3"
         />
         <div class="px-3 text-sm font-medium row-start-1 row-span-1 text-light-blue-800">

@@ -19,19 +19,21 @@
         // TODO:if not logged in, redirect to login page
         toggled = !toggled;
     };
+
+    const width = 'w-64';
+    const height = 'h-40';
+
+    $: container_base_class = `grid grid-flow-row rounded-md p-1 gap-y-2 ${width} content-visibility-auto`;
 </script>
 
-<div
-    class="grid grid-flow-row rounded-md p-1 gap-y-2 min-w-[240px] max-w-[240px] min-h-[300px] content-visibility-auto"
->
+<div class={container_base_class}>
     <Image
         src={course.img_href}
         alt="an open bible"
         class="rounded-md aspect-auto"
-        width="232"
-        height="139"
+        {width}
+        {height}
     />
-    <!-- <div class="w-[232px] h-[139px] placeholder animate-pulse" /> -->
 
     <!-- Ratings (Below)-->
     <div class="items-center grid justify-items-start">
@@ -61,14 +63,14 @@
 
     <!-- Course Stats (Below) -->
     <div
-        class="items-center px-2 text-sm font-thin text-gray-500 grid grid-flow-row grid-cols-2 justify-items-start gap-y-1 gap-x-2"
+        class="grid grid-flow-col auto-cols-max justify-between items-center gap-x-2 px-2 text-sm text-gray-500"
     >
-        <span class="flex items-center flex-flow-col gap-x-1">
-            <Fa icon={faFileLines} class="text-xs" />
+        <span class="flex items-center gap-x-1">
+            <Fa icon={faFileLines} size="sm" />
             <p class="whitespace-nowrap">{course.lesson_cnt} Lessons</p>
         </span>
-        <span class="flex items-center flex-flow-col gap-x-1">
-            <Fa icon={faClock} class="text-xs" />
+        <span class="flex items-center gap-x-1">
+            <Fa icon={faClock} size="sm" />
             <p class="whitespace-nowrap">
                 {course.estimated_time_hours}h {course.estimated_time_minutes}m
             </p>
@@ -82,8 +84,8 @@
         <!-- Instructor Row-->
         <div class="items-center px-2 grid grid-flow-col justify-items-start">
             <div class="flex items-center flex-flow-col gap-x-1">
-                <Fa icon={faCircle} class="text-2xl text-surface-400" />
-                <p class="text-sm font-light text-gray-500">{course.instructor}</p>
+                <Fa icon={faCircle} size="2x" class="text-surface-400" />
+                <p class="text-sm text-gray-500">{course.instructor}</p>
             </div>
         </div>
 
