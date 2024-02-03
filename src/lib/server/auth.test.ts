@@ -51,11 +51,8 @@ describe('auth', () => {
 
         await Promise.all(
             accounts.map(async (account) => {
-                const del_auth_user = await conn.execute(deleteAuthUser, [account.email]);
-                const del_user = await conn.execute(deleteUser, [account.email]);
-                console.log(
-                    `Deleted ${account.email} | (AuthUser): ${del_auth_user.rowsAffected} | (User): ${del_user.rowsAffected}`
-                );
+                await conn.execute(deleteAuthUser, [account.email]);
+                await conn.execute(deleteUser, [account.email]);
             })
         );
 
