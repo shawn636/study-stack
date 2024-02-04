@@ -1,13 +1,15 @@
 <script lang="ts">
     import type User from '$lib/models/user';
 
-    import { Avatar, popup } from '@skeletonlabs/skeleton';
+    import { Avatar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
     import { initials } from '$lib/client/util';
     import Fa from 'svelte-fa';
     import { faChevronDown, faDoorOpen, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';
     import { goto } from '$app/navigation';
 
     export let user: User;
+
+    let is_open = false;
 
     const signOut = async () => {
         const res = await fetch('/auth/logout', {
@@ -18,14 +20,8 @@
             goto('/auth/login');
         }
     };
-</script>
 
-<!-- Profile Button -->
-<button
-    aria-label="Profile"
-    class="grid items-center h-10 grid-flow-col p-0 px-2 m-0 text-sm font-semibold bg-white shadow-sm btn variant-filled text-surface-700 dark:bg-surface-700 dark:text-surface-50 xs:rounded-md gap-x-1 w-min"
-    data-testid="profile-button"
-    use:popup={{
+    const popup_settings: PopupSettings = {
         event: 'click',
         target: 'profile',
         placement: 'bottom-end',
@@ -34,8 +30,20 @@
                 mainAxis: 10,
                 crossAxis: -10
             }
+        },
+        state: (e: Record<string, boolean>) => {
+            is_open = e.state;
         }
-    }}
+    };
+</script>
+
+<!-- Profile Button -->
+<button
+    aria-label="Profile"
+    aria-expanded={is_open}
+    class="grid items-center h-10 grid-flow-col p-0 px-2 m-0 text-sm font-semibold bg-white shadow-sm btn variant-filled text-surface-700 dark:bg-surface-700 dark:text-surface-50 xs:rounded-md gap-x-1 w-min"
+    data-testid="profile-button"
+    use:popup={popup_settings}
 >
     <Avatar initials={initials(user.name)} width="w-8" />
     <span class="hidden xs:block">{user.name}</span>

@@ -2,7 +2,7 @@
     import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
     import { display } from '$lib/stores/controls';
 
-    let displayValue = 'Grid';
+    let displayValue: 'Grid' | 'List' = 'Grid';
     $: {
         display.set(displayValue);
     }

@@ -16,7 +16,7 @@ export const DisplayValues = ['Grid', 'List'];
  * @returns {object} An object with 'subscribe', 'set', and 'update' functions for the sorting store.
  */
 const createSortByStore = () => {
-    const { subscribe, set, update } = writable('Most Popular');
+    const { subscribe, set, update } = writable('Relevance');
 
     return {
         subscribe,

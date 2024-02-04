@@ -9,6 +9,8 @@
         search.set(value);
     }
 
+    // The hdndleKeydown function is passed as a prop. The default handler does nothing, but this
+    // is overridden in the parent component to handle the search bar's keydown event.
     export let handleKeydown: (e: KeyboardEvent) => void;
 </script>
 
