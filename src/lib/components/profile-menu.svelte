@@ -28,13 +28,13 @@
     use:popup={{
         event: 'click',
         target: 'profile',
-        placement: 'bottom-end'
-        // middleware: {
-        //     offset: {
-        //         mainAxis: 10,
-        //         crossAxis: -10
-        //     }
-        // }
+        placement: 'bottom-end',
+        middleware: {
+            offset: {
+                mainAxis: 10,
+                crossAxis: -10
+            }
+        }
     }}
 >
     <Avatar initials={initials(user.name)} width="w-8" />
@@ -43,57 +43,59 @@
 </button>
 
 <!-- Pop Up Menu -->
-<div
-    class="grid w-64 grid-flow-row p-4 bg-white shadow-xl card rounded-xl text-surface-800 dark:text-white"
-    data-popup="profile"
->
-    <nav class="list-nav grid grid-flow-row grid-cols-[1fr] p-0 gap-y-2">
-        <!-- Profile Summary -->
-        <div class="grid grid-cols-[auto_1fr] grid-rows-[1fr_1fr] gap-x-2 items-center">
-            <div class="col-start-1 row-start-1 row-end-3">
-                <Avatar
-                    initials={initials(user.name)}
-                    width="w-8"
-                    height="h-8"
-                    text_style="text-sm"
-                />
+
+<div data-popup="profile">
+    <div
+        class="grid w-64 grid-flow-row p-4 bg-white shadow-xl card rounded-xl text-surface-800 dark:text-white z-10"
+    >
+        <nav class="list-nav grid grid-flow-row grid-cols-[1fr] p-0 gap-y-2">
+            <!-- Profile Summary -->
+            <div class="grid grid-cols-[auto_1fr] grid-rows-[1fr_1fr] gap-x-2 items-center">
+                <div class="col-start-1 row-start-1 row-end-3">
+                    <Avatar
+                        initials={initials(user.name)}
+                        width="w-8"
+                        height="h-8"
+                        text_style="text-sm"
+                    />
+                </div>
+                <span class="row-start-1 text-sm font-semibold" data-testid="profile-popup-name"
+                    >{user.name}</span
+                >
+                <span
+                    class="row-start-2 text-xs text-gray-500 dark:text-gray-400"
+                    data-testid="profile-popup-email">{user.email}</span
+                >
             </div>
-            <span class="row-start-1 text-sm font-semibold" data-testid="profile-popup-name"
-                >{user.name}</span
-            >
-            <span
-                class="row-start-2 text-xs text-gray-500 dark:text-gray-400"
-                data-testid="profile-popup-email">{user.email}</span
-            >
-        </div>
 
-        <hr />
+            <hr />
 
-        <ul>
-            <!-- Students -->
-            <p class="text-sm font-semibold">Students</p>
+            <ul>
+                <!-- Students -->
+                <p class="text-sm font-semibold">Students</p>
 
-            <li>
-                <a href="/home">
-                    <Fa icon={faHouse} size="lg" class="text-gray-500 dark:text-gray-200" />
-                    <span>Home</span>
-                </a>
-            </li>
+                <li>
+                    <a href="/home">
+                        <Fa icon={faHouse} size="lg" class="text-gray-500 dark:text-gray-200" />
+                        <span>Home</span>
+                    </a>
+                </li>
 
-            <!-- Settings -->
-            <li>
-                <a href="/account">
-                    <Fa icon={faUser} size="lg" class="text-gray-500 dark:text-gray-200" />
-                    <span>My Account</span>
-                </a>
-            </li>
-            <!-- Sign Out -->
-            <li>
-                <button aria-label="Sign Out" class="w-full" on:click={signOut}>
-                    <Fa icon={faDoorOpen} size="lg" class="text-gray-500 dark:text-gray-200" />
-                    <span>Sign Out</span>
-                </button>
-            </li>
-        </ul>
-    </nav>
+                <!-- Settings -->
+                <li>
+                    <a href="/account">
+                        <Fa icon={faUser} size="lg" class="text-gray-500 dark:text-gray-200" />
+                        <span>My Account</span>
+                    </a>
+                </li>
+                <!-- Sign Out -->
+                <li>
+                    <button aria-label="Sign Out" class="w-full" on:click={signOut}>
+                        <Fa icon={faDoorOpen} size="lg" class="text-gray-500 dark:text-gray-200" />
+                        <span>Sign Out</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
