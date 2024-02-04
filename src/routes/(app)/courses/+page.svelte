@@ -1,14 +1,16 @@
 <script lang="ts">
+    import Controls from './controls.svelte';
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
     import Fa from 'svelte-fa';
     import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
     import type { PageData } from './$types';
-
+    import { sortBy } from '$lib/stores/controls';
+    import { search } from '$lib/stores/controls';
     let is_loading = false;
     export let data: PageData;
 
-    const _getCourses = async (
+    const getCourses = async (
         query: string | undefined = undefined,
         sort_by: string | undefined = undefined,
         expand_query: boolean | undefined = undefined
@@ -40,11 +42,28 @@
             }
         }
     };
+
+    // Search Options
+    $: sort_by = $sortBy.toLowerCase().replace(/\s/g, '_');
+    const expand_query = true;
+
+    const handleKeydown = async (e: KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            data.courses = await getCourses($search, sort_by, expand_query);
+        }
+    };
 </script>
 
 <div class="p-5 grid gap-y-4 justify-items-center">
     <div class="container max-w-5xl grid gap-y-4">
         <h1 class="text-lg font-bold">Find a Course</h1>
+
+        <Controls
+            {handleKeydown}
+            on:change={async () => {
+                await getCourses();
+            }}
+        />
 
         {#if is_loading}
             <div
