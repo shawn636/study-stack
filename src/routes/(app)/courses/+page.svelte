@@ -7,49 +7,49 @@
     import type { PageData } from './$types';
     import { sortBy } from '$lib/stores/controls';
     import { search } from '$lib/stores/controls';
-    let is_loading = false;
+    let isLoading = false;
     export let data: PageData;
 
     const getCourses = async (
         query: string | undefined = undefined,
-        sort_by: string | undefined = undefined,
-        expand_query: boolean | undefined = undefined
+        sortBy: string | undefined = undefined,
+        expandQuery: boolean | undefined = undefined
     ) => {
         if (!query) {
             try {
-                is_loading = true;
+                isLoading = true;
                 const res = await fetch('/api/courses');
                 return await res.json();
             } catch (error) {
                 console.log(error);
             } finally {
-                is_loading = false;
+                isLoading = false;
             }
         } else {
             try {
-                is_loading = true;
+                isLoading = true;
                 let url = `/api/search/${query}`;
-                url += sort_by || expand_query ? '?' : '';
-                url += sort_by ? `sort_by=${sort_by}` : '';
-                url += sort_by && expand_query ? '&' : '';
-                url += expand_query ? `expand_query=${expand_query}` : '';
+                url += sortBy || expandQuery ? '?' : '';
+                url += sortBy ? `sort_by=${sortBy}` : '';
+                url += sortBy && expandQuery ? '&' : '';
+                url += expandQuery ? `expand_query=${expandQuery}` : '';
                 const res = await fetch(url);
                 return await res.json();
             } catch (error) {
                 console.log(error);
             } finally {
-                is_loading = false;
+                isLoading = false;
             }
         }
     };
 
     // Search Options
-    $: sort_by = $sortBy.toLowerCase().replace(/\s/g, '_');
-    const expand_query = true;
+    $: sortByText = $sortBy.toLowerCase().replace(/\s/g, '_');
+    const expandQuery = true;
 
     const handleKeydown = async (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
-            data.courses = await getCourses($search, sort_by, expand_query);
+            data.courses = await getCourses($search, sortByText, expandQuery);
         }
     };
 </script>
@@ -65,7 +65,7 @@
             }}
         />
 
-        {#if is_loading}
+        {#if isLoading}
             <div
                 class="grid grid-flow-row justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-y-4 content-visibility-auto"
             >

@@ -1,5 +1,5 @@
 #!/bin/bash
-script_dir="./prisma/scripts/course_fulltext"
+script_dir="./prisma/scripts/course-fulltext"
 
 # Check if index exists
 result=$(mysql -h aws.connect.psdb.cloud -u "$DATABASE_USER" -p"$DATABASE_PW" < $script_dir/index.check.sql)

@@ -5,17 +5,17 @@ export const GET: RequestHandler = async () => {
     try {
         const conn = db.connection();
 
-        const csrf_flush = await conn.execute(
+        const csrfFlush = await conn.execute(
             'DELETE FROM csrf_token WHERE CAST(expires AS DATETIME) <= CURRENT_TIMESTAMP();'
         );
 
-        const auth_session_flush = await conn.execute(
+        const authSessionFlush = await conn.execute(
             'DELETE FROM auth_session WHERE expires <= CURRENT_TIMESTAMP();'
         );
 
         const json = JSON.stringify({
-            csrf_tokens_flushed: csrf_flush.rowsAffected,
-            auth_sessions_flushed: auth_session_flush.rowsAffected
+            csrf_tokens_flushed: csrfFlush.rowsAffected,
+            auth_sessions_flushed: authSessionFlush.rowsAffected
         });
 
         return new Response(json, {

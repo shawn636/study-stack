@@ -12,23 +12,23 @@ export async function seedUser(client: PrismaClient) {
         const includeOrganization = faker.datatype.boolean();
 
         const email = faker.internet.email();
-        const auth_user_id = faker.string.uuid();
-        const user_id = i + 1;
+        const authUserId = faker.string.uuid();
+        const userId = i + 1;
 
-        const auth_user: AuthUser = {
-            id: auth_user_id,
+        const authUser: AuthUser = {
+            id: authUserId,
             email: email,
-            user_id: user_id
+            user_id: userId
         };
 
         const user: User = {
-            id: user_id,
+            id: userId,
             email: faker.internet.email(),
             name: faker.person.fullName(),
             organizationId: includeOrganization
                 ? faker.helpers.arrayElement(organizations).id
                 : null,
-            auth_user_id: auth_user_id,
+            auth_user_id: authUserId,
             area_code: faker.phone.number().slice(0, 3),
             bio: faker.lorem.paragraph(),
             city: faker.location.city(),
@@ -37,7 +37,7 @@ export async function seedUser(client: PrismaClient) {
             photo_url: faker.image.avatar(),
             state: faker.location.state()
         };
-        authUsers.push(auth_user);
+        authUsers.push(authUser);
         users.push(user);
     }
 

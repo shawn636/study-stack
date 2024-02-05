@@ -4,13 +4,13 @@ import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({ cookies, parent }) => {
     await parent();
-    const session_id = auth.getSession(cookies);
-    const is_valid = await auth.validateSession(session_id ?? '');
-    if (!is_valid) {
+    const sessionId = auth.getSession(cookies);
+    const isValid = await auth.validateSession(sessionId ?? '');
+    if (!isValid) {
         cookies = auth.deleteSessionCookie(cookies);
         redirect(302, '/auth/login');
     } else {
-        const user = await auth.getUser(session_id ?? '');
+        const user = await auth.getUser(sessionId ?? '');
         return { user };
     }
 }) satisfies PageServerLoad;

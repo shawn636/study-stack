@@ -8,19 +8,19 @@ import { db } from '$lib/server/database';
 
 export const PUT = (async ({ cookies, request }) => {
     await csrf.validateCookies(cookies);
-    const session_id = auth.getSession(cookies);
+    const sessionId = auth.getSession(cookies);
 
-    if (!session_id) {
+    if (!sessionId) {
         error(401, 'You are not logged in.');
     }
 
-    const [user_id, data] = await Promise.all([auth.getUserId(session_id), request.json()]);
+    const [userId, data] = await Promise.all([auth.getUserId(sessionId), request.json()]);
 
     const user: User = data.user;
 
-    const user_id_from_request = data.user.id;
+    const userIdFromRequest = data.user.id;
 
-    if (user_id !== user_id_from_request) {
+    if (userId !== userIdFromRequest) {
         error(403, 'You are not authorized to update this user.');
     }
 
@@ -38,7 +38,7 @@ export const PUT = (async ({ cookies, request }) => {
             user.bio,
             user.city,
             user.state,
-            user_id
+            userId
         ]);
     } catch (e) {
         console.log(e);

@@ -71,9 +71,9 @@ const setCookie = (token: string, cookies: Cookies): Cookies => {
  */
 const validateAndSetCookie = async (cookies: Cookies): Promise<Cookies> => {
     const token = cookies.get(COOKIE_NAME);
-    const is_valid = await validateToken(token ?? '');
+    const isValid = await validateToken(token ?? '');
 
-    if (!is_valid) {
+    if (!isValid) {
         const token = await generateToken();
         if (token) {
             cookies = setCookie(token, cookies);
@@ -98,9 +98,9 @@ const validateCookies = async (cookies: Cookies): Promise<void> => {
         console.error('No csrf token provided');
         throw Error('CSRF_INVALID_TOKEN');
     }
-    const is_valid = await validateToken(token);
+    const isValid = await validateToken(token);
 
-    if (!is_valid) {
+    if (!isValid) {
         console.error('csrf token is invalid');
         throw Error('CSRF_INVALID_TOKEN');
     }

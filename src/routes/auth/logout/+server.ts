@@ -5,14 +5,14 @@ import { error } from '@sveltejs/kit';
 
 export const POST = (async ({ cookies }) => {
     await csrf.validateCookies(cookies);
-    const session_id = auth.getSession(cookies);
+    const sessionId = auth.getSession(cookies);
 
-    if (!session_id) {
+    if (!sessionId) {
         error(401, 'You are not logged in.');
     }
 
     try {
-        await auth.logout(session_id);
+        await auth.logout(sessionId);
         cookies = auth.deleteSessionCookie(cookies);
     } catch (e) {
         console.log(e);

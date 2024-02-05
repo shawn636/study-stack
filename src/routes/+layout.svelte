@@ -45,11 +45,11 @@
 
     // Update the theme based on the user's preference
     const updateTheme = () => {
-        const color_pref = localStorage.getItem('color-theme');
-        const prefers_dark =
+        const colorPref = localStorage.getItem('color-theme');
+        const prefersDark =
             !('color-theme' in localStorage) &&
             window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (color_pref === 'dark' || prefers_dark) {
+        if (colorPref === 'dark' || prefersDark) {
             setModeCurrent(false);
         } else {
             setModeCurrent(true);

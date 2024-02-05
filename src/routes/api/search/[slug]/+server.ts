@@ -8,33 +8,33 @@ export const GET = (async ({ params, url, cookies }) => {
     const conn = db.connection();
     await csrf.validateCookies(cookies);
 
-    const search_param = params.slug;
+    const searchParam = params.slug;
 
-    const sort_by = url.searchParams.get('sort_by') ?? 'relevance';
-    let expand_query = url.searchParams.get('expand_query') ?? 'false';
+    const sortBy = url.searchParams.get('sort_by') ?? 'relevance';
+    let expandQuery = url.searchParams.get('expand_query') ?? 'false';
 
-    if (!['relevance', 'highest_rated', 'lowest_price'].includes(sort_by)) {
+    if (!['relevance', 'highest_rated', 'lowest_price'].includes(sortBy)) {
         error(400, 'Invalid sort_by parameter');
     }
 
     try {
-        expand_query = JSON.parse(expand_query);
+        expandQuery = JSON.parse(expandQuery);
     } catch (e) {
         error(400, 'Invalid expand_query parameter');
     }
 
-    const search_query = `
+    const searchQuery = `
         SELECT * FROM Course WHERE MATCH(title, description)
-        AGAINST (? IN NATURAL LANGUAGE MODE ${expand_query ? 'WITH QUERY EXPANSION' : ''})
+        AGAINST (? IN NATURAL LANGUAGE MODE ${expandQuery ? 'WITH QUERY EXPANSION' : ''})
         ${
-            sort_by === 'relevance'
+            sortBy === 'relevance'
                 ? ''
                 : `ORDER BY ${
-                      sort_by === 'highest_rated' ? 'rating_avg DESC' : 'original_price ASC'
+                      sortBy === 'highest_rated' ? 'rating_avg DESC' : 'original_price ASC'
                   }`
         }`;
 
-    const courses = await conn.execute(search_query, [search_param]);
+    const courses = await conn.execute(searchQuery, [searchParam]);
 
     let json: string;
     if (courses.rows.length === 0) {

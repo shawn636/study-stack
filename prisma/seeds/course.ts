@@ -23,12 +23,12 @@ export async function seedCourse(client: PrismaClient) {
 
         const category = faker.helpers.arrayElement(categories);
         const instructor = faker.helpers.arrayElement(users);
-        const has_org = instructor.organizationId !== null;
-        const organization = has_org
+        const hasOrg = instructor.organizationId !== null;
+        const organization = hasOrg
             ? String(organizations.find((org) => org.id === instructor.organizationId))
             : null;
 
-        const lesson_cnt = lessons.filter((lesson) => {
+        const lessonCnt = lessons.filter((lesson) => {
             lesson.courseId === i + 1;
         }).length;
 
@@ -44,12 +44,12 @@ export async function seedCourse(client: PrismaClient) {
                 : new Prisma.Decimal(discountedPrice),
             instructorId: instructor.id,
             instructor: instructor.name,
-            organization: has_org ? organization : null,
+            organization: hasOrg ? organization : null,
             difficulty: faker.helpers.arrayElement(difficulties),
             img_href: 'images/course-image.webp',
             estimated_time_hours: faker.number.int({ min: 0, max: 100 }),
             estimated_time_minutes: faker.number.int({ min: 0, max: 59 }),
-            lesson_cnt: lesson_cnt,
+            lesson_cnt: lessonCnt,
             rating_cnt: faker.number.int({ min: 0, max: 1000 }),
             rating_avg: faker.number.float({ min: 0, max: 5 })
         };

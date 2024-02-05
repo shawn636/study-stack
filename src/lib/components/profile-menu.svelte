@@ -9,7 +9,7 @@
 
     export let user: User;
 
-    let is_open = false;
+    let isOpen = false;
 
     const signOut = async () => {
         const res = await fetch('/auth/logout', {
@@ -21,7 +21,7 @@
         }
     };
 
-    const popup_settings: PopupSettings = {
+    const popupSettings: PopupSettings = {
         event: 'click',
         target: 'profile',
         placement: 'bottom-end',
@@ -32,7 +32,7 @@
             }
         },
         state: (e: Record<string, boolean>) => {
-            is_open = e.state;
+            isOpen = e.state;
         }
     };
 </script>
@@ -40,10 +40,10 @@
 <!-- Profile Button -->
 <button
     aria-label="Profile"
-    aria-expanded={is_open}
+    aria-expanded={isOpen}
     class="grid items-center h-10 grid-flow-col p-0 px-2 m-0 text-sm font-semibold bg-white shadow-sm btn variant-filled text-surface-700 dark:bg-surface-700 dark:text-surface-50 xs:rounded-md gap-x-1 w-min"
     data-testid="profile-button"
-    use:popup={popup_settings}
+    use:popup={popupSettings}
 >
     <Avatar initials={initials(user.name)} width="w-8" />
     <span class="hidden xs:block">{user.name}</span>
@@ -64,7 +64,7 @@
                         initials={initials(user.name)}
                         width="w-8"
                         height="h-8"
-                        text_style="text-sm"
+                        textStyle="text-sm"
                     />
                 </div>
                 <span class="row-start-1 text-sm font-semibold" data-testid="profile-popup-name"

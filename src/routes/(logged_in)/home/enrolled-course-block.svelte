@@ -4,10 +4,10 @@
     import Image from '$lib/components/image.svelte';
 
     export let course: Course;
-    export let course_progress: CourseProgress;
+    export let courseProgress: CourseProgress;
 
-    $: percent_complete = Math.min(
-        (course_progress.lessons_completed / course.lesson_cnt) * 100,
+    $: percentComplete = Math.min(
+        (courseProgress.lessons_completed / course.lesson_cnt) * 100,
         100
     );
 </script>
@@ -19,11 +19,11 @@
         <div class="h-2 w-full bg-surface-300 dark:bg-surface-700 rounded-full relative">
             <div
                 class="absolute inset-0 bg-primary-500 rounded-full"
-                style={`width: ${percent_complete}%`}
+                style={`width: ${percentComplete}%`}
             />
         </div>
         <p class="text-primary-500 dark:text-primary-400">
-            {Math.round(percent_complete)} %
+            {Math.round(percentComplete)} %
         </p>
     </div>
     <button class="btn btn-sm variant-filled justify-self-start">Resume</button>

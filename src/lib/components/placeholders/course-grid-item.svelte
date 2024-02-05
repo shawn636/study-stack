@@ -1,6 +1,3 @@
-<script lang="ts">
-</script>
-
 <div
     class="grid grid-flow-row rounded-md p-1 gap-y-4 min-w-[240px] max-w-[240px] min-h-[300px] content-visibility-auto"
 >

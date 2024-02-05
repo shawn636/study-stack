@@ -6,45 +6,45 @@
         (): void;
     }
 
-    let show_edit_photo_overlay = false;
+    let showEditPhotoOverlay = false;
     export let initials = 'AB';
-    export let photo_url: string | null = null;
-    export let edit_function: VoidFunction | null = null;
+    export let photoUrl: string | null = null;
+    export let editFunction: VoidFunction | null = null;
     export let width = 'w-16';
     export let height = 'h-16';
-    export let text_style = 'text-xl';
-    export let font_style = 'font-bold';
-    let class_string = '';
-    export { class_string as class };
+    export let textStyle = 'text-xl';
+    export let fontStyle = 'font-bold';
+    let classString = '';
+    export { classString as class };
     export let color = '!bg-surface-200 !dark:bg-surface-500';
 
-    $: container_base_class = `grid items-center ${width} ${height} ${text_style} ${font_style} rounded-full justify-items-center ${color} ${class_string}`;
-    $: image_base_class = `object-cover ${width} ${height} border border-gray-200 rounded-full shadow-sm dark:border-gray-800`;
+    $: containerBaseClass = `grid items-center ${width} ${height} ${textStyle} ${fontStyle} rounded-full justify-items-center ${color} ${classString}`;
+    $: imageBaseClass = `object-cover ${width} ${height} border border-gray-200 rounded-full shadow-sm dark:border-gray-800`;
 </script>
 
 <div class="relative inline-block">
     <div
-        class={container_base_class}
+        class={containerBaseClass}
         role="button"
         tabindex="0"
         on:mouseenter={() => {
-            show_edit_photo_overlay = true;
+            showEditPhotoOverlay = true;
         }}
         on:mouseleave={() => {
-            show_edit_photo_overlay = false;
+            showEditPhotoOverlay = false;
         }}
     >
-        {#if show_edit_photo_overlay && edit_function}
+        {#if showEditPhotoOverlay && editFunction}
             <div
                 class="absolute inset-0 flex items-center justify-center transition-all duration-200 ease-in-out rounded-full opacity-0 bg-surface-500/10 dark:bg-surface-700 dark:hover:bg-surface-900/70 hover:bg-surface-500/80 hover:opacity-100"
             >
-                <button class="w-full btn-icon" on:click={edit_function}>
+                <button class="w-full btn-icon" on:click={editFunction}>
                     <Fa icon={faPenToSquare} size="lg" class="z-10 text-white" />
                 </button>
             </div>
         {/if}
-        {#if photo_url}
-            <img src={photo_url} alt="avatar" class={image_base_class} />
+        {#if photoUrl}
+            <img src={photoUrl} alt="avatar" class={imageBaseClass} />
         {:else}
             {initials}
         {/if}

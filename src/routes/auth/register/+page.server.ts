@@ -31,10 +31,10 @@ export const actions: Actions = {
         try {
             await registrationForm.validate(values, { abortEarly: true });
             await auth.createUser(values.email, values.password1, values.name);
-            const session_id = await auth.login(values.email, values.password1);
+            const sessionId = await auth.login(values.email, values.password1);
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            cookies = auth.setSessionCookie(session_id, cookies);
+            cookies = auth.setSessionCookie(sessionId, cookies);
             console.log('Successfully logged in and set cookie');
         } catch (e: unknown) {
             await errorPadding();
@@ -56,6 +56,6 @@ const handleError = (e: unknown) => {
 };
 
 export const load: PageServerLoad = async ({ cookies }) => {
-    const signed_in = await auth.validateCookies(cookies);
-    if (signed_in) redirect(302, '/');
+    const signedIn = await auth.validateCookies(cookies);
+    if (signedIn) redirect(302, '/');
 };

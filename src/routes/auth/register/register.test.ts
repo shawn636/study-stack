@@ -43,31 +43,31 @@ describe('register', () => {
 
     it('should successfully create account and create cookie', async () => {
         for (const account of accounts) {
-            const form_data = new FormData();
-            form_data.append('email', account.email);
-            form_data.append('password1', account.password);
-            form_data.append('password2', account.password);
-            form_data.append('name', account.name);
+            const formData = new FormData();
+            formData.append('email', account.email);
+            formData.append('password1', account.password);
+            formData.append('password2', account.password);
+            formData.append('name', account.name);
 
-            const csrf_token = await csrf.generateToken();
+            const csrfToken = await csrf.generateToken();
             const headers = new Headers();
-            headers.append(CSRF_COOKIE_NAME, csrf_token ?? '');
+            headers.append(CSRF_COOKIE_NAME, csrfToken ?? '');
 
             const res = await fetch('http://localhost:3000/auth/register', {
                 method: 'POST',
-                body: form_data,
+                body: formData,
                 headers
             });
 
             expect(res.status).toBe(200);
 
             const cookies = res.headers.get('set-cookie');
-            const split_cookies = cookies?.split(/[,;|]/).map((cookie) => cookie.trim()) ?? [];
-            const auth_cookie = split_cookies.find((cookie) => cookie.startsWith(AUTH_COOKIE_NAME));
-            const cookie_value = auth_cookie?.split('=').at(-1) ?? '';
+            const splitCookies = cookies?.split(/[,;|]/).map((cookie) => cookie.trim()) ?? [];
+            const authCookie = splitCookies.find((cookie) => cookie.startsWith(AUTH_COOKIE_NAME));
+            const cookieValue = authCookie?.split('=').at(-1) ?? '';
 
-            expect(cookie_value).toBeDefined();
-            expect(isUUID(cookie_value)).toBe(true);
+            expect(cookieValue).toBeDefined();
+            expect(isUUID(cookieValue)).toBe(true);
         }
     }, 20000);
 });

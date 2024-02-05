@@ -11,7 +11,7 @@
     import { Ratings } from '@skeletonlabs/skeleton';
 
     export let course: Course;
-    $: rating_avg_rounded = Math.round(course.rating_avg * 2) / 2;
+    $: ratingAvgRounded = Math.round(course.rating_avg * 2) / 2;
 
     let toggled = false;
 
@@ -23,10 +23,10 @@
     const width = 'w-64';
     const height = 'h-40';
 
-    $: container_base_class = `grid grid-flow-row rounded-md p-1 gap-y-2 ${width} content-visibility-auto`;
+    $: containerBaseClass = `grid grid-flow-row rounded-md p-1 gap-y-2 ${width} content-visibility-auto`;
 </script>
 
-<div class={container_base_class}>
+<div class={containerBaseClass}>
     <Image
         src={course.img_href}
         alt="an open bible"
@@ -41,7 +41,7 @@
             class="flex items-center px-2 text-sm font-medium flex-flow-col justify-items-center gap-x-2 text"
         >
             <p class="text-secondary-600">{Math.round(course.rating_avg * 100) / 100}</p>
-            <Ratings value={rating_avg_rounded} max={5}>
+            <Ratings value={ratingAvgRounded} max={5}>
                 <svelte:fragment slot="empty">
                     <Fa icon={faStarOutline} class="text-yellow-500" />
                 </svelte:fragment>

@@ -7,7 +7,7 @@
 
     const dispatch = createEventDispatcher();
     let sortByValue = 'Relevance';
-    let is_open = false;
+    let isOpen = false;
 
     //  Notify parent components of sorting option changes
     $: {
@@ -15,13 +15,13 @@
         dispatch('change');
     }
 
-    const popup_settings: PopupSettings = {
+    const popupSettings: PopupSettings = {
         event: 'click',
         target: 'sortby',
         placement: 'bottom',
         closeQuery: '[data-popup="sortby"]',
         state: (e: Record<string, boolean>) => {
-            is_open = e.state;
+            isOpen = e.state;
         }
     };
 </script>
@@ -30,10 +30,10 @@
     <aside class="whitespace-nowrap">Sort by:</aside>
     <button
         aria-label="Sort by"
-        aria-expanded={is_open}
+        aria-expanded={isOpen}
         type="button"
         class="w-32 btn btn-sm variant-soft-surface"
-        use:popup={popup_settings}
+        use:popup={popupSettings}
     >
         <p>{sortByValue}</p>
         <Fa icon={faChevronDown} class="ml-2" />

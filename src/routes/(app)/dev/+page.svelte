@@ -3,7 +3,7 @@
     let width: CssClasses = 'w-1/2';
     let height: CssClasses = 'h-px';
 
-    $: base_class = `${width} ${height} bg-surface-500`;
+    $: baseClass = `${width} ${height} bg-surface-500`;
 </script>
 
 <div class="grid grid-flow-row p-5">
@@ -13,7 +13,7 @@
         <!-- ENTER CODE BELOW -->
 
         <!-- <div class="w-{width} h-{height} bg-surface-500"></div> -->
-        <div class={base_class}></div>
+        <div class={baseClass}></div>
 
         <!-- ENTER CODE ABOVE -->
     </div>
