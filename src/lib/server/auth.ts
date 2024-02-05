@@ -17,6 +17,12 @@ const emailExists = async (email: string): Promise<boolean> => {
     const conn = db.connection();
     const query = `SELECT COUNT(*) AS count FROM auth_user WHERE email = ?;`;
     const result = await conn.execute(query, [email]);
+
+    if (result.rows.length !== 1) {
+        console.error('Invalid result structure');
+        throw Error('DB_SELECT_FAILED');
+    }
+
     const recordCount = result.rows[0] as { count: string };
     return parseInt(recordCount.count) > 0;
 };
@@ -219,6 +225,12 @@ const login = async (email: string, password: string): Promise<string> => {
     const conn = db.connection();
     const getAuthUser = 'SELECT id FROM auth_user WHERE email = ?';
     const authUserResult = await conn.execute(getAuthUser, [email]);
+
+    if (authUserResult === undefined || authUserResult.rows.length !== 1) {
+        console.error('AuthUser Not Found');
+        throw Error('AUTH_INVALID_CREDENTIALS');
+    }
+
     const user = authUserResult.rows[0] as { id: string };
 
     if (user === undefined) {
@@ -235,7 +247,7 @@ const login = async (email: string, password: string): Promise<string> => {
         'SELECT hashed_password as hashedPassword FROM auth_key WHERE auth_user_id = ?';
     const hashedPasswordResult = await conn.execute(getHashedPassword, [user.id]);
 
-    if (hashedPasswordResult === undefined) {
+    if (hashedPasswordResult === undefined || hashedPasswordResult.rows.length !== 1) {
         console.error('AuthKey not found');
         throw Error('DB_SELECT_FAILED');
     }
@@ -433,6 +445,11 @@ const deleteUserIfExists = async (email: string): Promise<void> => {
     const conn = db.connection();
 
     const result = await conn.execute('SELECT id FROM auth_user WHERE email = ?', [email]);
+
+    // It is safe to extract the first row because it will not throw
+    // an error if the email does not exist. We also check if the
+    // id is undefined to ensure that the row is valid.
+
     const resultObj = result.rows[0] as { id: string | undefined };
 
     if (resultObj?.id !== undefined) {
