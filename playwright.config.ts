@@ -36,7 +36,7 @@ const config: PlaywrightTestConfig = defineConfig({
         }
     ],
     webServer: {
-        command: 'npm run vercel-dev',
+        command: 'pnpm run vercel-dev',
         port: 3000
     },
     reporter: [['html', { open: 'true', outputFolder: 'e2e/test-results' }]]
