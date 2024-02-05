@@ -22,9 +22,9 @@ const createUser = async (email: string, password: string, name: string): Promis
 
     // Create auth_key
     const keyId = v4();
-    const hashed_password = await hashPassword(password);
+    const hashedPassword = await hashPassword(password);
     const keyQuery = 'INSERT INTO auth_key (id, auth_user_id, hashed_password) VALUES (?, ?, ?);';
-    const keyResult = await conn.execute(keyQuery, [keyId, userId, hashed_password]);
+    const keyResult = await conn.execute(keyQuery, [keyId, userId, hashedPassword]);
 
     if (keyResult.insertId === null) {
         console.error('Unable to insert auth_key');
