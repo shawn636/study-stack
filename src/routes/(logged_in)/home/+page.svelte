@@ -24,7 +24,7 @@
         rating_avg: 4.5
     };
 
-    let course_progress: CourseProgress = {
+    let courseProgress: CourseProgress = {
         user_id: data.user.id,
         course_id: course.id,
         lessons_completed: 6
@@ -37,10 +37,10 @@
         <h3>Courses I'm Enrolled In</h3>
 
         <div class="grid grid-cols-1 grid-flow-row-dense sm:grid-cols-2 justify-items-center">
-            <EnrolledCourseBlock bind:course bind:course_progress />
-            <EnrolledCourseBlock bind:course bind:course_progress />
-            <EnrolledCourseBlock bind:course bind:course_progress />
-            <EnrolledCourseBlock bind:course bind:course_progress />
+            <EnrolledCourseBlock bind:course bind:courseProgress />
+            <EnrolledCourseBlock bind:course bind:courseProgress />
+            <EnrolledCourseBlock bind:course bind:courseProgress />
+            <EnrolledCourseBlock bind:course bind:courseProgress />
         </div>
     </div>
 </div>

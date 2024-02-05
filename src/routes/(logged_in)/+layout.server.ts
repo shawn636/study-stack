@@ -3,13 +3,13 @@ import type User from '$lib/models/user';
 import { auth } from '$lib/server/auth';
 
 export const load = (async ({ cookies }) => {
-    const session_id = auth.getSession(cookies);
+    const sessionId = auth.getSession(cookies);
     let user: User | undefined;
 
-    if (session_id) {
-        const is_valid = await auth.validateSession(session_id);
+    if (sessionId) {
+        const is_valid = await auth.validateSession(sessionId);
         if (is_valid) {
-            user = await auth.getUser(session_id);
+            user = await auth.getUser(sessionId);
         } else {
             cookies = auth.deleteSessionCookie(cookies);
         }

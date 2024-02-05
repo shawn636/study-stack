@@ -8,29 +8,29 @@
     import { formatPhoneNumber, initials as getInitials } from '$lib/client/util';
     import Avatar from '$lib/components/avatar.svelte';
 
-    export let original_data: PageServerData;
+    export let originalData: PageServerData;
     export let data: PageServerData;
 
     const toastStore = getToastStore();
     $: phone = formatPhoneNumber((data.user.area_code ?? '') + (data.user.phone_number ?? ''));
-    let profile_img_input: HTMLInputElement;
+    let profileImgInput: HTMLInputElement;
 
-    let edit_mode = false;
-    let is_loading = false;
+    let editMode = false;
+    let isLoading = false;
 
-    const error_toast: ToastSettings = {
+    const errorToast: ToastSettings = {
         message: 'There was an error saving your changes.',
         background: 'bg-error-500',
         classes: 'text-white'
     };
 
-    const success_toast: ToastSettings = {
+    const successToast: ToastSettings = {
         message: 'Your changes have been saved.',
         background: 'bg-success-600'
     };
 
     onMount(() => {
-        original_data = data;
+        originalData = data;
     });
 
     const updatePhoneNumber = (
@@ -42,22 +42,22 @@
     };
 
     const cancelChanges = () => {
-        data = original_data;
-        edit_mode = false;
+        data = originalData;
+        editMode = false;
     };
 
     const saveChanges = async () => {
-        is_loading = true;
+        isLoading = true;
 
-        const phone_temp = phone.replace(/\s/g, '');
+        const phoneTemp = phone.replace(/\s/g, '');
 
         const user = {
             id: data.user.id,
             email: data.user.email,
             name: data.user.name,
             country_code: '+1',
-            area_code: phone_temp.slice(0, 3) === '' ? null : phone_temp.slice(0, 3),
-            phone_number: phone_temp.slice(3, 10) === '' ? null : phone_temp.slice(3, 10),
+            area_code: phoneTemp.slice(0, 3) === '' ? null : phoneTemp.slice(0, 3),
+            phone_number: phoneTemp.slice(3, 10) === '' ? null : phoneTemp.slice(3, 10),
             bio: data.user.bio === '' ? null : data.user.bio,
             city: data.user.city === '' ? null : data.user.city,
             state: data.user.state === '' ? null : data.user.state,
@@ -75,19 +75,19 @@
         });
 
         if (response.status === 200) {
-            original_data = data;
+            originalData = data;
 
-            const phone_temp = phone.replace(/\s/g, '');
-            original_data.user.area_code = phone_temp.slice(0, 3);
-            original_data.user.phone_number = phone_temp.slice(3, 10);
-            is_loading = false;
-            toastStore.trigger(success_toast);
+            const phoneTemp = phone.replace(/\s/g, '');
+            originalData.user.area_code = phoneTemp.slice(0, 3);
+            originalData.user.phone_number = phoneTemp.slice(3, 10);
+            isLoading = false;
+            toastStore.trigger(successToast);
 
-            is_loading = false;
-            edit_mode = !edit_mode;
+            isLoading = false;
+            editMode = !editMode;
         } else {
-            is_loading = false;
-            toastStore.trigger(error_toast);
+            isLoading = false;
+            toastStore.trigger(errorToast);
         }
     };
 
@@ -132,7 +132,7 @@
             >
                 <input
                     type="file"
-                    bind:this={profile_img_input}
+                    bind:this={profileImgInput}
                     on:change={(event) => {
                         onFileSelected(event);
                     }}
@@ -143,7 +143,7 @@
                     {initials}
                     photoUrl="images/home-image-2-optimized.webp"
                     editFunction={() => {
-                        profile_img_input.click();
+                        profileImgInput.click();
                     }}
                 />
 
@@ -163,7 +163,7 @@
                         class="absolute text-gray-400 transform -translate-y-1/2 left-2 top-1/2"
                     />
                     <input
-                        disabled={!edit_mode}
+                        disabled={!editMode}
                         name="email"
                         value={data.user.email}
                         class="w-full p-1 pl-8 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
@@ -179,7 +179,7 @@
                         class="absolute text-gray-400 transform -translate-y-1/2 left-2 top-1/2"
                     />
                     <input
-                        disabled={!edit_mode}
+                        disabled={!editMode}
                         type="tel"
                         value={phone}
                         id="phone-input"
@@ -198,7 +198,7 @@
             <div class="min-w-full">
                 <p class="h-auto font-bold text-gray-600 dark:text-gray-400">City</p>
                 <input
-                    disabled={!edit_mode}
+                    disabled={!editMode}
                     bind:value={data.user.city}
                     id="phone-input"
                     class="w-full p-1 pl-2 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
@@ -209,7 +209,7 @@
             <div class="min-w-full">
                 <p class="h-auto font-bold text-gray-600 dark:text-gray-400">State</p>
                 <input
-                    disabled={!edit_mode}
+                    disabled={!editMode}
                     bind:value={data.user.state}
                     id="phone-input"
                     class="w-full p-1 pl-2 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
@@ -225,7 +225,7 @@
                 <div class="min-w-full">
                     <p class="h-auto font-bold text-gray-600 dark:text-gray-400">Bio</p>
                     <textarea
-                        disabled={!edit_mode}
+                        disabled={!editMode}
                         bind:value={data.user.bio}
                         id="phone-input"
                         class="w-full h-24 min-w-full p-1 pl-2 text-gray-700 border rounded-md shadow-sm resize-none border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
@@ -236,7 +236,7 @@
     </div>
 
     <div class="grid w-full px-4 justify-items-end max-w-screen-xs md:max-w-5xl">
-        {#if edit_mode}
+        {#if editMode}
             <div class="grid items-center grid-flow-col gap-x-2 justify-self-end">
                 <button
                     aria-label="Cancel Changes"
@@ -246,12 +246,12 @@
                     Cancel
                 </button>
                 <button
-                    disabled={is_loading}
+                    disabled={isLoading}
                     aria-label="Save Changes"
                     class="grid items-center grid-flow-col mt-4 btn btn-sm variant-filled-primary justify-self-end gap-x-2"
                     on:click={saveChanges}
                 >
-                    {#if is_loading}
+                    {#if isLoading}
                         <ProgressRadial width="w-6" stroke={100} />
                     {/if}
                     Save Changes
@@ -262,7 +262,7 @@
                 aria-label="Edit Profile"
                 class="mt-4 btn btn-sm variant-soft justify-self-end"
                 on:click={() => {
-                    edit_mode = !edit_mode;
+                    editMode = !editMode;
                 }}
             >
                 <Fa icon={faPenToSquare} class="mr-2" />

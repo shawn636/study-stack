@@ -5,12 +5,12 @@ import type User from '$lib/models/user';
 
 export const load = (async ({ cookies, parent }) => {
     await parent();
-    const session_id = auth.getSession(cookies);
-    const is_valid = await auth.validateSession(session_id ?? '');
+    const sessionId = auth.getSession(cookies);
+    const isValid = await auth.validateSession(sessionId ?? '');
     let user: User | undefined;
 
-    if (is_valid && session_id) {
-        user = await auth.getUser(session_id);
+    if (isValid && sessionId) {
+        user = await auth.getUser(sessionId);
     } else {
         cookies = auth.deleteSessionCookie(cookies);
         redirect(302, '/auth/login');

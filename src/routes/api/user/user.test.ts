@@ -24,15 +24,15 @@ describe('/api/user', () => {
         await auth.deleteUserIfExists('johnny_testerson@testy.com');
         await auth.createUser(email, pw, name);
 
-        const session_id = await auth.login('johnny_testerson@testy.com', 'test');
+        const sessionId = await auth.login('johnny_testerson@testy.com', 'test');
 
-        const user: User = await auth.getUser(session_id);
+        const user: User = await auth.getUser(sessionId);
 
         const response = await fetch('http://localhost:3000/api/user', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                cookie: `${COOKIE_NAME}=${session_id}`
+                cookie: `${COOKIE_NAME}=${sessionId}`
             },
             body: JSON.stringify({ user })
         });
@@ -48,17 +48,17 @@ describe('/api/user', () => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                cookie: `${COOKIE_NAME}=${session_id}`
+                cookie: `${COOKIE_NAME}=${sessionId}`
             },
             body: JSON.stringify({ user })
         });
 
         expect(response2.status).toBe(200);
 
-        const updated_user = await auth.getUser(session_id);
-        expect(updated_user.country_code).toBe(user.country_code);
-        expect(updated_user.area_code).toBe(user.area_code);
-        expect(updated_user.phone_number).toBe(user.phone_number);
+        const updatedUser = await auth.getUser(sessionId);
+        expect(updatedUser.country_code).toBe(user.country_code);
+        expect(updatedUser.area_code).toBe(user.area_code);
+        expect(updatedUser.phone_number).toBe(user.phone_number);
     });
 
     it('should throw error if a user tries to update another', async () => {
@@ -77,18 +77,18 @@ describe('/api/user', () => {
             await auth.createUser(email2, pw2, name2)
         ]);
 
-        const [user_1_session_id, user_2_session_id] = await Promise.all([
+        const [user1SessionId, user2SessionId] = await Promise.all([
             await auth.login(email1, pw1),
             await auth.login(email2, pw2)
         ]);
 
-        const user2: User = await auth.getUser(user_2_session_id);
+        const user2: User = await auth.getUser(user2SessionId);
 
         const response = await fetch('http://localhost:3000/api/user', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                cookie: `${COOKIE_NAME}=${user_1_session_id}`
+                cookie: `${COOKIE_NAME}=${user1SessionId}`
             },
             body: JSON.stringify({ user: user2 })
         });
