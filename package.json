@@ -42,7 +42,7 @@
         "@fortawesome/free-brands-svg-icons": "^6.5.1",
         "@fortawesome/free-regular-svg-icons": "^6.5.1",
         "@fortawesome/free-solid-svg-icons": "^6.5.1",
-        "@planetscale/database": "^1.14.0",
+        "@planetscale/database": "^1.15.0",
         "@playwright/test": "^1.41.2",
         "@prisma/client": "^5.9.1",
         "@skeletonlabs/skeleton": "^2.8.0",
