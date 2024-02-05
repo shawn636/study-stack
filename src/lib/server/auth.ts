@@ -31,7 +31,14 @@ const getAllSessions = async (userId: string): Promise<string[]> => {
     const conn = db.connection();
     const query = 'SELECT id FROM auth_session WHERE auth_user_id = ?';
     const { rows } = await conn.execute(query, [userId]);
-    const sessions = rows as { id: string }[];
+
+    // Confirm that rows conforms to the expected structure
+    const sessions = rows.map((row) => {
+        if (!row || typeof row.id !== 'string') {
+            throw new Error('Invalid session structure');
+        }
+        return row;
+    });
     return sessions.map((session) => session.id);
 };
 
@@ -59,7 +66,46 @@ const getUser = async (sessionId: string): Promise<User> => {
                    WHERE auth_session.id = ?`;
 
     const { rows } = await conn.execute(query, [sessionId]);
-    const user = rows[0] as User;
+
+    if (rows.length !== 1) {
+        console.error('Unable to find user');
+        throw Error('DB_SELECT_FAILED');
+    }
+
+    const userRow = rows[0];
+
+    // id: string;
+    // email: string;
+    // name: string;
+    // country_code: string | null;
+    // area_code: string | null;
+    // phone_number: string | null;
+    // bio: string | null;
+    // city: string | null;
+    // state: string | null;
+    // photo_url: string | null;
+
+    const userProperties = [
+        'id',
+        'email',
+        'name',
+        'country_code',
+        'area_code',
+        'phone_number',
+        'bio',
+        'city',
+        'state',
+        'photo_url'
+    ];
+
+    for (const prop of userProperties) {
+        if (!(prop in userRow)) {
+            console.error(`Invalid user structure: Expected property ${prop}`);
+            throw Error('DB_SELECT_FAILED');
+        }
+    }
+
+    const user = userRow as User;
 
     if (!user) {
         console.error('Unable to find user');
@@ -90,6 +136,11 @@ const getUserId = async (sessionId: string): Promise<string> => {
                    WHERE auth_session.id = ?`;
 
     const { rows } = await conn.execute(query, [sessionId]);
+
+    if (rows.length !== 1 || !rows[0].id) {
+        console.error('Unable to find user');
+        throw Error('DB_SELECT_FAILED');
+    }
     const result = rows[0] as { id: string };
 
     if (!result) {
