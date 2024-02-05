@@ -15,12 +15,12 @@ describe('crypto', () => {
         }
 
         const password = faker.internet.password();
-        const wrong_password = 'wong_' + password;
+        const wrongPassword = 'wong_' + password;
         const hashedPassword = await hashPassword(password);
-        const compare_wrong_hash = await comparePassword(wrong_password, hashedPassword);
-        expect(compare_wrong_hash).toBe(false);
+        const compareWrongHash = await comparePassword(wrongPassword, hashedPassword);
+        expect(compareWrongHash).toBe(false);
 
-        const compare_hash_hash = await comparePassword(hashedPassword, hashedPassword);
-        expect(compare_hash_hash).toBe(false);
+        const compareCorrectHash = await comparePassword(hashedPassword, hashedPassword);
+        expect(compareCorrectHash).toBe(false);
     }, 20000);
 });

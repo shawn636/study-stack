@@ -10,7 +10,7 @@ export const formatPhoneNumber = (inputNumber: string) => {
     let currentIndex = 0;
     for (let i = 0; i < chunkSizes.length; i++) {
         const chunkSize = chunkSizes[i];
-        const chunk = numericInput.substr(currentIndex, chunkSize);
+        const chunk = numericInput.substring(currentIndex, currentIndex + chunkSize);
 
         if (chunk.length > 0) {
             result += chunk;

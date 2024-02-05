@@ -15,18 +15,18 @@
 
     let imageWorker: Worker | undefined = undefined;
 
-    let class_string = '';
-    export { class_string as class };
+    let classString = '';
+    export { classString as class };
 
     let imageUrl = '';
     let observer: IntersectionObserver;
     let componentRef: HTMLDivElement;
-    let load_image_called = false;
+    let loadImageCalled = false;
 
-    $: container_base_class = `${width} ${height}`;
-    $: image_loaded_base_class = `object-cover object-center ${width} ${height} ${class_string}`;
-    $: image_error_base_class = `placeholder ${width} ${height}`;
-    $: image_loading_base_class = `placeholder animate-pulse asbolute ${width} ${height}`;
+    $: containerBaseClass = `${width} ${height}`;
+    $: imageLoadedBaseClass = `object-cover object-center ${width} ${height} ${classString}`;
+    $: imageErrorBaseClass = `placeholder ${width} ${height}`;
+    $: imageLoadingBaseClass = `placeholder animate-pulse asbolute ${width} ${height}`;
 
     const loadWorker = async () => {
         const ImageWorker = await import('$lib/workers/image.worker?worker');
@@ -56,8 +56,8 @@
         // eslint-disable-next-line no-undef
         const handleIntersect: IntersectionObserverCallback = (entries) => {
             entries.forEach((entry) => {
-                if (entry.isIntersecting && !load_image_called) {
-                    load_image_called = true;
+                if (entry.isIntersecting && !loadImageCalled) {
+                    loadImageCalled = true;
                     observer.disconnect();
 
                     if (imageWorker) {
@@ -83,11 +83,11 @@
     });
 </script>
 
-<div bind:this={componentRef} class={container_base_class}>
+<div bind:this={componentRef} class={containerBaseClass}>
     {#if imageUrl}
-        <img src={imageUrl} role="presentation" {alt} class={image_loaded_base_class} />
+        <img src={imageUrl} role="presentation" {alt} class={imageLoadedBaseClass} />
     {:else if error}
-        <div class={image_error_base_class}>
+        <div class={imageErrorBaseClass}>
             <div
                 class={'text-center text-gray-400 dark:text-gray-500 grid items-center justify-items-center h-full'}
             >
@@ -95,6 +95,6 @@
             </div>
         </div>
     {:else}
-        <div class={image_loading_base_class} />
+        <div class={imageLoadingBaseClass} />
     {/if}
 </div>

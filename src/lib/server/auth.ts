@@ -17,20 +17,20 @@ const emailExists = async (email: string): Promise<boolean> => {
     const conn = db.connection();
     const query = `SELECT COUNT(*) AS count FROM auth_user WHERE email = ?;`;
     const result = await conn.execute(query, [email]);
-    const record_count = result.rows[0] as { count: string };
-    return parseInt(record_count.count) > 0;
+    const recordCount = result.rows[0] as { count: string };
+    return parseInt(recordCount.count) > 0;
 };
 
 /**
  * Retrieves all session IDs associated with a user.
  *
- * @param {string} user_id - The ID of the user.
+ * @param {string} userId - The ID of the user.
  * @returns {Promise<string[]>} A Promise that resolves to an array of session IDs.
  */
-const getAllSessions = async (user_id: string): Promise<string[]> => {
+const getAllSessions = async (userId: string): Promise<string[]> => {
     const conn = db.connection();
     const query = 'SELECT id FROM auth_session WHERE auth_user_id = ?';
-    const { rows } = await conn.execute(query, [user_id]);
+    const { rows } = await conn.execute(query, [userId]);
     const sessions = rows as { id: string }[];
     return sessions.map((session) => session.id);
 };
@@ -38,13 +38,13 @@ const getAllSessions = async (user_id: string): Promise<string[]> => {
 /**
  * Retrieves user information based on a session ID.
  *
- * @param {string} session_id - The ID of the session.
+ * @param {string} sessionId - The ID of the session.
  * @returns {Promise<User>} A Promise that resolves to a User object.
  * @throws {Error} Throws an error if the session is invalid or the user cannot be found.
  */
-const getUser = async (session_id: string): Promise<User> => {
-    const valid_session = await validateSession(session_id);
-    if (!valid_session) {
+const getUser = async (sessionId: string): Promise<User> => {
+    const validSession = await validateSession(sessionId);
+    if (!validSession) {
         console.error('Invalid session');
         throw Error('AUTH_INVALID_SESSION');
     }
@@ -58,7 +58,7 @@ const getUser = async (session_id: string): Promise<User> => {
                    FROM auth_session JOIN User on auth_session.auth_user_id = User.auth_user_id 
                    WHERE auth_session.id = ?`;
 
-    const { rows } = await conn.execute(query, [session_id]);
+    const { rows } = await conn.execute(query, [sessionId]);
     const user = rows[0] as User;
 
     if (!user) {
@@ -72,13 +72,13 @@ const getUser = async (session_id: string): Promise<User> => {
 /**
  * Retrieves the user ID associated with a session ID.
  *
- * @param {string} session_id - The ID of the session.
+ * @param {string} sessionId - The ID of the session.
  * @returns {Promise<string>} A Promise that resolves to the user ID.
  * @throws {Error} Throws an error if the session is invalid or the user cannot be found.
  */
-const getUserId = async (session_id: string): Promise<string> => {
-    const valid_session = await validateSession(session_id);
-    if (!valid_session) {
+const getUserId = async (sessionId: string): Promise<string> => {
+    const validSession = await validateSession(sessionId);
+    if (!validSession) {
         console.error('Invalid session');
         throw Error('AUTH_INVALID_SESSION');
     }
@@ -89,7 +89,7 @@ const getUserId = async (session_id: string): Promise<string> => {
                    FROM auth_session JOIN User on auth_session.auth_user_id = User.auth_user_id 
                    WHERE auth_session.id = ?`;
 
-    const { rows } = await conn.execute(query, [session_id]);
+    const { rows } = await conn.execute(query, [sessionId]);
     const result = rows[0] as { id: string };
 
     if (!result) {
@@ -110,50 +110,50 @@ const getUserId = async (session_id: string): Promise<string> => {
  * @throws {Error} Throws an error if the email already exists or the user creation fails.
  */
 const createUser = async (email: string, password: string, name: string): Promise<string> => {
-    const email_exists = await emailExists(email);
+    const emailAlreadyExists = await emailExists(email);
 
-    if (email_exists) {
+    if (emailAlreadyExists) {
         throw Error('AUTH_DUPLICATE_EMAIL');
     }
 
     const conn = db.connection();
 
-    const user_id = await conn.transaction(async (tx) => {
+    const userId = await conn.transaction(async (tx) => {
         // Create auth_user
-        const user_id = v4();
+        const userId = v4();
         const query = `INSERT INTO auth_user (id, email) VALUES (?, ?);`;
-        const user_result = await tx.execute(query, [user_id, email]);
+        const userResult = await tx.execute(query, [userId, email]);
 
-        if (user_result.insertId === null) {
+        if (userResult.insertId === null) {
             console.error('Unable to insert auth_user');
             throw Error('DB_INSERT_FAILED');
         }
 
         // Create auth_key
-        const key_id = v4();
-        const hashed_password = await hashPassword(password);
-        const key_query =
+        const keyId = v4();
+        const hashedPassword = await hashPassword(password);
+        const keyQuery =
             'INSERT INTO auth_key (id, auth_user_id, hashed_password) VALUES (?, ?, ?);';
-        const key_result = await tx.execute(key_query, [key_id, user_id, hashed_password]);
+        const keyResult = await tx.execute(keyQuery, [keyId, userId, hashedPassword]);
 
-        if (key_result.insertId === null) {
+        if (keyResult.insertId === null) {
             console.error('Unable to insert auth_key');
             throw new Error('DB_INSERT_FAILED');
         }
 
         // Create User Profile
-        const user_profile_query = 'INSERT INTO User (auth_user_id, name, email) VALUES (?, ?, ?);';
-        const user_profile_result = await tx.execute(user_profile_query, [user_id, name, email]);
+        const userProfileQuery = 'INSERT INTO User (auth_user_id, name, email) VALUES (?, ?, ?);';
+        const userProfileResult = await tx.execute(userProfileQuery, [userId, name, email]);
 
-        if (user_profile_result.insertId === null) {
+        if (userProfileResult.insertId === null) {
             console.error('Unable to insert User');
             throw Error('DB_INSERT_FAILED');
         }
 
-        return user_id;
+        return userId;
     });
 
-    return user_id;
+    return userId;
 };
 
 /**
@@ -218,22 +218,22 @@ const login = async (email: string, password: string): Promise<string> => {
 /**
  * Logs out a user by deleting the session associated with the provided session ID.
  *
- * @param {string} session_id - The ID of the session to log out.
+ * @param {string} sessionId - The ID of the session to log out.
  * @returns {Promise<void>} A Promise that resolves when the logout is successful.
  * @throws {Error} Throws an error if the session is invalid or deletion fails.
  */
-const logout = async (session_id: string): Promise<void> => {
+const logout = async (sessionId: string): Promise<void> => {
     const conn = db.connection();
-    const select_query = 'SELECT id FROM auth_session WHERE id = ?';
-    const select_result = await conn.execute(select_query, [session_id]);
+    const selectQuery = 'SELECT id FROM auth_session WHERE id = ?';
+    const selectResult = await conn.execute(selectQuery, [sessionId]);
 
-    if (select_result.rows.length !== 1) {
+    if (selectResult.rows.length !== 1) {
         console.error('Session not found');
         throw Error('AUTH_INVALID_SESSION');
     }
 
-    const delete_session_query = 'DELETE FROM auth_session WHERE id = ?';
-    const result = await conn.execute(delete_session_query, [session_id]);
+    const deleteSessionQuery = 'DELETE FROM auth_session WHERE id = ?';
+    const result = await conn.execute(deleteSessionQuery, [sessionId]);
 
     if (result.rowsAffected === 0) {
         console.error('Unable to delete session');
@@ -246,29 +246,29 @@ const logout = async (session_id: string): Promise<void> => {
 /**
  * Logs out all sessions associated with a user.
  *
- * @param {string} auth_user_id - The ID of the user to log out.
+ * @param {string} authUserId - The ID of the user to log out.
  * @returns {Promise<void>} A Promise that resolves when all sessions are successfully logged out.
  * @throws {Error} Throws an error if the user or sessions are not found, or deletion fails.
  */
-const logoutAll = async (auth_user_id: string): Promise<void> => {
+const logoutAll = async (authUserId: string): Promise<void> => {
     const conn = db.connection();
-    const find_user_query = 'SELECT id FROM auth_user WHERE id = ?';
-    const find_user_result = await conn.execute(find_user_query, [auth_user_id]);
-    if (find_user_result.rows.length !== 1) {
+    const findUserQuery = 'SELECT id FROM auth_user WHERE id = ?';
+    const findUserResult = await conn.execute(findUserQuery, [authUserId]);
+    if (findUserResult.rows.length !== 1) {
         console.error('User not found');
         throw Error('AUTH_INVALID_SESSION');
     }
 
-    const find_sessions_query = 'SELECT id FROM auth_session WHERE auth_user_id = ?';
-    const find_sessions_result = await conn.execute(find_sessions_query, [auth_user_id]);
-    if (find_sessions_result.rows.length === 0) {
+    const findSessionsQuery = 'SELECT id FROM auth_session WHERE auth_user_id = ?';
+    const findSessionsResult = await conn.execute(findSessionsQuery, [authUserId]);
+    if (findSessionsResult.rows.length === 0) {
         console.error('No sessions found for User');
         throw Error('AUTH_INVALID_SESSION');
     }
 
-    const delete_sessions_query = 'DELETE FROM auth_session WHERE auth_user_id = ?';
-    const delete_sessions_result = await conn.execute(delete_sessions_query, [auth_user_id]);
-    if (delete_sessions_result.rowsAffected === 0) {
+    const deleteSessionsQuery = 'DELETE FROM auth_session WHERE auth_user_id = ?';
+    const deleteSessionsResult = await conn.execute(deleteSessionsQuery, [authUserId]);
+    if (deleteSessionsResult.rowsAffected === 0) {
         console.error('Unable to delete sessions');
         throw Error('DB_DELETE_FAILED');
     }
@@ -279,13 +279,13 @@ const logoutAll = async (auth_user_id: string): Promise<void> => {
 /**
  * Validates if a session ID is valid.
  *
- * @param {string} session_id - The ID of the session to validate.
+ * @param {string} sessionId - The ID of the session to validate.
  * @returns {Promise<boolean>} A Promise that resolves to true if the session is valid, false otherwise.
  */
-const validateSession = async (session_id: string): Promise<boolean> => {
+const validateSession = async (sessionId: string): Promise<boolean> => {
     const conn = db.connection();
     const query = 'SELECT id FROM auth_session WHERE id = ?';
-    const result = await conn.execute(query, [session_id]);
+    const result = await conn.execute(query, [sessionId]);
     return result.rows.length === 1;
 };
 
@@ -306,22 +306,22 @@ const getSession = (cookies: Cookies): string | undefined => {
  * @returns {Promise<boolean>} A Promise that resolves to true if the session is valid, false otherwise.
  */
 const validateCookies = async (cookies: Cookies): Promise<boolean> => {
-    const session_id = cookies.get(COOKIE_NAME);
-    if (session_id === undefined) {
+    const sessionId = cookies.get(COOKIE_NAME);
+    if (sessionId === undefined) {
         return false;
     }
-    return await validateSession(session_id);
+    return await validateSession(sessionId);
 };
 
 /**
  * Sets the session ID as a cookie.
  *
- * @param {string} session_id - The session ID to set as a cookie.
+ * @param {string} sessionId - The session ID to set as a cookie.
  * @param {Cookies} cookies - The cookies object.
  * @returns {Cookies} The updated cookies object.
  */
-const setSessionCookie = (session_id: string, cookies: Cookies): Cookies => {
-    cookies.set(COOKIE_NAME, session_id, {
+const setSessionCookie = (sessionId: string, cookies: Cookies): Cookies => {
+    cookies.set(COOKIE_NAME, sessionId, {
         httpOnly: true,
         secure: false,
         sameSite: 'strict',
@@ -352,19 +352,19 @@ const deleteSessionCookie = (cookies: Cookies): Cookies => {
 /**
  * Validates the session ID and sets it as a cookie if valid.
  *
- * @param {string} session_id - The session ID to validate and set as a cookie.
+ * @param {string} sessionId - The session ID to validate and set as a cookie.
  * @param {Cookies} cookies - The cookies object.
  * @returns {Promise<Cookies>} A Promise that resolves to the updated cookies object.
  */
-const validateAndSetCookie = async (session_id: string, cookies: Cookies): Promise<Cookies> => {
-    const isValid = await validateSession(session_id);
+const validateAndSetCookie = async (sessionId: string, cookies: Cookies): Promise<Cookies> => {
+    const isValid = await validateSession(sessionId);
 
     if (!isValid) {
         console.error('Invalid Session');
         return cookies;
     }
 
-    return setSessionCookie(session_id, cookies);
+    return setSessionCookie(sessionId, cookies);
 };
 
 /**
@@ -382,14 +382,14 @@ const deleteUserIfExists = async (email: string): Promise<void> => {
     const conn = db.connection();
 
     const result = await conn.execute('SELECT id FROM auth_user WHERE email = ?', [email]);
-    const result_obj = result.rows[0] as { id: string | undefined };
+    const resultObj = result.rows[0] as { id: string | undefined };
 
-    if (result_obj?.id !== undefined) {
+    if (resultObj?.id !== undefined) {
         await conn.transaction(async (tx) => {
-            await tx.execute('DELETE FROM auth_user WHERE id = ?', [result_obj.id]);
-            await tx.execute('DELETE FROM auth_key WHERE auth_user_id = ?', [result_obj.id]);
-            await tx.execute('DELETE FROM auth_session WHERE auth_user_id = ?', [result_obj.id]);
-            await tx.execute('DELETE FROM User WHERE auth_user_id = ?', [result_obj.id]);
+            await tx.execute('DELETE FROM auth_user WHERE id = ?', [resultObj.id]);
+            await tx.execute('DELETE FROM auth_key WHERE auth_user_id = ?', [resultObj.id]);
+            await tx.execute('DELETE FROM auth_session WHERE auth_user_id = ?', [resultObj.id]);
+            await tx.execute('DELETE FROM User WHERE auth_user_id = ?', [resultObj.id]);
         });
     }
 

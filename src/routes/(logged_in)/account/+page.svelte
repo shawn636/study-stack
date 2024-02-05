@@ -141,8 +141,8 @@
                 />
                 <Avatar
                     {initials}
-                    photo_url="images/home-image-2-optimized.webp"
-                    edit_function={() => {
+                    photoUrl="images/home-image-2-optimized.webp"
+                    editFunction={() => {
                         profile_img_input.click();
                     }}
                 />
