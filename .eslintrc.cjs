@@ -16,7 +16,7 @@ module.exports = {
                 argsIgnorePattern: '^_',
                 destructuredArrayIgnorePattern: '^_'
             }
-        ]
+        ],
     },
     parserOptions: {
         sourceType: 'module',
