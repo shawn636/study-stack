@@ -1,0 +1,41 @@
+{
+    "versions": "2.0.0",
+    "tasks": [
+        {
+            "label": "Dev Server",
+            "type": "shell",
+            "command": "pnpm dev",
+            "group": "none",
+            "isBackground": true,
+            "presentation": {
+                "echo": true,
+                "reveal": "never",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+        {
+            "label": "Vercel Dev Server",
+            "type": "shell",
+            "command": "pnpm vercel-dev",
+            "group": "none",
+            "isBackground": true,
+            "presentation": {
+                "echo": true,
+                "reveal": "never",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        }
+    ]
+}

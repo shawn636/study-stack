@@ -16,7 +16,7 @@ test.describe('all-home-page', () => {
                 const src = await img.evaluate((img) => img.getAttribute('src'));
                 expect(src).toBeTruthy();
                 if (src) {
-                    const response = await fetch(`http://localhost:3000/${src}`);
+                    const response = await fetch(`http://localhost:3005/${src}`);
                     if (!response.ok) {
                         console.error(`\n[Error]: Unable to load image at ${src}\n`);
                     }

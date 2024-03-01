@@ -16,7 +16,7 @@ describe('top-categories', () => {
     });
 
     it('should return the top 6 catgories', async () => {
-        const response = await fetch('http://localhost:3000/api/top-categories');
+        const response = await fetch('http://localhost:3004/api/top-categories');
         expect(response.status).toBe(200);
 
         let categories = await response.json();

@@ -10,7 +10,7 @@ describe('/api/user', () => {
 
     it('should throw error if user is not logged in', async () => {
         // Call the PUT endpoint
-        const response = await fetch('http://localhost:3000/api/user', {
+        const response = await fetch('http://localhost:3004/api/user', {
             method: 'PUT'
         });
 
@@ -29,7 +29,7 @@ describe('/api/user', () => {
 
         const user: User = await auth.getUser(sessionId);
 
-        const response = await fetch('http://localhost:3000/api/user', {
+        const response = await fetch('http://localhost:3004/api/user', {
             body: JSON.stringify({ user }),
             headers: {
                 'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ describe('/api/user', () => {
         user.phone_number = '4567890';
         user.bio = 'I am a test user';
 
-        const response2 = await fetch('http://localhost:3000/api/user', {
+        const response2 = await fetch('http://localhost:3004/api/user', {
             body: JSON.stringify({ user }),
             headers: {
                 'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ describe('/api/user', () => {
 
         const user2: User = await auth.getUser(user2SessionId);
 
-        const response = await fetch('http://localhost:3000/api/user', {
+        const response = await fetch('http://localhost:3004/api/user', {
             body: JSON.stringify({ user: user2 }),
             headers: {
                 'Content-Type': 'application/json',

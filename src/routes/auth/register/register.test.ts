@@ -53,7 +53,7 @@ describe('register', () => {
             const headers = new Headers();
             headers.append(CSRF_COOKIE_NAME, csrfToken ?? '');
 
-            const res = await fetch('http://localhost:3000/auth/register', {
+            const res = await fetch('http://localhost:3004/auth/register', {
                 body: formData,
                 headers,
                 method: 'POST'

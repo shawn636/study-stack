@@ -5,7 +5,7 @@ import type Course from '$lib/models/course';
  */
 describe('/api/courses', () => {
     it('should return a list of courses', async () => {
-        const response = await fetch('http://localhost:3000/api/courses', {
+        const response = await fetch('http://localhost:3004/api/courses', {
             method: 'GET'
         });
 

@@ -34,11 +34,11 @@ const config: PlaywrightTestConfig = defineConfig({
     testDir: 'e2e',
     testMatch: /(.+\.)?(test|spec)\.[jt]s/,
     use: {
-        baseURL: 'http://localhost:3000'
+        baseURL: 'http://localhost:3005'
     },
     webServer: {
-        command: 'pnpm run vercel-dev',
-        port: 3000
+        command: 'vercel dev --token $VERCEL_TOKEN --yes --listen 3005',
+        port: 3005
     },
     workers: 1
 });
