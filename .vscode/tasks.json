@@ -1,5 +1,5 @@
 {
-    "versions": "2.0.0",
+    "version": "2.0.0",
     "tasks": [
         {
             "label": "Dev Server",
@@ -14,6 +14,9 @@
                 "panel": "new",
                 "showReuseMessage": true,
                 "clear": true
+            },
+            "icon": {
+                "id": "server"
             },
             "runOptions": {
                 "runOn": "folderOpen"
@@ -32,6 +35,9 @@
                 "panel": "new",
                 "showReuseMessage": true,
                 "clear": true
+            },
+            "icon": {
+                "id": "server"
             },
             "runOptions": {
                 "runOn": "folderOpen"
