@@ -8,7 +8,7 @@ export const sortByValues = ['Relevance', 'Highest Rated', 'Lowest Price'];
 /**
  * An array of valid values for display options.
  */
-export const DisplayValues = ['Grid', 'List'];
+export const displayValues = ['Grid', 'List'];
 
 /**
  * Creates a writable store for the sorting option.
@@ -16,10 +16,9 @@ export const DisplayValues = ['Grid', 'List'];
  * @returns {object} An object with 'subscribe', 'set', and 'update' functions for the sorting store.
  */
 const createSortByStore = () => {
-    const { subscribe, set, update } = writable('Relevance');
+    const { set, subscribe, update } = writable('Relevance');
 
     return {
-        subscribe,
         set: (sortBy: string) => {
             if (sortByValues.includes(sortBy)) {
                 set(sortBy);
@@ -27,6 +26,7 @@ const createSortByStore = () => {
                 throw new Error('Invalid sortBy value');
             }
         },
+        subscribe,
         update
     };
 };
@@ -37,16 +37,16 @@ const createSortByStore = () => {
  * @returns {object} An object with 'subscribe' and 'set' functions for the display store.
  */
 const createDisplayStore = () => {
-    const { subscribe, set } = writable('Grid');
+    const { set, subscribe } = writable('Grid');
     return {
-        subscribe,
         set: (display: string) => {
-            if (DisplayValues.includes(display)) {
+            if (displayValues.includes(display)) {
                 set(display);
             } else {
                 throw new Error('Invalid display value');
             }
-        }
+        },
+        subscribe
     };
 };
 

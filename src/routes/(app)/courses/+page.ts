@@ -1,5 +1,6 @@
-import type { PageLoad } from './$types';
 import type Course from '$lib/models/course';
+
+import type { PageLoad } from './$types';
 
 export const load = (async ({ fetch }) => {
     const res = await fetch('/api/courses');

@@ -1,7 +1,9 @@
-import type { PageServerLoad } from './$types';
+import type User from '$lib/models/user';
+
 import { auth } from '$lib/server/auth';
 import { redirect } from '@sveltejs/kit';
-import type User from '$lib/models/user';
+
+import type { PageServerLoad } from './$types';
 
 export const load = (async ({ cookies, parent }) => {
     await parent();

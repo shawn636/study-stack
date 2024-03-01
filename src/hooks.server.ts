@@ -1,4 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
+
 import { csrf } from '$lib/server/csrf';
 
 export const handle: Handle = async ({ event, resolve }) => {

@@ -1,12 +1,14 @@
 <script lang="ts">
-    import type { PageServerData } from './$types';
     import type { ToastSettings } from '@skeletonlabs/skeleton';
-    import { getToastStore, ProgressRadial } from '@skeletonlabs/skeleton';
-    import Fa from 'svelte-fa';
-    import { faEnvelope, faPhone, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-    import { onMount } from 'svelte';
+
     import { formatPhoneNumber, initials as getInitials } from '$lib/client/util';
     import Avatar from '$lib/components/avatar.svelte';
+    import { faEnvelope, faPenToSquare, faPhone } from '@fortawesome/free-solid-svg-icons';
+    import { ProgressRadial, getToastStore } from '@skeletonlabs/skeleton';
+    import { onMount } from 'svelte';
+    import Fa from 'svelte-fa';
+
+    import type { PageServerData } from './$types';
 
     export let originalData: PageServerData;
     export let data: PageServerData;
@@ -19,14 +21,14 @@
     let isLoading = false;
 
     const errorToast: ToastSettings = {
-        message: 'There was an error saving your changes.',
         background: 'bg-error-500',
-        classes: 'text-white'
+        classes: 'text-white',
+        message: 'There was an error saving your changes.'
     };
 
     const successToast: ToastSettings = {
-        message: 'Your changes have been saved.',
-        background: 'bg-success-600'
+        background: 'bg-success-600',
+        message: 'Your changes have been saved.'
     };
 
     onMount(() => {
@@ -52,26 +54,26 @@
         const phoneTemp = phone.replace(/\s/g, '');
 
         const user = {
-            id: data.user.id,
-            email: data.user.email,
-            name: data.user.name,
-            country_code: '+1',
             area_code: phoneTemp.slice(0, 3) === '' ? null : phoneTemp.slice(0, 3),
-            phone_number: phoneTemp.slice(3, 10) === '' ? null : phoneTemp.slice(3, 10),
             bio: data.user.bio === '' ? null : data.user.bio,
             city: data.user.city === '' ? null : data.user.city,
-            state: data.user.state === '' ? null : data.user.state,
-            photo_url: data.user.photo_url === '' ? null : data.user.photo_url
+            country_code: '+1',
+            email: data.user.email,
+            id: data.user.id,
+            name: data.user.name,
+            phone_number: phoneTemp.slice(3, 10) === '' ? null : phoneTemp.slice(3, 10),
+            photo_url: data.user.photo_url === '' ? null : data.user.photo_url,
+            state: data.user.state === '' ? null : data.user.state
         };
 
         const response = await fetch('/api/user', {
-            method: 'PUT',
+            body: JSON.stringify({
+                user
+            }),
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                user
-            })
+            method: 'PUT'
         });
 
         if (response.status === 200) {
@@ -95,8 +97,8 @@
         event: Event & { currentTarget: EventTarget & HTMLInputElement }
     ) => {
         if (event.currentTarget && event.currentTarget.files) {
-            let image = event.currentTarget.files[0];
-            let reader = new FileReader();
+            const image = event.currentTarget.files[0];
+            const reader = new FileReader();
             reader.readAsDataURL(image);
             reader.onload = async () => {
                 const formData = new FormData();
@@ -104,15 +106,15 @@
                 formData.append('user_id', data.user.id);
 
                 const response = await fetch('/api/user/photo', {
-                    method: 'POST',
-                    body: formData
+                    body: formData,
+                    method: 'POST'
                 });
 
                 if (response.status === 200) {
                     const data = await response.json();
-                    const profile_url = data.url;
+                    const profileUrl = data.url;
 
-                    data.user.photo_url = profile_url;
+                    data.user.photo_url = profileUrl;
                 }
             };
         }
@@ -123,85 +125,85 @@
 
 <div class="grid items-center justify-items-center md:p-6">
     <div
-        class="container grid max-w-sm grid-flow-row p-6 bg-white shadow card gap-y-4 md:max-w-5xl"
+        class="card container grid max-w-sm grid-flow-row gap-y-4 bg-white p-6 shadow md:max-w-5xl"
     >
         <!-- Name Block -->
         <div class="grid justify-items-center">
             <div
-                class="grid grid-flow-row items-center justify-items-center md:grid-flow-col md:justify-items-start md:grid-cols-[auto_1fr] gap-x-2"
+                class="grid grid-flow-row items-center justify-items-center gap-x-2 md:grid-flow-col md:grid-cols-[auto_1fr] md:justify-items-start"
             >
                 <input
-                    type="file"
+                    accept=".jpg, .jpeg, .png"
                     bind:this={profileImgInput}
                     on:change={(event) => {
                         onFileSelected(event);
                     }}
-                    accept=".jpg, .jpeg, .png"
                     style="display: none;"
+                    type="file"
                 />
                 <Avatar
-                    {initials}
-                    photoUrl="images/home-image-2-optimized.webp"
                     editFunction={() => {
                         profileImgInput.click();
                     }}
+                    {initials}
+                    photoUrl="images/home-image-2-optimized.webp"
                 />
 
                 <h1 class="text-2xl font-bold">{data.user.name}</h1>
             </div>
         </div>
         <div class="hidden md:block">
-            <hr class="min-w-full mt-4" />
+            <hr class="mt-4 min-w-full" />
         </div>
 
-        <div class="grid grid-rows-2 md:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-0">
+        <div class="grid grid-rows-2 gap-x-4 gap-y-4 md:grid-cols-2 md:gap-y-0">
             <!-- Email -->
-            <div class="grid items-center min-w-full text-gray-500">
+            <div class="grid min-w-full items-center text-gray-500">
                 <div class="relative min-w-full">
                     <Fa
+                        class="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-400"
                         icon={faEnvelope}
-                        class="absolute text-gray-400 transform -translate-y-1/2 left-2 top-1/2"
                     />
                     <input
+                        class="w-full rounded-md border border-surface-50 p-1 pl-8 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:border-surface-700 dark:bg-surface-900 dark:text-gray-200 dark:shadow-sm dark:disabled:bg-surface-900 dark:disabled:text-gray-50"
                         disabled={!editMode}
                         name="email"
                         value={data.user.email}
-                        class="w-full p-1 pl-8 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
                     />
                 </div>
             </div>
 
             <!-- Phone -->
-            <div class="grid items-center min-w-full text-gray-500 gap-x-2">
+            <div class="grid min-w-full items-center gap-x-2 text-gray-500">
                 <div class="relative min-w-full">
                     <Fa
+                        class="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-400"
                         icon={faPhone}
-                        class="absolute text-gray-400 transform -translate-y-1/2 left-2 top-1/2"
                     />
                     <input
+                        class="w-full rounded-md border border-surface-50 p-1 pl-8 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:border-surface-700 dark:bg-surface-900 dark:text-gray-200 dark:shadow-sm dark:disabled:bg-surface-900 dark:disabled:text-gray-50"
                         disabled={!editMode}
-                        type="tel"
-                        value={phone}
                         id="phone-input"
                         maxlength="12"
                         on:input={updatePhoneNumber}
-                        class="w-full p-1 pl-8 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
+                        type="tel"
+                        value={phone}
                     />
                 </div>
             </div>
 
             <div class="md:hidden">
-                <hr class="min-w-full mt-4" />
+                <hr class="mt-4 min-w-full" />
             </div>
 
             <!-- City -->
             <div class="min-w-full">
                 <p class="h-auto font-bold text-gray-600 dark:text-gray-400">City</p>
                 <input
-                    disabled={!editMode}
                     bind:value={data.user.city}
+                    class="w-full rounded-md border border-surface-50 p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:border-surface-700 dark:bg-surface-900 dark:text-gray-200 dark:shadow-sm dark:disabled:bg-surface-900 dark:disabled:text-gray-50"
+                    disabled={!editMode}
                     id="phone-input"
-                    class="w-full p-1 pl-2 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
                 />
             </div>
 
@@ -209,50 +211,50 @@
             <div class="min-w-full">
                 <p class="h-auto font-bold text-gray-600 dark:text-gray-400">State</p>
                 <input
-                    disabled={!editMode}
                     bind:value={data.user.state}
+                    class="w-full rounded-md border border-surface-50 p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:border-surface-700 dark:bg-surface-900 dark:text-gray-200 dark:shadow-sm dark:disabled:bg-surface-900 dark:disabled:text-gray-50"
+                    disabled={!editMode}
                     id="phone-input"
-                    class="w-full p-1 pl-2 text-gray-700 border rounded-md shadow-sm border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
                 />
             </div>
         </div>
 
-        <div class="grid items-center grid-flow-row gap-y-1 justify-items-center">
+        <div class="grid grid-flow-row items-center justify-items-center gap-y-1">
             <!-- Bio -->
             <div
-                class="grid grid-flow-col grid-cols-[auto_1fr] items-center gap-x-2 text-gray-500 min-w-full"
+                class="grid min-w-full grid-flow-col grid-cols-[auto_1fr] items-center gap-x-2 text-gray-500"
             >
                 <div class="min-w-full">
                     <p class="h-auto font-bold text-gray-600 dark:text-gray-400">Bio</p>
                     <textarea
-                        disabled={!editMode}
                         bind:value={data.user.bio}
+                        class="h-24 w-full min-w-full resize-none rounded-md border border-surface-50 p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:border-surface-700 dark:bg-surface-900 dark:text-gray-200 dark:shadow-sm dark:disabled:bg-surface-900 dark:disabled:text-gray-50"
+                        disabled={!editMode}
                         id="phone-input"
-                        class="w-full h-24 min-w-full p-1 pl-2 text-gray-700 border rounded-md shadow-sm resize-none border-surface-50 disabled:bg-gray-100 disabled:text-black dark:disabled:bg-surface-900 dark:border-2 dark:border-surface-700 dark:disabled:text-gray-50 dark:bg-surface-900 dark:shadow-sm dark:text-gray-200"
                     />
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="grid w-full px-4 justify-items-end max-w-screen-xs md:max-w-5xl">
+    <div class="grid w-full max-w-screen-xs justify-items-end px-4 md:max-w-5xl">
         {#if editMode}
-            <div class="grid items-center grid-flow-col gap-x-2 justify-self-end">
+            <div class="grid grid-flow-col items-center gap-x-2 justify-self-end">
                 <button
                     aria-label="Cancel Changes"
-                    class="mt-4 text-gray-700 btn btn-sm justify-self-end dark:text-gray-500"
+                    class="btn btn-sm mt-4 justify-self-end text-gray-700 dark:text-gray-500"
                     on:click={cancelChanges}
                 >
                     Cancel
                 </button>
                 <button
-                    disabled={isLoading}
                     aria-label="Save Changes"
-                    class="grid items-center grid-flow-col mt-4 btn btn-sm variant-filled-primary justify-self-end gap-x-2"
+                    class="variant-filled-primary btn btn-sm mt-4 grid grid-flow-col items-center gap-x-2 justify-self-end"
+                    disabled={isLoading}
                     on:click={saveChanges}
                 >
                     {#if isLoading}
-                        <ProgressRadial width="w-6" stroke={100} />
+                        <ProgressRadial stroke={100} width="w-6" />
                     {/if}
                     Save Changes
                 </button>
@@ -260,12 +262,12 @@
         {:else}
             <button
                 aria-label="Edit Profile"
-                class="mt-4 btn btn-sm variant-soft justify-self-end"
+                class="variant-soft btn btn-sm mt-4 justify-self-end"
                 on:click={() => {
                     editMode = !editMode;
                 }}
             >
-                <Fa icon={faPenToSquare} class="mr-2" />
+                <Fa class="mr-2" icon={faPenToSquare} />
                 Edit Profile
             </button>
         {/if}

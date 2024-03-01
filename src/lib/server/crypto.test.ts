@@ -2,8 +2,8 @@
  * @vitest-environment jsdom
  */
 
+import { comparePassword, hashPassword } from '$lib/server/crypto';
 import { faker } from '@faker-js/faker';
-import { hashPassword, comparePassword } from '$lib/server/crypto';
 
 describe('crypto', () => {
     it('should be able to hash and compare a password', async () => {

@@ -1,45 +1,45 @@
 /**
  * @vitest-environment jsdom
  */
-import { db } from '$lib/server/database';
 import { auth } from '$lib/server/auth';
+import { db } from '$lib/server/database';
 
 const accounts = [
     {
         email: 'jackmiller@gmail.com',
+        hashedPassword: '$2b$10$kAf6zKTdEIL.Xogd3xSizekP93x0w3yJry2e3cB2rB0FvCXEoHCeq',
         name: 'Jack Miller',
-        password: 'password',
-        hashedPassword: '$2b$10$kAf6zKTdEIL.Xogd3xSizekP93x0w3yJry2e3cB2rB0FvCXEoHCeq'
+        password: 'password'
     },
     {
         email: 'jordansmith@hotmail.com',
+        hashedPassword: '$2b$10$uY7dZXLZnkexrJdvvzoHJuuzsDPR0NuQUSspkpWbuJTyZH6Hw1eiu',
         name: 'Jordan Smith',
-        password: 'password123',
-        hashedPassword: '$2b$10$uY7dZXLZnkexrJdvvzoHJuuzsDPR0NuQUSspkpWbuJTyZH6Hw1eiu'
+        password: 'password123'
     },
     {
         email: 'testuser1@example.com',
+        hashedPassword: '$2b$10$zR0tq5WF/aI46blB3nTUIeJYKav5Dr7us7e3APdm6z1DXAQlsp7pe',
         name: 'John Doe',
-        password: 'P@$$w0Rd',
-        hashedPassword: '$2b$10$zR0tq5WF/aI46blB3nTUIeJYKav5Dr7us7e3APdm6z1DXAQlsp7pe'
+        password: 'P@$$w0Rd'
     },
     {
         email: 'sveltekit123@gmail.com',
+        hashedPassword: '$2b$10$o8FwYlkExQif5OT9oeyuX.LRrm8YsUqvkFqhlUMJ1lTND2fEQ3AXC',
         name: 'Jane Smith',
-        password: 'testytesttest123',
-        hashedPassword: '$2b$10$o8FwYlkExQif5OT9oeyuX.LRrm8YsUqvkFqhlUMJ1lTND2fEQ3AXC'
+        password: 'testytesttest123'
     },
     {
         email: 'superfakeemail@suspicious.net',
+        hashedPassword: '$2b$10$Gb6Lf7yunn/XrGThk3jtFevdApUjpUh9DOIN1cyxbgwNOWWckvj5S',
         name: 'Leroy Jenkinsonsmithers',
-        password: 'IHonestlyHaveNoIdeaWhatImDoing',
-        hashedPassword: '$2b$10$Gb6Lf7yunn/XrGThk3jtFevdApUjpUh9DOIN1cyxbgwNOWWckvj5S'
+        password: 'IHonestlyHaveNoIdeaWhatImDoing'
     },
     {
         email: 'cookiemonster@sesame.street',
+        hashedPassword: '$2b$10$lwqZ2xX1fGhEA9Khq2hBDumlNpLbCw4Hyy4SQDrBhbU5TuvdWMwxe',
         name: 'Monster, Cookie',
-        password: 'COOKIE',
-        hashedPassword: '$2b$10$lwqZ2xX1fGhEA9Khq2hBDumlNpLbCw4Hyy4SQDrBhbU5TuvdWMwxe'
+        password: 'COOKIE'
     }
 ];
 

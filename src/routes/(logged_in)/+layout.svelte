@@ -1,9 +1,11 @@
 <script lang="ts">
-    import Sidebar from '$lib/components/sidebar.svelte';
-    import Header from '$lib/components/header.svelte';
-    import { AppShell, Toast } from '@skeletonlabs/skeleton';
-    import type { LayoutData } from './$types';
     import type User from '$lib/models/user';
+
+    import Header from '$lib/components/header.svelte';
+    import Sidebar from '$lib/components/sidebar.svelte';
+    import { AppShell, Toast } from '@skeletonlabs/skeleton';
+
+    import type { LayoutData } from './$types';
 
     export let data: LayoutData;
     $: user = data.user as User;
@@ -16,7 +18,7 @@
         <Header {user} />
     </svelte:fragment>
 
-    <div class="h-full p-4 bg-surface-50 dark:bg-surface-900">
+    <div class="h-full bg-surface-50 p-4 dark:bg-surface-900">
         <slot />
     </div>
 </AppShell>

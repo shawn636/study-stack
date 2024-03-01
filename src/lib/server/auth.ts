@@ -1,9 +1,10 @@
-import { hashPassword, comparePassword } from '$lib/server/crypto';
-import { v4 } from 'uuid';
-import { db } from '$lib/server/database';
-import type { Cookies } from '@sveltejs/kit';
 import type User from '$lib/models/user';
+import type { Cookies } from '@sveltejs/kit';
+
 import { dev } from '$app/environment';
+import { comparePassword, hashPassword } from '$lib/server/crypto';
+import { db } from '$lib/server/database';
+import { v4 } from 'uuid';
 
 export const COOKIE_NAME = 'auth_session';
 
@@ -15,7 +16,7 @@ export const COOKIE_NAME = 'auth_session';
  */
 const emailExists = async (email: string): Promise<boolean> => {
     const conn = db.connection();
-    const query = `SELECT COUNT(*) AS count FROM auth_user WHERE email = ?;`;
+    const query = 'SELECT COUNT(*) AS count FROM auth_user WHERE email = ?;';
     const result = await conn.execute(query, [email]);
 
     if (result.rows.length !== 1) {
@@ -178,7 +179,7 @@ const createUser = async (email: string, password: string, name: string): Promis
     const userId = await conn.transaction(async (tx) => {
         // Create auth_user
         const userId = v4();
-        const query = `INSERT INTO auth_user (id, email) VALUES (?, ?);`;
+        const query = 'INSERT INTO auth_user (id, email) VALUES (?, ?);';
         const userResult = await tx.execute(query, [userId, email]);
 
         if (userResult.insertId === null) {
@@ -386,10 +387,10 @@ const validateCookies = async (cookies: Cookies): Promise<boolean> => {
 const setSessionCookie = (sessionId: string, cookies: Cookies): Cookies => {
     cookies.set(COOKIE_NAME, sessionId, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 30,
         path: '/',
-        maxAge: 60 * 60 * 24 * 30
+        sameSite: 'strict',
+        secure: false
     });
 
     return cookies;
@@ -404,10 +405,10 @@ const setSessionCookie = (sessionId: string, cookies: Cookies): Cookies => {
 const deleteSessionCookie = (cookies: Cookies): Cookies => {
     cookies.set(COOKIE_NAME, 'null', {
         httpOnly: true,
-        secure: false,
-        sameSite: 'strict',
+        maxAge: 0,
         path: '/',
-        maxAge: 0
+        sameSite: 'strict',
+        secure: false
     });
     return cookies;
 };
@@ -468,19 +469,19 @@ const deleteUserIfExists = async (email: string): Promise<void> => {
  * Exposes the authentication-related functions as properties of the 'auth' object.
  */
 export const auth = {
+    createUser,
+    deleteSessionCookie,
+    deleteUserIfExists,
     emailExists,
     getAllSessions,
+    getSession,
     getUser,
     getUserId,
-    createUser,
     login,
     logout,
     logoutAll,
-    validateSession,
-    validateAndSetCookie,
     setSessionCookie,
+    validateAndSetCookie,
     validateCookies,
-    getSession,
-    deleteSessionCookie,
-    deleteUserIfExists
+    validateSession
 };

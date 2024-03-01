@@ -1,5 +1,6 @@
-import { auth, COOKIE_NAME } from '$lib/server/auth';
 import type User from '$lib/models/user';
+
+import { COOKIE_NAME, auth } from '$lib/server/auth';
 
 /**
  * @vitest-environment jsdom
@@ -29,12 +30,12 @@ describe('/api/user', () => {
         const user: User = await auth.getUser(sessionId);
 
         const response = await fetch('http://localhost:3000/api/user', {
-            method: 'PUT',
+            body: JSON.stringify({ user }),
             headers: {
                 'Content-Type': 'application/json',
                 cookie: `${COOKIE_NAME}=${sessionId}`
             },
-            body: JSON.stringify({ user })
+            method: 'PUT'
         });
 
         expect(response.status).toBe(200);
@@ -45,12 +46,12 @@ describe('/api/user', () => {
         user.bio = 'I am a test user';
 
         const response2 = await fetch('http://localhost:3000/api/user', {
-            method: 'PUT',
+            body: JSON.stringify({ user }),
             headers: {
                 'Content-Type': 'application/json',
                 cookie: `${COOKIE_NAME}=${sessionId}`
             },
-            body: JSON.stringify({ user })
+            method: 'PUT'
         });
 
         expect(response2.status).toBe(200);
@@ -85,12 +86,12 @@ describe('/api/user', () => {
         const user2: User = await auth.getUser(user2SessionId);
 
         const response = await fetch('http://localhost:3000/api/user', {
-            method: 'PUT',
+            body: JSON.stringify({ user: user2 }),
             headers: {
                 'Content-Type': 'application/json',
                 cookie: `${COOKIE_NAME}=${user1SessionId}`
             },
-            body: JSON.stringify({ user: user2 })
+            method: 'PUT'
         });
 
         expect(response.status).toBe(403);

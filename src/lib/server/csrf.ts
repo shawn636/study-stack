@@ -1,6 +1,7 @@
+import type { Cookies } from '@sveltejs/kit';
+
 import { db } from '$lib/server/database';
 import { v4 as uuidv4 } from 'uuid';
-import type { Cookies } from '@sveltejs/kit';
 
 export const COOKIE_NAME = 'x-csrf-token';
 
@@ -10,7 +11,7 @@ export const COOKIE_NAME = 'x-csrf-token';
  * @param {string} token - The CSRF token to validate.
  * @returns {Promise<boolean>} A Promise that resolves to true if the token is valid, false otherwise.
  */
-const validateToken = async (token: string) => {
+const validateToken = async (token: string): Promise<boolean> => {
     const conn = db.connection();
     try {
         const result = await conn.execute(
@@ -29,7 +30,7 @@ const validateToken = async (token: string) => {
  *
  * @returns {Promise<string | null>} A Promise that resolves to the generated CSRF token, or null if insertion fails.
  */
-const generateToken = async () => {
+const generateToken = async (): Promise<null | string> => {
     const newToken: string = uuidv4();
     const conn = db.connection();
     try {
@@ -55,10 +56,10 @@ const generateToken = async () => {
 const setCookie = (token: string, cookies: Cookies): Cookies => {
     cookies.set(COOKIE_NAME, token, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
+        maxAge: 0,
         path: '/',
-        maxAge: 0
+        sameSite: 'strict',
+        secure: true
     });
     return cookies;
 };
@@ -94,7 +95,7 @@ const validateAndSetCookie = async (cookies: Cookies): Promise<Cookies> => {
 const validateCookies = async (cookies: Cookies): Promise<void> => {
     const token = cookies.get(COOKIE_NAME) as string;
 
-    if (token === undefined || token == null || token === '') {
+    if (token === undefined || token === null || token === '') {
         console.error('No csrf token provided');
         throw Error('CSRF_INVALID_TOKEN');
     }
@@ -111,9 +112,9 @@ const validateCookies = async (cookies: Cookies): Promise<void> => {
  * Exposes the CSRF-related functions as properties of the 'csrf' object.
  */
 export const csrf = {
-    validateToken,
     generateToken,
     setCookie,
     validateAndSetCookie,
-    validateCookies
+    validateCookies,
+    validateToken
 };

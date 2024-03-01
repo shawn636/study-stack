@@ -1,26 +1,26 @@
 <script lang="ts">
-    import Fa from 'svelte-fa';
-    import { faGoogle, faFacebook, faApple } from '@fortawesome/free-brands-svg-icons';
+    import { goto } from '$app/navigation';
+    import { faApple, faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
     import {
         faChevronLeft,
+        faCircleCheck,
         faCircleExclamation,
-        faExclamationTriangle,
-        faCircleCheck
+        faExclamationTriangle
     } from '@fortawesome/free-solid-svg-icons';
-    import { fly, slide } from 'svelte/transition';
-    import { cubicInOut } from 'svelte/easing';
-    import { createForm } from 'svelte-forms-lib';
     import { ProgressRadial } from '@skeletonlabs/skeleton';
-    import { goto } from '$app/navigation';
+    import { cubicInOut } from 'svelte/easing';
+    import { fly, slide } from 'svelte/transition';
+    import Fa from 'svelte-fa';
+    import { createForm } from 'svelte-forms-lib';
+
     import { loginForm } from './login-form-schema';
 
     // Form Validation
-    const { form, errors, validateField, touched, handleChange, handleSubmit } = createForm({
+    const { errors, form, handleChange, handleSubmit, touched, validateField } = createForm({
         initialValues: {
             email: '',
             password: ''
         },
-        validationSchema: loginForm,
         onSubmit: async (values) => {
             validateField('email');
             validateField('password');
@@ -33,7 +33,7 @@
             if (res) {
                 const data = await res.json();
 
-                if (res?.status == 200) {
+                if (res?.status === 200) {
                     showSuccess = true;
                     goto('/');
                 } else {
@@ -46,12 +46,13 @@
             } else {
                 submissionError = 'An error occurred. Please try again.';
             }
-        }
+        },
+        validationSchema: loginForm
     });
 
     let showSuccess = false;
     let isSubmitting = false;
-    let submissionError: string | null = null;
+    let submissionError: null | string = null;
 
     const submitForm = async (
         values: {
@@ -65,8 +66,8 @@
             formData.append('password', values.password);
 
             const res = await fetch('/auth/login', {
-                method: 'POST',
-                body: formData
+                body: formData,
+                method: 'POST'
             });
 
             return res;
@@ -80,57 +81,57 @@
 </script>
 
 <form
-    class="items-center w-full h-full grid"
+    class="grid h-full w-full items-center"
+    data-test-id="sign-in-form"
     id="register-form"
     on:submit={handleSubmit}
-    data-test-id="sign-in-form"
 >
     <div
-        class="items-center h-full grid justify-items-center row-start-1 row-end-2 col-start-1 col-end-2"
+        class="col-start-1 col-end-2 row-start-1 row-end-2 grid h-full items-center justify-items-center"
         id="main"
         in:fly|global={{
-            x: '100%',
-            duration: transitionDuration,
             delay: transitionDuration,
-            easing: cubicInOut
+            duration: transitionDuration,
+            easing: cubicInOut,
+            x: '100%'
         }}
         out:fly|global={{
-            x: '-100%',
             duration: transitionDuration,
-            easing: cubicInOut
+            easing: cubicInOut,
+            x: '-100%'
         }}
     >
-        <div class="items-center grid">
+        <div class="grid items-center">
             <a
+                class="btn-iconn btn flex items-center justify-start gap-1 p-1 text-center text-surface-700 dark:text-surface-300"
                 href="/"
-                class="flex items-center justify-start p-1 text-center btn btn-iconn text-surface-700 dark:text-surface-300 gap-1"
             >
                 <Fa icon={faChevronLeft} />
                 Home
             </a>
-            <div class="card shadow-lg p-10 w-[360px] grid justify-items-center">
+            <div class="card grid w-[360px] justify-items-center p-10 shadow-lg">
                 <div class="text-center">
                     <!-- Header -->
                     <div class="py-5">
-                        <h2 class="font-semibold h2">Welcome</h2>
+                        <h2 class="h2 font-semibold">Welcome</h2>
                         <p class="my-2 text-xs text-slate-500">Please enter your details below</p>
                     </div>
 
-                    <div class="grid grid-flow-row text-md gap-y-4">
+                    <div class="text-md grid grid-flow-row gap-y-4">
                         <div>
                             <input
-                                type="email"
-                                tabindex="0"
-                                name="email"
-                                placeholder="Email"
+                                bind:value={$form.email}
                                 class="input
                                         {$errors.email ? 'border-error-500' : ''}
                                         {!$errors.email && $touched.email
                                     ? 'border-success-700'
                                     : ''}"
-                                on:change={handleChange}
+                                name="email"
                                 on:blur={handleChange}
-                                bind:value={$form.email}
+                                on:change={handleChange}
+                                placeholder="Email"
+                                tabindex="0"
+                                type="email"
                             />
                             {#if $errors.email}
                                 <div
@@ -145,9 +146,9 @@
                                     }}
                                 >
                                     <Fa
+                                        class="text-error-500"
                                         icon={faCircleExclamation}
                                         size="sm"
-                                        class="text-error-500"
                                     />
                                     <small class="text-error-500">{$errors.email}</small>
                                 </div>
@@ -155,18 +156,18 @@
                         </div>
 
                         <input
-                            type="password"
-                            tabindex="0"
-                            name="password"
-                            placeholder="Password"
-                            on:change={handleChange}
-                            on:blur={handleChange}
                             bind:value={$form.password}
                             class="input
                                         {$errors.password ? 'border-error-500' : ''}
                                         {!$errors.password && $touched.password
                                 ? 'border-success-700'
                                 : ''}"
+                            name="password"
+                            on:blur={handleChange}
+                            on:change={handleChange}
+                            placeholder="Password"
+                            tabindex="0"
+                            type="password"
                         />
                         {#if $errors.password}
                             <div
@@ -180,25 +181,25 @@
                                     easing: cubicInOut
                                 }}
                             >
-                                <Fa icon={faCircleExclamation} size="sm" class="text-error-500" />
+                                <Fa class="text-error-500" icon={faCircleExclamation} size="sm" />
                                 <small class="text-error-500">{$errors.password}</small>
                             </div>
                         {/if}
                         <button
-                            type="submit"
-                            tabindex="0"
                             aria-label="continue"
-                            class="font-medium btn variant-filled-secondary"
+                            class="variant-filled-secondary btn font-medium"
+                            tabindex="0"
+                            type="submit"
                         >
                             {#if isSubmitting}
-                                <ProgressRadial width="w-6" stroke={100} />
+                                <ProgressRadial stroke={100} width="w-6" />
                             {:else}
                                 Submit
                             {/if}
                         </button>
                         {#if submissionError}
                             <div
-                                class="items-center mt-4 alert variant-ghost-error"
+                                class="alert variant-ghost-error mt-4 items-center"
                                 in:slide={{
                                     duration: 300,
                                     easing: cubicInOut
@@ -209,15 +210,15 @@
                                 }}
                             >
                                 <div
-                                    class="grid grid-cols-[auto_1fr] gap-x-4 w-ful h-full items-center"
+                                    class="w-ful grid h-full grid-cols-[auto_1fr] items-center gap-x-4"
                                 >
                                     <Fa
+                                        class="col-start-1 col-end-2 row-start-1 row-end-2"
                                         icon={faExclamationTriangle}
                                         size="sm"
-                                        class="row-start-1 row-end-2 col-start-1 col-end-2"
                                     />
                                     <div
-                                        class="items-center alert-message grid h-fullrow-start-1 row-end-2 col-start-2 col-end-3"
+                                        class="h-fullrow-start-1 alert-message col-start-2 col-end-3 row-end-2 grid items-center"
                                     >
                                         <p>{submissionError}</p>
                                     </div>
@@ -226,7 +227,7 @@
                         {/if}
                         {#if showSuccess}
                             <div
-                                class="mt-4 alert variant-ghost-success"
+                                class="alert variant-ghost-success mt-4"
                                 in:slide={{
                                     duration: 300,
                                     easing: cubicInOut
@@ -237,7 +238,7 @@
                                 }}
                             >
                                 <div
-                                    class="items-center text-center alert-message grid grid-flow-col gap-x-2"
+                                    class="alert-message grid grid-flow-col items-center gap-x-2 text-center"
                                 >
                                     <Fa icon={faCircleCheck} />
                                     <p class="pb-1">Login Successful</p>
@@ -261,30 +262,30 @@
                     <!-- OAuth Buttons -->
                     <div class="grid grid-flow-row gap-y-3">
                         <button
+                            aria-label="Sign in with Google"
+                            class="variant-soft btn"
                             disabled
                             type="button"
-                            class="btn variant-soft"
-                            aria-label="Sign in with Google"
                         >
                             <Fa icon={faGoogle} size="lg" />
                             <span>Sign in with Google</span>
                         </button>
 
                         <button
+                            aria-label="Sign in with Facebook"
+                            class="variant-soft btn"
                             disabled
                             type="button"
-                            class="btn variant-soft"
-                            aria-label="Sign in with Facebook"
                         >
                             <Fa icon={faFacebook} size="lg" />
                             <span>Sign in with Facebook</span>
                         </button>
 
                         <button
+                            aria-label="Sign in with Apple"
+                            class="variant-soft btn"
                             disabled
                             type="button"
-                            class="btn variant-soft"
-                            aria-label="Sign in with Apple"
                         >
                             <Fa icon={faApple} size="lg" />
                             <span>Sign in with Apple</span>

@@ -1,6 +1,8 @@
-import type { LayoutServerLoad } from './$types';
 import type User from '$lib/models/user';
+
 import { auth } from '$lib/server/auth';
+
+import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ cookies }) => {
     const sessionId = auth.getSession(cookies);

@@ -1,7 +1,8 @@
-import { DATABASE_URL } from './env';
 import { Client } from '@planetscale/database';
 import { v4 } from 'uuid';
+
 import { hashPassword } from './crypto';
+import { DATABASE_URL } from './env';
 
 export const db = new Client({
     url: DATABASE_URL
@@ -12,7 +13,7 @@ const createUser = async (email: string, password: string, name: string): Promis
 
     // Create auth_user
     const userId = v4();
-    const query = `INSERT INTO auth_user (id, email) VALUES (?, ?);`;
+    const query = 'INSERT INTO auth_user (id, email) VALUES (?, ?);';
     const userResult = await conn.execute(query, [userId, email]);
 
     if (userResult.insertId === null) {

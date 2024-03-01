@@ -1,7 +1,8 @@
-import type { RequestHandler } from './$types';
 import { auth } from '$lib/server/auth';
 import { csrf } from '$lib/server/csrf';
 import { error } from '@sveltejs/kit';
+
+import type { RequestHandler } from './$types';
 
 export const POST = (async ({ cookies }) => {
     await csrf.validateCookies(cookies);

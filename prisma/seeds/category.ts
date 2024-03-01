@@ -4,40 +4,40 @@ export async function seedCategory(client: PrismaClient) {
     await client.category.createMany({
         data: [
             {
-                title: 'Bible Study & Theology',
-                img_href: 'images/book-open.svg'
+                img_href: 'images/book-open.svg',
+                title: 'Bible Study & Theology'
             },
             {
-                title: 'Biblical Languages',
-                img_href: 'images/biblical-languages.svg'
+                img_href: 'images/biblical-languages.svg',
+                title: 'Biblical Languages'
             },
             {
-                title: 'Apologetics',
-                img_href: 'images/shield-check.svg'
+                img_href: 'images/shield-check.svg',
+                title: 'Apologetics'
             },
             {
-                title: 'Leadership & Ministry',
-                img_href: 'images/user-group.svg'
+                img_href: 'images/user-group.svg',
+                title: 'Leadership & Ministry'
             },
             {
-                title: 'Worldview & Philosophy',
-                img_href: 'images/scale.svg'
+                img_href: 'images/scale.svg',
+                title: 'Worldview & Philosophy'
             },
             {
-                title: 'Christian Counseling & Psychology',
-                img_href: 'images/heart.svg'
+                img_href: 'images/heart.svg',
+                title: 'Christian Counseling & Psychology'
             },
             {
-                title: 'Evangelism',
-                img_href: 'images/globe-africa.svg'
+                img_href: 'images/globe-africa.svg',
+                title: 'Evangelism'
             },
             {
-                title: 'Worship & Music',
-                img_href: 'images/musical-note.svg'
+                img_href: 'images/musical-note.svg',
+                title: 'Worship & Music'
             },
             {
-                title: 'Ministry & Service',
-                img_href: 'images/gift.svg'
+                img_href: 'images/gift.svg',
+                title: 'Ministry & Service'
             }
         ]
     });

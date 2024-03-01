@@ -1,42 +1,44 @@
 <script lang="ts">
-    import type { PageServerData } from './$types';
-    import type CourseProgress from '$lib/models/course-progress';
     import type Course from '$lib/models/course';
+    import type CourseProgress from '$lib/models/course-progress';
+
+    import type { PageServerData } from './$types';
+
     import EnrolledCourseBlock from './enrolled-course-block.svelte';
 
     export let data: PageServerData;
 
     let course: Course = {
-        id: '123456',
-        title: 'Introduction to TypeScript',
-        description: 'Learn the basics of TypeScript programming language.',
         category: 'Programming',
         current_price: 29.99,
-        original_price: 49.99,
-        instructor: 'John Doe',
-        organization: null,
+        description: 'Learn the basics of TypeScript programming language.',
         difficulty: 'Beginner',
-        img_href: '/images/course-image.webp',
         estimated_time_hours: 2,
         estimated_time_minutes: 30,
+        id: '123456',
+        img_href: '/images/course-image.webp',
+        instructor: 'John Doe',
         lesson_cnt: 11,
+        organization: null,
+        original_price: 49.99,
+        rating_avg: 4.5,
         rating_cnt: 50,
-        rating_avg: 4.5
+        title: 'Introduction to TypeScript'
     };
 
     let courseProgress: CourseProgress = {
-        user_id: data.user.id,
         course_id: course.id,
-        lessons_completed: 6
+        lessons_completed: 6,
+        user_id: data.user.id
     };
 </script>
 
-<div class="grid grid-flow-rows gap-2">
+<div class="grid-flow-rows grid gap-2">
     <h2 class="h2">Welcome back, {data.user.name.split(' ', 1)}!</h2>
     <div class="grid grid-flow-row gap-1">
         <h3>Courses I'm Enrolled In</h3>
 
-        <div class="grid grid-cols-1 grid-flow-row-dense sm:grid-cols-2 justify-items-center">
+        <div class="grid grid-flow-row-dense grid-cols-1 justify-items-center sm:grid-cols-2">
             <EnrolledCourseBlock bind:course bind:courseProgress />
             <EnrolledCourseBlock bind:course bind:courseProgress />
             <EnrolledCourseBlock bind:course bind:courseProgress />

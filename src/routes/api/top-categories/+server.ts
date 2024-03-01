@@ -1,5 +1,6 @@
-import type { RequestHandler } from './$types';
 import { db } from '$lib/server/database';
+
+import type { RequestHandler } from './$types';
 
 export const GET = (async () => {
     const conn = db.connection();
@@ -15,8 +16,8 @@ export const GET = (async () => {
 
     return new Response(json, {
         headers: {
-            'content-type': 'application/json;charset=UTF-8',
-            'access-control-allow-origin': '*' // CORS
+            'access-control-allow-origin': '*', // CORS
+            'content-type': 'application/json;charset=UTF-8'
         }
     });
 }) satisfies RequestHandler;

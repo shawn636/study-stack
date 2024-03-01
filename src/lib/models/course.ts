@@ -1,17 +1,17 @@
 export default interface Course {
-    id: string;
-    title: string;
-    description: string;
     category: string;
     current_price: number;
-    original_price: number;
-    instructor: string;
-    organization: string | null;
+    description: string;
     difficulty: string;
-    img_href: string;
     estimated_time_hours: number;
     estimated_time_minutes: number;
+    id: string;
+    img_href: string;
+    instructor: string;
     lesson_cnt: number;
-    rating_cnt: number;
+    organization: null | string;
+    original_price: number;
     rating_avg: number;
+    rating_cnt: number;
+    title: string;
 }

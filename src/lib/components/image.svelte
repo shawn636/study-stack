@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { CssClasses } from '@skeletonlabs/skeleton';
-    import { onMount, onDestroy, afterUpdate } from 'svelte';
+
+    import { afterUpdate, onDestroy, onMount } from 'svelte';
 
     export let src: string;
     export let alt: string;
@@ -13,7 +14,7 @@
 
     export let error = false;
 
-    let imageWorker: Worker | undefined = undefined;
+    let worker: Worker | undefined = undefined;
 
     let classString = '';
     export { classString as class };
@@ -29,10 +30,10 @@
     $: imageLoadingBaseClass = `placeholder animate-pulse asbolute ${width} ${height}`;
 
     const loadWorker = async () => {
-        const ImageWorker = await import('$lib/workers/image.worker?worker');
-        imageWorker = new ImageWorker.default();
+        const imageWorker = await import('$lib/workers/image.worker?worker');
+        worker = new imageWorker.default();
 
-        imageWorker.onmessage = (event) => {
+        worker.onmessage = (event) => {
             if (event.data.error) {
                 error = true;
             }
@@ -60,8 +61,8 @@
                     loadImageCalled = true;
                     observer.disconnect();
 
-                    if (imageWorker) {
-                        imageWorker.postMessage({ src: src });
+                    if (worker) {
+                        worker.postMessage({ src: src });
                     }
                 }
             });
@@ -85,11 +86,11 @@
 
 <div bind:this={componentRef} class={containerBaseClass}>
     {#if imageUrl}
-        <img src={imageUrl} role="presentation" {alt} class={imageLoadedBaseClass} />
+        <img {alt} class={imageLoadedBaseClass} role="presentation" src={imageUrl} />
     {:else if error}
         <div class={imageErrorBaseClass}>
             <div
-                class={'text-center text-gray-400 dark:text-gray-500 grid items-center justify-items-center h-full'}
+                class={'grid h-full items-center justify-items-center text-center text-gray-400 dark:text-gray-500'}
             >
                 <p class="text-gray-700 dark:text-white">Image failed to load</p>
             </div>

@@ -1,8 +1,9 @@
+import type { CourseContent, Prisma, PrismaClient } from '@prisma/client';
+
 import { faker } from '@faker-js/faker';
-import type { PrismaClient, CourseContent, Prisma } from '@prisma/client';
 
 const generateJson = (): Prisma.JsonValue => {
-    const numKeys = faker.number.int({ min: 1, max: 5 });
+    const numKeys = faker.number.int({ max: 5, min: 1 });
     const json: Prisma.JsonValue = {};
 
     for (let i = 0; i < numKeys; i++) {
@@ -29,15 +30,15 @@ export async function seedCourseContent(client: PrismaClient) {
     const contents: any = [];
 
     for (const lesson of lessons) {
-        const numContent: number = faker.number.int({ min: 0, max: 5 });
+        const numContent: number = faker.number.int({ max: 5, min: 0 });
 
         for (let i = 0; i < numContent; i++) {
             const content: CourseContent = {
-                id: contentId,
-                contentTypeId: faker.helpers.arrayElement(contentTypes).id,
-                lessonId: lesson.id,
+                authorId: faker.helpers.arrayElement(authors).id,
                 content: generateJson(),
-                authorId: faker.helpers.arrayElement(authors).id
+                contentTypeId: faker.helpers.arrayElement(contentTypes).id,
+                id: contentId,
+                lessonId: lesson.id
             };
             contents.push(content);
             contentId += 1;

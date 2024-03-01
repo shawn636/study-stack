@@ -1,12 +1,12 @@
 export default interface User {
-    id: string;
+    area_code: null | string;
+    bio: null | string;
+    city: null | string;
+    country_code: null | string;
     email: string;
+    id: string;
     name: string;
-    country_code: string | null;
-    area_code: string | null;
-    phone_number: string | null;
-    bio: string | null;
-    city: string | null;
-    state: string | null;
-    photo_url: string | null;
+    phone_number: null | string;
+    photo_url: null | string;
+    state: null | string;
 }

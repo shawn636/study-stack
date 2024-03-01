@@ -1,10 +1,11 @@
-import type { RequestHandler } from './$types';
 import type User from '$lib/models/user';
 
 import { auth } from '$lib/server/auth';
 import { csrf } from '$lib/server/csrf';
-import { error } from '@sveltejs/kit';
 import { db } from '$lib/server/database';
+import { error } from '@sveltejs/kit';
+
+import type { RequestHandler } from './$types';
 
 export const PUT = (async ({ cookies, request }) => {
     await csrf.validateCookies(cookies);

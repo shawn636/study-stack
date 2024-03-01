@@ -1,29 +1,31 @@
+import type { Actions } from '@sveltejs/kit';
+
 import { auth } from '$lib/server/auth';
 import { csrf } from '$lib/server/csrf';
-
-import type { Actions } from '@sveltejs/kit';
-import { redirect } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
-import { error } from '@sveltejs/kit';
-import { registrationForm } from './registration-form-schema';
 import { errorPadding } from '$lib/server/util';
+import { redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { ValidationError } from 'yup';
 
+import type { PageServerLoad } from './$types';
+
+import { registrationForm } from './registration-form-schema';
+
 interface FormData {
-    name: string;
     email: string;
+    name: string;
     password1: string;
     password2: string;
 }
 
 export const actions: Actions = {
-    default: async ({ request, cookies }) => {
+    default: async ({ cookies, request }) => {
         await csrf.validateCookies(cookies);
         const form = await request.formData();
 
         const values: FormData = {
-            name: form.get('name') as string,
             email: form.get('email') as string,
+            name: form.get('name') as string,
             password1: form.get('password1') as string,
             password2: form.get('password2') as string
         };

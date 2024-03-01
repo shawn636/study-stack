@@ -1,7 +1,6 @@
-import { object, string, ref } from 'yup';
+import { object, ref, string } from 'yup';
 
 export const registrationForm = object().shape({
-    name: string().required('Please enter your name.'),
     email: string()
         .email('Oops! The email you entered is invalid.')
         .matches(
@@ -9,6 +8,7 @@ export const registrationForm = object().shape({
             'Oops! The email you entered is invalid.'
         )
         .required('Please enter your email address.'),
+    name: string().required('Please enter your name.'),
     password1: string()
         .min(8, 'Password should have at least 8 characters')
         .matches(/[a-z]/, 'Password should contain a lowercase letter')

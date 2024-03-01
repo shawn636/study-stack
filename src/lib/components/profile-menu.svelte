@@ -1,11 +1,11 @@
 <script lang="ts">
     import type User from '$lib/models/user';
 
-    import { Avatar, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-    import { initials } from '$lib/client/util';
-    import Fa from 'svelte-fa';
-    import { faChevronDown, faDoorOpen, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';
     import { goto } from '$app/navigation';
+    import { initials } from '$lib/client/util';
+    import { faChevronDown, faDoorOpen, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';
+    import { Avatar, type PopupSettings, popup } from '@skeletonlabs/skeleton';
+    import Fa from 'svelte-fa';
 
     export let user: User;
 
@@ -15,7 +15,7 @@
         const res = await fetch('/auth/logout', {
             method: 'POST'
         });
-        if (res.status == 200) {
+        if (res.status === 200) {
             console.log(res.status);
             goto('/auth/login');
         }
@@ -23,48 +23,48 @@
 
     const popupSettings: PopupSettings = {
         event: 'click',
-        target: 'profile',
-        placement: 'bottom-end',
         middleware: {
             offset: {
-                mainAxis: 10,
-                crossAxis: -10
+                crossAxis: -10,
+                mainAxis: 10
             }
         },
+        placement: 'bottom-end',
         state: (e: Record<string, boolean>) => {
             isOpen = e.state;
-        }
+        },
+        target: 'profile'
     };
 </script>
 
 <!-- Profile Button -->
 <button
-    aria-label="Profile"
     aria-expanded={isOpen}
-    class="grid items-center h-10 grid-flow-col p-0 px-2 m-0 text-sm font-semibold bg-white shadow-sm btn variant-filled text-surface-700 dark:bg-surface-700 dark:text-surface-50 xs:rounded-md gap-x-1 w-min"
+    aria-label="Profile"
+    class="variant-filled btn m-0 grid h-10 w-min grid-flow-col items-center gap-x-1 bg-white p-0 px-2 text-sm font-semibold text-surface-700 shadow-sm dark:bg-surface-700 dark:text-surface-50 xs:rounded-md"
     data-testid="profile-button"
     use:popup={popupSettings}
 >
     <Avatar initials={initials(user.name)} width="w-8" />
     <span class="hidden xs:block">{user.name}</span>
-    <Fa icon={faChevronDown} size="sm" class="text-surface-700 dark:text-white xs:block" />
+    <Fa class="text-surface-700 dark:text-white xs:block" icon={faChevronDown} size="sm" />
 </button>
 
 <!-- Pop Up Menu -->
 
 <div data-popup="profile">
     <div
-        class="grid w-64 grid-flow-row p-4 bg-white shadow-xl card rounded-xl text-surface-800 dark:text-white z-10"
+        class="card z-10 grid w-64 grid-flow-row rounded-xl bg-white p-4 text-surface-800 shadow-xl dark:text-white"
     >
-        <nav class="list-nav grid grid-flow-row grid-cols-[1fr] p-0 gap-y-2">
+        <nav class="list-nav grid grid-flow-row grid-cols-[1fr] gap-y-2 p-0">
             <!-- Profile Summary -->
-            <div class="grid grid-cols-[auto_1fr] grid-rows-[1fr_1fr] gap-x-2 items-center">
+            <div class="grid grid-cols-[auto_1fr] grid-rows-[1fr_1fr] items-center gap-x-2">
                 <div class="col-start-1 row-start-1 row-end-3">
                     <Avatar
-                        initials={initials(user.name)}
-                        width="w-8"
                         height="h-8"
+                        initials={initials(user.name)}
                         textStyle="text-sm"
+                        width="w-8"
                     />
                 </div>
                 <span class="row-start-1 text-sm font-semibold" data-testid="profile-popup-name"
@@ -84,7 +84,7 @@
 
                 <li>
                     <a href="/home">
-                        <Fa icon={faHouse} size="lg" class="text-gray-500 dark:text-gray-200" />
+                        <Fa class="text-gray-500 dark:text-gray-200" icon={faHouse} size="lg" />
                         <span>Home</span>
                     </a>
                 </li>
@@ -92,14 +92,14 @@
                 <!-- Settings -->
                 <li>
                     <a href="/account">
-                        <Fa icon={faUser} size="lg" class="text-gray-500 dark:text-gray-200" />
+                        <Fa class="text-gray-500 dark:text-gray-200" icon={faUser} size="lg" />
                         <span>My Account</span>
                     </a>
                 </li>
                 <!-- Sign Out -->
                 <li>
                     <button aria-label="Sign Out" class="w-full" on:click={signOut}>
-                        <Fa icon={faDoorOpen} size="lg" class="text-gray-500 dark:text-gray-200" />
+                        <Fa class="text-gray-500 dark:text-gray-200" icon={faDoorOpen} size="lg" />
                         <span>Sign Out</span>
                     </button>
                 </li>

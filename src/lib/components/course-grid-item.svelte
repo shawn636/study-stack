@@ -1,14 +1,15 @@
 <script lang="ts">
-    import Fa from 'svelte-fa';
-    import { faStar, faStarHalfAlt, faHeart, faCircle } from '@fortawesome/free-solid-svg-icons';
-    import {
-        faStar as faStarOutline,
-        faHeart as faHeartOutline
-    } from '@fortawesome/free-regular-svg-icons';
-    import { faFileLines, faClock } from '@fortawesome/free-regular-svg-icons';
-    import Image from '$lib/components/image.svelte';
     import type Course from '$lib/models/course';
+
+    import Image from '$lib/components/image.svelte';
+    import {
+        faHeart as faHeartOutline,
+        faStar as faStarOutline
+    } from '@fortawesome/free-regular-svg-icons';
+    import { faClock, faFileLines } from '@fortawesome/free-regular-svg-icons';
+    import { faCircle, faHeart, faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
     import { Ratings } from '@skeletonlabs/skeleton';
+    import Fa from 'svelte-fa';
 
     export let course: Course;
     $: ratingAvgRounded = Math.round(course.rating_avg * 2) / 2;
@@ -28,28 +29,28 @@
 
 <div class={containerBaseClass}>
     <Image
-        src={course.img_href}
         alt="an open bible"
-        class="rounded-md aspect-auto"
-        {width}
+        class="aspect-auto rounded-md"
         {height}
+        src={course.img_href}
+        {width}
     />
 
     <!-- Ratings (Below)-->
-    <div class="items-center grid justify-items-start">
+    <div class="grid items-center justify-items-start">
         <div
-            class="flex items-center px-2 text-sm font-medium flex-flow-col justify-items-center gap-x-2 text"
+            class="flex-flow-col text flex items-center justify-items-center gap-x-2 px-2 text-sm font-medium"
         >
             <p class="text-secondary-600">{Math.round(course.rating_avg * 100) / 100}</p>
-            <Ratings value={ratingAvgRounded} max={5}>
+            <Ratings max={5} value={ratingAvgRounded}>
                 <svelte:fragment slot="empty">
-                    <Fa icon={faStarOutline} class="text-yellow-500" />
+                    <Fa class="text-yellow-500" icon={faStarOutline} />
                 </svelte:fragment>
                 <svelte:fragment slot="half">
-                    <Fa icon={faStarHalfAlt} class="text-yellow-500" />
+                    <Fa class="text-yellow-500" icon={faStarHalfAlt} />
                 </svelte:fragment>
                 <svelte:fragment slot="full">
-                    <Fa icon={faStar} class="text-yellow-500" />
+                    <Fa class="text-yellow-500" icon={faStar} />
                 </svelte:fragment>
             </Ratings>
             <p class="text-xs text-gray-400">({course.rating_cnt})</p>
@@ -57,13 +58,13 @@
     </div>
     <!-- Ratings (Above) -->
 
-    <h3 class="px-2 text-lg font-medium text-start">
+    <h3 class="px-2 text-start text-lg font-medium">
         {course.title.length > 40 ? course.title.substring(0, 40) + '...' : course.title}
     </h3>
 
     <!-- Course Stats (Below) -->
     <div
-        class="grid grid-flow-col auto-cols-max justify-between items-center gap-x-2 px-2 text-sm text-gray-500"
+        class="grid auto-cols-max grid-flow-col items-center justify-between gap-x-2 px-2 text-sm text-gray-500"
     >
         <span class="flex items-center gap-x-1">
             <Fa icon={faFileLines} size="sm" />
@@ -82,15 +83,15 @@
 
     <div class="grid grid-flow-col grid-cols-[1fr_1fr]">
         <!-- Instructor Row-->
-        <div class="items-center px-2 grid grid-flow-col justify-items-start">
-            <div class="flex items-center flex-flow-col gap-x-1">
-                <Fa icon={faCircle} size="2x" class="text-surface-400" />
+        <div class="grid grid-flow-col items-center justify-items-start px-2">
+            <div class="flex-flow-col flex items-center gap-x-1">
+                <Fa class="text-surface-400" icon={faCircle} size="2x" />
                 <p class="text-sm text-gray-500">{course.instructor}</p>
             </div>
         </div>
 
         <div class="grid grid-rows-[1fr_1fr]">
-            <div class=" grid grid-flow-col justify-items-end h-min grid-cols-[1fr_auto] gap-2">
+            <div class=" grid h-min grid-flow-col grid-cols-[1fr_auto] justify-items-end gap-2">
                 {#if course.current_price < course.original_price}
                     <p class="text-gray-400 line-through">
                         ${Number(course.current_price).toFixed(2)}
@@ -103,13 +104,13 @@
             </div>
             <div class="grid grid-cols-[1fr_auto] justify-items-end">
                 <button
+                    aria-label="Toggle Favorite"
                     class="btn-icon btn-icon-sm"
                     on:click={handleToggle}
-                    aria-label="Toggle Favorite"
                 >
-                    <Fa icon={toggled ? faHeart : faHeartOutline} class="text-pink-500" />
+                    <Fa class="text-pink-500" icon={toggled ? faHeart : faHeartOutline} />
                 </button>
-                <button class="btn btn-sm variant-filled-secondary" aria-label="Enroll">
+                <button aria-label="Enroll" class="variant-filled-secondary btn btn-sm">
                     <p class="text-sm font-medium">Enroll Now</p>
                 </button>
             </div>
