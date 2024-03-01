@@ -1,10 +1,12 @@
-import type { RequestHandler } from './$types';
+import type Course from '$lib/models/course';
+
+import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
 import { error } from '@sveltejs/kit';
-import type Course from '$lib/models/course';
-import { csrf } from '$lib/server/csrf';
 
-export const GET = (async ({ params, url, cookies }) => {
+import type { RequestHandler } from './$types';
+
+export const GET = (async ({ cookies, params, url }) => {
     const conn = db.connection();
     await csrf.validateCookies(cookies);
 
@@ -13,7 +15,7 @@ export const GET = (async ({ params, url, cookies }) => {
     const sortBy = url.searchParams.get('sort_by') ?? 'relevance';
     let expandQuery = url.searchParams.get('expand_query') ?? 'false';
 
-    if (!['relevance', 'highest_rated', 'lowest_price'].includes(sortBy)) {
+    if (!['highest_rated', 'lowest_price', 'relevance'].includes(sortBy)) {
         error(400, 'Invalid sort_by parameter');
     }
 
@@ -45,8 +47,8 @@ export const GET = (async ({ params, url, cookies }) => {
 
     return new Response(json, {
         headers: {
-            'content-type': 'application/json;charset=UTF-8',
-            'cache-control': 'public, max-age=3600'
+            'cache-control': 'public, max-age=3600',
+            'content-type': 'application/json;charset=UTF-8'
         }
     });
 }) satisfies RequestHandler;

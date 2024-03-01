@@ -1,46 +1,46 @@
 <script lang="ts">
-    import Fa from 'svelte-fa';
+    import Logo from '$lib/components/logo.svelte';
+    import { pageHeight, scrollPosition } from '$lib/stores/scroll';
     import {
         faFacebookF,
-        faTwitter,
         faInstagram,
-        faLinkedinIn
+        faLinkedinIn,
+        faTwitter
     } from '@fortawesome/free-brands-svg-icons';
-    import Logo from '$lib/components/logo.svelte';
     import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
-    import { scrollPosition, pageHeight } from '$lib/stores/scroll';
+    import Fa from 'svelte-fa';
 </script>
 
-<div class="w-full p-4 text-white bg-gray-800 sm:p-10">
+<div class="w-full bg-gray-800 p-4 text-white sm:p-10">
     <!-- Logo and Social Media Bar (Below) -->
-    <div class="grid grid-rows sm:grid-cols-[auto_1fr] justify-items-center items-center">
+    <div class="grid-rows grid items-center justify-items-center sm:grid-cols-[auto_1fr]">
         <Logo />
         <div
-            class="items-center sm:justify-self-end grid grid-flow-row sm:grid-flow-col gap-y-2 sm:gap-x-2"
+            class="grid grid-flow-row items-center gap-y-2 sm:grid-flow-col sm:gap-x-2 sm:justify-self-end"
         >
             <aside class="font-light">Follow Us On Social Media</aside>
-            <div class="items-center grid grid-flow-col">
+            <div class="grid grid-flow-col items-center">
                 <a
+                    class="grid h-8 w-8 items-center justify-items-center rounded-full p-1 hover:bg-primary-800"
                     href="https://www.facebook.com/"
-                    class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
                     <Fa icon={faFacebookF} size="lg" />
                 </a>
                 <a
+                    class="grid h-8 w-8 items-center justify-items-center rounded-full p-1 hover:bg-primary-800"
                     href="https://www.twitter.com/"
-                    class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
                     <Fa icon={faTwitter} size="lg" />
                 </a>
                 <a
+                    class="grid h-8 w-8 items-center justify-items-center rounded-full p-1 hover:bg-primary-800"
                     href="https://www.instagram.com/"
-                    class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
                     <Fa icon={faInstagram} size="lg" />
                 </a>
                 <a
+                    class="grid h-8 w-8 items-center justify-items-center rounded-full p-1 hover:bg-primary-800"
                     href="https://www.linkedin.com/"
-                    class="items-center w-8 h-8 p-1 rounded-full hover:bg-primary-800 grid justify-items-center"
                 >
                     <Fa icon={faLinkedinIn} size="lg" />
                 </a>
@@ -49,27 +49,26 @@
     </div>
     <!-- Logo and Social Media Bar (Above) -->
 
-    <hr class="!border-t-1 !border-gray-600 my-4" />
+    <hr class="!border-t-1 my-4 !border-gray-600" />
 
     <!-- Only visible for sm brekpoint or below -->
     <!-- Contact Us Box (Below) -->
-    <div class="pt-2 pb-4 sm:hidden grid grid-flow-row">
+    <div class="grid grid-flow-row pb-4 pt-2 sm:hidden">
         <p class="pb-2 pl-4 font-semibold uppercase">Get In Touch</p>
         <p class="pl-4">Don't worry, we don't send spam.</p>
         <div class="relative mt-2">
             <div class="flex">
                 <input
-                    type="text"
+                    class="input w-full rounded-l-full rounded-r-none !border-0 !bg-surface-100 placeholder-surface-500"
                     name="email"
                     placeholder="Email Address"
-                    class="input rounded-r-none rounded-l-full w-full placeholder-surface-500 !border-0 !bg-surface-100"
                     required
+                    type="text"
                 />
                 <button
                     aria-label="Submit Email Address"
-                    type="button"
-                    class="font-medium rounded-l-none rounded-r-full btn variant-filled-secondary"
-                    >Submit</button
+                    class="variant-filled-secondary btn rounded-l-none rounded-r-full font-medium"
+                    type="button">Submit</button
                 >
             </div>
         </div>
@@ -134,11 +133,11 @@
     <!-- Only for > sm breakpoints -->
     <!-- Link Columns (Below) -->
     <div
-        class="hidden md:grid grid-flow-col grid-cols-3 lg:grid-cols-4 grid-rows-[1fr_auto] lg:grid-rows-1 font-light text-md justify-items-center gap-y-8"
+        class="text-md hidden grid-flow-col grid-cols-3 grid-rows-[1fr_auto] justify-items-center gap-y-8 font-light md:grid lg:grid-cols-4 lg:grid-rows-1"
     >
         <!-- CATEOGIRIES -->
         <div class="row-start-1 row-end-2">
-            <h4 class="pb-2 uppercase h4 grid">Categories</h4>
+            <h4 class="h4 grid pb-2 uppercase">Categories</h4>
             <ul class="grid gap-y-1">
                 <li><a href="/">Biblical Studies</a></li>
                 <li><a href="/">Theology & Doctrine</a></li>
@@ -150,7 +149,7 @@
         </div>
         <!-- ABOUT -->
         <div class="row-start-1 row-end-2">
-            <h4 class="pb-2 uppercase h4 grid">About</h4>
+            <h4 class="h4 grid pb-2 uppercase">About</h4>
             <ul class="grid gap-y-1">
                 <li><a href="/about">About Us</a></li>
                 <li><a href="/">Learner Stories</a></li>
@@ -162,7 +161,7 @@
         </div>
         <!-- SUPPORT -->
         <div class="row-start-1 row-end-2">
-            <h4 class="pb-2 uppercase h4 grid">Support</h4>
+            <h4 class="h4 grid pb-2 uppercase">Support</h4>
             <ul class="grid gap-y-1">
                 <li><a href="/">Documentation</a></li>
                 <li><a href="/">FAQs</a></li>
@@ -173,24 +172,23 @@
 
         <!-- Contact Us Box (Below) -->
         <div
-            class="row-start-2 row-span-1 col-start-1 col-span-2 lg:row-start-1 lg:col-start-4 lg:col-span-1 justify-self-start"
+            class="col-span-2 col-start-1 row-span-1 row-start-2 justify-self-start lg:col-span-1 lg:col-start-4 lg:row-start-1"
         >
             <p class="pb-2 pl-4 font-semibold uppercase">Get In Touch</p>
             <p class="pl-4">Don't worry, we don't send spam.</p>
             <div class="relative mt-2">
                 <div class="flex">
                     <input
-                        type="text"
+                        class="input w-full rounded-l-full rounded-r-none !border-0 !bg-surface-100 text-surface-600 placeholder-surface-400"
                         name="email"
                         placeholder="Email Address"
-                        class="input rounded-r-none rounded-l-full w-full placeholder-surface-400 !border-0 !bg-surface-100 text-surface-600"
                         required
+                        type="text"
                     />
                     <button
                         aria-label="Submit Email Address"
-                        type="button"
-                        class="font-medium rounded-l-none rounded-r-full btn variant-filled-secondary active:scale-100"
-                        >Submit</button
+                        class="variant-filled-secondary btn rounded-l-none rounded-r-full font-medium active:scale-100"
+                        type="button">Submit</button
                     >
                 </div>
             </div>
@@ -203,5 +201,5 @@
 </div>
 
 {#if $scrollPosition > $pageHeight}
-    <div class="absolute bottom-0 w-full h-64 bg-gray-800 -z-10" />
+    <div class="absolute bottom-0 -z-10 h-64 w-full bg-gray-800" />
 {/if}

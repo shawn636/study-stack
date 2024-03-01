@@ -1,5 +1,6 @@
-import type { RequestHandler } from './$types';
 import { db } from '$lib/server/database';
+
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
     try {
@@ -14,8 +15,8 @@ export const GET: RequestHandler = async () => {
         );
 
         const json = JSON.stringify({
-            csrf_tokens_flushed: csrfFlush.rowsAffected,
-            auth_sessions_flushed: authSessionFlush.rowsAffected
+            auth_sessions_flushed: authSessionFlush.rowsAffected,
+            csrf_tokens_flushed: csrfFlush.rowsAffected
         });
 
         return new Response(json, {

@@ -1,23 +1,23 @@
 /**
  * @vitest-environment jsdom
  */
+import { COOKIE_NAME as AUTH_COOKIE_NAME, auth } from '$lib/server/auth';
+import { isUUID } from '$lib/server/crypto';
+import { COOKIE_NAME as CSRF_COOKIE_NAME, csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
 import { faker } from '@faker-js/faker';
-import { auth, COOKIE_NAME as AUTH_COOKIE_NAME } from '$lib/server/auth';
-import { csrf, COOKIE_NAME as CSRF_COOKIE_NAME } from '$lib/server/csrf';
-import { isUUID } from '$lib/server/crypto';
 
 interface Account {
     email: string;
-    password: string;
     name: string;
+    password: string;
 }
 
 const accounts: Account[] = new Array(5).fill(null).map(() => {
     return {
         email: faker.internet.email(),
-        password: faker.internet.password() + 'Aa1!',
-        name: faker.person.fullName()
+        name: faker.person.fullName(),
+        password: faker.internet.password() + 'Aa1!'
     } as Account;
 });
 
@@ -54,9 +54,9 @@ describe('register', () => {
             headers.append(CSRF_COOKIE_NAME, csrfToken ?? '');
 
             const res = await fetch('http://localhost:3000/auth/register', {
-                method: 'POST',
                 body: formData,
-                headers
+                headers,
+                method: 'POST'
             });
 
             expect(res.status).toBe(200);

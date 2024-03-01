@@ -1,12 +1,14 @@
 <script lang="ts">
-    import Controls from './controls.svelte';
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
-    import Fa from 'svelte-fa';
-    import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
-    import type { PageData } from './$types';
     import { sortBy } from '$lib/stores/controls';
     import { search } from '$lib/stores/controls';
+    import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
+    import Fa from 'svelte-fa';
+
+    import type { PageData } from './$types';
+
+    import Controls from './controls.svelte';
     let isLoading = false;
     export let data: PageData;
 
@@ -54,8 +56,8 @@
     };
 </script>
 
-<div class="p-5 grid gap-y-4 justify-items-center">
-    <div class="container max-w-5xl grid gap-y-4">
+<div class="grid justify-items-center gap-y-4 p-5">
+    <div class="container grid max-w-5xl gap-y-4">
         <h1 class="text-lg font-bold">Find a Course</h1>
 
         <Controls
@@ -67,7 +69,7 @@
 
         {#if isLoading}
             <div
-                class="grid grid-flow-row justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-y-4 content-visibility-auto"
+                class="content-visibility-auto grid grid-flow-row grid-cols-1 justify-items-center gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
             >
                 {#each Array(20) as _}
                     <div class="!-z-20">
@@ -76,15 +78,15 @@
                 {/each}
             </div>
         {:else if data.courses.length === 0}
-            <div class="items-center mt-8 mb-6 grid justify-items-center content-visibility-auto">
-                <div class="flex items-center p-4 card flex-flow-col gap-x-2">
-                    <Fa icon={faBinoculars} class="text-xl" />
+            <div class="content-visibility-auto mb-6 mt-8 grid items-center justify-items-center">
+                <div class="flex-flow-col card flex items-center gap-x-2 p-4">
+                    <Fa class="text-xl" icon={faBinoculars} />
                     <span>No courses found</span>
                 </div>
             </div>
         {:else}
             <div
-                class="grid grid-flow-row justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-y-4"
+                class="grid grid-flow-row grid-cols-1 justify-items-center gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
             >
                 {#each data.courses as course}
                     <CourseGridItem {course} />

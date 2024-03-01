@@ -1,8 +1,8 @@
 export default interface TableSchema {
-    field: string;
-    type: string;
-    nullable: string;
-    constaint_name: string | null;
+    constaint_name: null | string;
     default_value: unknown;
     extra: string;
+    field: string;
+    nullable: string;
+    type: string;
 }

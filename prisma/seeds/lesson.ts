@@ -1,4 +1,5 @@
-import type { PrismaClient, Course, Lesson } from '@prisma/client';
+import type { Course, Lesson, PrismaClient } from '@prisma/client';
+
 import { faker } from '@faker-js/faker';
 
 export async function seedLesson(client: PrismaClient) {
@@ -7,13 +8,13 @@ export async function seedLesson(client: PrismaClient) {
 
     let lessonId = 1;
     for (const course of courses) {
-        const numLessons = faker.number.int({ min: 0, max: 10 });
+        const numLessons = faker.number.int({ max: 10, min: 0 });
 
         for (let i = 0; i < numLessons; i++) {
             const lesson: Lesson = {
+                courseId: course.id,
                 id: lessonId,
-                title: faker.lorem.sentence(),
-                courseId: course.id
+                title: faker.lorem.sentence()
             };
             lessons.push(lesson);
             lessonId += 1;

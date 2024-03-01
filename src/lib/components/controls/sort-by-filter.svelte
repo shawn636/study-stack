@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { popup, RadioGroup, RadioItem, type PopupSettings } from '@skeletonlabs/skeleton';
-    import Fa from 'svelte-fa';
-    import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
     import { sortBy, sortByValues } from '$lib/stores/controls';
+    import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+    import { type PopupSettings, RadioGroup, RadioItem, popup } from '@skeletonlabs/skeleton';
     import { createEventDispatcher } from 'svelte';
+    import Fa from 'svelte-fa';
 
     const dispatch = createEventDispatcher();
     let sortByValue = 'Relevance';
@@ -16,33 +16,33 @@
     }
 
     const popupSettings: PopupSettings = {
-        event: 'click',
-        target: 'sortby',
-        placement: 'bottom',
         closeQuery: '[data-popup="sortby"]',
+        event: 'click',
+        placement: 'bottom',
         state: (e: Record<string, boolean>) => {
             isOpen = e.state;
-        }
+        },
+        target: 'sortby'
     };
 </script>
 
-<div class="items-center hidden md:grid grid-flow-col w-min gap-2">
+<div class="hidden w-min grid-flow-col items-center gap-2 md:grid">
     <aside class="whitespace-nowrap">Sort by:</aside>
     <button
-        aria-label="Sort by"
         aria-expanded={isOpen}
+        aria-label="Sort by"
+        class="variant-soft-surface btn btn-sm w-32"
         type="button"
-        class="w-32 btn btn-sm variant-soft-surface"
         use:popup={popupSettings}
     >
         <p>{sortByValue}</p>
-        <Fa icon={faChevronDown} class="ml-2" />
+        <Fa class="ml-2" icon={faChevronDown} />
     </button>
 
     <!-- Popup -->
-    <div data-popup="sortby" class="card shadow-xl rounded-xl z-10">
+    <div class="card z-10 rounded-xl shadow-xl" data-popup="sortby">
         <RadioGroup
-            class="p-2 border-none shadow-xl card grid grid-flow-row rounded-xl"
+            class="card grid grid-flow-row rounded-xl border-none p-2 shadow-xl"
             data-popup="sortby"
             display="flex-col"
             rounded="rounded-container-token"
@@ -50,10 +50,10 @@
             {#each sortByValues as value}
                 <RadioItem
                     bind:group={sortByValue}
-                    name="sort-by"
-                    {value}
                     class="mb-2"
-                    data-popup="sortby">{value}</RadioItem
+                    data-popup="sortby"
+                    name="sort-by"
+                    {value}>{value}</RadioItem
                 >
             {/each}
         </RadioGroup>

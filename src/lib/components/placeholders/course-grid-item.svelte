@@ -1,51 +1,51 @@
 <div
-    class="grid grid-flow-row rounded-md p-1 gap-y-4 min-w-[240px] max-w-[240px] min-h-[300px] content-visibility-auto"
+    class="content-visibility-auto grid min-h-[300px] min-w-[240px] max-w-[240px] grid-flow-row gap-y-4 rounded-md p-1"
 >
-    <div class="w-[232px] h-[139px] placeholder animate-pulse" />
+    <div class="placeholder h-[139px] w-[232px] animate-pulse" />
 
     <!-- Ratings -->
-    <div class="h-5 w-36 placeholder animate-pulse bg-surface-300" />
+    <div class="placeholder h-5 w-36 animate-pulse bg-surface-300" />
 
     <!-- Title -->
-    <div class="h-6 placeholder animate-pulse" />
+    <div class="placeholder h-6 animate-pulse" />
 
     <!-- Course Stats -->
-    <div class="grid justify-items-stretch item-center grid-flow-col gap-x-4">
-        <div class="h-4 placeholder animate-pulse bg-surface-200" />
-        <div class="h-4 placeholder animate-pulse bg-surface-200" />
-        <div class="h-4 placeholder animate-pulse bg-surface-200" />
+    <div class="item-center grid grid-flow-col justify-items-stretch gap-x-4">
+        <div class="placeholder h-4 animate-pulse bg-surface-200" />
+        <div class="placeholder h-4 animate-pulse bg-surface-200" />
+        <div class="placeholder h-4 animate-pulse bg-surface-200" />
     </div>
 
     <hr class="mx-2" />
 
     <div class="grid grid-flow-col grid-cols-[1fr_1fr]">
         <!-- Instructor Row-->
-        <div class="items-center px-2 grid grid-flow-col justify-items-start">
-            <div class="flex items-center flex-flow-col gap-x-1">
+        <div class="grid grid-flow-col items-center justify-items-start px-2">
+            <div class="flex-flow-col flex items-center gap-x-1">
                 <!-- Instructor Photo -->
-                <div class="w-6 h-6 rounded-full placeholder animate-pulse" />
+                <div class="placeholder h-6 w-6 animate-pulse rounded-full" />
 
                 <!-- Instructor Name -->
-                <div class="w-12 h-4 bg-surface-200 placeholder animate-pulse" />
+                <div class="placeholder h-4 w-12 animate-pulse bg-surface-200" />
             </div>
         </div>
 
         <div class="grid grid-rows-[1fr_1fr]">
             <div
-                class=" grid grid-flow-col justify-items-end items-center h-min grid-cols-[1fr_auto] gap-2"
+                class=" grid h-min grid-flow-col grid-cols-[1fr_auto] items-center justify-items-end gap-2"
             >
                 <!-- Original price -->
-                <div class="w-8 h-4 bg-surface-200 placeholder animate-pulse" />
+                <div class="placeholder h-4 w-8 animate-pulse bg-surface-200" />
 
                 <!-- Discounted price -->
-                <div class="w-12 h-6 bg-surface-300 placeholder animate-pulse" />
+                <div class="placeholder h-6 w-12 animate-pulse bg-surface-300" />
             </div>
-            <div class="grid grid-cols-[1fr_auto] justify-items-end items-center gap-x-1">
+            <div class="grid grid-cols-[1fr_auto] items-center justify-items-end gap-x-1">
                 <!-- Little Button -->
-                <div class="w-5 h-5 rounded-full placeholder animate-pulse" />
+                <div class="placeholder h-5 w-5 animate-pulse rounded-full" />
 
                 <!-- Big Button -->
-                <div class="w-24 h-8 placeholder animate-pulse" />
+                <div class="placeholder h-8 w-24 animate-pulse" />
             </div>
         </div>
     </div>

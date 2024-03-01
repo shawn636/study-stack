@@ -5,14 +5,14 @@
 </script>
 
 <a
+    class="card card-hover grid h-full w-40 grid-flow-row items-center justify-items-center bg-surface-50 p-4 text-center ring-0"
     href="/categories"
-    class="items-center w-40 h-full p-4 text-center card card-hover bg-surface-50 grid grid-flow-row justify-items-center ring-0"
 >
-    <div class="items-center p-0 m-0 bg-white rounded-full grid justify-items-center shadow-sm">
-        <img src={category.img_href} alt={category.title} class="w-20 h-20 p-4 m-0" />
+    <div class="m-0 grid items-center justify-items-center rounded-full bg-white p-0 shadow-sm">
+        <img alt={category.title} class="m-0 h-20 w-20 p-4" src={category.img_href} />
     </div>
-    <div class="p-0 grid grid-flow-row">
+    <div class="grid grid-flow-row p-0">
         <h4 class="font-bold">{category.title}</h4>
-        <p class="text-sm text-surface-800-100-token">{category.count}+ Courses</p>
+        <p class="text-surface-800-100-token text-sm">{category.count}+ Courses</p>
     </div>
 </a>

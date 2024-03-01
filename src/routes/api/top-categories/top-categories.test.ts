@@ -1,8 +1,9 @@
 /**
  * @vitest-environment jsdom
  */
-import { db } from '$lib/server/database';
 import type Category from '$lib/models/category';
+
+import { db } from '$lib/server/database';
 
 describe('top-categories', () => {
     it('should be able to communicate with database', async () => {
@@ -21,11 +22,11 @@ describe('top-categories', () => {
         let categories = await response.json();
 
         categories = categories.map(
-            (category: { title: string; count: string; img_href: string }) => {
+            (category: { count: string; img_href: string; title: string }) => {
                 return {
-                    title: category.title,
                     count: parseInt(category.count),
-                    img_href: category.img_href
+                    img_href: category.img_href,
+                    title: category.title
                 } as Category;
             }
         );

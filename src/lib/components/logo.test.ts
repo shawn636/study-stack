@@ -2,9 +2,9 @@
  * @vitest-environment jsdom
  */
 
+import Logo from '$lib/components/logo.svelte';
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/svelte';
-import Logo from '$lib/components/logo.svelte';
 
 test('Test logo component', () => {
     const logo = render(Logo);

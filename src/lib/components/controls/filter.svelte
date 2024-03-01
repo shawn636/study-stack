@@ -1,31 +1,31 @@
 <script lang="ts">
-    import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
     import { faFilter } from '@fortawesome/free-solid-svg-icons';
+    import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
     import Fa from 'svelte-fa';
 
     let isOpen = false;
 
     const popupSettings: PopupSettings = {
         event: 'click',
-        target: 'filter',
         placement: 'bottom',
         state: (e: Record<string, boolean>) => {
             isOpen = e.state;
-        }
+        },
+        target: 'filter'
     };
 </script>
 
 <button
-    aria-label="Filter"
     aria-expanded={isOpen}
+    aria-label="Filter"
+    class="variant-ghost-primary btn btn-sm hidden justify-center gap-2 text-primary-700 first:items-center dark:text-primary-400 md:flex"
     type="button"
-    class="justify-center hidden btn btn-sm first:items-center gap-2 variant-ghost-primary text-primary-700 dark:text-primary-400 md:flex"
     use:popup={popupSettings}
 >
-    <Fa icon={faFilter} class="w-4 h-4" />
+    <Fa class="h-4 w-4" icon={faFilter} />
     <p>Filter</p>
 </button>
 
-<div class="p-4 card" data-popup="filter">
+<div class="card p-4" data-popup="filter">
     <!-- INSERT FILTERS HERE -->
 </div>

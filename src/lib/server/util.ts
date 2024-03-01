@@ -1,4 +1,5 @@
 import type TableSchema from '$lib/models/table-schema';
+
 import { db } from '$lib/server/database';
 
 /**

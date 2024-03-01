@@ -1,5 +1,6 @@
-import type { PageServerLoad } from './$types';
 import type Category from '$lib/models/category';
+
+import type { PageServerLoad } from './$types';
 
 export const load = (async ({ fetch }) => {
     try {

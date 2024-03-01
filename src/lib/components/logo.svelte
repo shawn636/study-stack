@@ -4,10 +4,10 @@
 </script>
 
 <div
-    class="items-center p-2 grid grid-flow-{layout === 'horizontal'
+    class="grid items-center p-2 grid-flow-{layout === 'horizontal'
         ? 'col'
         : 'row'} justify-items-center gap-x-2"
 >
-    <div class="w-8 h-8 bg-surface-400 rounded-md" />
+    <div class="h-8 w-8 rounded-md bg-surface-400" />
     <p class="text-lg font-medium text-{color}">Equipped</p>
 </div>

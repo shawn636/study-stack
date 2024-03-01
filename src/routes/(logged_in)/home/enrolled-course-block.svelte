@@ -1,6 +1,7 @@
 <script lang="ts">
     import type Course from '$lib/models/course';
     import type CourseProgress from '$lib/models/course-progress';
+
     import Image from '$lib/components/image.svelte';
 
     export let course: Course;
@@ -13,12 +14,12 @@
 </script>
 
 <div class="grid gap-y-1 p-4" data-testid="course-progress-block">
-    <Image src={course.img_href} alt="Course 1" class="rounded-lg" width="252" height="151" />
-    <p class="font-bold text-lg">{course.title}</p>
-    <div class="grid grid-cols-[1fr_auto] gap-x-2 items-center">
-        <div class="h-2 w-full bg-surface-300 dark:bg-surface-700 rounded-full relative">
+    <Image alt="Course 1" class="rounded-lg" height="151" src={course.img_href} width="252" />
+    <p class="text-lg font-bold">{course.title}</p>
+    <div class="grid grid-cols-[1fr_auto] items-center gap-x-2">
+        <div class="relative h-2 w-full rounded-full bg-surface-300 dark:bg-surface-700">
             <div
-                class="absolute inset-0 bg-primary-500 rounded-full"
+                class="absolute inset-0 rounded-full bg-primary-500"
                 style={`width: ${percentComplete}%`}
             />
         </div>
@@ -26,5 +27,5 @@
             {Math.round(percentComplete)} %
         </p>
     </div>
-    <button class="btn btn-sm variant-filled justify-self-start">Resume</button>
+    <button class="variant-filled btn btn-sm justify-self-start">Resume</button>
 </div>

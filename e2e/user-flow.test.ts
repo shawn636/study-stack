@@ -1,12 +1,12 @@
+import { faker } from '@faker-js/faker';
 import { expect, test } from '@playwright/test';
 
-import { faker } from '@faker-js/faker';
 import { auth } from './utils/auth';
 
 const ACCOUNTS = [
     {
-        name: faker.person.fullName(),
         email: faker.internet.email(),
+        name: faker.person.fullName(),
         pass: faker.internet.password({
             length: 8,
             memorable: false,
@@ -15,8 +15,8 @@ const ACCOUNTS = [
         })
     },
     {
-        name: faker.person.fullName(),
         email: faker.internet.email(),
+        name: faker.person.fullName(),
         pass: faker.internet.password({
             length: 8,
             memorable: false,
@@ -38,7 +38,7 @@ test.describe('all-user-flow', async () => {
         }
     });
     test('should be able to make account', async ({ page }) => {
-        const { name, email, pass } = ACCOUNTS[0];
+        const { email, name, pass } = ACCOUNTS[0];
 
         await page.goto('/auth/register');
         await page.waitForLoadState('networkidle');
@@ -63,7 +63,7 @@ test.describe('all-user-flow', async () => {
     });
 
     test('should show validation errors', async ({ page }) => {
-        const { name, email, pass } = ACCOUNTS[1];
+        const { email, name, pass } = ACCOUNTS[1];
         await auth.createUser(email, pass, name);
 
         await page.goto('/auth/register');

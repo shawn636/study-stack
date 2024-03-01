@@ -1,12 +1,15 @@
+import type { Actions } from '@sveltejs/kit';
+
 import { auth } from '$lib/server/auth';
 import { csrf } from '$lib/server/csrf';
-import type { Actions } from '@sveltejs/kit';
-import { redirect } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
-import { error } from '@sveltejs/kit';
-import { loginForm } from './login-form-schema';
 import { errorPadding } from '$lib/server/util';
+import { redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { ValidationError } from 'yup';
+
+import type { PageServerLoad } from './$types';
+
+import { loginForm } from './login-form-schema';
 
 interface FormData {
     email: string;
@@ -14,7 +17,7 @@ interface FormData {
 }
 
 export const actions: Actions = {
-    default: async ({ request, cookies }) => {
+    default: async ({ cookies, request }) => {
         await csrf.validateCookies(cookies);
 
         const form = await request.formData();
