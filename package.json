@@ -4,6 +4,8 @@
     "private": true,
     "scripts": {
         "dev": "vite dev",
+        "pscale:branch:create": "chmod +x ./scripts/create-branch.sh && ./scripts/create-branch.sh",
+        "pscale:branch:delete": "chmod +x ./scripts/delete-branch.sh && ./scripts/delete-branch.sh",
         "_vercel-start": "vercel dev --token $VERCEL_TOKEN --yes --listen $PORT",
         "vercel-dev": "dotenv -v PORT=3000 -- pnpm _vercel-start",
         "vercel-unit-test": "dotenv -v PORT=3004 -- pnpm _vercel-start",
