@@ -53,6 +53,7 @@ function delete_branch() {
 }
 
 function remove_credentials_from_dotenv() {
+    var_name=$1
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # Mac OSX
         sed -i '' "s|^$var_name=.*||" .env
