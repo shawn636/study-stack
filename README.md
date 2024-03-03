@@ -35,7 +35,7 @@ Equipped is an innovative web application designed for immersive learning experi
 10. Clone the repository
 
     - SSH (Recommended): `git clone git@github.com:EquippedTeam/equipped.git`
-        - For help setting up ssh, see [the github documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+        - For help setting up ssh, see [the GitHub documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
     - HTTPS (deprecated): `git clone https://github.com/EquippedTeam/equipped.git`
 
 11. Install dependencies using PNPM: `pnpm install`
@@ -91,7 +91,7 @@ Equipped is an innovative web application designed for immersive learning experi
 
     - SSH (Recommended): `git clone git@github.com:EquippedTeam/equipped.git`
 
-        - For help setting up ssh, see [the github documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+        - For help setting up ssh, see [the GitHub documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 
     - HTTPS (deprecated): `git clone https://github.com/EquippedTeam/equipped.git`
 

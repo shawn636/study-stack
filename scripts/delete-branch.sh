@@ -4,7 +4,7 @@ set +o allexport
 source .env
 set -o allexport
 
-# --- GLOABL VARS ---
+# --- GLOBAL VARS ---
 REQUIRED_ENV_VARS=(
     "PLANETSCALE_SERVICE_TOKEN_ID"
     "PLANETSCALE_SERVICE_TOKEN"
