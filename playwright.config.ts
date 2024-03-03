@@ -37,7 +37,7 @@ const config: PlaywrightTestConfig = defineConfig({
         baseURL: 'http://localhost:3005'
     },
     webServer: {
-        command: 'vercel dev --token $VERCEL_TOKEN --yes --listen 3005',
+        command: 'pnpm vercel-e2e-test',
         port: 3005
     },
     workers: 1
