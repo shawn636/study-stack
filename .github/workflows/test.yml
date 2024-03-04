@@ -17,11 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: planetscale/setup-pscale-action@v1
-      - name: test some stuff
-        run: |
-          echo $(pscale auth check)
-          pscale auth login --service-token-id $PLANETSCALE_SERVICE_TOKEN_ID --service-token $PLANETSCALE_SERVICE_TOKEN
-          echo $(pscale auth check)
+      - run: echo $(pscale auth check)
+      - run: pscale auth login --service-token-id $PLANETSCALE_SERVICE_TOKEN_ID --service-token $PLANETSCALE_SERVICE_TOKEN
+      - run: echo $(pscale auth check)
 
 
   # prepare:
