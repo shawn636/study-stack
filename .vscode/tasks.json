@@ -16,7 +16,8 @@
                 "clear": true
             },
             "icon": {
-                "id": "server"
+                "id": "server",
+                "color": "terminal.ansiCyan"
             },
             "runOptions": {
                 "runOn": "folderOpen"
@@ -37,7 +38,8 @@
                 "clear": true
             },
             "icon": {
-                "id": "server"
+                "id": "server",
+                "color": "terminal.ansiGreen"
             },
             "runOptions": {
                 "runOn": "folderOpen"

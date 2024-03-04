@@ -4,6 +4,16 @@ set +o allexport
 source .env
 set -o allexport
 
+# Script Arguments
+cred_name=$1
+
+if [ -z "$cred_name" ]; then
+    cred_name=$(git config user.email | tr -cd '[:alnum:]-' | tr '[:upper:]' '[:lower:]')
+    if [ -z "$cred_name" ]; then
+        cred_name="local_dev_user"
+    fi
+fi
+
 # --- GLOBAL VARS --- 
 REQUIRED_ENV_VARS=(
     "PLANETSCALE_SERVICE_TOKEN_ID"
@@ -36,31 +46,51 @@ function verify_on_git_feature_branch() {
     fi
 }
 
-function check_branch_creation_possible() {
-    new_branch_name=$1
+function delete_cred_if_exists() {
+    branch_name=$1
+    cred_name=$2
 
-    if [ -z "$new_branch_name" ]; then
-        echo "Error: missing argument new_branch_name. Please use the format: check_branch_creation_possible <new_branch_name>"
+    if [ -z "$branch_name" ]; then
+        echo "Error: missing argument branch_name. Please use the format: check_cred_creation_possible <branch_name> <cred_name>"
         exit 1
     fi
 
-    cur_branches_json=$(pscale branch list "$PSCALE_DB_NAME" --format json)
-    dev_branch_cnt=$(echo "$cur_branches_json" | jq -r '[.[] | select(.production == false)] | length')
-    dev_branch_names=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name' | tr '\n' ' ')
-    dev_branch_name=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name' | head -n 1)
-
-    # if branch_cnt eq 1 and branch_name eq current branch name, exit 0 because nothing to do
-    if [ "$dev_branch_cnt" -eq 1 ] && [ "$dev_branch_name" == "$(branch_name_from_git)" ]; then
-        echo " Database Branch $(branch_name_from_git) already exists. Nothing to do. Exiting..."
-        exit 0
-    fi
-
-    # if branch_cnt gt 0 exit 1 because max 1 dev branch cap reached
-    if [ "$dev_branch_cnt" -gt 0 ]; then
-        echo "Error: Maximum number of database branches reached. Please delete a branch before creating a new one."
-        echo "Existing branches: $dev_branch_names"
+    if [ -z "$cred_name" ]; then
+        echo "Error: missing argument cred_name. Please use the format: check_cred_creation_possible <branch_name> <cred_name>"
         exit 1
     fi
+
+    cur_creds_json=$(pscale password list "$PSCALE_DB_NAME" "$branch_name" --format json)
+    matching_cred_id=$(echo "$cur_creds_json" | jq -r ".[] | select(.name == \"$cred_name\") | .id")
+
+    if [ -n "$matching_cred_id" ]; then
+        pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$matching_cred_id" --force
+    fi
+}
+
+function get_cred_id() {
+    branch_name=$1
+    cred_name=$2
+
+    if [ -z "$branch_name" ]; then
+        echo "Error: missing argument branch_name. Please use the format: check_cred_creation_possible <branch_name> <cred_name>"
+        exit 1
+    fi
+
+    if [ -z "$cred_name" ]; then
+        echo "Error: missing argument cred_name. Please use the format: check_cred_creation_possible <branch_name> <cred_name>"
+        exit 1
+    fi
+
+    cur_creds_json=$(pscale password list "$PSCALE_DB_NAME" "$branch_name" --format json)
+    matching_cred_id=$(echo "$cur_creds_json" | jq -r ".[] | select(.name == \"$cred_name\") | .id")
+
+    if [ -z "$matching_cred_id" ]; then
+        echo "Error: Credential $cred_name does not exist. Exiting..."
+        exit 1
+    fi
+
+    echo "$matching_cred_id"
 }
 
 update_var_in_dotenv() {
@@ -97,30 +127,19 @@ update_var_in_dotenv() {
     fi
 }
 
-function create_branch() {
-    new_branch_name=$1
-    if [ -z "$new_branch_name" ]; then
-        echo "Error: missing argument branch_name. Please use the format: create_branch <branch_name>"
-        exit 1
-    fi
-
-    cur_prod_branch=$(pscale branch list "$PSCALE_DB_NAME" --format json | jq -r '.[] | select(.production == true) | .name')
-    latest_successful_backup=$(pscale backup list "$PSCALE_DB_NAME" "$cur_prod_branch" --format json | jq -r 'sort_by(.completed_at) | reverse | .[] | select(.state == "success") | .id' | head -n 1)
-
-    pscale branch create "$PSCALE_DB_NAME" "$new_branch_name" --from "$cur_prod_branch" --restore "$latest_successful_backup" --wait
-}
-
 function generate_credentials() {
     new_branch_name=$1
+    cred_name=$2
     if [ -z "$new_branch_name" ]; then
         echo "Error: missing argument new_branch_name. Please use the format: generate_credentials <new_branch_name>"
         exit 1
     fi
-    
-    cred_name=$(git config user.email | tr -cd '[:alnum:]-' | tr '[:upper:]' '[:lower:]')
+
     if [ -z "$cred_name" ]; then
-        cred_name="local_dev_user"
+        echo "Error: missing argument cred_name. Please use the format: generate_credentials <new_branch_name> <cred_name>"
+        exit 1
     fi
+
     cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$new_branch_name" "$cred_name" --ttl 2592000 --format json)
     cred_results_json=$(echo "$cred_results_raw" | tr -d '\000-\031')
     parsed_url=$(echo "$cred_results_json" | jq -r '. | .connection_strings | .prisma' | grep -o 'url = "[^"]*' | sed 's/url = "//')
@@ -129,14 +148,15 @@ function generate_credentials() {
 
 # --- MAIN ---
 function main() {
+    cred_name=$1
     new_branch_name=$(branch_name_from_git)
 
     check_for_required_env_vars
     verify_on_git_feature_branch
-    check_branch_creation_possible "$new_branch_name"
-
-    create_branch "$new_branch_name"
-    update_var_in_dotenv "DATABASE_URL" "$(generate_credentials "$new_branch_name")"
-    pnpm prisma db seed
+    delete_cred_if_exists "$new_branch_name" "$cred_name" 
+    cred=$(generate_credentials "$new_branch_name" "$cred_name")
+    cred_id=$(get_cred_id "$new_branch_name" "$cred_name")
+    update_var_in_dotenv "DATABASE_URL" "$cred"
+    printf "Password \033[31m%s\033[0m was successfully generated for \033[32m%s\033[0m\n" "$cred_id" "$new_branch_name"
 }
-main
+main "$cred_name"
