@@ -30,11 +30,11 @@ function branch_name_from_git() {
         if [ -z "$git_user" ]; then
             PSCALE_BRANCH_NAME="$PSCALE_BRANCH_NAME-$RANDOM"
         else
-            PSCALE_BRANCH_NAME="$PSCALE_BRANCH_NAME$git_user"
+            PSCALE_BRANCH_NAME="$PSCALE_BRANCH_NAME-$git_user"
         fi
     fi
 
-    echo $PSCALE_BRANCH_NAME
+    echo "$PSCALE_BRANCH_NAME"
 }
 
 function check_branch_creation_possible() {
