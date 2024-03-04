@@ -16,6 +16,7 @@ jobs:
       PLAYWRIGHT_VERSION: ${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
     steps:
       - uses: actions/checkout@v3
+      - uses: planetscale/setup-pscale-action@v1
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -73,6 +74,7 @@ jobs:
       PEPPER: ${{ secrets.PEPPER }}
     steps:
       - uses: actions/checkout@v3
+      - uses: planetscale/setup-pscale-action@v1
 
       - name: Restore pnpm cache
         uses: actions/cache@v3
@@ -101,6 +103,7 @@ jobs:
       PEPPER: ${{ secrets.PEPPER }}
     steps:
       - uses: actions/checkout@v3
+      - uses: planetscale/setup-pscale-action@v1
       
       - name: Restore pnpm cache
         uses: actions/cache@v3
@@ -129,6 +132,7 @@ jobs:
       PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
     steps:
       - uses: actions/checkout@v3
+      - uses: planetscale/setup-pscale-action@v1
 
       - name: Delete Credentials
         run: ./scripts/delete-all-creds.sh
