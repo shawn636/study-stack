@@ -46,6 +46,7 @@ jobs:
 
       - name: Cache playwright binaries
         uses: actions/cache@v3
+        id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
@@ -123,6 +124,9 @@ jobs:
     needs: [unit-tests, e2e-tests]
     if: always()
     runs-on: ubuntu-latest
+    env:
+      PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+      PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
     steps:
       - uses: actions/checkout@v3
 
