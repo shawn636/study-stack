@@ -20,7 +20,7 @@ jobs:
       - name: test some stuff
         run: |
           echo $(pscale auth check)
-          pscale auth login
+          pscale auth login --service-token-id $PLANETSCALE_SERVICE_TOKEN_ID --service-token $PLANETSCALE_SERVICE_TOKEN
           echo $(pscale auth check)
 
 
