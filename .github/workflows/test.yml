@@ -17,11 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: planetscale/setup-pscale-action@v1
-
-      - run : |
-          echo $(pscale org show)
-          sleep 10
-          echo $(pscale database list --org $ORG_NAME)
+      - name: test some stuff
+        run: |
+          echo $(pscale auth check)
+          pscale auth login
+          echo $(pscale auth check)
 
 
   # prepare:
