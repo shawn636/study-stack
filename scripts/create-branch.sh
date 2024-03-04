@@ -27,15 +27,6 @@ function branch_name_from_git() {
     echo $PSCALE_BRANCH_NAME
 }
 
-function verify_on_git_feature_branch() {
-    cur_git_branch=$(git branch --show-current)
-    
-    if [ "$cur_git_branch" == "main" ]; then
-        echo "Error: You must be on a feature branch to run this command. Exiting..."
-        exit 1
-    fi
-}
-
 function check_branch_creation_possible() {
     new_branch_name=$1
 
@@ -132,7 +123,6 @@ function main() {
     new_branch_name=$(branch_name_from_git)
 
     check_for_required_env_vars
-    verify_on_git_feature_branch
     check_branch_creation_possible "$new_branch_name"
 
     create_branch "$new_branch_name"
