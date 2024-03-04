@@ -19,9 +19,9 @@ jobs:
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
           curl --request GET \
-          --url 'https://api.planetscale.com/v1/organizations/organization/databases/database/branches?page=1&per_page=25' \
-          --header 'accept: application/json' \
-          --header 'Authorization: $PLANETSCALE_SERVICE_TOKEN_ID:$PLANETSCALE_SERVICE_TOKEN'
+          --url 'https://api.planetscale.com/v1/organizations/equipped/databases/equipped-db/branches?page=1&per_page=25' \
+          --header 'Authorization: t2hr8ietrdnu:pscale_tkn_xoSVjfVuPgnR3pnG4hH0Vf56VSf7-b3QvxeeA9i3zUg' \
+          --header 'accept: application/json'
           
           
 
