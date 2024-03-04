@@ -9,6 +9,9 @@ on:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    env:
+      PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+      PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
     outputs:
       PLAYWRIGHT_VERSION: ${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
     steps:
@@ -63,6 +66,10 @@ jobs:
   unit-tests:
     needs: prepare
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      PEPPER: ${{ secrets.PEPPER }}
     steps:
       - uses: actions/checkout@v3
 
@@ -87,6 +94,10 @@ jobs:
   e2e-tests:
     needs: prepare
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      PEPPER: ${{ secrets.PEPPER }}
     steps:
       - uses: actions/checkout@v3
       
