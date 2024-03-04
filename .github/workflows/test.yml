@@ -9,11 +9,6 @@ on:
 jobs:
   temp-test:
     runs-on: ubuntu-latest
-    env:
-      PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
-      PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-      ORG_NAME: ${{secrets.ORG_NAME}}
-      DB_NAME: ${{secrets.DB_NAME}}
     steps:
       - uses: actions/checkout@v3
       - name: Setup pscale
