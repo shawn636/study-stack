@@ -12,6 +12,7 @@ REQUIRED_ENV_VARS=(
     "PLANETSCALE_SERVICE_TOKEN"
 )
 PSCALE_DB_NAME="equipped-db"
+PSCALE_ORG_NAME="equipped"
 
 # --- FUNCTIONS ---
 function check_for_required_env_vars() {
@@ -63,7 +64,7 @@ function get_credential_ids() {
         exit 1
     fi
 
-    credential_ids=$(pscale password list equipped-db "$branch_name" --format=json | jq -r '.[] | .id')
+    credential_ids=$(pscale password list equipped-db "$branch_name" --format=json --org "$PSCALE_ORG_NAME" | jq -r '.[] | .id')
     echo "$credential_ids"
 }
 
@@ -81,7 +82,7 @@ function delete_credential() {
         exit 1
     fi
     
-    pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$credential_id" --force
+    pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$credential_id" --force --org "$PSCALE_ORG_NAME"
 }
 
 # --- MAIN ---

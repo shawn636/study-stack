@@ -12,6 +12,7 @@ REQUIRED_ENV_VARS=(
     "PLANETSCALE_SERVICE_TOKEN"
 )
 PSCALE_DB_NAME="equipped-db"
+PSCALE_ORG_NAME="equipped"
 
 
 # --- FUNCTIONS ---
@@ -53,7 +54,7 @@ function check_branch_creation_possible() {
         exit 1
     fi
 
-    cur_branches_json=$(pscale branch list "$PSCALE_DB_NAME" --format json)
+    cur_branches_json=$(pscale branch list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME")
     dev_branch_cnt=$(echo "$cur_branches_json" | jq -r '[.[] | select(.production == false)] | length')
     dev_branch_names=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name' | tr '\n' ' ')
     dev_branch_name=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name' | head -n 1)
@@ -113,10 +114,10 @@ function create_branch() {
         exit 1
     fi
 
-    cur_prod_branch=$(pscale branch list "$PSCALE_DB_NAME" --format json | jq -r '.[] | select(.production == true) | .name')
-    latest_successful_backup=$(pscale backup list "$PSCALE_DB_NAME" "$cur_prod_branch" --format json | jq -r 'sort_by(.completed_at) | reverse | .[] | select(.state == "success") | .id' | head -n 1)
+    cur_prod_branch=$(pscale branch list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" | jq -r '.[] | select(.production == true) | .name')
+    latest_successful_backup=$(pscale backup list "$PSCALE_DB_NAME" "$cur_prod_branch" --format json --org "$PSCALE_ORG_NAME" | jq -r 'sort_by(.completed_at) | reverse | .[] | select(.state == "success") | .id' | head -n 1)
 
-    pscale branch create "$PSCALE_DB_NAME" "$new_branch_name" --from "$cur_prod_branch" --restore "$latest_successful_backup" --wait
+    pscale branch create "$PSCALE_DB_NAME" "$new_branch_name" --from "$cur_prod_branch" --restore "$latest_successful_backup" --wait --org "$PSCALE_ORG_NAME"
 }
 
 function generate_credentials() {
@@ -130,7 +131,7 @@ function generate_credentials() {
     if [ -z "$cred_name" ]; then
         cred_name="local_dev_user"
     fi
-    cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$new_branch_name" "$cred_name" --ttl 2592000 --format json)
+    cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$new_branch_name" "$cred_name" --ttl 2592000 --format json --org "$PSCALE_ORG_NAME")
     cred_results_json=$(echo "$cred_results_raw" | tr -d '\000-\031')
     parsed_url=$(echo "$cred_results_json" | jq -r '. | .connection_strings | .prisma' | grep -o 'url = "[^"]*' | sed 's/url = "//')
     echo "$parsed_url"

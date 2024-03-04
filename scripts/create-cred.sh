@@ -22,6 +22,7 @@ REQUIRED_ENV_VARS=(
     "PLANETSCALE_SERVICE_TOKEN"
 )
 PSCALE_DB_NAME="equipped-db"
+PSCALE_ORG_NAME="equipped"
 
 
 # --- FUNCTIONS ---
@@ -69,11 +70,11 @@ function delete_cred_if_exists() {
         exit 1
     fi
 
-    cur_creds_json=$(pscale password list "$PSCALE_DB_NAME" "$branch_name" --format json)
+    cur_creds_json=$(pscale password list "$PSCALE_DB_NAME" "$branch_name" --format json --org "$PSCALE_ORG_NAME")
     matching_cred_id=$(echo "$cur_creds_json" | jq -r ".[] | select(.name == \"$cred_name\") | .id")
 
     if [ -n "$matching_cred_id" ]; then
-        pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$matching_cred_id" --force
+        pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$matching_cred_id" --force --org "$PSCALE_ORG_NAME"
     fi
 }
 
@@ -91,7 +92,7 @@ function get_cred_id() {
         exit 1
     fi
 
-    cur_creds_json=$(pscale password list "$PSCALE_DB_NAME" "$branch_name" --format json)
+    cur_creds_json=$(pscale password list "$PSCALE_DB_NAME" "$branch_name" --format json --org "$PSCALE_ORG_NAME")
     matching_cred_id=$(echo "$cur_creds_json" | jq -r ".[] | select(.name == \"$cred_name\") | .id")
 
     if [ -z "$matching_cred_id" ]; then
@@ -149,7 +150,7 @@ function generate_credentials() {
         exit 1
     fi
 
-    cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$new_branch_name" "$cred_name" --ttl 2592000 --format json)
+    cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$new_branch_name" "$cred_name" --ttl 2592000 --format json --org "$PSCALE_ORG_NAME")
     cred_results_json=$(echo "$cred_results_raw" | tr -d '\000-\031')
     parsed_url=$(echo "$cred_results_json" | jq -r '. | .connection_strings | .prisma' | grep -o 'url = "[^"]*' | sed 's/url = "//')
     echo "$parsed_url"

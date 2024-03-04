@@ -49,7 +49,7 @@ jobs:
         uses: actions/cache@v3
         id: playwright-cache
         with:
-          path: ~/.cache/ms-playwright
+          path: /home/runner/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
       - run: pnpm exec playwright install --with-deps
@@ -85,7 +85,7 @@ jobs:
       - name: Restore Playwright cache
         uses: actions/cache@v3
         with:
-          path: ~/.cache/ms-playwright
+          path: /home/runner/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.PLAYWRIGHT_VERSION }}
       
       - name: Generate New Credentials
@@ -114,7 +114,7 @@ jobs:
       - name: Restore Playwright cache
         uses: actions/cache@v3
         with:
-          path: ~/.cache/ms-playwright
+          path: /home/runner/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.PLAYWRIGHT_VERSION }}
       
       - name: Generate New Credentials
