@@ -24,6 +24,16 @@ function check_for_required_env_vars() {
 
 function branch_name_from_git() {
     PSCALE_BRANCH_NAME=$(git branch --show-current | tr -cd '[:alnum:]-' | tr '[:upper:]' '[:lower:]')
+
+    if [ "$PSCALE_BRANCH_NAME" == "main" ]; then
+        git_user=$(git config user.email | tr -cd '[:alnum:]-' | tr '[:upper:]' '[:lower:]')
+        if [ -z "$git_user" ]; then
+            PSCALE_BRANCH_NAME="$PSCALE_BRANCH_NAME-$RANDOM"
+        else
+            PSCALE_BRANCH_NAME="$PSCALE_BRANCH_NAME$git_user"
+        fi
+    fi
+
     echo $PSCALE_BRANCH_NAME
 }
 
