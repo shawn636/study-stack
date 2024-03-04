@@ -1,9 +1,11 @@
 #!/bin/bash
 
-set +o allexport
-source .env
-set -o allexport
 
+if [ -f .env ]; then
+    set +o allexport
+    source .env
+    set -o allexport
+fi
 # --- GLOBAL VARS ---
 REQUIRED_ENV_VARS=(
     "PLANETSCALE_SERVICE_TOKEN_ID"

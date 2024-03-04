@@ -1,8 +1,10 @@
 #!/bin/bash
 
-set +o allexport
-source .env
-set -o allexport
+if [ -f .env ]; then
+    set +o allexport
+    source .env
+    set -o allexport
+fi
 
 # Script Arguments
 cred_name=$1
