@@ -7,8 +7,28 @@ on:
     branches: ['preview', 'main']
 
 jobs:
+  temp-test:
+    runs-on: ubuntu-latest
+    env:
+      PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+      PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      ORG_NAME: ${{secrets.ORG_NAME}}
+      DB_NAME: ${{secrets.DB_NAME}}
+    outputs:
+      PLAYWRIGHT_VERSION: ${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: planetscale/setup-pscale-action@v1
+
+      - run : |
+          echo $(pscale org show)
+          sleep 10
+          echo $(pscale database list --org $ORG_NAME)
+
+
   prepare:
     runs-on: ubuntu-latest
+    if: !always()
     env:
       PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
       PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
@@ -69,6 +89,7 @@ jobs:
 
   unit-tests:
     needs: prepare
+    if: !always()
     runs-on: ubuntu-latest
     env:
       PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
@@ -100,6 +121,7 @@ jobs:
 
   e2e-tests:
     needs: prepare
+    if: !always()
     runs-on: ubuntu-latest
     env:
       PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
@@ -131,7 +153,7 @@ jobs:
 
   cleanup:
     needs: [unit-tests, e2e-tests]
-    if: always()
+    if: !always()
     runs-on: ubuntu-latest
     env:
       PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
