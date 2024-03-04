@@ -18,8 +18,12 @@ jobs:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
-          pscale deploy-request list equipped-db --org equipped
-
+          curl --request GET \
+          --url 'https://api.planetscale.com/v1/organizations/organization/databases/database/branches?page=1&per_page=25' \
+          --header 'accept: application/json' \
+          --header 'Authorization: $PLANETSCALE_SERVICE_TOKEN_ID:$PLANETSCALE_SERVICE_TOKEN'
+          
+          
 
   # prepare:
   #   runs-on: ubuntu-latest
