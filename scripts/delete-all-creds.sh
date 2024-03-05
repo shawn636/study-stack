@@ -64,7 +64,7 @@ function get_credential_ids() {
         exit 1
     fi
 
-    credential_ids=$(pscale password list equipped-db "$branch_name" --format=json --org "$PSCALE_ORG_NAME" | jq -r '.[] | .id')
+    credential_ids=$(pscale password list equipped-db "$branch_name" --format=json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r '.[] | .id')
     echo "$credential_ids"
 }
 
@@ -82,7 +82,7 @@ function delete_credential() {
         exit 1
     fi
     
-    pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$credential_id" --force --org "$PSCALE_ORG_NAME"
+    pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$credential_id" --force --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
 }
 
 # --- MAIN ---
