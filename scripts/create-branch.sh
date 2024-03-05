@@ -117,6 +117,16 @@ function create_branch() {
     cur_prod_branch=$(pscale branch list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r '.[] | select(.production == true) | .name')
     latest_successful_backup=$(pscale backup list "$PSCALE_DB_NAME" "$cur_prod_branch" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r 'sort_by(.completed_at) | reverse | .[] | select(.state == "success") | .id' | head -n 1)
 
+    if [ -z "$cur_prod_branch" ]; then
+        echo "Error: Unable to determine current production branch. Exiting..."
+        exit 1
+    fi
+
+    if [ -z "$latest_successful_backup" ]; then
+        echo "Error: Unable to determine latest successful backup. Exiting..."
+        exit 1
+    fi
+
     pscale branch create "$PSCALE_DB_NAME" "$new_branch_name" --from "$cur_prod_branch" --restore "$latest_successful_backup" --wait --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
 }
 
@@ -128,12 +138,37 @@ function generate_credentials() {
     fi
     
     cred_name=$(git config user.email | tr -cd '[:alnum:]-' | tr '[:upper:]' '[:lower:]')
-    if [ -z "$cred_name" ]; then
-        cred_name="local_dev_user"
+    # if cred_name is empty, retrieve from github actions
+
+    if [ -n "$CI" ]; then
+        if [ -n "$GITHUB_RUN_ID" ]; then
+            cred_name="github-actions-$GITHUB_RUN_ID"
+        else
+            cred_name="github-actions"
+        fi
+    else
+        cred_name="local-dev-user"
     fi
-    cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$new_branch_name" "$cred_name" --ttl 2592000 --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID")
-    cred_results_json=$(echo "$cred_results_raw" | tr -d '\000-\031')
-    parsed_url=$(echo "$cred_results_json" | jq -r '. | .connection_strings | .prisma' | grep -o 'url = "[^"]*' | sed 's/url = "//')
+
+    if [ -z "$cred_name" ]; then
+        echo "Error: Unable to determine credential name. Exiting..."
+        exit 1
+    fi
+
+    parsed_url=$(
+        pscale password create "$PSCALE_DB_NAME" "$new_branch_name" "$cred_name" \
+            --ttl 2592000 --format json --org "$PSCALE_ORG_NAME" \
+            --role readwriter \
+            --service-token "$PLANETSCALE_SERVICE_TOKEN" \
+            --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" \
+            | jq -r '. | .connection_strings | .prisma' | grep -o 'url = "[^"]*' | sed 's/url = "//'
+    )
+
+    if [ -z "$parsed_url" ]; then
+        echo "Error: Unable to determine credential URL. Exiting..."
+        exit 1
+    fi
+
     echo "$parsed_url"
 }
 
@@ -145,7 +180,8 @@ function main() {
     check_branch_creation_possible "$new_branch_name"
 
     create_branch "$new_branch_name"
-    update_var_in_dotenv "DATABASE_URL" "$(generate_credentials "$new_branch_name")"
+    DB_URL=$(generate_credentials "$new_branch_name")
+    update_var_in_dotenv "DATABASE_URL" "$DB_URL"
     pnpm prisma db seed
 }
 main

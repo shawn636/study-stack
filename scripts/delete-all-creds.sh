@@ -64,7 +64,12 @@ function get_credential_ids() {
         exit 1
     fi
 
-    credential_ids=$(pscale password list equipped-db "$branch_name" --format=json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r '.[] | .id')
+    credential_ids=$(pscale password list "$PSCALE_DB_NAME" "$branch_name" --format=json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r '.[] | .id')
+
+    if [ -z "$credential_ids" ]; then
+        echo "No credentials found for branch $branch_name"
+    fi
+    
     echo "$credential_ids"
 }
 

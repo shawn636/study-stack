@@ -150,9 +150,15 @@ function generate_credentials() {
         exit 1
     fi
 
-    cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$new_branch_name" "$cred_name" --ttl 2592000 --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID")
+    cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$new_branch_name" "$cred_name" --role readwriter --ttl 2592000 --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID")
     cred_results_json=$(echo "$cred_results_raw" | tr -d '\000-\031')
     parsed_url=$(echo "$cred_results_json" | jq -r '. | .connection_strings | .prisma' | grep -o 'url = "[^"]*' | sed 's/url = "//')
+
+    if [ -z "$parsed_url" ]; then
+        echo "Error: Unable to parse credential URL. Exiting..."
+        exit 1
+    fi
+    
     echo "$parsed_url"
 }
 

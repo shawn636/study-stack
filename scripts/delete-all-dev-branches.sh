@@ -27,6 +27,12 @@ function check_for_required_env_vars() {
 function get_dev_branches() {
     cur_branches_json=$(pscale branch list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID")
     dev_branches=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name')
+
+    if [ -z "$dev_branches" ]; then
+        echo "No dev branches found. Exiting..."
+        exit 1
+    fi
+    
     echo "$dev_branches"
 }
 
