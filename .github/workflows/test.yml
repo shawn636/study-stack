@@ -12,8 +12,6 @@ jobs:
     env:
       PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
       PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-      ORG_NAME: equipped
-      DB_NAME: equipped-db
     steps:
       - uses: actions/checkout@v2
       - name: Install pscale
@@ -25,7 +23,7 @@ jobs:
       - name: Install MySQL Client
         run: sudo apt-get install mysql-client
       - name: Test some things
-        run: pscale branch list $DB_NAME --format json --org $ORG_NAME --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+        run: pscale branch list equipped-db --format json --org equipped --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
   # prepare:
   #   runs-on: ubuntu-latest
   #   env:
