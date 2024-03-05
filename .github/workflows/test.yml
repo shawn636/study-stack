@@ -14,20 +14,9 @@ jobs:
       PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
     steps:
       - uses: actions/checkout@v2
-      - name: Install pscale
-        run: |
-          ASSET_URL=$(curl -s "https://api.github.com/repos/planetscale/cli/releases/latest" | jq -r ".assets[] | select(.name | endswith(\"_linux_amd64.deb\")) | .browser_download_url")
-          curl -L -o pscale_latest_linux_amd64.deb "$ASSET_URL"
-          sudo dpkg -i pscale_latest_linux_amd64.deb
-          rm pscale_latest_linux_amd64.deb
-      - name: Install MySQL Client
-        run: sudo apt-get install mysql-client
-      - run: if [ -z "$PLANETSCALE_SERVICE_TOKEN" ]; then echo "PLANETSCALE SERVICE TOKEN is not set"; exit 1; fi
-      - run: if [ -z "$PLANETSCALE_SERVICE_TOKEN_ID" ]; then echo "PLANETSCALE SERVICE TOKEN ID is not set"; exit 1; fi
-      - run: if [[ $PLANETSCALE_SERVICE_TOKEN == \"*\" || $PLANETSCALE_SERVICE_TOKEN == *\" ]]; then echo "PLANETSCALE SERVICE TOKEN contains quote literals"; exit 1; fi
-      - run: if [[ $PLANETSCALE_SERVICE_TOKEN_ID == \"*\" || $PLANETSCALE_SERVICE_TOKEN_ID == *\" ]]; then echo "PLANETSCALE SERVICE TOKEN ID contains quote literals"; exit 1; fi
+      - uses: planetscale/setup-pscale-action@v1
       - name: Test some things
-        run: pscale branch list equipped-db --org equipped --service-token pscale_tkn_ufL9BkkNR-YW6o9tjM4PY0jyHA6QUF8gJyO4PnxnMQg --service-token-id k51vmn6n82vc
+        run: pscale branch list equipped-db --org equipped --service-token $PLANETSCALE_SERVICE_TOKEN --service-token-id $PLANETSCALE_SERVICE_TOKEN_ID
   # prepare:
   #   runs-on: ubuntu-latest
   #   env:
