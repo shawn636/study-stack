@@ -46,7 +46,7 @@ jobs:
 
       - name: Get installed Playwright version
         id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
+        run: echo "PLAYWRIGHT_VERSION=$(pnpm list @playwright/test | grep @playwright/test | awk '{print $2}')" >> $GITHUB_ENV
 
       - name: Cache playwright binaries
         uses: actions/cache@v3
@@ -78,20 +78,25 @@ jobs:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       PEPPER: ${{ secrets.PEPPER }}
     steps:
-      - uses: actions/checkout@v3
+     - uses: actions/checkout@v3
       - uses: planetscale/setup-pscale-action@v1
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
 
       - name: Restore pnpm cache
         uses: actions/cache@v3
         with:
           path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-      
-      - name: Restore Playwright cache
-        uses: actions/cache@v3
-        with:
-          path: /home/runner/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.PLAYWRIGHT_VERSION }}
       
       - name: Generate New Credentials
         run: ./scripts/create-cred.sh "unit-tests-${{ github.run_number }}"
@@ -111,6 +116,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: planetscale/setup-pscale-action@v1
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
       
       - name: Restore pnpm cache
         uses: actions/cache@v3
