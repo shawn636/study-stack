@@ -22,6 +22,10 @@ jobs:
           rm pscale_latest_linux_amd64.deb
       - name: Install MySQL Client
         run: sudo apt-get install mysql-client
+      - run: if [ -z "$PLANETSCALE_SERVICE_TOKEN" ]; then echo "PLANETSCALE SERVICE TOKEN is not set"; exit 1; fi
+      - run: if [ -z "$PLANETSCALE_SERVICE_TOKEN_ID" ]; then echo "PLANETSCALE SERVICE TOKEN ID is not set"; exit 1; fi
+      - run: if [[ $PLANETSCALE_SERVICE_TOKEN == \"*\" || $PLANETSCALE_SERVICE_TOKEN == *\" ]]; then echo "PLANETSCALE SERVICE TOKEN contains quote literals"; exit 1; fi
+      - run: if [[ $PLANETSCALE_SERVICE_TOKEN_ID == \"*\" || $PLANETSCALE_SERVICE_TOKEN_ID == *\" ]]; then echo "PLANETSCALE SERVICE TOKEN ID contains quote literals"; exit 1; fi
       - name: Test some things
         run: pscale branch list equipped-db --format json --org equipped --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
   # prepare:
