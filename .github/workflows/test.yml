@@ -142,7 +142,7 @@ jobs:
 
   cleanup:
     # needs: [unit-tests, e2e-tests]
-    needs: prepare
+    needs: testing
     if: always()
     runs-on: ubuntu-latest
     env:
