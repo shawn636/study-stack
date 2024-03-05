@@ -27,7 +27,7 @@ jobs:
       - run: if [[ $PLANETSCALE_SERVICE_TOKEN == \"*\" || $PLANETSCALE_SERVICE_TOKEN == *\" ]]; then echo "PLANETSCALE SERVICE TOKEN contains quote literals"; exit 1; fi
       - run: if [[ $PLANETSCALE_SERVICE_TOKEN_ID == \"*\" || $PLANETSCALE_SERVICE_TOKEN_ID == *\" ]]; then echo "PLANETSCALE SERVICE TOKEN ID contains quote literals"; exit 1; fi
       - name: Test some things
-        run: pscale branch list equipped-db --format json --org equipped --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+        run: pscale branch list equipped-db --org equipped --service-token pscale_tkn_ufL9BkkNR-YW6o9tjM4PY0jyHA6QUF8gJyO4PnxnMQg --service-token-id k51vmn6n82vc
   # prepare:
   #   runs-on: ubuntu-latest
   #   env:
@@ -150,22 +150,22 @@ jobs:
   #     - name: Run end-to-end tests
   #       run: pnpm test
 
-  cleanup:
-    # needs: [unit-tests, e2e-tests]
-    needs: testing
-    if: always()
-    runs-on: ubuntu-latest
-    env:
-      PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
-      PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-      ORG_NAME: ${{secrets.ORG_NAME}}
-      DB_NAME: ${{secrets.DB_NAME}}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: planetscale/setup-pscale-action@v1
+  # cleanup:
+  #   # needs: [unit-tests, e2e-tests]
+  #   needs: testing
+  #   if: always()
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+  #     PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+  #     ORG_NAME: ${{secrets.ORG_NAME}}
+  #     DB_NAME: ${{secrets.DB_NAME}}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: planetscale/setup-pscale-action@v1
 
-      - name: Delete Credentials
-        run: ./scripts/delete-all-creds.sh
+  #     - name: Delete Credentials
+  #       run: ./scripts/delete-all-creds.sh
 
-      - name: Delete Dev DB Branch
-        run: ./scripts/delete-branch.sh
+  #     - name: Delete Dev DB Branch
+  #       run: ./scripts/delete-branch.sh
