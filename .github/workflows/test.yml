@@ -78,7 +78,7 @@ jobs:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       PEPPER: ${{ secrets.PEPPER }}
     steps:
-     - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - uses: planetscale/setup-pscale-action@v1
 
       - name: Install Node.js
