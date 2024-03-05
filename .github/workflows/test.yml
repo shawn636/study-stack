@@ -91,12 +91,18 @@ jobs:
         with:
           version: 8
           run_install: false
+      
+      - name: Get pnpm store directory
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Restore pnpm cache
         uses: actions/cache@v3
         with:
           path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+      
+      - name: Install dependencies
+        run: pnpm install
       
       - name: Generate New Credentials
         run: ./scripts/create-cred.sh "unit-tests-${{ github.run_number }}"
@@ -128,17 +134,37 @@ jobs:
           version: 8
           run_install: false
       
+      - name: Get pnpm store directory
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        
       - name: Restore pnpm cache
         uses: actions/cache@v3
         with:
           path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-      
+
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Restore Playwright cache
         uses: actions/cache@v3
         with:
           path: /home/runner/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.PLAYWRIGHT_VERSION }}
+      
+      - name: Cache playwright binaries
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: /home/runner/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+
+      - run: pnpm exec playwright install --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - run: pnpm exec playwright install-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - run: pnpm exec playwright install msedge
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
       
       - name: Generate New Credentials
         run: ./scripts/create-cred.sh "e2e-tests-${{ github.run_number }}"
