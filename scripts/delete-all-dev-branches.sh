@@ -53,6 +53,14 @@ function delete_branch() {
     pscale branch delete "$PSCALE_DB_NAME" "$branch_name" --force --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
 }
 
+cleanup_dotenv() {
+    local env_file=$1
+
+    # Use awk to remove empty lines, but retain the last empty line if it exists
+    awk 'NF && !found {print; found=1; next} NF {print}' "$env_file" > temp_env_file
+    mv temp_env_file "$env_file"
+}
+
 function remove_credentials_from_dotenv() {
     var_name=$1
 
@@ -77,5 +85,7 @@ function main() {
         delete_branch "$branch"
     done
     remove_credentials_from_dotenv "DATABASE_URL"
+    cleanup_dotenv .env
+    
 }
 main

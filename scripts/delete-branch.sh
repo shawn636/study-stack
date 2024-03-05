@@ -24,6 +24,14 @@ function check_for_required_env_vars() {
     done
 }
 
+cleanup_dotenv() {
+    local env_file=$1
+
+    # Use awk to remove empty lines, but retain the last empty line if it exists
+    awk 'NF && !found {print; found=1; next} NF {print}' "$env_file" > temp_env_file
+    mv temp_env_file "$env_file"
+}
+
 function branch_name_from_git() {
     PSCALE_BRANCH_NAME=$(git branch --show-current | tr -cd '[:alnum:]-' | tr '[:upper:]' '[:lower:]')
 
@@ -84,5 +92,6 @@ function main() {
     check_for_required_env_vars
     delete_branch "$new_branch_name"
     remove_credentials_from_dotenv "DATABASE_URL"
+    cleanup_dotenv .env
 }
 main
