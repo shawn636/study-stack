@@ -76,9 +76,11 @@ function check_branch_creation_possible() {
 cleanup_dotenv() {
     local env_file=$1
 
-    # Use awk to remove empty lines, but retain the last empty line if it exists
-    awk 'NF && !found {print; found=1; next} NF {print}' "$env_file" > temp_env_file
-    mv temp_env_file "$env_file"
+    if [ -f .env ]; then
+          # Use awk to remove empty lines, but retain the last empty line if it exists
+        awk 'NF && !found {print; found=1; next} NF {print}' "$env_file" > temp_env_file
+        mv temp_env_file "$env_file"
+    fi
 }
 
 update_var_in_dotenv() {
@@ -192,6 +194,7 @@ function main() {
     create_branch "$new_branch_name"
     DB_URL=$(generate_credentials "$new_branch_name")
     update_var_in_dotenv "DATABASE_URL" "$DB_URL"
+    pnpm build
     pnpm prisma generate
     pnpm prisma db seed
 }

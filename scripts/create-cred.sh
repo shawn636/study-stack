@@ -106,9 +106,11 @@ function get_cred_id() {
 cleanup_dotenv() {
     local env_file=$1
 
-    # Use awk to remove empty lines, but retain the last empty line if it exists
-    awk 'NF && !found {print; found=1; next} NF {print}' "$env_file" > temp_env_file
-    mv temp_env_file "$env_file"
+    if [ -f .env ]; then
+          # Use awk to remove empty lines, but retain the last empty line if it exists
+        awk 'NF && !found {print; found=1; next} NF {print}' "$env_file" > temp_env_file
+        mv temp_env_file "$env_file"
+    fi
 }
 
 update_var_in_dotenv() {
