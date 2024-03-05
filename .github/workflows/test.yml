@@ -7,65 +7,76 @@ on:
     branches: ['preview', 'main']
 
 jobs:
-  prepare:
+  testing:
     runs-on: ubuntu-latest
     env:
       PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
       PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-      ORG_NAME: ${{secrets.ORG_NAME}}
-      DB_NAME: ${{secrets.DB_NAME}}
-    outputs:
-      PLAYWRIGHT_VERSION: ${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+      ORG_NAME: equipped
+      DB_NAME: equipped-db
     steps:
-      - uses: actions/checkout@v3
-      - uses: planetscale/setup-pscale-action@v1
+      - uses: actions/checkout@v2
+      - name: Test some things
+        run: pscale branch list $DB_NAME --format json --org $ORG_NAME --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+  # prepare:
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+  #     PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+  #     ORG_NAME: ${{secrets.ORG_NAME}}
+  #     DB_NAME: ${{secrets.DB_NAME}}
+  #   outputs:
+  #     PLAYWRIGHT_VERSION: ${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: planetscale/setup-pscale-action@v1
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.x'
+  #     - name: Install Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '20.x'
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: false
+  #     - name: Install pnpm
+  #       uses: pnpm/action-setup@v2
+  #       with:
+  #         version: 8
+  #         run_install: false
 
-      - name: Get pnpm store directory
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+  #     - name: Get pnpm store directory
+  #       run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+  #     - name: Setup pnpm cache
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: ${{ env.STORE_PATH }}
+  #         key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Install dependencies
-        run: pnpm install
+  #     - name: Install dependencies
+  #       run: pnpm install
 
-      - name: Get installed Playwright version
-        id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
+  #     - name: Get installed Playwright version
+  #       id: playwright-version
+  #       run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
 
-      - name: Cache playwright binaries
-        uses: actions/cache@v3
-        id: playwright-cache
-        with:
-          path: /home/runner/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+  #     - name: Cache playwright binaries
+  #       uses: actions/cache@v3
+  #       id: playwright-cache
+  #       with:
+  #         path: /home/runner/.cache/ms-playwright
+  #         key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
-      - run: pnpm exec playwright install --with-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: pnpm exec playwright install-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: pnpm exec playwright install msedge
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
+  #     - run: pnpm exec playwright install --with-deps
+  #       if: steps.playwright-cache.outputs.cache-hit != 'true'
+  #     - run: pnpm exec playwright install-deps
+  #       if: steps.playwright-cache.outputs.cache-hit != 'true'
+  #     - run: pnpm exec playwright install msedge
+  #       if: steps.playwright-cache.outputs.cache-hit != 'true'
       
-      - name: Delete Existing Dev DB Branches
-        run: ./scripts/delete-all-dev-branches.sh
+  #     - name: Delete Existing Dev DB Branches
+  #       run: ./scripts/delete-all-dev-branches.sh
       
-      - name: Create Dev DB Branch
-        run: ./scripts/create-branch.sh
+  #     - name: Create Dev DB Branch
+  #       run: ./scripts/create-branch.sh
 
   # unit-tests:
   #   needs: prepare
