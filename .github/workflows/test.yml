@@ -43,24 +43,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-
-      - name: Get installed Playwright version
-        id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(pnpm list @playwright/test | grep @playwright/test | awk '{print $2}')" >> $GITHUB_ENV
-
-      - name: Cache playwright binaries
-        uses: actions/cache@v3
-        id: playwright-cache
-        with:
-          path: /home/runner/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-
-      - run: pnpm exec playwright install --with-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: pnpm exec playwright install-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: pnpm exec playwright install msedge
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
       
       - name: Delete Existing Dev DB Branches
         run: pnpm pscale:branch:delete-all-dev
@@ -145,25 +127,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Restore Playwright cache
-        uses: actions/cache@v3
-        with:
-          path: /home/runner/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.PLAYWRIGHT_VERSION }}
-      
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: echo "PLAYWRIGHT_VERSION=$(pnpm list @playwright/test | grep @playwright/test | awk '{print $2}')" >> $GITHUB_ENV
+
       - name: Cache playwright binaries
         uses: actions/cache@v3
         id: playwright-cache
         with:
-          path: /home/runner/.cache/ms-playwright
+          path: $HOME/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
       - run: pnpm exec playwright install --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: pnpm exec playwright install-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
       - run: pnpm exec playwright install msedge
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
       
       - name: Generate New Credentials
         run: pnpm pscale:cred:create "e2e-tests-${{ github.run_number }}"
@@ -192,10 +170,9 @@ jobs:
         with:
           version: 8
           run_install: false
-      
 
       - name: Delete Credentials
-        run: pnpm pscale:cred:delete-all-dev
+        run: pnpm pscale:cred:delete-all
 
       - name: Delete Dev DB Branch
         run: pnpm pscale:branch:delete
