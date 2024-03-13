@@ -15,8 +15,6 @@ jobs:
       PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       PEPPER: ${{ secrets.PEPPER }}
-    outputs:
-      PLAYWRIGHT_VERSION: ${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
     steps:
       - uses: actions/checkout@v3
       - uses: planetscale/setup-pscale-action@v1
@@ -135,13 +133,15 @@ jobs:
         uses: actions/cache@v3
         id: playwright-cache
         with:
-          path: $HOME/.cache/ms-playwright
+          path: |
+            ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
-      - run: pnpm exec playwright install --with-deps
+      - run: npx playwright install --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-
-      - run: pnpm exec playwright install msedge
+      - run: npx playwright install-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - run: pnpm exec playwright install msedge # Can't be cached
       
       - name: Generate New Credentials
         run: pnpm pscale:cred:create "e2e-tests-${{ github.run_number }}"
