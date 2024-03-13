@@ -75,25 +75,29 @@ function remove_credentials_from_dotenv() {
     var_name=$1
     local status_code=""
 
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        # Mac OSX
-        sed -i '' "s|^$var_name=.*||" .env
+    if [ -f .env ]; then
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # Mac OSX
+            sed -i '' "s|^$var_name=.*||" .env
 
-        status_code=$?
-        if [ "$status_code" -ne 0 ]; then
-            echo "Error: Unable to remove credentials from .env file. Exiting..."
-            exit 1
-        fi
-    else
-        # Linux
-        sed -i "s|^$var_name=.*||" .env
-        
-        status_code=$?
-        if [ "$status_code" -ne 0 ]; then
-            echo "Error: Unable to remove credentials from .env file. Exiting..."
-            exit 1
+            status_code=$?
+            if [ "$status_code" -ne 0 ]; then
+                echo "Error: Unable to remove credentials from .env file. Exiting..."
+                exit 1
+            fi
+        else
+            # Linux
+            sed -i "s|^$var_name=.*||" .env
+            
+            status_code=$?
+            if [ "$status_code" -ne 0 ]; then
+                echo "Error: Unable to remove credentials from .env file. Exiting..."
+                exit 1
+            fi
         fi
     fi
+
+   
 }
 
 # --- GIT METHODS ---
