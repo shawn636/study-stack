@@ -63,10 +63,10 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       
       - name: Delete Existing Dev DB Branches
-        run: ./scripts/delete-all-dev-branches.sh
+        run: .pscale/cli-helper-scripts/delete-all-dev-branches.sh
       
       - name: Create Dev DB Branch
-        run: ./scripts/create-branch.sh
+        run: .pscale/cli-helper-scripts/create-branch.sh
 
   unit-tests:
     needs: prepare
@@ -105,7 +105,7 @@ jobs:
         run: pnpm install
       
       - name: Generate New Credentials
-        run: ./scripts/create-cred.sh "unit-tests-${{ github.run_number }}"
+        run: .pscale/cli-helper-scripts/create-cred.sh "unit-tests-${{ github.run_number }}"
 
       - name: Run unit tests
         run: pnpm test:unit
@@ -167,7 +167,7 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       
       - name: Generate New Credentials
-        run: ./scripts/create-cred.sh "e2e-tests-${{ github.run_number }}"
+        run: .pscale/cli-helper-scripts/create-cred.sh "e2e-tests-${{ github.run_number }}"
 
       - name: Run end-to-end tests
         run: pnpm test
@@ -184,7 +184,7 @@ jobs:
       - uses: planetscale/setup-pscale-action@v1
 
       - name: Delete Credentials
-        run: ./scripts/delete-all-creds.sh
+        run: .pscale/cli-helper-scripts/delete-all-creds.sh
 
       - name: Delete Dev DB Branch
-        run: ./scripts/delete-branch.sh
+        run: .pscale/cli-helper-scripts/delete-branch.sh
