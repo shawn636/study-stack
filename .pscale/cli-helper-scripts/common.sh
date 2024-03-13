@@ -402,7 +402,7 @@ function close_deploy_request() {
     fi
 
     if [ -n "$reason_for_closing" ]; then
-        add_pr_comment 'string' ":recycle: Deploy request [$dr_number](https://app.planetscale.com/$PSCALE_ORG_NAME/$PSCALE_DB_NAME/deploy-requests/$dr_number) closed for reason: $reason_for_closin."
+        add_pr_comment 'string' ":recycle: Deploy request [$dr_number](https://app.planetscale.com/$PSCALE_ORG_NAME/$PSCALE_DB_NAME/deploy-requests/$dr_number) closed for reason: $reason_for_closing."
     else
         add_pr_comment 'string' ":recycle: Deploy request [$dr_number](https://app.planetscale.com/$PSCALE_ORG_NAME/$PSCALE_DB_NAME/deploy-requests/$dr_number) closed."
     fi
