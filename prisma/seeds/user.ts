@@ -1,4 +1,4 @@
-import type { AuthUser, Organization, PrismaClient, User } from '@prisma/client';
+import type { Organization, PrismaClient, User, auth_user } from '@prisma/client';
 
 import { faker } from '@faker-js/faker';
 
@@ -7,7 +7,7 @@ export async function seedUser(client: PrismaClient) {
 
     const numUsers = 100;
     const users: User[] = [];
-    const authUsers: AuthUser[] = [];
+    const authUsers: auth_user[] = [];
 
     for (let i = 0; i < numUsers; i++) {
         const includeOrganization = faker.datatype.boolean();
@@ -16,7 +16,7 @@ export async function seedUser(client: PrismaClient) {
         const authUserId = faker.string.uuid();
         const userId = i + 1;
 
-        const authUser: AuthUser = {
+        const authUser: auth_user = {
             email: email,
             id: authUserId,
             user_id: userId
@@ -36,12 +36,13 @@ export async function seedUser(client: PrismaClient) {
                 : null,
             phone_number: faker.phone.number().slice(3, 10),
             photo_url: faker.image.avatar(),
+            role: faker.helpers.arrayElement(['admin', 'user']),
             state: faker.location.state()
         };
         authUsers.push(authUser);
         users.push(user);
     }
 
-    await client.authUser.createMany({ data: authUsers });
+    await client.auth_user.createMany({ data: authUsers });
     await client.user.createMany({ data: users });
 }

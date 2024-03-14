@@ -1,104 +1,57 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider     = "mysql"
-  relationMode = "prisma"
   url          = env("DATABASE_URL")
-}
-
-model AuthKey {
-  id String @id @unique
-
-  auth_user       AuthUser @relation(references: [id], fields: [auth_user_id], onDelete: Cascade)
-  auth_user_id    String
-  hashed_password String?
-
-  @@index([auth_user_id])
-  @@map("auth_key")
-}
-
-model AuthSession {
-  id String @id @unique
-
-  auth_user    AuthUser @relation(fields: [auth_user_id], references: [id], onDelete: Cascade)
-  auth_user_id String
-  expires      DateTime
-
-  @@index([auth_user_id])
-  @@map("auth_session")
-}
-
-model AuthUser {
-  id String @id @unique
-
-  AuthKey     AuthKey[]
-  AuthSession AuthSession[]
-  email       String        @unique
-  User        User?         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  user_id     Int?          @unique
-
-  @@index([user_id])
-  @@map("auth_user")
+  relationMode = "prisma"
 }
 
 model Category {
-  id Int @id @default(autoincrement())
-
-  courses  Course[]
+  id       Int    @id @default(autoincrement())
+  title    String @unique
   img_href String
-  title    String   @unique
 }
 
 model ContentType {
-  id Int @id @default(autoincrement())
-
-  CourseContent CourseContent[]
-  title         String          @unique
+  id    Int    @id @default(autoincrement())
+  title String @unique
 }
 
 model Course {
-  id Int @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
+  title       String @db.MediumText
+  description String @db.LongText
+  category    String
+  categoryId  Int
 
-  category               String
-  Category               Category        @relation(fields: [categoryId], references: [id])
-  categoryId             Int
-  current_price          Decimal
-  description            String          @db.LongText
+  current_price  Decimal
+  original_price Decimal
+
+  instructor   String
+  instructorId Int
+
+  organization           String?
   difficulty             String
+  img_href               String
   estimated_time_hours   Int
   estimated_time_minutes Int
-  img_href               String
-  instructor             String
-  Instructor             User            @relation(fields: [instructorId], references: [id])
-  instructorId           Int
   lesson_cnt             Int
-  lessons                Lesson[]
-  original_price         Decimal
-  organization           String?
-  rating_avg             Float
   rating_cnt             Int
-  title                  String          @db.MediumText
-  CourseProgres          CourseProgres[]
+  rating_avg             Float
 
   @@index([categoryId])
   @@index([instructorId])
+  @@index([title(length: 100), description(length: 500)], map: "course_fulltext")
 }
 
 model CourseContent {
-  id Int @id @default(autoincrement())
-
-  author        User        @relation(fields: [authorId], references: [id])
-  authorId      Int
-  content       Json
+  id            Int  @id @default(autoincrement())
   contentTypeId Int
-  Lesson        Lesson?     @relation(fields: [lessonId], references: [id])
   lessonId      Int?
-  type          ContentType @relation(fields: [contentTypeId], references: [id])
+  content       Json
+  authorId      Int
 
   @@index([authorId])
   @@index([contentTypeId])
@@ -107,63 +60,82 @@ model CourseContent {
 
 model CourseProgres {
   user_id           Int
-  users             User   @relation(fields: [user_id], references: [id])
   lessons_completed Int
   course_id         Int
-  courses           Course @relation(fields: [course_id], references: [id])
 
   @@id([user_id, course_id])
-  @@index([user_id])
   @@index([course_id])
-}
-
-model CSRFToken {
-  token String @id @unique
-
-  expires BigInt
-
-  @@map("csrf_token")
+  @@index([user_id])
 }
 
 model Lesson {
-  id Int @id @default(autoincrement())
-
-  content  CourseContent[]
-  Course   Course?         @relation(fields: [courseId], references: [id])
-  courseId Int?
+  id       Int    @id @default(autoincrement())
   title    String
+  courseId Int?
 
   @@index([courseId])
 }
 
 model Organization {
-  id Int @id @default(autoincrement())
-
-  description String?
+  id          Int     @id @default(autoincrement())
   name        String
-  users       User[]
+  description String?
 }
 
 model User {
-  id Int @id @default(autoincrement())
-
+  id             Int     @id @default(autoincrement())
+  auth_user_id   String  @unique
+  name           String
+  email          String  @unique
+  organizationId Int?
   area_code      String?
-  AuthUser       AuthUser?
-  auth_user_id   String          @unique
-  bio            String?         @db.LongText
+  bio            String? @db.LongText
   city           String?
   country_code   String?
-  courseContent  CourseContent[]
-  courses        Course[]
-  email          String          @unique
-  name           String
-  Organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  organizationId Int?
   phone_number   String?
   photo_url      String?
   state          String?
-  CourseProgres  CourseProgres[]
+  role           String  @default("user")
 
   @@index([auth_user_id])
   @@index([organizationId])
+}
+
+model auth_key {
+  id              String  @id @unique
+  hashed_password String?
+  auth_user_id    String
+
+  @@index([auth_user_id])
+}
+
+model auth_session {
+  id           String   @id @unique
+  auth_user_id String
+  expires      DateTime
+
+  @@index([auth_user_id])
+}
+
+model auth_user {
+  id      String @id @unique
+  user_id Int?   @unique
+  email   String @unique
+
+  @@index([user_id])
+}
+
+model csrf_token {
+  token   String @id @unique
+  expires BigInt
+}
+
+model permissions {
+  id              Int    @id @default(autoincrement())
+  permission_type String
+  resource_id     Int
+  resource_type   String
+  user_id         Int
+
+  @@index([user_id])
 }

@@ -41,7 +41,7 @@
         ]
     },
     "prisma": {
-        "seed": "node --experimental-specifier-resolution=node --loader ts-node/esm prisma/seed.ts"
+        "seed": "tsx prisma/seed.ts"
     },
     "devDependencies": {
         "@amplitude/analytics-browser": "^2.5.3",
@@ -105,6 +105,7 @@
         "ts-interface-checker": "^1.0.2",
         "ts-node": "^10.9.2",
         "tslib": "^2.6.2",
+        "tsx": "^4.7.1",
         "typescript": "^5.4.2",
         "uuid": "^9.0.1",
         "vercel": "^33.5.5",

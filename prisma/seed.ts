@@ -12,7 +12,6 @@ const prisma = new PrismaClient();
 
 async function main() {
     await deleteAll(prisma);
-
     await seedOrganization(prisma);
     await Promise.all([seedCategory(prisma), seedUser(prisma)]);
     await seedCourse(prisma);

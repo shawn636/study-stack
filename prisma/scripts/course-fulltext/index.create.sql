@@ -1,1 +1,1 @@
-CREATE FULLTEXT INDEX course_fulltext ON Course(title, description);
+CREATE FULLTEXT INDEX course_fulltext ON Courses(title, description);

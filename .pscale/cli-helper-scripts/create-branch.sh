@@ -67,19 +67,13 @@ function create_branch() {
     fi
 
     cur_prod_branch=$(pscale branch list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r '.[] | select(.production == true) | .name')
-    latest_successful_backup=$(pscale backup list "$PSCALE_DB_NAME" "$cur_prod_branch" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r 'sort_by(.completed_at) | reverse | .[] | select(.state == "success") | .id' | head -n 1)
 
     if [ -z "$cur_prod_branch" ]; then
         echo "Error: Unable to determine current production branch. Exiting..."
         exit 1
     fi
 
-    if [ -z "$latest_successful_backup" ]; then
-        echo "Error: Unable to determine latest successful backup. Exiting..."
-        exit 1
-    fi
-
-    pscale branch create "$PSCALE_DB_NAME" "$new_branch_name" --from "$cur_prod_branch" --restore "$latest_successful_backup" --wait --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+    pscale branch create "$PSCALE_DB_NAME" "$new_branch_name" --from "$cur_prod_branch" --wait --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
 }
 
 # --- MAIN ---
@@ -95,6 +89,7 @@ function main() {
     update_var_in_dotenv "DATABASE_URL" "$DB_URL" || exit $?
     pnpm build || exit $?
     pnpm prisma generate || exit $?
+    pnpm prisma db push || exit $?
     pnpm prisma db seed || exit $?
 }
 main

@@ -104,7 +104,11 @@ function remove_credentials_from_dotenv() {
 function branch_name_from_git() {
     local git_branch_name=""
     if [ -n "$CI" ]; then
-       git_branch_name=${GITHUB_REF#refs/heads/}
+        if [ -n "$GITHUB_HEAD_REF" ]; then
+            git_branch_name=$GITHUB_HEAD_REF
+        else
+            git_branch_name=$GITHUB_REF_NAME
+        fi
     else
         git_branch_name=$(git branch --show-current)
     fi
@@ -211,7 +215,7 @@ function generate_credentials() {
     # Clean the cred name
     cred_name=$(echo "$cred_name" | tr -cd '[:alnum:]-/' | tr '/' '-' | tr '[:upper:]' '[:lower:]')
 
-    cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$branch_name" "$cred_name" --role readwriter --ttl 2592000 --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID")
+    cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$branch_name" "$cred_name" --role admin --ttl 2592000 --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID")
 
     status_code=$?
     if [ "$status_code" -ne 0 ]; then
