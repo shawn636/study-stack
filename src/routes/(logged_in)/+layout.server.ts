@@ -1,4 +1,4 @@
-import type User from '$lib/models/user';
+import type { User } from '@prisma/client';
 
 import { auth } from '$lib/server/auth';
 

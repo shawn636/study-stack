@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type User from '$lib/models/user';
+    import type { User } from '@prisma/client';
 
     import { goto } from '$app/navigation';
     import { initials } from '$lib/client/util';
@@ -16,7 +16,6 @@
             method: 'POST'
         });
         if (res.status === 200) {
-            console.log(res.status);
             goto('/auth/login');
         }
     };

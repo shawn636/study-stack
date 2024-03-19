@@ -43,6 +43,9 @@ devDependencies:
   '@playwright/test':
     specifier: ^1.42.1
     version: 1.42.1
+  '@prisma/adapter-planetscale':
+    specifier: ^5.11.0
+    version: 5.11.0(@planetscale/database@1.16.0)
   '@prisma/client':
     specifier: ^5.11.0
     version: 5.11.0(prisma@5.11.0)
@@ -987,6 +990,15 @@ packages:
     resolution: {integrity: sha512-j7P6Rgr3mmtdkeDGTe0E/aYyWEWVtc5yFXtHCRHs28/jptDEWfaVOc5T7cblqy1XKPPfCxJc/8DwQ5YgLOZOVQ==}
     dev: true
 
+  /@prisma/adapter-planetscale@5.11.0(@planetscale/database@1.16.0):
+    resolution: {integrity: sha512-Z7MoNtisYsDcghw+8UYJW05+3hFV90Qkvh0iuD1hMpqCCTqB9YwrxBvExr3uxL3B97NGeHOqHNfQxCANehd3yg==}
+    peerDependencies:
+      '@planetscale/database': ^1.15.0
+    dependencies:
+      '@planetscale/database': 1.16.0
+      '@prisma/driver-adapter-utils': 5.11.0
+    dev: true
+
   /@prisma/client@5.11.0(prisma@5.11.0):
     resolution: {integrity: sha512-SWshvS5FDXvgJKM/a0y9nDC1rqd7KG0Q6ZVzd+U7ZXK5soe73DJxJJgbNBt2GNXOa+ysWB4suTpdK5zfFPhwiw==}
     engines: {node: '>=16.13'}
@@ -1002,6 +1014,12 @@ packages:
 
   /@prisma/debug@5.11.0:
     resolution: {integrity: sha512-N6yYr3AbQqaiUg+OgjkdPp3KPW1vMTAgtKX6+BiB/qB2i1TjLYCrweKcUjzOoRM5BriA4idrkTej9A9QqTfl3A==}
+    dev: true
+
+  /@prisma/driver-adapter-utils@5.11.0:
+    resolution: {integrity: sha512-C2Qa/HZXZNwDBZCHJxlV4eibqXakbOBLd+mUeNCxSfaM8yi8Qi8zToN8Kb3M60Kr1ymr+tzzw/wVqYIfIfUiXw==}
+    dependencies:
+      '@prisma/debug': 5.11.0
     dev: true
 
   /@prisma/engines-version@5.11.0-15.efd2449663b3d73d637ea1fd226bafbcf45b3102:

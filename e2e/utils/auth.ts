@@ -1,60 +1,45 @@
 import { Client } from '@planetscale/database';
-import { v4 } from 'uuid';
+import { PrismaPlanetScale } from '@prisma/adapter-planetscale';
+import { KeyType, PrismaClient } from '@prisma/client';
 
 import { hashPassword } from './crypto';
 import { DATABASE_URL } from './env';
 
-export const db = new Client({
+const client = new Client({
     url: DATABASE_URL
 });
+const adapter = new PrismaPlanetScale(client);
+export const prisma = new PrismaClient({ adapter });
 
 const createUser = async (email: string, password: string, name: string): Promise<string> => {
-    const conn = db.connection();
+    const keyValue = await hashPassword(password);
 
-    // Create auth_user
-    const userId = v4();
-    const query = 'INSERT INTO auth_user (id, email) VALUES (?, ?);';
-    const userResult = await conn.execute(query, [userId, email]);
+    const createUserResult = await prisma.authUser.create({
+        data: {
+            authKeys: { create: { keyType: KeyType.CREDENTIAL_HASH, keyValue: keyValue } },
+            email: email,
+            user: { create: { email: email, name: name } }
+        },
+        include: { user: true }
+    });
 
-    if (userResult.insertId === null) {
-        console.error('Unable to insert auth_user');
-        throw Error('DB_INSERT_FAILED');
+    let userId: number = -1;
+
+    if (createUserResult.user?.id !== undefined && createUserResult.id !== undefined) {
+        userId = createUserResult.user.id;
     }
 
-    // Create auth_key
-    const keyId = v4();
-    const hashedPassword = await hashPassword(password);
-    const keyQuery = 'INSERT INTO auth_key (id, auth_user_id, hashed_password) VALUES (?, ?, ?);';
-    const keyResult = await conn.execute(keyQuery, [keyId, userId, hashedPassword]);
-
-    if (keyResult.insertId === null) {
-        console.error('Unable to insert auth_key');
-        throw new Error('DB_INSERT_FAILED');
-    }
-
-    // Create User Profile
-    const userProfileQuery = 'INSERT INTO User (auth_user_id, name, email) VALUES (?, ?, ?);';
-    const userProfileResult = await conn.execute(userProfileQuery, [userId, name, email]);
-
-    if (userProfileResult.insertId === null) {
-        console.error('Unable to insert User');
-        throw Error('DB_INSERT_FAILED');
-    }
-
-    return userId;
+    return userId.toString();
 };
 
 const deleteUserIfExists = async (email: string): Promise<void> => {
-    const conn = db.connection();
+    const queryUserResult = await prisma.authUser.findFirst({
+        include: { user: true },
+        where: { email: email }
+    });
 
-    const result = await conn.execute('SELECT id FROM auth_user WHERE email = ?', [email]);
-    const resultObject = result.rows[0] as { id: string | undefined };
-
-    if (resultObject?.id !== undefined) {
-        await conn.execute('DELETE FROM auth_user WHERE id = ?', [resultObject.id]);
-        await conn.execute('DELETE FROM auth_key WHERE auth_user_id = ?', [resultObject.id]);
-        await conn.execute('DELETE FROM auth_session WHERE auth_user_id = ?', [resultObject.id]);
-        await conn.execute('DELETE FROM User WHERE auth_user_id = ?', [resultObject.id]);
+    if (queryUserResult?.user?.id !== undefined && queryUserResult.id !== undefined) {
+        await prisma.authUser.delete({ where: { id: queryUserResult.id } });
     }
 
     return;

@@ -2,16 +2,20 @@
  * @vitest-environment jsdom
  */
 
-import { db } from './database';
+import { prisma } from './database';
 
 describe('database', () => {
     it('should be able to connect to the database', async () => {
-        expect(db).toBeTruthy();
-        const connection = db.connection();
-        expect(connection).toBeTruthy();
-        const result = await connection.execute('SELECT 1 + 1 as solution');
+        expect(prisma).toBeTruthy();
 
-        const solution = parseInt(result.rows[0].solution) || null;
-        expect(solution).toBe(2);
+        interface Result {
+            solution: number;
+        }
+
+        const result: Result[] = await prisma.$queryRaw`SELECT 1 + 1 as solution`;
+
+        expect(result.length).toBe(1);
+        const num: number = Number(result[0]?.solution) ?? -1;
+        expect(num).toBe(2);
     });
 });

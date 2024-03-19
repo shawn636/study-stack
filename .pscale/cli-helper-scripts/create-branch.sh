@@ -88,8 +88,8 @@ function main() {
     DB_URL=$(generate_credentials "$new_branch_name") || exit $?
     update_var_in_dotenv "DATABASE_URL" "$DB_URL" || exit $?
     pnpm build || exit $?
-    pnpm prisma generate || exit $?
     pnpm prisma db push || exit $?
+    pnpm prisma generate || exit $?
     pnpm prisma db seed || exit $?
 }
 main

@@ -1,7 +1,6 @@
 import type { Cookies } from '@sveltejs/kit';
 
-import { db } from '$lib/server/database';
-import { v4 as uuidv4 } from 'uuid';
+import { prisma } from '$lib/server/database';
 
 export const COOKIE_NAME = 'x-csrf-token';
 
@@ -12,13 +11,22 @@ export const COOKIE_NAME = 'x-csrf-token';
  * @returns {Promise<boolean>} A Promise that resolves to true if the token is valid, false otherwise.
  */
 const validateToken = async (token: string): Promise<boolean> => {
-    const conn = db.connection();
     try {
-        const result = await conn.execute(
-            'SELECT * FROM csrf_token WHERE token = ? AND expires > CURRENT_TIMESTAMP;',
-            [token]
-        );
-        return result.rows.length > 0;
+        const result = await prisma.csrfToken.findFirst({
+            where: {
+                AND: [
+                    {
+                        token: token
+                    },
+                    {
+                        expirationDate: {
+                            gt: new Date()
+                        }
+                    }
+                ]
+            }
+        });
+        return result !== null;
     } catch (e) {
         console.error('Something went wrong while validating token');
         return false;
@@ -31,16 +39,19 @@ const validateToken = async (token: string): Promise<boolean> => {
  * @returns {Promise<string | null>} A Promise that resolves to the generated CSRF token, or null if insertion fails.
  */
 const generateToken = async (): Promise<null | string> => {
-    const newToken: string = uuidv4();
-    const conn = db.connection();
     try {
-        await conn.execute(
-            'INSERT INTO csrf_token (token, expires) VALUES (?, DATE_ADD(NOW(), INTERVAL 30 DAY)   );',
-            [newToken]
-        );
-        return newToken;
+        const currentDate = new Date();
+        const expirationDate = new Date();
+        expirationDate.setDate(currentDate.getDate() + 30);
+
+        const newToken = await prisma.csrfToken.create({
+            data: {
+                expirationDate: expirationDate
+            }
+        });
+        const tokenValue = newToken.token;
+        return tokenValue;
     } catch (e) {
-        console.log(e);
         console.error('Unable to insert token into database');
         return null;
     }

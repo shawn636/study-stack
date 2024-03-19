@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type Course from '$lib/models/course';
+    import type { Course, User } from '@prisma/client';
 
     import Image from '$lib/components/image.svelte';
     import {
@@ -12,7 +12,9 @@
     import Fa from 'svelte-fa';
 
     export let course: Course;
-    $: ratingAvgRounded = Math.round(course.rating_avg * 2) / 2;
+    export let instructor: User;
+
+    $: ratingAvgRounded = Math.round(course.ratingAverage * 2) / 2;
 
     let toggled = false;
 
@@ -32,7 +34,7 @@
         alt="an open bible"
         class="aspect-auto rounded-md"
         {height}
-        src={course.img_href}
+        src={course.imgHref}
         {width}
     />
 
@@ -41,7 +43,9 @@
         <div
             class="flex-flow-col text flex items-center justify-items-center gap-x-2 px-2 text-sm font-medium"
         >
-            <p class="text-secondary-600">{Math.round(course.rating_avg * 100) / 100}</p>
+            <p class="text-secondary-600">
+                {Math.round(course.ratingAverage * 100) / 100}
+            </p>
             <Ratings max={5} value={ratingAvgRounded}>
                 <svelte:fragment slot="empty">
                     <Fa class="text-yellow-500" icon={faStarOutline} />
@@ -53,7 +57,7 @@
                     <Fa class="text-yellow-500" icon={faStar} />
                 </svelte:fragment>
             </Ratings>
-            <p class="text-xs text-gray-400">({course.rating_cnt})</p>
+            <p class="text-xs text-gray-400">({course.ratingCount})</p>
         </div>
     </div>
     <!-- Ratings (Above) -->
@@ -68,12 +72,12 @@
     >
         <span class="flex items-center gap-x-1">
             <Fa icon={faFileLines} size="sm" />
-            <p class="whitespace-nowrap">{course.lesson_cnt} Lessons</p>
+            <p class="whitespace-nowrap">{course.lessonCount} Lessons</p>
         </span>
         <span class="flex items-center gap-x-1">
             <Fa icon={faClock} size="sm" />
             <p class="whitespace-nowrap">
-                {course.estimated_time_hours}h {course.estimated_time_minutes}m
+                {course.estimatedTimeHours}h {course.estimatedTimeMinutes}m
             </p>
         </span>
     </div>
@@ -86,20 +90,20 @@
         <div class="grid grid-flow-col items-center justify-items-start px-2">
             <div class="flex-flow-col flex items-center gap-x-1">
                 <Fa class="text-surface-400" icon={faCircle} size="2x" />
-                <p class="text-sm text-gray-500">{course.instructor}</p>
+                <p class="text-sm text-gray-500">{instructor.name}</p>
             </div>
         </div>
 
         <div class="grid grid-rows-[1fr_1fr]">
             <div class=" grid h-min grid-flow-col grid-cols-[1fr_auto] justify-items-end gap-2">
-                {#if course.current_price < course.original_price}
+                {#if course.currentPrice < course.originalPrice}
                     <p class="text-gray-400 line-through">
-                        ${Number(course.current_price).toFixed(2)}
+                        ${Number(course.currentPrice).toFixed(2)}
                     </p>
                 {/if}
 
                 <p class="font-semibold text-gray-600">
-                    ${Number(course.original_price).toFixed(2)}
+                    ${Number(course.originalPrice).toFixed(2)}
                 </p>
             </div>
             <div class="grid grid-cols-[1fr_auto] justify-items-end">

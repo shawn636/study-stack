@@ -1,4 +1,4 @@
-import type Course from '$lib/models/course';
+import type { Course, User } from '@prisma/client';
 
 /**
  * @vitest-environment jsdom
@@ -11,7 +11,7 @@ describe('/api/courses', () => {
 
         expect(response.status).toBe(200);
 
-        const courses: Course[] = await response.json();
+        const courses: { course: Course; instructor: User }[] = await response.json();
 
         expect(courses.length).toBeGreaterThan(0);
     });

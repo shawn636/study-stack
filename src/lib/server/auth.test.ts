@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 import { auth } from '$lib/server/auth';
-import { db } from '$lib/server/database';
+import { prisma } from '$lib/server/database';
 
 const accounts = [
     {
@@ -45,23 +45,15 @@ const accounts = [
 
 describe('auth', () => {
     beforeAll(async () => {
-        const conn = db.connection();
-        const deleteAuthUser = 'DELETE FROM auth_user WHERE email = ?';
-        const deleteUser = 'DELETE FROM User WHERE email = ?';
-
-        await Promise.all(
-            accounts.map(async (account) => {
-                await conn.execute(deleteAuthUser, [account.email]);
-                await conn.execute(deleteUser, [account.email]);
-            })
-        );
+        const promises = accounts.map(async (account) => {
+            await prisma.authUser.deleteMany({ where: { email: account.email } });
+        });
+        await Promise.all(promises);
 
         return async () => Promise.resolve();
     }, 20000);
 
     it('should create a valid user from createUser()', async () => {
-        const conn = db.connection();
-
         const actIdx = 0;
 
         const userId = await auth.createUser(
@@ -72,23 +64,16 @@ describe('auth', () => {
         expect(userId).toBeDefined();
         expect(userId).toBeTruthy();
 
-        const authUserResult = await conn.execute('SELECT * FROM auth_user WHERE email = ?', [
-            accounts[actIdx].email
-        ]);
-        expect(authUserResult.rows.length).toBe(1);
-        expect(authUserResult.rows[actIdx]).toBeTruthy();
+        const authUserResults = await prisma.authUser.findMany({
+            include: { authKeys: true, user: true },
+            where: { email: accounts[actIdx].email }
+        });
 
-        const userResult = await conn.execute('SELECT * FROM User WHERE email = ?', [
-            accounts[actIdx].email
-        ]);
-        expect(userResult.rows.length).toBe(1);
-        expect(userResult.rows[actIdx]).toBeTruthy();
-
-        const authKeyResult = await conn.execute('SELECT * FROM auth_key WHERE auth_user_id = ?', [
-            userId
-        ]);
-        expect(authKeyResult.rows.length).toBe(1);
-        expect(authKeyResult.rows[actIdx]).toBeTruthy();
+        expect(authUserResults.length).toBe(1);
+        expect(authUserResults[0].id).toBeTruthy();
+        expect(authUserResults[0]?.user?.id).toBeTruthy();
+        expect(authUserResults[0].authKeys.length).toBe(1);
+        expect(authUserResults[0].authKeys[0].id).toBeTruthy();
     });
 
     it('should fail to create a user from createUser() if they already have an account', async () => {
@@ -109,19 +94,19 @@ describe('auth', () => {
 
     it('should successfully login a valid user from login()', async () => {
         const actIdx = 2;
-        const userId = await auth.createUser(
+        const authUserId = await auth.createUser(
             accounts[actIdx].email,
             accounts[actIdx].password,
             accounts[actIdx].name
         );
-        expect(userId).toBeDefined();
-        expect(userId).toBeTruthy();
+        expect(authUserId).toBeDefined();
+        expect(authUserId).toBeTruthy();
 
         const session = await auth.login(accounts[actIdx].email, accounts[actIdx].password);
         expect(session).toBeDefined();
         expect(session).toBeTruthy();
 
-        const allSessionsResults = await auth.getAllSessions(userId);
+        const allSessionsResults = await auth.getAllSessions(authUserId);
         expect(allSessionsResults).toBeDefined();
         expect(allSessionsResults).toBeTruthy();
         expect(allSessionsResults.length).toBe(1);
@@ -131,7 +116,7 @@ describe('auth', () => {
         expect(newSession).toBeTruthy();
         expect(newSession).not.toBe(session);
 
-        const allSessionsResults2 = await auth.getAllSessions(userId);
+        const allSessionsResults2 = await auth.getAllSessions(authUserId);
         expect(allSessionsResults2).toBeDefined();
         expect(allSessionsResults2).toBeTruthy();
         expect(allSessionsResults2.length).toBe(2);

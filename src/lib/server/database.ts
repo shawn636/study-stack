@@ -1,12 +1,14 @@
 import { DATABASE_URL } from '$env/static/private';
 import { Client } from '@planetscale/database';
+import { PrismaPlanetScale } from '@prisma/adapter-planetscale';
+import { PrismaClient } from '@prisma/client';
 
-/**
- * Creates a new instance of the Planetscale Database client using the provided database URL.
- *
- * @param {string} url - The URL of the Planetscale database.
- * @returns {Client} A new instance of the Planetscale Database client.
- */
-export const db = new Client({
+const config = {
     url: DATABASE_URL
-});
+};
+
+const client = new Client(config);
+const adapter = new PrismaPlanetScale(client);
+
+export const db = client;
+export const prisma = new PrismaClient({ adapter });

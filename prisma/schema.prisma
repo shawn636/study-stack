@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters", "fullTextIndex", "fullTextSearch"]
 }
 
 datasource db {
@@ -9,133 +10,207 @@ datasource db {
 }
 
 model Category {
-  id       Int    @id @default(autoincrement())
-  title    String @unique
-  img_href String
-}
+  id Int @id @default(autoincrement())
 
-model ContentType {
-  id    Int    @id @default(autoincrement())
-  title String @unique
+  courses Course[]
+
+  imgHref String @map("img_href") @db.Text
+  title   String @unique
+
+  @@map("categories")
 }
 
 model Course {
-  id          Int    @id @default(autoincrement())
-  title       String @db.MediumText
-  description String @db.LongText
-  category    String
-  categoryId  Int
+  id Int @id @default(autoincrement())
 
-  current_price  Decimal
-  original_price Decimal
+  category           Category         @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Restrict)
+  courseProgressions CourseProgress[]
+  instructor         User             @relation(fields: [instructorId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  lessons            Lesson[]
+  organization       Organization?    @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: SetNull)
 
-  instructor   String
-  instructorId Int
-
-  organization           String?
-  difficulty             String
-  img_href               String
-  estimated_time_hours   Int
-  estimated_time_minutes Int
-  lesson_cnt             Int
-  rating_cnt             Int
-  rating_avg             Float
+  categoryId           Int     @map("category_id")
+  currentPrice         Decimal @map("current_price")
+  description          String  @db.Text
+  difficulty           String
+  estimatedTimeHours   Int     @map("estimated_time_hours")
+  estimatedTimeMinutes Int     @map("estimated_time_minutes")
+  imgHref              String  @map("img_href")
+  instructorId         Int     @map("instructor_id")
+  lessonCount          Int     @map("lesson_count")
+  organizationId       Int?    @map("organization_id")
+  originalPrice        Decimal @map("original_price")
+  ratingAverage        Float   @map("rating_average")
+  ratingCount          Int     @map("rating_count")
+  title                String  @db.Text
 
   @@index([categoryId])
   @@index([instructorId])
-  @@index([title(length: 100), description(length: 500)], map: "course_fulltext")
+  @@index([organizationId])
+  @@fulltext([title])
+  @@fulltext([title, description])
+  @@map("courses")
+}
+
+enum ContentType {
+  VIDEO
+  TEXT
+  QUIZ
 }
 
 model CourseContent {
-  id            Int  @id @default(autoincrement())
-  contentTypeId Int
-  lessonId      Int?
-  content       Json
-  authorId      Int
+  id Int @id @default(autoincrement())
+
+  contentType ContentType @map("content_type")
+
+  authorId Int     @map("author_id")
+  content  Json
+  lessonId Int?    @map("lesson_id")
+  Lesson   Lesson? @relation(fields: [lessonId], references: [id])
 
   @@index([authorId])
-  @@index([contentTypeId])
   @@index([lessonId])
+  @@map("course_contents")
 }
 
-model CourseProgres {
-  user_id           Int
-  lessons_completed Int
-  course_id         Int
+model CourseProgress {
+  course Course @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
-  @@id([user_id, course_id])
-  @@index([course_id])
-  @@index([user_id])
+  courseId         Int @map("course_id")
+  lessonsCompleted Int @map("lessons_completed")
+  userId           Int @map("user_id")
+
+  @@id([userId, courseId])
+  @@index([courseId])
+  @@index([userId])
+  @@map("course_progresions")
 }
 
 model Lesson {
-  id       Int    @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
+  course         Course?         @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  courseContents CourseContent[]
+
+  courseId Int?   @map("course_id")
   title    String
-  courseId Int?
 
   @@index([courseId])
+  @@map("lessons")
 }
 
 model Organization {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
+  id Int @id @default(autoincrement())
+
+  courses Course[]
+
+  description String? @db.Text
+  name        String  @db.Text
+  User        User[]
+
+  @@map("organizations")
 }
 
 model User {
-  id             Int     @id @default(autoincrement())
-  auth_user_id   String  @unique
-  name           String
+  id Int @id @default(autoincrement())
+
+  AuthUser           AuthUser?        @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  courses            Course[]
+  courseProgressions CourseProgress[]
+  organization       Organization?    @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+  permissions        Permission[]
+
+  areaCode       String? @map("area_code") @db.VarChar(5)
+  authUserId     String? @unique @map("auth_user_id") @db.VarChar(30)
+  bio            String? @db.Text
+  city           String? @db.Text
+  countryCode    String? @map("country_code") @db.VarChar(5)
   email          String  @unique
-  organizationId Int?
-  area_code      String?
-  bio            String? @db.LongText
-  city           String?
-  country_code   String?
-  phone_number   String?
-  photo_url      String?
-  state          String?
+  name           String  @db.Text
+  organizationId Int?    @map("organization_id")
+  phoneNumber    String? @map("phone_number") @db.VarChar(15)
+  photoUrl       String? @map("photo_url") @db.Text
   role           String  @default("user")
+  state          String?
 
-  @@index([auth_user_id])
+  @@index([authUserId])
   @@index([organizationId])
+  @@map("users")
 }
 
-model auth_key {
-  id              String  @id @unique
-  hashed_password String?
-  auth_user_id    String
-
-  @@index([auth_user_id])
+enum KeyType {
+  CREDENTIAL_HASH
+  OAUTH_TOKEN
 }
 
-model auth_session {
-  id           String   @id @unique
-  auth_user_id String
-  expires      DateTime
+model AuthKey {
+  id String @id @default(cuid()) @db.VarChar(30)
 
-  @@index([auth_user_id])
+  authUser AuthUser @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  authUserId String  @map("auth_user_id") @db.VarChar(30)
+  keyValue   String  @map("key_value")
+  keyType    KeyType @map("key_type")
+
+  @@index([authUserId])
+  @@map("auth_keys")
 }
 
-model auth_user {
-  id      String @id @unique
-  user_id Int?   @unique
-  email   String @unique
+model AuthSession {
+  id String @id @default(cuid()) @db.VarChar(30)
 
-  @@index([user_id])
+  authUser AuthUser @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  authUserId     String   @map("auth_user_id") @db.VarChar(30)
+  expirationDate DateTime @map("expiration_date")
+
+  @@index([authUserId])
+  @@map("auth_sessions")
 }
 
-model csrf_token {
-  token   String @id @unique
-  expires BigInt
+model AuthUser {
+  id String @id @default(cuid()) @db.VarChar(30)
+
+  authKeys     AuthKey[]
+  authSessions AuthSession[]
+  user         User?
+
+  email String @unique
+
+  @@map("auth_users")
 }
 
-model permissions {
-  id              Int    @id @default(autoincrement())
-  permission_type String
-  resource_id     Int
-  resource_type   String
-  user_id         Int
+model CsrfToken {
+  token String @id @default(cuid()) @db.VarChar(30)
 
-  @@index([user_id])
+  expirationDate DateTime @map("expiration_date")
+
+  @@map("csrf_tokens")
+}
+
+enum PermissionType {
+  READ
+  WRITE
+  DELETE
+}
+
+enum ResourceType {
+  COURSE
+  LESSON
+  USER
+}
+
+model Permission {
+  id Int @id @default(autoincrement())
+
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  permissionType PermissionType @map("permission_type")
+  resourceId     Int            @map("resouce_id") // Eventually shift this to another table
+  resourceType   ResourceType   @map("resource_type")
+  userId         Int            @map("user_id")
+
+  @@index([userId])
+  @@map("permissions")
 }

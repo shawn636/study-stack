@@ -1,8 +1,8 @@
-import type User from '$lib/models/user';
+import type { User } from '@prisma/client';
 
 import { auth } from '$lib/server/auth';
 import { csrf } from '$lib/server/csrf';
-import { db } from '$lib/server/database';
+import { prisma } from '$lib/server/database';
 import { error } from '@sveltejs/kit';
 
 import type { RequestHandler } from './$types';
@@ -15,34 +15,30 @@ export const PUT = (async ({ cookies, request }) => {
         error(401, 'You are not logged in.');
     }
 
-    const [userId, data] = await Promise.all([auth.getUserId(sessionId), request.json()]);
+    const [userIdFromSession, requestData] = await Promise.all([
+        await auth.getUserId(sessionId),
+        await request.json()
+    ]);
 
-    const user: User = data.user;
+    const userFromRequest: User = requestData.user;
+    const userIdFromRequest: number = requestData.user.id;
 
-    const userIdFromRequest = data.user.id;
-
-    if (userId !== userIdFromRequest) {
+    if (Number(userIdFromSession) !== Number(userIdFromRequest)) {
         error(403, 'You are not authorized to update this user.');
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { authUserId, id, organizationId, ...userFromRequestWithoutForeignKeys } =
+        userFromRequest;
     try {
-        const query =
-            'UPDATE User SET email = ?, name = ?, country_code = ?, area_code = ?, phone_number = ?, bio = ?, city = ?, state = ? WHERE id = ?';
-
-        const conn = db.connection();
-        await conn.execute(query, [
-            user.email,
-            user.name,
-            user.country_code,
-            user.area_code,
-            user.phone_number,
-            user.bio,
-            user.city,
-            user.state,
-            userId
-        ]);
+        await prisma.user.update({
+            data: {
+                ...userFromRequestWithoutForeignKeys
+            },
+            where: { id }
+        });
     } catch (e) {
-        console.log(e);
+        console.error(e);
 
         error(500, 'Unable to update due to server error.');
     }

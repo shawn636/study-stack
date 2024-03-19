@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type User from '$lib/models/user';
+    import type { User } from '@prisma/client';
 
     import { page } from '$app/stores';
     import { getHeaderLinks } from '$lib/stores/links';

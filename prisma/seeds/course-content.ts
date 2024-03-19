@@ -1,6 +1,7 @@
 import type { CourseContent, Prisma, PrismaClient } from '@prisma/client';
 
 import { faker } from '@faker-js/faker';
+import { ContentType } from '@prisma/client';
 
 const generateJson = (): Prisma.JsonValue => {
     const numKeys = faker.number.int({ max: 5, min: 1 });
@@ -16,8 +17,7 @@ const generateJson = (): Prisma.JsonValue => {
 };
 
 export async function seedCourseContent(client: PrismaClient) {
-    const [contentTypes, lessons, authors] = await Promise.all([
-        client.contentType.findMany(),
+    const [lessons, authors] = await Promise.all([
         client.lesson.findMany(),
         client.user.findMany()
     ]);
@@ -36,7 +36,7 @@ export async function seedCourseContent(client: PrismaClient) {
             const content: CourseContent = {
                 authorId: faker.helpers.arrayElement(authors).id,
                 content: generateJson(),
-                contentTypeId: faker.helpers.arrayElement(contentTypes).id,
+                contentType: faker.helpers.arrayElement(Object.values(ContentType)),
                 id: contentId,
                 lessonId: lesson.id
             };

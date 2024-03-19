@@ -1,4 +1,4 @@
-import type User from '$lib/models/user';
+import type { User } from '@prisma/client';
 
 import { COOKIE_NAME, auth } from '$lib/server/auth';
 
@@ -40,9 +40,9 @@ describe('/api/user', () => {
 
         expect(response.status).toBe(200);
 
-        user.country_code = '+1';
-        user.area_code = '123';
-        user.phone_number = '4567890';
+        user.countryCode = '+1';
+        user.areaCode = '123';
+        user.phoneNumber = '4567890';
         user.bio = 'I am a test user';
 
         const response2 = await fetch('http://localhost:3004/api/user', {
@@ -57,9 +57,9 @@ describe('/api/user', () => {
         expect(response2.status).toBe(200);
 
         const updatedUser = await auth.getUser(sessionId);
-        expect(updatedUser.country_code).toBe(user.country_code);
-        expect(updatedUser.area_code).toBe(user.area_code);
-        expect(updatedUser.phone_number).toBe(user.phone_number);
+        expect(updatedUser.countryCode).toBe(user.countryCode);
+        expect(updatedUser.areaCode).toBe(user.areaCode);
+        expect(updatedUser.phoneNumber).toBe(user.phoneNumber);
     });
 
     it('should throw error if a user tries to update another', async () => {

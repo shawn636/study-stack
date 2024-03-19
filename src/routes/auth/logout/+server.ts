@@ -16,7 +16,6 @@ export const POST = (async ({ cookies }) => {
         await auth.logout(sessionId);
         cookies = auth.deleteSessionCookie(cookies);
     } catch (e) {
-        console.log(e);
         error(500, 'Unable to log out due to server error.');
     }
 

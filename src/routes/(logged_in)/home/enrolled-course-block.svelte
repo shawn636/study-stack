@@ -1,6 +1,5 @@
 <script lang="ts">
-    import type Course from '$lib/models/course';
-    import type CourseProgress from '$lib/models/course-progress';
+    import type { Course, CourseProgress } from '@prisma/client';
 
     import Image from '$lib/components/image.svelte';
 
@@ -8,13 +7,13 @@
     export let courseProgress: CourseProgress;
 
     $: percentComplete = Math.min(
-        (courseProgress.lessons_completed / course.lesson_cnt) * 100,
+        (courseProgress.lessonsCompleted / course.lessonCount) * 100,
         100
     );
 </script>
 
 <div class="grid gap-y-1 p-4" data-testid="course-progress-block">
-    <Image alt="Course 1" class="rounded-lg" height="151" src={course.img_href} width="252" />
+    <Image alt="Course 1" class="rounded-lg" height="151" src={course.imgHref} width="252" />
     <p class="text-lg font-bold">{course.title}</p>
     <div class="grid grid-cols-[1fr_auto] items-center gap-x-2">
         <div class="relative h-2 w-full rounded-full bg-surface-300 dark:bg-surface-700">

@@ -1,15 +1,27 @@
 import { csrf } from '$lib/server/csrf';
-import { db } from '$lib/server/database';
+import { prisma } from '$lib/server/database';
 
 import type { RequestHandler } from './$types';
 
 export const GET = (async ({ cookies }) => {
-    const conn = db.connection();
     await csrf.validateCookies(cookies);
 
-    const courses = await conn.execute('SELECT * FROM Course LIMIT 20;');
+    // Declare a type
 
-    const json = JSON.stringify(courses.rows);
+    const coursesWithInstructors = await prisma.course.findMany({
+        include: {
+            instructor: true
+        },
+        take: 20
+    });
+
+    const unzippedCoursesWithInstructors: { course: Course; instructor: User }[] =
+        coursesWithInstructors.map(({ instructor, ...course }) => ({
+            course,
+            instructor
+        }));
+
+    const json = JSON.stringify(unzippedCoursesWithInstructors);
 
     return new Response(json, {
         headers: {

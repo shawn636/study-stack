@@ -41,7 +41,6 @@
                         submissionError = 'The email or password you entered is incorrect.';
                     }
                     submissionError = data.error.message;
-                    console.log(data.error.message);
                 }
             } else {
                 submissionError = 'An error occurred. Please try again.';

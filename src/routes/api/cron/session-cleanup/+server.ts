@@ -1,22 +1,20 @@
-import { db } from '$lib/server/database';
+import { prisma } from '$lib/server/database';
 
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
     try {
-        const conn = db.connection();
-
-        const csrfFlush = await conn.execute(
-            'DELETE FROM csrf_token WHERE CAST(expires AS DATETIME) <= CURRENT_TIMESTAMP();'
-        );
-
-        const authSessionFlush = await conn.execute(
-            'DELETE FROM auth_session WHERE expires <= CURRENT_TIMESTAMP();'
-        );
-
+        const [csrfFlush, authSessionFlush] = await Promise.all([
+            prisma.csrfToken.deleteMany({
+                where: { expirationDate: { lte: new Date() } }
+            }),
+            prisma.authSession.deleteMany({
+                where: { expirationDate: { lte: new Date() } }
+            })
+        ]);
         const json = JSON.stringify({
-            auth_sessions_flushed: authSessionFlush.rowsAffected,
-            csrf_tokens_flushed: csrfFlush.rowsAffected
+            authSessionsFlushed: authSessionFlush.count,
+            csrfTokensFlushed: csrfFlush.count
         });
 
         return new Response(json, {

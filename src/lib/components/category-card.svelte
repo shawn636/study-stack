@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type Category from '$lib/models/category';
+    import type CategorySummary from '$lib/models/category-summary';
 
-    export let category: Category;
+    export let categorySummary: CategorySummary;
 </script>
 
 <a
@@ -9,10 +9,10 @@
     href="/categories"
 >
     <div class="m-0 grid items-center justify-items-center rounded-full bg-white p-0 shadow-sm">
-        <img alt={category.title} class="m-0 h-20 w-20 p-4" src={category.img_href} />
+        <img alt={categorySummary.title} class="m-0 h-20 w-20 p-4" src={categorySummary.imgHref} />
     </div>
     <div class="grid grid-flow-row p-0">
-        <h4 class="font-bold">{category.title}</h4>
-        <p class="text-surface-800-100-token text-sm">{category.count}+ Courses</p>
+        <h4 class="font-bold">{categorySummary.title}</h4>
+        <p class="text-surface-800-100-token text-sm">{categorySummary.count}+ Courses</p>
     </div>
 </a>

@@ -33,7 +33,6 @@
         if (event.key === 'Enter') {
             event.preventDefault();
             (event.target as HTMLInputElement).blur();
-            console.log('enter key pressed');
             nextForm();
         }
     };
@@ -67,7 +66,6 @@
                     await new Promise<void>((resolve) => setTimeout(resolve, 600));
                     goto('/');
                 } else {
-                    console.log(data.error.message);
                     if (data.error.message.includes('already in use')) {
                         prevFormIndex = currFormIndex;
                         currFormIndex = 0;
@@ -126,37 +124,18 @@
     $: transitionTo = currFormIndex > prevFormIndex ? 'right' : 'left';
 
     const nextForm = () => {
-        console.log('Validating inputs');
         validateField('name');
         validateField('email');
-        console.log('inputs validated');
         if (!$touched.name) {
-            console.log('name not touched');
             $errors.name = 'Please enter your name.';
-        } else {
-            console.log('name touched');
         }
         if (!$touched.email) {
-            console.log('email not touched');
             $errors.email = 'Please enter your email address.';
-        } else {
-            console.log('email touched');
         }
 
         if (!$errors.name && !$errors.email && currFormIndex < formCount - 1) {
-            console.log('no errors and not last form');
             prevFormIndex = currFormIndex;
             currFormIndex++;
-        } else {
-            if ($errors.name) {
-                console.log(`Name error: ${$errors.name}`);
-            }
-            if ($errors.email) {
-                console.log(`Email error: ${$errors.email}`);
-            }
-            if (currFormIndex >= formCount - 1) {
-                console.log('last form');
-            }
         }
     };
 
