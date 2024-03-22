@@ -33,7 +33,7 @@ jobs:
 
       - run: pnpm install
       - run: pnpm prisma generate
-      - run: pnpm build     
+      - run: pnpm build
       
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v4
@@ -42,7 +42,7 @@ jobs:
           path: |
             .vercel
             .svelte-kit
-            node_modules/.prisma
+            .prisma
           retention-days: 1
   unit-tests:
     needs: prepare
@@ -62,24 +62,26 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          cache: 'pnpm'
-      
+          cache: 'pnpm'  
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            .vercel
+            .svelte-kit
+            .prisma
+
       - name: Install dependencies
         run: pnpm install
+      
+      - m
       
       - name: Generate New Credentials
         run: |
           pnpm pscale:cred:delete-all-ci "ga-"
           pnpm pscale:cred:create "ga-unit-tests-${{ github.run_number }}"
       
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: |
-            .vercel
-            .svelte-kit
-            node_modules/.prisma
+
 
       - name: Run unit tests
         run: pnpm test:unit
@@ -114,7 +116,7 @@ jobs:
           path: |
             .vercel
             .svelte-kit
-            node_modules/.prisma
+            .prisma
 
       - name: Get installed Playwright version
         id: playwright-version

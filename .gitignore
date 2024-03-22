@@ -1,18 +1,29 @@
+# MacOS Files
 .DS_Store
+*.icloud
+
+# Build Files and Dependencies
 node_modules
 /build
 /.svelte-kit
+.vercel
+.prisma
 /package
+
+# Local Secrets
 .env
 .env.*
 !.env.example
+
+# Vite Temp Files
 vite.config.js.timestamp-*
-vite.config.ts.timestamp-*w
-.vercel
+vite.config.ts.timestamp-*
+
+# Test Artifacts
 coverage
-*.nnb
 e2e/test-results
 e2e/artifacts
-*.icloud
+
+# Node Notebooks
+*.nnb
 /notebooks
-vite.config.ts.timestamp-*
