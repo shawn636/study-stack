@@ -74,8 +74,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       
-      - m
-      
       - name: Generate New Credentials
         run: |
           pnpm pscale:cred:delete-all-ci "ga-"
