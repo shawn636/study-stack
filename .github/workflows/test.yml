@@ -32,8 +32,8 @@ jobs:
           pnpm pscale:cred:create "ga-prepare-${{ github.run_number }}"
 
       - run: pnpm install
-      - run: pnpm build     
       - run: pnpm prisma generate
+      - run: pnpm build     
       
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v4
