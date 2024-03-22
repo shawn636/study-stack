@@ -189,11 +189,11 @@ function generate_credentials() {
     if [ -z "$cred_name" ]; then
         if [ -n "$CI" ]; then
             if [ -n "$GITHUB_ACTOR" ]; then
-                cred_name="github-actions-$GITHUB_ACTOR"
+                cred_name="ga-$GITHUB_ACTOR"
             elif [ -n "$GITHUB_RUN_ID" ]; then
-                cred_name="github-actions-$GITHUB_RUN_ID"
+                cred_name="ga-$GITHUB_RUN_ID"
             else
-                cred_name="github-actions-$RANDOM"
+                cred_name="ga-$RANDOM"
             fi
         else
             git_user_name=$(git config user.name)

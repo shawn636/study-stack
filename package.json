@@ -8,6 +8,7 @@
         "pscale:branch:delete": ".pscale/cli-helper-scripts/delete-branch.sh",
         "pscale:branch:delete-all-dev": ".pscale/cli-helper-scripts/delete-all-dev-branches.sh",
         "pscale:cred:delete-all": ".pscale/cli-helper-scripts/delete-all-creds.sh",
+        "pscale:cred:delete-all-ci": ".pscale/cli-helper-scripts/delete-all-ci-creds.sh",
         "pscale:cred:create": ".pscale/cli-helper-scripts/create-cred.sh",
         "pscale:dr:create": ".pscale/cli-helper-scripts/create-deploy-request.sh",
         "pscale:dr:close": ".pscale/cli-helper-scripts/close-deploy-request.sh",

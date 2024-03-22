@@ -29,7 +29,7 @@ jobs:
       - name: Create Dev DB Branch and credential
         run: |
           pnpm pscale:branch:create
-          pnpm pscale:cred:create "prepare-${{ github.run_number }}"
+          pnpm pscale:cred:create "ga-prepare-${{ github.run_number }}"
 
       - run: pnpm install
       - run: pnpm build     
@@ -68,7 +68,9 @@ jobs:
         run: pnpm install
       
       - name: Generate New Credentials
-        run: pnpm pscale:cred:create "unit-tests-${{ github.run_number }}"
+        run: |
+          pnpm pscale:cred:delete-all-ci "ga-"
+          pnpm pscale:cred:create "ga-unit-tests-${{ github.run_number }}"
       
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
@@ -133,7 +135,7 @@ jobs:
       - run: pnpm exec playwright install msedge # Can't be cached
       
       - name: Generate New Credentials
-        run: pnpm pscale:cred:create "e2e-tests-${{ github.run_number }}"
+        run: pnpm pscale:cred:create "ga-e2e-tests-${{ github.run_number }}"
 
       - name: Run end-to-end tests
         run: pnpm test
@@ -156,11 +158,8 @@ jobs:
           node-version: '20.x'
           cache: 'pnpm'
 
-      # - name: Delete Credentials
-      #   run: pnpm pscale:cred:delete-all
-
-      # - name: Delete Dev DB Branch
-      #   run: pnpm pscale:branch:delete
+      - name: Delete Credentials
+        run: pnpm pscale:cred:delete-all-ci "ga-"
       
       - name: Delete Build Artifacts
         uses: geekyeggo/delete-artifact@v5
