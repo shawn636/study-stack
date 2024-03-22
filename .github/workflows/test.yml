@@ -18,32 +18,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: planetscale/setup-pscale-action@v1
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.x'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v2
         with:
           version: 8
-          run_install: false
-
-      - name: Get pnpm store directory
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
+      - uses: actions/setup-node@v3
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          node-version: '20.x'
+          cache: 'pnpm'
 
-      - name: Install dependencies
-        run: pnpm install
-      
-      - name: Delete Existing Dev DB Branches
-        run: pnpm pscale:branch:delete-all-dev
+      - run: pnpm install     
+      - run: pnpm prisma generate
       
       - name: Create Dev DB Branch
         run: pnpm pscale:branch:create
@@ -59,32 +43,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: planetscale/setup-pscale-action@v1
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.x'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v2
         with:
           version: 8
-          run_install: false
-      
-      - name: Get pnpm store directory
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Restore pnpm cache
-        uses: actions/cache@v3
+      - uses: actions/setup-node@v3
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          node-version: '20.x'
+          cache: 'pnpm'
       
       - name: Install dependencies
         run: pnpm install
-      
-      - name: Build
-        run: pnpm build
       
       - name: Generate New Credentials
         run: pnpm pscale:cred:create "unit-tests-${{ github.run_number }}"
@@ -104,26 +72,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: planetscale/setup-pscale-action@v1
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.x'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v2
         with:
           version: 8
-          run_install: false
-      
-      - name: Get pnpm store directory
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-        
-      - name: Restore pnpm cache
-        uses: actions/cache@v3
+      - uses: actions/setup-node@v3
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          node-version: '20.x'
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install
@@ -162,17 +117,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: planetscale/setup-pscale-action@v1
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.x'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v2
         with:
           version: 8
-          run_install: false
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'pnpm'
 
       - name: Delete Credentials
         run: pnpm pscale:cred:delete-all
