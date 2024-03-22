@@ -90,23 +90,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Get installed Playwright version
-        id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(pnpm list @playwright/test | grep @playwright/test | awk '{print $2}')" >> $GITHUB_ENV
-
-      - name: Cache playwright binaries
-        uses: actions/cache@v3
-        id: playwright-cache
-        with:
-          path: |
-            ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-
-      - run: npx playwright install --with-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: npx playwright install-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: pnpm exec playwright install msedge # Can't be cached
+      - name: Install Playwright
+        run: |
+          pnpm exec playwright install --with-deps
+          pnpm exec playwright install msedge
 
       - name: Generate New Credentials
         run: pnpm pscale:cred:create "ga-e2e-tests-${{ github.run_number }}"
