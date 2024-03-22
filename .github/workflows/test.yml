@@ -26,11 +26,22 @@ jobs:
           node-version: '20.x'
           cache: 'pnpm'
 
-      - run: pnpm install     
+      - run: pnpm install
+      - run: pnpm build     
       - run: pnpm prisma generate
       
       - name: Create Dev DB Branch
         run: pnpm pscale:branch:create
+
+      - name: Archive Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            .vercel
+            .svelte-kit
+            node_modules/.prisma
+          retention-days: 1
   unit-tests:
     needs: prepare
     runs-on: ubuntu-latest
@@ -56,6 +67,15 @@ jobs:
       
       - name: Generate New Credentials
         run: pnpm pscale:cred:create "unit-tests-${{ github.run_number }}"
+      
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            .vercel
+            .svelte-kit
+            node_modules/.prisma
 
       - name: Run unit tests
         run: pnpm test:unit
@@ -82,6 +102,15 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            .vercel
+            .svelte-kit
+            node_modules/.prisma
 
       - name: Get installed Playwright version
         id: playwright-version
@@ -130,3 +159,9 @@ jobs:
 
       - name: Delete Dev DB Branch
         run: pnpm pscale:branch:delete
+      
+      - name: Delete Build Artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: build-artifacts
+
