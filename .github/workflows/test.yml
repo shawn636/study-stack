@@ -26,8 +26,10 @@ jobs:
           node-version: '20.x'
           cache: 'pnpm'
 
-      - name: Create Dev DB Branch
-        run: pnpm pscale:branch:create
+      - name: Create Dev DB Branch and credential
+        run: |
+          pnpm pscale:branch:create
+          pnpm pscale:cred:create "prepare-${{ github.run_number }}"
 
       - run: pnpm install
       - run: pnpm build     
@@ -154,11 +156,11 @@ jobs:
           node-version: '20.x'
           cache: 'pnpm'
 
-      - name: Delete Credentials
-        run: pnpm pscale:cred:delete-all
+      # - name: Delete Credentials
+      #   run: pnpm pscale:cred:delete-all
 
-      - name: Delete Dev DB Branch
-        run: pnpm pscale:branch:delete
+      # - name: Delete Dev DB Branch
+      #   run: pnpm pscale:branch:delete
       
       - name: Delete Build Artifacts
         uses: geekyeggo/delete-artifact@v5
