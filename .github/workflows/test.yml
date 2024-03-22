@@ -42,7 +42,7 @@ jobs:
           path: |
             .vercel
             .svelte-kit
-            .prisma
+            node_modules/@prisma/client
           retention-days: 1
   unit-tests:
     needs: prepare
@@ -69,7 +69,7 @@ jobs:
           path: |
             .vercel
             .svelte-kit
-            .prisma
+            node_modules/@prisma/client
 
       - name: Install dependencies
         run: pnpm install
@@ -114,7 +114,7 @@ jobs:
           path: |
             .vercel
             .svelte-kit
-            .prisma
+            node_modules/@prisma/client
 
       - name: Get installed Playwright version
         id: playwright-version
