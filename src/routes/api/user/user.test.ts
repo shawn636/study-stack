@@ -6,7 +6,37 @@ import { COOKIE_NAME, auth } from '$lib/server/auth';
  * @vitest-environment jsdom
  */
 describe('/api/user', () => {
-    // Define any necessary variables or constants for the tests
+    interface TestAccount {
+        email: string;
+        name: string;
+        password: string;
+    }
+
+    const testAccounts: TestAccount[] = [
+        {
+            email: 'johnny_testerson@testy.com',
+            name: 'Johnny Testerson',
+            password: 'test'
+        },
+        {
+            email: 'someone_else@gmail.com',
+            name: 'Someone Else',
+            password: 'test'
+        }
+    ];
+
+    beforeAll(async () => {
+        await Promise.all(testAccounts.map((account) => auth.deleteUserIfExists(account.email)));
+        await Promise.all(
+            testAccounts.map((account) =>
+                auth.createUser(account.email, account.password, account.name)
+            )
+        );
+    });
+
+    afterAll(async () => {
+        await Promise.all(testAccounts.map((account) => auth.deleteUserIfExists(account.email)));
+    });
 
     it('should throw error if user is not logged in', async () => {
         // Call the PUT endpoint
@@ -18,15 +48,7 @@ describe('/api/user', () => {
     });
 
     it('should update the user with valid data', async () => {
-        const email = 'johnny_testerson@testy.com';
-        const pw = 'test';
-        const name = 'Johnny Testerson';
-
-        await auth.deleteUserIfExists('johnny_testerson@testy.com');
-        await auth.createUser(email, pw, name);
-
-        const sessionId = await auth.login('johnny_testerson@testy.com', 'test');
-
+        const sessionId = await auth.login(testAccounts[0].email, testAccounts[0].password);
         const user: User = await auth.getUser(sessionId);
 
         const response = await fetch('http://localhost:3004/api/user', {
@@ -63,24 +85,9 @@ describe('/api/user', () => {
     });
 
     it('should throw error if a user tries to update another', async () => {
-        const email1 = 'johnny_testerson@testy.com';
-        const pw1 = 'test';
-        const name1 = 'Johnny Testerson';
-
-        const email2 = 'someone_else@gmail.com';
-        const pw2 = 'test';
-        const name2 = 'Someone Else';
-
-        await Promise.all([auth.deleteUserIfExists(email1), auth.deleteUserIfExists(email2)]);
-
-        await Promise.all([
-            await auth.createUser(email1, pw1, name1),
-            await auth.createUser(email2, pw2, name2)
-        ]);
-
         const [user1SessionId, user2SessionId] = await Promise.all([
-            await auth.login(email1, pw1),
-            await auth.login(email2, pw2)
+            await auth.login(testAccounts[0].email, testAccounts[0].password),
+            await auth.login(testAccounts[1].email, testAccounts[1].password)
         ]);
 
         const user2: User = await auth.getUser(user2SessionId);
