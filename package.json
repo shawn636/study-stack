@@ -22,7 +22,7 @@
         "test": "playwright install && playwright test",
         "check": "velte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-        "test:unit": "concurrently \"pnpm run vercel-unit-test\" \"vitest --run\" --kill-others -s first",
+        "test:unit": "concurrently \"pnpm run vercel-unit-test\" \"sleep 5 && vitest --run\" --kill-others -s first",
         "test:watch": "concurrently \"pnpm run vercel-unit-test\" \"vitest\" --kill-others",
         "codegen": "concurrently \"pnpm run vercel-e2e-test\" \"playwright codegen\" --kill-others",
         "test:ui": "concurrently \"pnpm run vercel-e2e-test\" \"playwright test --ui\" --kill-others",
