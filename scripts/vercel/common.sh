@@ -26,8 +26,12 @@ function check_for_required_env_vars() {
     done
 }
 
+function pull_project_settings() {
+    pnpm exec vercel pull --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN"
+}
+
 function build() {
-    pnpm exec vercel pull --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" || exit $?
+    pnpm exec vercel build --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN"
 }
 
 
