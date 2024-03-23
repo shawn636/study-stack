@@ -112,7 +112,7 @@ jobs:
       - run: pnpm pscale:cred:create "ga-deploy-preview-${{ github.run_number }}"
       - run: pnpm vercel:settings:pull
       - run: pnpm exec vercel build --prod     
-      - run: pnpm vercel:dr:create 
+      - run: pnpm pscale:dr:create 
       - run: pnpm vercel:deploy:preview
           
   cleanup:
