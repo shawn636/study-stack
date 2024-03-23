@@ -14,7 +14,7 @@
         "pscale:dr:close": "scripts/pscale/close-deploy-request.sh",
         "postinstall": "prisma generate",
         "vercel:deploy:preview": "scripts/vercel/deploy-preview.sh",
-        "_vercel-start": "vercel dev --token $VERCEL_TOKEN --yes --listen $PORT",
+        "_vercel-start": "vercel dev --scope equipped-team --token $VERCEL_TOKEN --yes --listen $PORT",
         "vercel-dev": "dotenv -v PORT=3000 -- pnpm _vercel-start",
         "vercel-unit-test": "dotenv -v PORT=3004 -- pnpm _vercel-start",
         "vercel-e2e-test": "dotenv -v PORT=3005 -- pnpm _vercel-start",

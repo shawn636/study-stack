@@ -27,9 +27,7 @@ function check_for_required_env_vars() {
 }
 
 function build() {
-    pnpm exec prisma generate || exit $?
-    pnpm exec vercel link --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" || exit $?
-    pnpm exec vercel build --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" || exit $?
+    pnpm exec vercel pull --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" || exit $?
 }
 
 
@@ -50,10 +48,10 @@ function deploy() {
 
     if [ "$deployment_target" = "production" ]; then
         echo "Deploying to production..."
-        pnpm exec vercel deploy --prod --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
+        pnpm exec vercel deploy --archive=tgz --prod --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     else
         echo "Deploying preview..."
-        pnpm exec vercel deploy --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
+        pnpm exec vercel deploy --archive=tgz --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     fi
 
     local code=$?
@@ -93,5 +91,5 @@ function add_secret() {
     # Try to delete the secret first in case it already exists
     pnpm exec vercel env rm "$secret_name" "$environment" --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" || true
     
-    echo "$secret_value" | pnpm exec vercel env add "$secret_name" "$environment" --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN"
+    echo "$secret_value" | pnpm exec vercel env add "$secret_name" "$environment" --sensitive --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN"
 }

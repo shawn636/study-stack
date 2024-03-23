@@ -7,7 +7,7 @@ source scripts/vercel/common.sh
 function main() {
     check_for_required_env_vars || exit $?
     build || exit $?
-    add_secret "DATABASE_URL" "$DATABASE_URL" "production" || exit $?
     deploy "production" || exit $?
+    add_secret "DATABASE_URL" "$DATABASE_URL" "production" || exit $?
 }
 main
