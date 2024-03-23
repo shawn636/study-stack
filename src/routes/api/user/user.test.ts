@@ -17,54 +17,50 @@ describe('/api/user', () => {
         expect(response.status).toBe(401);
     });
 
-    it(
-        'should update the user with valid data',
-        async () => {
-            const email = 'johnny_testerson@testy.com';
-            const pw = 'test';
-            const name = 'Johnny Testerson';
+    it('should update the user with valid data', async () => {
+        const email = 'johnny_testerson@testy.com';
+        const pw = 'test';
+        const name = 'Johnny Testerson';
 
-            await auth.deleteUserIfExists('johnny_testerson@testy.com');
-            await auth.createUser(email, pw, name);
+        await auth.deleteUserIfExists('johnny_testerson@testy.com');
+        await auth.createUser(email, pw, name);
 
-            const sessionId = await auth.login('johnny_testerson@testy.com', 'test');
+        const sessionId = await auth.login('johnny_testerson@testy.com', 'test');
 
-            const user: User = await auth.getUser(sessionId);
+        const user: User = await auth.getUser(sessionId);
 
-            const response = await fetch('http://localhost:3004/api/user', {
-                body: JSON.stringify({ user }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    cookie: `${COOKIE_NAME}=${sessionId}`
-                },
-                method: 'PUT'
-            });
+        const response = await fetch('http://localhost:3004/api/user', {
+            body: JSON.stringify({ user }),
+            headers: {
+                'Content-Type': 'application/json',
+                cookie: `${COOKIE_NAME}=${sessionId}`
+            },
+            method: 'PUT'
+        });
 
-            expect(response.status).toBe(200);
+        expect(response.status).toBe(200);
 
-            user.countryCode = '+1';
-            user.areaCode = '123';
-            user.phoneNumber = '4567890';
-            user.bio = 'I am a test user';
+        user.countryCode = '+1';
+        user.areaCode = '123';
+        user.phoneNumber = '4567890';
+        user.bio = 'I am a test user';
 
-            const response2 = await fetch('http://localhost:3004/api/user', {
-                body: JSON.stringify({ user }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    cookie: `${COOKIE_NAME}=${sessionId}`
-                },
-                method: 'PUT'
-            });
+        const response2 = await fetch('http://localhost:3004/api/user', {
+            body: JSON.stringify({ user }),
+            headers: {
+                'Content-Type': 'application/json',
+                cookie: `${COOKIE_NAME}=${sessionId}`
+            },
+            method: 'PUT'
+        });
 
-            expect(response2.status).toBe(200);
+        expect(response2.status).toBe(200);
 
-            const updatedUser = await auth.getUser(sessionId);
-            expect(updatedUser.countryCode).toBe(user.countryCode);
-            expect(updatedUser.areaCode).toBe(user.areaCode);
-            expect(updatedUser.phoneNumber).toBe(user.phoneNumber);
-        },
-        { timeout: 10000 }
-    );
+        const updatedUser = await auth.getUser(sessionId);
+        expect(updatedUser.countryCode).toBe(user.countryCode);
+        expect(updatedUser.areaCode).toBe(user.areaCode);
+        expect(updatedUser.phoneNumber).toBe(user.phoneNumber);
+    });
 
     it('should throw error if a user tries to update another', async () => {
         const email1 = 'johnny_testerson@testy.com';

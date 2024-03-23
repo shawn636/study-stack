@@ -55,9 +55,7 @@ jobs:
         run: pnpm install
       
       - name: Generate New Credentials
-        run: |
-          pnpm pscale:cred:delete-all-ci "ga-"
-          pnpm pscale:cred:create "ga-unit-tests-${{ github.run_number }}"
+        run: pnpm pscale:cred:create "ga-unit-tests-${{ github.run_number }}"
       
       - name: Generate Prisma Client & Build
         run: |
