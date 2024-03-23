@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck disable=SC1091
-source .pscale/cli-helper-scripts/common.sh
+source scripts/pscale/common.sh
 
 # --- FUNCTIONS ---
 function create_deploy_request() {

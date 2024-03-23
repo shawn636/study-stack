@@ -9,6 +9,4 @@ const config = {
 
 const client = new Client(config);
 const adapter = new PrismaPlanetScale(client);
-
-export const db = client;
 export const prisma = new PrismaClient({ adapter });

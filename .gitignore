@@ -9,6 +9,8 @@ node_modules
 .vercel
 .prisma
 /package
+deployment-url.txt
+error-log.txt
 
 # Local Secrets
 .env

@@ -5,10 +5,10 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
     kit: {
         adapter: adapter({
-            runtime: 'edge',
-            split: true
+            // runtime: 'edge', // temporarily disabled until prisma fixes middleware support for edge and sveltekit
+            split: false // Can only be enabled on edge runtime since we hit cap of 12 functions
         }),
-        csrf: false
+        csrf: false // CSRF protection is disabled since we use custom csrf implementation
     },
 
     preprocess: [vitePreprocess()]

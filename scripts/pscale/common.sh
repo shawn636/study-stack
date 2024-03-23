@@ -1,11 +1,13 @@
 #!/bin/bash
-
 if [ -f .env ]; then
     set +o allexport
     # shellcheck disable=SC1091
     source .env
     set -o allexport
 fi
+
+# shellcheck disable=SC1091
+source scripts/shared/github.sh
 
 # --- GLOBAL VARS --- 
 REQUIRED_ENV_VARS=(
@@ -104,11 +106,7 @@ function remove_credentials_from_dotenv() {
 function branch_name_from_git() {
     local git_branch_name=""
     if [ -n "$CI" ]; then
-        if [ -n "$GITHUB_HEAD_REF" ]; then
-            git_branch_name=$GITHUB_HEAD_REF
-        else
-            git_branch_name=$GITHUB_REF_NAME
-        fi
+        git_branch_name=$GITHUB_HEAD_REF
     else
         git_branch_name=$(git branch --show-current)
     fi
@@ -117,60 +115,6 @@ function branch_name_from_git() {
     PSCALE_BRANCH_NAME=$(echo "$git_branch_name" | tr -cd '[:alnum:]-/' | tr '/' '-' | tr '[:upper:]' '[:lower:]')
 
     echo "$PSCALE_BRANCH_NAME"
-}
-
-
-# --- GITHUB METHODS ---
-function add_pr_comment() {
-    local arg_type=$1 # Either 'file' or 'string'
-    local arg_val=$2 # Either the file_path or the string value
-    local head_branch=$3 # Optional head branch name
-    local status_code=""
-
-
-    if [ -z "$arg_type" ] || { [ "$arg_type" != 'file' ] && [ "$arg_type" != 'string' ]; }; then
-        echo "Error: missing or invalid argument type. Please use the format: add_pr_comment ['file'|'string'] <file_path|str_val> [head_branch (optional)]"
-        # exit 1
-    fi
-
-    if [ -z "$arg_val" ]; then
-        echo "Error: missing argument comment.lease use the format: add_pr_comment ['file'|'string'] <file_path|str_val> [head_branch (optional)]"
-        # exit 1
-    fi
-
-    if [ -z "$head_branch" ]; then
-        head_branch=$(git branch --show-current)
-    fi
-
-    local pr_number=""
-    pr_number=$(gh pr list -H "$head_branch" -s open -L 1 --json number | jq -r '.[0].number')
-
-    if [ -z "$pr_number" ]; then
-        echo "Error: Unable to locate an open pull request for branch $head_branch. Exiting..."
-        # exit 1
-    fi
-
-    if [ "$arg_type" = 'file' ]; then
-        if [ ! -f "$arg_val" ]; then
-            echo "Error: File $arg_val does not exist. Exiting..."
-            # exit 1
-        fi
-        gh pr comment "$pr_number" --body-file "$arg_val" >> /dev/null
-        status_code=$?
-
-        if [ "$status_code" -ne 0 ]; then
-            echo "Error: Unable to add comment to pull request $pr_number. Exiting..."
-            # exit 1
-        fi
-    else
-        gh pr comment "$pr_number" --body "$arg_val" >> /dev/null
-
-        status_code=$?
-        if [ "$status_code" -ne 0 ]; then
-            echo "Error: Unable to add comment to pull request $pr_number. Exiting..."
-            # exit 1
-        fi
-    fi
 }
 
 

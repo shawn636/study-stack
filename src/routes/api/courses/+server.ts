@@ -1,3 +1,5 @@
+import type { Course, User } from '@prisma/client';
+
 import { csrf } from '$lib/server/csrf';
 import { prisma } from '$lib/server/database';
 
@@ -5,8 +7,6 @@ import type { RequestHandler } from './$types';
 
 export const GET = (async ({ cookies }) => {
     await csrf.validateCookies(cookies);
-
-    // Declare a type
 
     const coursesWithInstructors = await prisma.course.findMany({
         include: {

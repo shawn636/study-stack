@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck disable=SC1091
-source .pscale/cli-helper-scripts/common.sh
+source scripts/pscale/common.sh
 
 # Arguments
 CI_PREFIX=$1
