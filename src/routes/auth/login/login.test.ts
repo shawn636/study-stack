@@ -3,7 +3,8 @@
  */
 import { COOKIE_NAME as AUTH_COOKIE_NAME, auth } from '$lib/server/auth';
 import { COOKIE_NAME as CSRF_COOKIE_NAME, csrf } from '$lib/server/csrf';
-import { prisma } from '$lib/server/database';
+// import { prisma } from '$lib/server/database';
+import { db, sql } from '$lib/server/database';
 import { faker } from '@faker-js/faker';
 
 interface Account {
@@ -35,16 +36,12 @@ describe('login', () => {
         await Promise.all(promises);
     });
     it('should be able to communicate with database', async () => {
-        expect(prisma).toBeDefined();
-        expect(prisma).toBeTruthy();
+        expect(db).toBeTruthy();
 
-        interface Result {
-            solution: number;
-        }
-        const result: Result[] = await prisma.$queryRaw`SELECT 1 + 1 as solution`;
-        expect(result.length).toBe(1);
-        const num: number = Number(result[0]?.solution) ?? -1;
-        expect(num).toBe(2);
+        const result = await sql<{ solution: number }>`SELECT 1 + 1 as solution`.execute(db);
+
+        expect(result.rows.length).toBe(1);
+        expect(Number(result.rows[0].solution)).toBe(2);
     });
 
     it('should successfully login', async () => {
@@ -70,13 +67,15 @@ describe('login', () => {
             const authCookie = splitCookies.find((cookie) => cookie.startsWith(AUTH_COOKIE_NAME));
             const cookieValue = authCookie?.split('=').at(-1) ?? '';
 
-            expect(cookieValue).toBeDefined();
+            expect(cookieValue).toBeTruthy();
 
-            const session = await prisma.authSession.findUnique({
-                where: { id: cookieValue }
-            });
+            const session = await db
+                .selectFrom('AuthSession')
+                .selectAll()
+                .where('AuthSession.id', '=', cookieValue)
+                .executeTakeFirst();
 
-            expect(session).toBeDefined();
+            expect(session).toBeTruthy();
             expect(session?.id).toBeTruthy();
             expect(session?.id).toBe(cookieValue);
         }

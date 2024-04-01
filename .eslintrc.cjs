@@ -107,9 +107,9 @@ module.exports = {
         'filename-rules/match': [
             2,
             {
-                '.js': /^\+?[a-z]*(-[a-z]*)*(.(config|server|test|worker|d))?.js$/,
-                '.svelte': /^\+?[a-z]*(-[a-z]*)*(.(config|server|test|worker|d))?.svelte$/,
-                '.ts': /^\+?[a-z]*(-[a-z]*)*(.(config|server|test|worker|d))?.ts$/
+                '.js': /^\+?[a-z]*(-[a-z]*)*(.(config|server|test|worker|d|tmp))?.js$/,
+                '.svelte': /^\+?[a-z]*(-[a-z]*)*(.(config|server|test|worker|d|tmp))?.svelte$/,
+                '.ts': /^\+?[a-z]*(-[a-z]*)*(.(config|server|test|worker|d|tmp))?.ts$/
             }
         ],
         'no-restricted-properties': [

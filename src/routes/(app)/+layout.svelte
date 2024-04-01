@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { User } from '@prisma/client';
+    import type { User } from '$lib/models/database.types';
 
     import Footer from '$lib/components/footer.svelte';
     import Header from '$lib/components/header.svelte';

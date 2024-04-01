@@ -1,8 +1,11 @@
 /**
  * @vitest-environment jsdom
  */
+import type { Transaction } from '$lib/server/database';
+
+import { KeyType } from '$lib/models/database.types';
 import { auth } from '$lib/server/auth';
-import { prisma } from '$lib/server/database';
+import { db } from '$lib/server/database';
 
 const accounts = [
     {
@@ -46,7 +49,29 @@ const accounts = [
 describe('auth', () => {
     beforeAll(async () => {
         const promises = accounts.map(async (account) => {
-            await prisma.authUser.deleteMany({ where: { email: account.email } });
+            const authUser = await db
+                .selectFrom('AuthUser')
+                .select('id')
+                .where('AuthUser.email', '=', account.email)
+                .executeTakeFirst();
+
+            if (authUser) {
+                await db.transaction().execute(async (trx: Transaction) => {
+                    await trx
+                        .deleteFrom('User')
+                        .where('User.authUserId', '=', authUser.id)
+                        .execute();
+                    await trx
+                        .deleteFrom('AuthKey')
+                        .where('AuthKey.authUserId', '=', authUser.id)
+                        .execute();
+                    await trx
+                        .deleteFrom('AuthSession')
+                        .where('AuthSession.authUserId', '=', authUser.id)
+                        .execute();
+                    await trx.deleteFrom('AuthUser').where('id', '=', authUser.id).execute();
+                });
+            }
         });
         await Promise.all(promises);
 
@@ -64,16 +89,23 @@ describe('auth', () => {
         expect(userId).toBeDefined();
         expect(userId).toBeTruthy();
 
-        const authUserResults = await prisma.authUser.findMany({
-            include: { authKeys: true, user: true },
-            where: { email: accounts[actIdx].email }
-        });
+        const results = await db
+            .selectFrom('AuthUser')
+            .innerJoin('AuthKey', 'AuthUser.id', 'AuthKey.authUserId')
+            .innerJoin('User', 'AuthUser.id', 'User.authUserId')
+            .select(['AuthUser.id as authUserId', 'User.id as userId', 'AuthKey.id as authKeyId'])
+            .where('AuthUser.email', '=', accounts[actIdx].email)
+            .where('AuthKey.keyType', '=', KeyType.CREDENTIAL_HASH)
+            .execute();
 
-        expect(authUserResults.length).toBe(1);
-        expect(authUserResults[0].id).toBeTruthy();
-        expect(authUserResults[0]?.user?.id).toBeTruthy();
-        expect(authUserResults[0].authKeys.length).toBe(1);
-        expect(authUserResults[0].authKeys[0].id).toBeTruthy();
+        expect(results).toBeTruthy();
+
+        expect(results.length).toBe(1);
+        const result = results[0];
+
+        expect(result.authUserId).toBeTruthy();
+        expect(result.userId).toBeTruthy();
+        expect(result.authKeyId).toBeTruthy;
     });
 
     it('should fail to create a user from createUser() if they already have an account', async () => {

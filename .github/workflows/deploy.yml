@@ -2,7 +2,7 @@ name: Deploy
 
 on:
     workflow_run:
-        workflows: ['Build and Test']
+        workflows: ['Test']
         types: [completed]
         branches:
             - 'main'
@@ -14,78 +14,26 @@ jobs:
             packages: write
         if: ${{ github.event.workflow_run.conclusion == 'success' }}
         env:
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            MIGRATION_URL: ${{ secrets.MIGRATION_URL }}
-            PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
-            PEPPER: ${{ secrets.PEPPER }}
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+          PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          PEPPER: ${{ secrets.PEPPER }}
+          GH_TOKEN: ${{ github.token }}
         steps:
-            - uses: actions/checkout@v2
-            - run: npm install
-            - run: npm install prisma --save-dev
-            - run: npx prisma generate
-            - run: npx prisma migrate deploy
-              env:
-                  DATABASE_URL: ${{ env.DATABASE_URL }}
-                  MIGRATION_URL: ${{ env.MIGRATION_URL }}
-                  PEPPER: ${{ env.PEPPER }}
-            - run: npm run build --production
-            - uses: amondnet/vercel-action@v25
-              with:
-                  vercel-token: ${{ secrets.VERCEL_TOKEN }}
-                  vercel-args: '--prod'
-                  vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-                  vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-                  working-directory: ./
-    deploy-new:
-        runs-on: ubuntu-latest
-        env:
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            MIGRATION_URL: ${{ secrets.MIGRATION_URL }}
-            PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
-            PEPPER: ${{ secrets.PEPPER }}
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
+          - uses: actions/checkout@v3
+          - uses: planetscale/setup-pscale-action@v1
+          - uses: pnpm/action-setup@v2
+            with:
+              version: 8
+          - uses: actions/setup-node@v3
+            with:
+              node-version: '20.x'
+              cache: 'pnpm'
 
-            - name: Install Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: '20.x'
-
-            - uses: pnpm/action-setup@v2
-              name: Install pnpm
-              with:
-                version: 8
-                run_install: false
-            
-            - name: Get pnpm store directory
-              shell: bash
-              run: |
-                echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-            
-            - uses: actions/cache@v3
-              name: Setup pnpm cache
-              with:
-                path: ${{ env.STORE_PATH }}
-                key: ${{ runner.os }}-pnpm-store-
-            - name: Install dependencies
-              run: pnpm install
-            
-            - name: Prisma generate
-              run: pnpm exec prisma generate
-              env:
-                  DATABASE_URL: ${{ env.DATABASE_URL }}
-                  MIGRATION_URL: ${{ env.MIGRATION_URL }}
-                  PEPPER: ${{ env.PEPPER }}
-
-            - name: Build
-              run: pnpm build:production
-            
-            - name: Deploy to Vercel
-              uses: amondnet/vercel-action@v25
-              with:
-                vercel-token: ${{ secrets.VERCEL_TOKEN }}
-                vercel-args: '--prod'
-                vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-                vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-                working-directory: ./
+          - run: pnpm install
+          - run: pnpm pscale:cred:create "ga-deploy-preview-${{ github.run_number }}"
+          - run: pnpm vercel:settings:pull
+          - run: pnpm exec vercel build --prod     
+          - run: pnpm pscale:dr:apply
+          - run: pnpm vercel:deploy:production

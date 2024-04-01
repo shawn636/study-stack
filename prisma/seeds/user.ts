@@ -2,6 +2,8 @@ import type { AuthUser, Organization, PrismaClient, User } from '@prisma/client'
 
 import { faker } from '@faker-js/faker';
 
+import { cuid } from './utils';
+
 export async function seedUser(client: PrismaClient) {
     const organizations: Organization[] = await client.organization.findMany();
 
@@ -14,7 +16,7 @@ export async function seedUser(client: PrismaClient) {
 
         const email = faker.internet.email();
         const authUserId = faker.string.uuid().slice(0, 30);
-        const userId = i + 1;
+        const userId = cuid();
 
         const authUser: AuthUser = {
             email: email,

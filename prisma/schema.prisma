@@ -3,6 +3,15 @@ generator client {
   previewFeatures = ["driverAdapters", "fullTextIndex", "fullTextSearch"]
 }
 
+generator kyselyServerSide {
+  provider            = "prisma-kysely"
+  camelCase           = true
+  output              = "../src/lib/models"
+  fileName            = "database.types.ts"
+  decimalTypeOverride = "number"
+  bigIntTypeOverride  = "number"
+}
+
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
@@ -10,18 +19,16 @@ datasource db {
 }
 
 model Category {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid()) @db.VarChar(30)
 
   courses Course[]
 
-  imgHref String @map("img_href") @db.Text
+  imgHref String @db.Text
   title   String @unique
-
-  @@map("categories")
 }
 
 model Course {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid()) @db.VarChar(30)
 
   category           Category         @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Restrict)
   courseProgressions CourseProgress[]
@@ -29,19 +36,19 @@ model Course {
   lessons            Lesson[]
   organization       Organization?    @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: SetNull)
 
-  categoryId           Int     @map("category_id")
-  currentPrice         Decimal @map("current_price")
+  categoryId           String
+  currentPrice         Decimal
   description          String  @db.Text
   difficulty           String
-  estimatedTimeHours   Int     @map("estimated_time_hours")
-  estimatedTimeMinutes Int     @map("estimated_time_minutes")
-  imgHref              String  @map("img_href")
-  instructorId         Int     @map("instructor_id")
-  lessonCount          Int     @map("lesson_count")
-  organizationId       Int?    @map("organization_id")
-  originalPrice        Decimal @map("original_price")
-  ratingAverage        Float   @map("rating_average")
-  ratingCount          Int     @map("rating_count")
+  estimatedTimeHours   Int
+  estimatedTimeMinutes Int
+  imgHref              String
+  instructorId         String
+  lessonCount          Int
+  organizationId       String?
+  originalPrice        Decimal
+  ratingAverage        Float
+  ratingCount          Int
   title                String  @db.Text
 
   @@index([categoryId])
@@ -49,7 +56,6 @@ model Course {
   @@index([organizationId])
   @@fulltext([title])
   @@fulltext([title, description])
-  @@map("courses")
 }
 
 enum ContentType {
@@ -59,61 +65,56 @@ enum ContentType {
 }
 
 model CourseContent {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid()) @db.VarChar(30)
 
-  contentType ContentType @map("content_type")
+  contentType ContentType
 
-  authorId Int     @map("author_id")
+  authorId String
   content  Json
-  lessonId Int?    @map("lesson_id")
+  lessonId String?
   Lesson   Lesson? @relation(fields: [lessonId], references: [id])
 
   @@index([authorId])
   @@index([lessonId])
-  @@map("course_contents")
 }
 
 model CourseProgress {
   course Course @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
-  courseId         Int @map("course_id")
-  lessonsCompleted Int @map("lessons_completed")
-  userId           Int @map("user_id")
+  courseId         String
+  lessonsCompleted Int
+  userId           String
 
   @@id([userId, courseId])
   @@index([courseId])
   @@index([userId])
-  @@map("course_progresions")
 }
 
 model Lesson {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid()) @db.VarChar(30)
 
   course         Course?         @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   courseContents CourseContent[]
 
-  courseId Int?   @map("course_id")
+  courseId String?
   title    String
 
   @@index([courseId])
-  @@map("lessons")
 }
 
 model Organization {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid()) @db.VarChar(30)
 
   courses Course[]
 
   description String? @db.Text
   name        String  @db.Text
   User        User[]
-
-  @@map("organizations")
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid()) @db.VarChar(30)
 
   AuthUser           AuthUser?        @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   courses            Course[]
@@ -121,22 +122,21 @@ model User {
   organization       Organization?    @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: SetNull)
   permissions        Permission[]
 
-  areaCode       String? @map("area_code") @db.VarChar(5)
-  authUserId     String? @unique @map("auth_user_id") @db.VarChar(30)
+  areaCode       String? @db.VarChar(5)
+  authUserId     String? @unique @db.VarChar(30)
   bio            String? @db.Text
   city           String? @db.Text
-  countryCode    String? @map("country_code") @db.VarChar(5)
+  countryCode    String? @db.VarChar(5)
   email          String  @unique
   name           String  @db.Text
-  organizationId Int?    @map("organization_id")
-  phoneNumber    String? @map("phone_number") @db.VarChar(15)
-  photoUrl       String? @map("photo_url") @db.Text
-  role           String  @default("user")
+  organizationId String?
+  phoneNumber    String? @db.VarChar(15)
+  photoUrl       String? @db.Text
+  role           String
   state          String?
 
   @@index([authUserId])
   @@index([organizationId])
-  @@map("users")
 }
 
 enum KeyType {
@@ -149,12 +149,11 @@ model AuthKey {
 
   authUser AuthUser @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
-  authUserId String  @map("auth_user_id") @db.VarChar(30)
-  keyValue   String  @map("key_value")
-  keyType    KeyType @map("key_type")
+  authUserId String  @db.VarChar(30)
+  keyValue   String
+  keyType    KeyType
 
   @@index([authUserId])
-  @@map("auth_keys")
 }
 
 model AuthSession {
@@ -162,11 +161,10 @@ model AuthSession {
 
   authUser AuthUser @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
-  authUserId     String   @map("auth_user_id") @db.VarChar(30)
-  expirationDate DateTime @map("expiration_date")
+  authUserId     String   @db.VarChar(30)
+  expirationDate DateTime
 
   @@index([authUserId])
-  @@map("auth_sessions")
 }
 
 model AuthUser {
@@ -177,16 +175,12 @@ model AuthUser {
   user         User?
 
   email String @unique
-
-  @@map("auth_users")
 }
 
 model CsrfToken {
   token String @id @default(cuid()) @db.VarChar(30)
 
-  expirationDate DateTime @map("expiration_date")
-
-  @@map("csrf_tokens")
+  expirationDate DateTime
 }
 
 enum PermissionType {
@@ -202,15 +196,14 @@ enum ResourceType {
 }
 
 model Permission {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid()) @db.VarChar(30)
 
   user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
-  permissionType PermissionType @map("permission_type")
-  resourceId     Int            @map("resouce_id") // Eventually shift this to another table
-  resourceType   ResourceType   @map("resource_type")
-  userId         Int            @map("user_id")
+  permissionType PermissionType
+  resourceId     String // Eventually shift this to another table
+  resourceType   ResourceType
+  userId         String
 
   @@index([userId])
-  @@map("permissions")
 }

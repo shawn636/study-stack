@@ -1,5 +1,4 @@
-import type { Course, User } from '@prisma/client';
-
+import type { Course, User } from '$lib/models/database.types';
 /**
  * @vitest-environment jsdom
  */

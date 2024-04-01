@@ -11,6 +11,8 @@ node_modules
 /package
 deployment-url.txt
 error-log.txt
+src/lib/server/database.types.ts
+src/lib/models/database.types.ts
 
 # Local Secrets
 .env
@@ -26,6 +28,7 @@ coverage
 e2e/test-results
 e2e/artifacts
 
-# Node Notebooks
+# Node Notebooks and manually created tmp files
 *.nnb
 /notebooks
+*.tmp.ts

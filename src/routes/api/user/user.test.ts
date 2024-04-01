@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client';
+import type { User } from '$lib/models/database.types';
 
 import { COOKIE_NAME, auth } from '$lib/server/auth';
 
@@ -26,16 +26,16 @@ describe('/api/user', () => {
     ];
 
     beforeAll(async () => {
-        await Promise.all(testAccounts.map((account) => auth.deleteUserIfExists(account.email)));
-        await Promise.all(
-            testAccounts.map((account) =>
-                auth.createUser(account.email, account.password, account.name)
-            )
-        );
+        for (const account of testAccounts) {
+            await auth.deleteUserIfExists(account.email);
+            await auth.createUser(account.email, account.password, account.name);
+        }
     });
 
     afterAll(async () => {
-        await Promise.all(testAccounts.map((account) => auth.deleteUserIfExists(account.email)));
+        // for (const account of testAccounts) {
+        //     await auth.deleteUserIfExists(account.email);
+        // }
     });
 
     it('should throw error if user is not logged in', async () => {

@@ -2,6 +2,8 @@ import type { Organization, PrismaClient } from '@prisma/client';
 
 import { faker } from '@faker-js/faker';
 
+import { cuid } from './utils';
+
 export async function seedOrganization(client: PrismaClient) {
     const numOrganizations = 50;
     const organizations: Organization[] = [];
@@ -9,7 +11,7 @@ export async function seedOrganization(client: PrismaClient) {
     for (let i = 0; i < numOrganizations; i++) {
         const organization: Organization = {
             description: faker.company.catchPhrase(),
-            id: i + 1,
+            id: cuid(),
             name: faker.company.name()
         };
 

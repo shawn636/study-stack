@@ -3,20 +3,20 @@
  */
 import type CategorySummary from '$lib/models/category-summary';
 
-import { prisma } from '$lib/server/database';
+import { db, sql } from '$lib/server/database';
 
 describe('top-categories', () => {
     it('should be able to communicate with database', async () => {
-        expect(prisma).toBeDefined();
-        expect(prisma).toBeTruthy();
+        expect(db).toBeTruthy();
 
         interface ServerDate {
             serverDate: Date;
         }
-        const results: ServerDate[] = await prisma.$queryRaw`SELECT NOW() as serverDate`;
-        const serverDate = results[0].serverDate;
 
-        expect(serverDate).toBeDefined();
+        const { rows } = await sql<ServerDate>`SELECT NOW() as serverDate`.execute(db);
+
+        expect(rows).toHaveLength(1);
+        const serverDate = rows[0].serverDate;
         expect(serverDate).toBeTruthy();
     });
 
@@ -26,12 +26,11 @@ describe('top-categories', () => {
 
         let categorySummaries: CategorySummary[] = await response.json();
 
-        expect(categorySummaries).toBeDefined();
         expect(categorySummaries).toBeTruthy();
 
         categorySummaries = categorySummaries.map((categorySummary: CategorySummary) => {
             return {
-                count: categorySummary.count,
+                count: Number(categorySummary.count),
                 imgHref: categorySummary.imgHref,
                 title: categorySummary.title
             };
@@ -40,16 +39,12 @@ describe('top-categories', () => {
         expect(categorySummaries.length).toBe(6);
 
         for (const categorySummary of categorySummaries) {
-            expect(categorySummary.title).toBeDefined();
             expect(categorySummary.title).toBeTruthy();
             expect(typeof categorySummary.title).toBe('string');
 
-            expect(categorySummary.count).toBeDefined();
             expect(categorySummary.count).toBeTruthy();
-            expect(typeof categorySummary.count).toBe('number');
             expect(categorySummary.count).toBeGreaterThanOrEqual(1);
 
-            expect(categorySummary.imgHref).toBeDefined();
             expect(categorySummary.imgHref).toBeTruthy();
             expect(typeof categorySummary.imgHref).toBe('string');
         }

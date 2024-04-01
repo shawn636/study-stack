@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { Course, CourseProgress } from '@prisma/client';
+    import type { Course, CourseProgress } from '$lib/models/database.types';
 
-    import { Prisma } from '@prisma/client';
+    import { init } from '@paralleldrive/cuid2';
 
     import type { PageServerData } from './$types';
 
@@ -9,19 +9,21 @@
 
     export let data: PageServerData;
 
+    const cuid = init();
+
     let course: Course = {
-        categoryId: 456,
-        currentPrice: new Prisma.Decimal(29.99),
+        categoryId: cuid(),
+        currentPrice: 29.99,
         description: 'Learn the basics of TypeScript programming language.',
         difficulty: 'Beginner',
         estimatedTimeHours: 2,
         estimatedTimeMinutes: 30,
-        id: 123456,
+        id: cuid(),
         imgHref: '/images/course-image.webp',
-        instructorId: 3,
+        instructorId: cuid(),
         lessonCount: 11,
         organizationId: null,
-        originalPrice: new Prisma.Decimal(49.99),
+        originalPrice: 49.99,
         ratingAverage: 4.5,
         ratingCount: 50,
         title: 'Introduction to TypeScript'

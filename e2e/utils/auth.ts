@@ -1,48 +1,91 @@
-import { Client } from '@planetscale/database';
-import { PrismaPlanetScale } from '@prisma/adapter-planetscale';
-import { KeyType, PrismaClient } from '@prisma/client';
+import { init } from '@paralleldrive/cuid2';
+import { Kysely, Transaction } from 'kysely';
+import { PlanetScaleDialect } from 'kysely-planetscale';
 
+import { DB, KeyType } from '../../src/lib/models/database.types';
 import { hashPassword } from './crypto';
 import { DATABASE_URL } from './env';
 
-const client = new Client({
-    url: DATABASE_URL
+const cuid = init({
+    length: 30
 });
-const adapter = new PrismaPlanetScale(client);
-export const prisma = new PrismaClient({ adapter });
+
+export const db = new Kysely<DB>({
+    dialect: new PlanetScaleDialect({
+        url: DATABASE_URL
+    })
+});
 
 const createUser = async (email: string, password: string, name: string): Promise<string> => {
     const keyValue = await hashPassword(password);
 
-    const createUserResult = await prisma.authUser.create({
-        data: {
-            authKeys: { create: { keyType: KeyType.CREDENTIAL_HASH, keyValue: keyValue } },
-            email: email,
-            user: { create: { email: email, name: name } }
-        },
-        include: { user: true }
+    const authUserId = cuid();
+    const userId = cuid();
+    const authKeyId = cuid();
+
+    await db.transaction().execute(async (trx: Transaction<DB>) => {
+        const createAuthUserResult = await trx
+            .insertInto('AuthUser')
+            .values({
+                email: email,
+                id: authUserId
+            })
+            .executeTakeFirst();
+
+        if (createAuthUserResult.numInsertedOrUpdatedRows !== 1n) {
+            throw new Error('Failed to create AuthUser');
+        }
+
+        const createAuthKeyResult = await trx
+            .insertInto('AuthKey')
+            .values({
+                authUserId: authUserId,
+                id: authKeyId,
+                keyType: KeyType.CREDENTIAL_HASH,
+                keyValue: keyValue
+            })
+            .executeTakeFirst();
+
+        if (createAuthKeyResult.numInsertedOrUpdatedRows !== 1n) {
+            throw new Error('Failed to create AuthKey');
+        }
+
+        const createUserResult = await trx
+            .insertInto('User')
+            .values({
+                authUserId: authUserId,
+                email: email,
+                id: userId,
+                name: name,
+                role: 'user'
+            })
+            .executeTakeFirst();
+
+        if (createUserResult.numInsertedOrUpdatedRows !== 1n) {
+            throw new Error('Failed to create User');
+        }
     });
 
-    let userId: number = -1;
-
-    if (createUserResult.user?.id !== undefined && createUserResult.id !== undefined) {
-        userId = createUserResult.user.id;
-    }
-
-    return userId.toString();
+    return userId;
 };
 
 const deleteUserIfExists = async (email: string): Promise<void> => {
-    const queryUserResult = await prisma.authUser.findFirst({
-        include: { user: true },
-        where: { email: email }
-    });
+    const authUserResult = await db
+        .selectFrom('AuthUser')
+        .select('id')
+        .where('AuthUser.email', '=', email)
+        .executeTakeFirst();
 
-    if (queryUserResult?.user?.id !== undefined && queryUserResult.id !== undefined) {
-        await prisma.authUser.delete({ where: { id: queryUserResult.id } });
+    if (authUserResult?.id === undefined) {
+        return;
     }
+    const authUserId = authUserResult.id;
 
-    return;
+    await db.transaction().execute(async (trx: Transaction<DB>) => {
+        await trx.deleteFrom('User').where('User.authUserId', '=', authUserId).execute();
+        await trx.deleteFrom('AuthKey').where('AuthKey.authUserId', '=', authUserId).execute();
+        await trx.deleteFrom('AuthUser').where('AuthUser.id', '=', authUserId).execute();
+    });
 };
 
 export const auth = {

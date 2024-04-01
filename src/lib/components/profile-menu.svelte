@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { User } from '@prisma/client';
+    import type { User } from '$lib/models/database.types';
 
     import { goto } from '$app/navigation';
     import { initials } from '$lib/client/util';

@@ -1,9 +1,9 @@
-import type { Course, User } from '@prisma/client';
+import type { Course, User } from '$lib/models/database.types';
 
 import type { PageLoad } from './$types';
 
 export const load = (async ({ fetch }) => {
     const res = await fetch('/api/courses');
-    const coursesWithInstructors: { course: Course; instructor: User }[] = await res.json();
+    const coursesWithInstructors: (Course & User)[] = await res.json();
     return { coursesWithInstructors };
 }) satisfies PageLoad;

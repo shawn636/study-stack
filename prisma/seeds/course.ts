@@ -3,13 +3,14 @@ import type { Course, PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { Prisma } from '@prisma/client';
 
+import { cuid } from './utils';
+
 export async function seedCourse(client: PrismaClient) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [categories, users, organizations, lessons] = await Promise.all([
+    const [categories, users, organizations] = await Promise.all([
         client.category.findMany(),
         client.user.findMany(),
-        client.organization.findMany(),
-        client.lesson.findMany()
+        client.organization.findMany()
     ]);
 
     const difficulties = ['Beginner', 'Intermediate', 'Advanced'];
@@ -29,10 +30,6 @@ export async function seedCourse(client: PrismaClient) {
             ? organizations.find((org) => org.id === instructor.organizationId)
             : null;
 
-        const lessonCnt = lessons.filter((lesson) => {
-            lesson.courseId === i + 1;
-        }).length;
-
         const course: Course = {
             categoryId: category.id,
             currentPrice: new Prisma.Decimal(discountedPrice),
@@ -40,10 +37,10 @@ export async function seedCourse(client: PrismaClient) {
             difficulty: faker.helpers.arrayElement(difficulties),
             estimatedTimeHours: faker.number.int({ max: 100, min: 0 }),
             estimatedTimeMinutes: faker.number.int({ max: 59, min: 0 }),
-            id: i + 1,
+            id: cuid(),
             imgHref: 'images/course-image.webp',
             instructorId: instructor.id,
-            lessonCount: lessonCnt,
+            lessonCount: 0,
             organizationId: organization?.id ?? null,
             originalPrice: isDiscounted
                 ? new Prisma.Decimal(price)

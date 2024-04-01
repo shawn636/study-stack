@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client';
+import type { User } from '$lib/models/database.types';
 
 import { auth } from '$lib/server/auth';
 import { redirect } from '@sveltejs/kit';

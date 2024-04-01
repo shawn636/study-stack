@@ -1,9 +1,10 @@
+import type { User } from '$lib/models/database.types';
 import type { Cookies } from '@sveltejs/kit';
 
 import { dev } from '$app/environment';
+import { KeyType } from '$lib/models/database.types';
 import { comparePassword, hashPassword } from '$lib/server/crypto';
-import { prisma } from '$lib/server/database';
-import { KeyType, type User } from '@prisma/client';
+import { type Transaction, cuid, db } from '$lib/server/database';
 
 export const COOKIE_NAME = 'auth_session';
 
@@ -14,13 +15,13 @@ export const COOKIE_NAME = 'auth_session';
  * @returns {Promise<boolean>} A Promise that resolves to true if the email exists, false otherwise.
  */
 const emailExists = async (email: string): Promise<boolean> => {
-    const userCount = await prisma.authUser.count({
-        where: {
-            email: email
-        }
-    });
+    const { authUserCount } = await db
+        .selectFrom('AuthUser')
+        .where('AuthUser.email', '=', email)
+        .select(({ fn }) => [fn.count<number>('id').as('authUserCount')])
+        .executeTakeFirstOrThrow();
 
-    return userCount > 0;
+    return authUserCount > 0;
 };
 
 /**
@@ -30,13 +31,13 @@ const emailExists = async (email: string): Promise<boolean> => {
  * @returns {Promise<string[]>} A Promise that resolves to an array of session IDs.
  */
 const getAllSessions = async (authUserId: string): Promise<string[]> => {
-    const sessions = await prisma.authSession.findMany({
-        select: {
-            id: true
-        },
-        where: { authUserId }
-    });
-    const sessionIds: string[] = sessions.map((session) => session.id);
+    const sessionResults = await db
+        .selectFrom('AuthSession')
+        .select('id')
+        .where('AuthSession.authUserId', '=', authUserId)
+        .execute();
+
+    const sessionIds: string[] = sessionResults.map((session) => session.id);
 
     return sessionIds;
 };
@@ -55,25 +56,21 @@ const getUser = async (sessionId: string): Promise<User> => {
         throw Error('AUTH_INVALID_SESSION');
     }
 
-    const sessionResult = await prisma.authSession.findUniqueOrThrow({
-        include: {
-            authUser: {
-                include: {
-                    user: true
-                }
-            }
-        },
-        where: {
-            id: sessionId
-        }
-    });
+    const userResult = await db
+        .selectFrom('User')
+        .innerJoin('AuthSession', 'User.authUserId', 'AuthSession.authUserId')
+        .selectAll('User')
+        .where('AuthSession.id', '=', sessionId)
+        .executeTakeFirst();
 
-    if (!sessionResult.authUser.user) {
+    const user = userResult as User | undefined;
+
+    if (!user) {
         console.error('Unable to find user');
         throw Error('DB_SELECT_FAILED');
     }
 
-    return sessionResult.authUser.user;
+    return user;
 };
 
 /**
@@ -90,29 +87,19 @@ const getUserId = async (sessionId: string): Promise<string> => {
         throw Error('AUTH_INVALID_SESSION');
     }
 
-    const sessionResult = await prisma.authSession.findUniqueOrThrow({
-        include: {
-            authUser: {
-                include: {
-                    user: {
-                        select: {
-                            id: true
-                        }
-                    }
-                }
-            }
-        },
-        where: {
-            id: sessionId
-        }
-    });
+    const userResult = await db
+        .selectFrom('User')
+        .innerJoin('AuthSession', 'User.authUserId', 'AuthSession.authUserId')
+        .select('User.id as userId')
+        .where('AuthSession.id', '=', sessionId)
+        .executeTakeFirst();
 
-    if (!sessionResult?.authUser?.user?.id) {
+    if (!userResult || !userResult.userId) {
         console.error('Unable to find user');
         throw Error('DB_SELECT_FAILED');
     }
 
-    return sessionResult.authUser.user.id.toString();
+    return userResult.userId;
 };
 
 /**
@@ -133,27 +120,52 @@ const createUser = async (email: string, password: string, name: string): Promis
 
     const keyValue = await hashPassword(password);
 
-    const results = await prisma.authUser.create({
-        data: {
-            authKeys: { create: { keyType: KeyType.CREDENTIAL_HASH, keyValue } },
-            email: email,
-            user: { create: { email, name } }
-        },
-        include: { user: true }
+    const authUserId = cuid();
+    const userId = cuid();
+    const authKeyId = cuid();
+
+    await db.transaction().execute(async (trx: Transaction) => {
+        const createAuthUserResult = await trx
+            .insertInto('AuthUser')
+            .values({
+                email: email,
+                id: authUserId
+            })
+            .executeTakeFirst();
+
+        if (createAuthUserResult.numInsertedOrUpdatedRows !== 1n) {
+            throw Error('DB_INSERT_FAILED');
+        }
+
+        const createUserResult = await trx
+            .insertInto('User')
+            .values({
+                authUserId: authUserId,
+                email: email,
+                id: userId,
+                name: name,
+                role: 'user'
+            })
+            .executeTakeFirst();
+
+        if (createUserResult.numInsertedOrUpdatedRows !== 1n) {
+            throw Error('DB_INSERT_FAILED');
+        }
+
+        const createAuthKeyResult = await trx
+            .insertInto('AuthKey')
+            .values({
+                authUserId: authUserId,
+                id: authKeyId,
+                keyType: KeyType.CREDENTIAL_HASH,
+                keyValue: keyValue
+            })
+            .executeTakeFirst();
+
+        if (createAuthKeyResult.numInsertedOrUpdatedRows !== 1n) {
+            throw Error('DB_INSERT_FAILED');
+        }
     });
-
-    if (!results.id) {
-        throw Error('DB_INSERT_FAILED');
-    }
-
-    let authUserId = '';
-    if (results.id !== undefined && results.id !== null) {
-        authUserId = results.id;
-    }
-
-    if (authUserId === '') {
-        throw Error('DB_INSERT_FAILED');
-    }
 
     return authUserId;
 };
@@ -167,31 +179,26 @@ const createUser = async (email: string, password: string, name: string): Promis
  * @throws {Error} Throws an error if the email or password is invalid, or session creation fails.
  */
 const login = async (email: string, password: string): Promise<string> => {
-    const loginResults = await prisma.authUser.findUnique({
-        include: {
-            authKeys: true
-        },
-        where: { email }
-    });
+    const loginResult = await db
+        .selectFrom('AuthUser')
+        .innerJoin('AuthKey', 'AuthKey.authUserId', 'AuthUser.id')
+        .where('AuthUser.email', '=', email)
+        .where('keyType', '=', KeyType.CREDENTIAL_HASH)
+        .selectAll('AuthUser')
+        .select(['AuthKey.keyValue'])
+        .executeTakeFirst();
 
-    if (loginResults === undefined || loginResults?.id === undefined) {
+    if (loginResult === undefined || loginResult?.id === undefined) {
         console.error('AuthUser Not Found');
         throw Error('AUTH_INVALID_CREDENTIALS');
     }
 
-    if (loginResults.authKeys === undefined || loginResults.authKeys.length === 0) {
+    if (loginResult.keyValue === undefined) {
         console.error('AuthKey not found');
         throw Error('DB_SELECT_FAILED');
     }
 
-    const credential = loginResults.authKeys.find((key) => key.keyType === KeyType.CREDENTIAL_HASH);
-
-    if (credential === undefined || credential.keyValue === undefined) {
-        console.error('AuthKey not found');
-        throw Error('DB_SELECT_FAILED');
-    }
-
-    const isValid = await comparePassword(password, credential.keyValue);
+    const isValid = await comparePassword(password, loginResult.keyValue);
 
     if (!isValid) {
         console.error('Invalid Password');
@@ -202,19 +209,22 @@ const login = async (email: string, password: string): Promise<string> => {
     const expirationDate = new Date(currentDate);
     expirationDate.setDate(expirationDate.getDate() + 30);
 
-    const session = await prisma.authSession.create({
-        data: {
-            authUserId: loginResults.id,
-            expirationDate: expirationDate
-        }
-    });
+    const sessionId = cuid();
+    const createSessionResult = await db
+        .insertInto('AuthSession')
+        .values({
+            authUserId: loginResult.id,
+            expirationDate: expirationDate,
+            id: sessionId
+        })
+        .executeTakeFirstOrThrow();
 
-    if (session === undefined || session.id === undefined) {
+    if (createSessionResult.numInsertedOrUpdatedRows !== 1n) {
         console.error('Unable to create session');
         throw Error('DB_INSERT_FAILED');
     }
 
-    return session.id;
+    return sessionId;
 };
 
 /**
@@ -225,9 +235,7 @@ const login = async (email: string, password: string): Promise<string> => {
  * @throws {Error} Throws an error if the session is invalid or deletion fails.
  */
 const logout = async (sessionId: string): Promise<void> => {
-    await prisma.authSession.delete({
-        where: { id: sessionId }
-    });
+    await db.deleteFrom('AuthSession').where('id', '=', sessionId).execute();
 
     return;
 };
@@ -240,9 +248,7 @@ const logout = async (sessionId: string): Promise<void> => {
  * @throws {Error} Throws an error if the user or sessions are not found, or deletion fails.
  */
 const logoutAll = async (authUserId: string): Promise<void> => {
-    await prisma.authSession.deleteMany({
-        where: { authUserId: authUserId }
-    });
+    await db.deleteFrom('AuthSession').where('AuthSession.authUserId', '=', authUserId).execute();
 
     return;
 };
@@ -255,11 +261,13 @@ const logoutAll = async (authUserId: string): Promise<void> => {
  */
 const validateSession = async (sessionId: string): Promise<boolean> => {
     try {
-        const session = await prisma.authSession.findUniqueOrThrow({
-            where: { id: sessionId }
-        });
+        const session = await db
+            .selectFrom('AuthSession')
+            .selectAll()
+            .where('AuthSession.id', '=', sessionId)
+            .executeTakeFirst();
 
-        if (!session || !session.expirationDate) {
+        if (session === undefined || session.expirationDate === undefined) {
             return false;
         } else {
             return session.expirationDate > new Date();
@@ -359,15 +367,25 @@ const deleteUserIfExists = async (email: string): Promise<void> => {
         return;
     }
 
-    const authUser = await prisma.authUser.findUnique({ where: { email } });
+    try {
+        const { authUserId } = await db
+            .selectFrom('AuthUser')
+            .select('id as authUserId')
+            .where('AuthUser.email', '=', email)
+            .executeTakeFirstOrThrow();
 
-    if (authUser === null || authUser === undefined) {
+        await db.transaction().execute(async (trx: Transaction) => {
+            await trx.deleteFrom('User').where('User.authUserId', '=', authUserId).execute();
+            await trx.deleteFrom('AuthKey').where('AuthKey.authUserId', '=', authUserId).execute();
+            await trx
+                .deleteFrom('AuthSession')
+                .where('AuthSession.authUserId', '=', authUserId)
+                .execute();
+            await trx.deleteFrom('AuthUser').where('AuthUser.id', '=', authUserId).execute();
+        });
+    } catch {
         return;
     }
-
-    await prisma.authUser.delete({ where: { email } });
-
-    return;
 };
 
 /**

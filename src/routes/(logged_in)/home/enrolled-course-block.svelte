@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Course, CourseProgress } from '@prisma/client';
+    import type { Course, CourseProgress } from '$lib/models/database.types';
 
     import Image from '$lib/components/image.svelte';
 

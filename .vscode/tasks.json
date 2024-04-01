@@ -16,8 +16,7 @@
                 "clear": true
             },
             "icon": {
-                "id": "server",
-                "color": "terminal.ansiCyan"
+                "id": "code"
             },
             "runOptions": {
                 "runOn": "folderOpen"
@@ -38,8 +37,46 @@
                 "clear": true
             },
             "icon": {
-                "id": "server",
-                "color": "terminal.ansiGreen"
+                "id": "globe"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+        {
+            "label": "Run TS File",
+            "type": "shell",
+            "command": "pnpm tsx ${file}",
+            "group": {
+                "kind": "none",
+                "isDefault": true
+            },
+            "presentation": {
+                "panel": "shared",
+                "reveal": "always",
+                "focus": true
+            },
+            "icon": {
+                "id": "run"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Prisma Studio",
+            "type": "shell",
+            "command": "BROWSER=none pnpm prisma studio",
+            "group": "none",
+            "isBackground": true,
+            "presentation": {
+                "echo": true,
+                "reveal": "never",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "icon": {
+                "id": "database"
             },
             "runOptions": {
                 "runOn": "folderOpen"

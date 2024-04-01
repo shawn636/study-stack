@@ -10,12 +10,12 @@ function add_pr_comment() {
 
     if [ -z "$arg_type" ] || { [ "$arg_type" != 'file' ] && [ "$arg_type" != 'string' ]; }; then
         echo "Error: missing or invalid argument type. Please use the format: add_pr_comment ['file'|'string'] <file_path|str_val> [head_branch (optional)]"
-        # exit 1
+        exit 1
     fi
 
     if [ -z "$arg_val" ]; then
         echo "Error: missing argument comment.lease use the format: add_pr_comment ['file'|'string'] <file_path|str_val> [head_branch (optional)]"
-        # exit 1
+        exit 1
     fi
 
     if [ -z "$head_branch" ]; then
@@ -31,20 +31,20 @@ function add_pr_comment() {
 
     if [ -z "$pr_number" ]; then
         echo "Error: Unable to locate an open pull request for branch $head_branch. Exiting..."
-        # exit 1
+        exit 1
     fi
 
     if [ "$arg_type" = 'file' ]; then
         if [ ! -f "$arg_val" ]; then
             echo "Error: File $arg_val does not exist. Exiting..."
-            # exit 1
+            exit 1
         fi
         gh pr comment "$pr_number" --body-file "$arg_val" >> /dev/null
         status_code=$?
 
         if [ "$status_code" -ne 0 ]; then
             echo "Error: Unable to add comment to pull request $pr_number. Exiting..."
-            # exit 1
+            exit 1
         fi
     else
         gh pr comment "$pr_number" --body "$arg_val" >> /dev/null
@@ -52,7 +52,7 @@ function add_pr_comment() {
         status_code=$?
         if [ "$status_code" -ne 0 ]; then
             echo "Error: Unable to add comment to pull request $pr_number. Exiting..."
-            # exit 1
+            exit 1
         fi
     fi
 }

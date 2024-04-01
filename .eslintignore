@@ -8,7 +8,8 @@ node_modules
 .env
 .env.*
 !.env.example
-**/*.nnb
+src/lib/server/database.types.ts
+*.nnb
 
 # Ignore Default Layout because lightswitch watcher breaks eslint
 src/routes/+layout.svelte

@@ -1,6 +1,6 @@
 import type { Cookies } from '@sveltejs/kit';
 
-import { prisma } from '$lib/server/database';
+import { cuid, db } from '$lib/server/database';
 
 export const COOKIE_NAME = 'x-csrf-token';
 
@@ -12,21 +12,14 @@ export const COOKIE_NAME = 'x-csrf-token';
  */
 const validateToken = async (token: string): Promise<boolean> => {
     try {
-        const result = await prisma.csrfToken.findFirst({
-            where: {
-                AND: [
-                    {
-                        token: token
-                    },
-                    {
-                        expirationDate: {
-                            gt: new Date()
-                        }
-                    }
-                ]
-            }
-        });
-        return result !== null;
+        const tokenResult = await db
+            .selectFrom('CsrfToken')
+            .select(({ fn }) => fn.countAll<number>().as('tokenCount'))
+            .where('token', '=', token)
+            .where('expirationDate', '>', new Date())
+            .executeTakeFirst();
+
+        return Number(tokenResult?.tokenCount) === 1;
     } catch (e) {
         console.error('Something went wrong while validating token');
         return false;
@@ -43,14 +36,22 @@ const generateToken = async (): Promise<null | string> => {
         const currentDate = new Date();
         const expirationDate = new Date();
         expirationDate.setDate(currentDate.getDate() + 30);
+        const newToken = cuid();
 
-        const newToken = await prisma.csrfToken.create({
-            data: {
-                expirationDate: expirationDate
-            }
-        });
-        const tokenValue = newToken.token;
-        return tokenValue;
+        const createToken = await db
+            .insertInto('CsrfToken')
+            .values({
+                expirationDate: expirationDate,
+                token: newToken
+            })
+            .executeTakeFirstOrThrow();
+
+        if (createToken.numInsertedOrUpdatedRows !== 1n) {
+            console.error('Unable to insert token into database');
+            return null;
+        }
+
+        return newToken;
     } catch (e) {
         console.error('Unable to insert token into database');
         return null;

@@ -13,3 +13,6 @@ coverage/
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
+
+*.nnb
+src/lib/server/database.types.ts

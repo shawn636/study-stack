@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Course, User } from '@prisma/client';
+    import type { Course, User } from '$lib/models/database.types';
 
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
@@ -22,7 +22,7 @@
             try {
                 isLoading = true;
                 const res = await fetch('/api/courses');
-                return (await res.json()) as { course: Course; instructor: User }[];
+                return (await res.json()) as (Course & User)[];
             } catch (error) {
                 console.error(error);
             } finally {
@@ -87,10 +87,7 @@
                 class="grid grid-flow-row grid-cols-1 justify-items-center gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
             >
                 {#each data.coursesWithInstructors as courseWithInstructor}
-                    <CourseGridItem
-                        course={courseWithInstructor.course}
-                        instructor={courseWithInstructor.instructor}
-                    />
+                    <CourseGridItem {courseWithInstructor} />
                 {/each}
             </div>
         {/if}
