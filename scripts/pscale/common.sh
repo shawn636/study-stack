@@ -107,6 +107,9 @@ function branch_name_from_git() {
     local git_branch_name=""
     if [ -n "$CI" ]; then
         git_branch_name=$GITHUB_HEAD_REF
+        if [ -z "$git_branch_name" ]; then
+            git_branch_name=$GITHUB_REF_NAME
+        fi
     else
         git_branch_name=$(git branch --show-current)
     fi
