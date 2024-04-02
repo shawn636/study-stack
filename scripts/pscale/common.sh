@@ -110,6 +110,10 @@ function branch_name_from_git() {
         if [ -z "$git_branch_name" ]; then
             git_branch_name=$GITHUB_REF_NAME
         fi
+
+        if [ "$git_branch_name" = "main" ]; then
+            git_branch_name="$git_branch_name-$GITHUB_RUN_ID"
+        fi
     else
         git_branch_name=$(git branch --show-current)
     fi
