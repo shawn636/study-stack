@@ -52,7 +52,7 @@ function get_common_branches() {
     common_branches=$(comm -12 open_deploy_requests.txt closed_pull_requests.txt)
 
     if [ -f open_deploy_requests.txt ]; then rm open_deploy_requests.txt; fi
-    if [ -f closed_pull_requests.txt ]; then m closed_pull_requests.txt; fi
+    if [ -f closed_pull_requests.txt ]; then rm closed_pull_requests.txt; fi
 
     echo "$common_branches"
 }
