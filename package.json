@@ -12,6 +12,7 @@
         "pscale:cred:create": "scripts/pscale/create-cred.sh",
         "pscale:dr:create": "scripts/pscale/create-deploy-request.sh",
         "pscale:dr:close": "scripts/pscale/close-deploy-request.sh",
+        "pscale:dr:apply": "scripts/pscale/apply-deploy-request.sh",
         "postinstall": "prisma generate",
         "vercel:deploy:preview": "scripts/vercel/deploy-preview.sh",
         "vercel:settings:pull": "scripts/vercel/pull-settings.sh",
