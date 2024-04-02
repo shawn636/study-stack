@@ -31,13 +31,6 @@ function check_branch_creation_possible() {
         exit 1
     fi
 
-    dev_branch_names=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name' | tr '\n' ' ')
-    status_code=$?
-    if [ "$status_code" -ne 0 ]; then
-        echo "Error: Unable to parse branch list. Exiting..."
-        exit 1
-    fi
-
     dev_branch_name=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name' | head -n 1)
     status_code=$?
     if [ "$status_code" -ne 0 ]; then

@@ -116,6 +116,16 @@ function branch_name_from_git() {
         fi
     else
         git_branch_name=$(git branch --show-current)
+        
+        if [ "$git_branch_name" = "main" ]; then
+            branch_suffix=$(git config user.email)
+            
+            if [ -z "$branch_suffix" ]; then
+                branch_suffix=$(git config user.name)
+            fi
+
+            git_branch_name="$git_branch_name-$branch_suffix"
+        fi
     fi
 
     local PSCALE_BRANCH_NAME=""

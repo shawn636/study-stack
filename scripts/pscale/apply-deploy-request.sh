@@ -63,7 +63,6 @@ function apply_dep_reqs_for_branches() {
     while IFS= read -r branch; do
         echo "Applying deploy request for branch: $branch"
 
-        # pscale deploy-request apply "$PSCALE_DB_NAME" --branch "$branch" --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
         dr_number=$(pscale deploy-request list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r "[.[] | select(.branch == \"$branch\")] | .[] | select(.state == \"open\") | .number")
         local status_code=$?
 
@@ -80,6 +79,8 @@ function apply_dep_reqs_for_branches() {
                 echo "Error: failed to apply deploy request for branch: $branch"
                 exit 1
             fi
+
+            delete_branch "$branch" || exit $?
         else
             echo "No open deploy request found for branch: $branch. Skipping..."
         fi
