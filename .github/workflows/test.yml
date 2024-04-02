@@ -149,3 +149,6 @@ jobs:
                   cache: 'pnpm'
 
             - run: pnpm pscale:cred:delete-all-ci "ga-"
+
+            - run: pnpm pscale:branch:delete
+              if: ${{ github.ref_name == 'main' }}
