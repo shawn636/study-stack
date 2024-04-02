@@ -1,12 +1,19 @@
-import { DATABASE_URL } from '$env/static/private';
-import { Client } from '@planetscale/database';
+import type { DB } from '$lib/models/database.types';
 
-/**
- * Creates a new instance of the Planetscale Database client using the provided database URL.
- *
- * @param {string} url - The URL of the Planetscale database.
- * @returns {Client} A new instance of the Planetscale Database client.
- */
-export const db = new Client({
-    url: DATABASE_URL
+import { DATABASE_URL } from '$env/static/private';
+import { init } from '@paralleldrive/cuid2';
+import { Kysely, sql as KyselySql, Transaction as KyselyTransaction } from 'kysely';
+import { PlanetScaleDialect } from 'kysely-planetscale';
+
+export const cuid = init({
+    length: 30
 });
+
+export const db = new Kysely<DB>({
+    dialect: new PlanetScaleDialect({
+        url: DATABASE_URL
+    })
+});
+
+export type Transaction = KyselyTransaction<DB>;
+export const sql = KyselySql;

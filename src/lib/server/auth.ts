@@ -1,10 +1,10 @@
-import type User from '$lib/models/user';
+import type { User } from '$lib/models/database.types';
 import type { Cookies } from '@sveltejs/kit';
 
 import { dev } from '$app/environment';
+import { KeyType } from '$lib/models/database.types';
 import { comparePassword, hashPassword } from '$lib/server/crypto';
-import { db } from '$lib/server/database';
-import { v4 } from 'uuid';
+import { type Transaction, cuid, db } from '$lib/server/database';
 
 export const COOKIE_NAME = 'auth_session';
 
@@ -15,38 +15,31 @@ export const COOKIE_NAME = 'auth_session';
  * @returns {Promise<boolean>} A Promise that resolves to true if the email exists, false otherwise.
  */
 const emailExists = async (email: string): Promise<boolean> => {
-    const conn = db.connection();
-    const query = 'SELECT COUNT(*) AS count FROM auth_user WHERE email = ?;';
-    const result = await conn.execute(query, [email]);
+    const { authUserCount } = await db
+        .selectFrom('AuthUser')
+        .where('AuthUser.email', '=', email)
+        .select(({ fn }) => [fn.count<number>('id').as('authUserCount')])
+        .executeTakeFirstOrThrow();
 
-    if (result.rows.length !== 1) {
-        console.error('Invalid result structure');
-        throw Error('DB_SELECT_FAILED');
-    }
-
-    const recordCount = result.rows[0] as { count: string };
-    return parseInt(recordCount.count) > 0;
+    return authUserCount > 0;
 };
 
 /**
  * Retrieves all session IDs associated with a user.
  *
- * @param {string} userId - The ID of the user.
+ * @param {string} authUserId - The ID of the AuthUser.
  * @returns {Promise<string[]>} A Promise that resolves to an array of session IDs.
  */
-const getAllSessions = async (userId: string): Promise<string[]> => {
-    const conn = db.connection();
-    const query = 'SELECT id FROM auth_session WHERE auth_user_id = ?';
-    const { rows } = await conn.execute(query, [userId]);
+const getAllSessions = async (authUserId: string): Promise<string[]> => {
+    const sessionResults = await db
+        .selectFrom('AuthSession')
+        .select('id')
+        .where('AuthSession.authUserId', '=', authUserId)
+        .execute();
 
-    // Confirm that rows conforms to the expected structure
-    const sessions = rows.map((row) => {
-        if (!row || typeof row.id !== 'string') {
-            throw new Error('Invalid session structure');
-        }
-        return row;
-    });
-    return sessions.map((session) => session.id);
+    const sessionIds: string[] = sessionResults.map((session) => session.id);
+
+    return sessionIds;
 };
 
 /**
@@ -63,56 +56,14 @@ const getUser = async (sessionId: string): Promise<User> => {
         throw Error('AUTH_INVALID_SESSION');
     }
 
-    const conn = db.connection();
+    const userResult = await db
+        .selectFrom('User')
+        .innerJoin('AuthSession', 'User.authUserId', 'AuthSession.authUserId')
+        .selectAll('User')
+        .where('AuthSession.id', '=', sessionId)
+        .executeTakeFirst();
 
-    const query = `SELECT User.id as id, User.email as email, User.name as name,
-                   User.country_code as country_code, User.area_code as area_code,
-                   User.phone_number as phone_number, User.bio as bio, User.city as city,
-                   User.state as state, User.photo_url as photo_url
-                   FROM auth_session JOIN User on auth_session.auth_user_id = User.auth_user_id 
-                   WHERE auth_session.id = ?`;
-
-    const { rows } = await conn.execute(query, [sessionId]);
-
-    if (rows.length !== 1) {
-        console.error('Unable to find user');
-        throw Error('DB_SELECT_FAILED');
-    }
-
-    const userRow = rows[0];
-
-    // id: string;
-    // email: string;
-    // name: string;
-    // country_code: string | null;
-    // area_code: string | null;
-    // phone_number: string | null;
-    // bio: string | null;
-    // city: string | null;
-    // state: string | null;
-    // photo_url: string | null;
-
-    const userProperties = [
-        'id',
-        'email',
-        'name',
-        'country_code',
-        'area_code',
-        'phone_number',
-        'bio',
-        'city',
-        'state',
-        'photo_url'
-    ];
-
-    for (const prop of userProperties) {
-        if (!(prop in userRow)) {
-            console.error(`Invalid user structure: Expected property ${prop}`);
-            throw Error('DB_SELECT_FAILED');
-        }
-    }
-
-    const user = userRow as User;
+    const user = userResult as User | undefined;
 
     if (!user) {
         console.error('Unable to find user');
@@ -136,26 +87,19 @@ const getUserId = async (sessionId: string): Promise<string> => {
         throw Error('AUTH_INVALID_SESSION');
     }
 
-    const conn = db.connection();
+    const userResult = await db
+        .selectFrom('User')
+        .innerJoin('AuthSession', 'User.authUserId', 'AuthSession.authUserId')
+        .select('User.id as userId')
+        .where('AuthSession.id', '=', sessionId)
+        .executeTakeFirst();
 
-    const query = `SELECT User.id as id
-                   FROM auth_session JOIN User on auth_session.auth_user_id = User.auth_user_id 
-                   WHERE auth_session.id = ?`;
-
-    const { rows } = await conn.execute(query, [sessionId]);
-
-    if (rows.length !== 1 || !rows[0].id) {
-        console.error('Unable to find user');
-        throw Error('DB_SELECT_FAILED');
-    }
-    const result = rows[0] as { id: string };
-
-    if (!result) {
+    if (!userResult || !userResult.userId) {
         console.error('Unable to find user');
         throw Error('DB_SELECT_FAILED');
     }
 
-    return result.id;
+    return userResult.userId;
 };
 
 /**
@@ -174,44 +118,56 @@ const createUser = async (email: string, password: string, name: string): Promis
         throw Error('AUTH_DUPLICATE_EMAIL');
     }
 
-    const conn = db.connection();
+    const keyValue = await hashPassword(password);
 
-    const userId = await conn.transaction(async (tx) => {
-        // Create auth_user
-        const userId = v4();
-        const query = 'INSERT INTO auth_user (id, email) VALUES (?, ?);';
-        const userResult = await tx.execute(query, [userId, email]);
+    const authUserId = cuid();
+    const userId = cuid();
+    const authKeyId = cuid();
 
-        if (userResult.insertId === null) {
-            console.error('Unable to insert auth_user');
+    await db.transaction().execute(async (trx: Transaction) => {
+        const createAuthUserResult = await trx
+            .insertInto('AuthUser')
+            .values({
+                email: email,
+                id: authUserId
+            })
+            .executeTakeFirst();
+
+        if (createAuthUserResult.numInsertedOrUpdatedRows !== 1n) {
             throw Error('DB_INSERT_FAILED');
         }
 
-        // Create auth_key
-        const keyId = v4();
-        const hashedPassword = await hashPassword(password);
-        const keyQuery =
-            'INSERT INTO auth_key (id, auth_user_id, hashed_password) VALUES (?, ?, ?);';
-        const keyResult = await tx.execute(keyQuery, [keyId, userId, hashedPassword]);
+        const createUserResult = await trx
+            .insertInto('User')
+            .values({
+                authUserId: authUserId,
+                email: email,
+                id: userId,
+                name: name,
+                role: 'user'
+            })
+            .executeTakeFirst();
 
-        if (keyResult.insertId === null) {
-            console.error('Unable to insert auth_key');
-            throw new Error('DB_INSERT_FAILED');
-        }
-
-        // Create User Profile
-        const userProfileQuery = 'INSERT INTO User (auth_user_id, name, email) VALUES (?, ?, ?);';
-        const userProfileResult = await tx.execute(userProfileQuery, [userId, name, email]);
-
-        if (userProfileResult.insertId === null) {
-            console.error('Unable to insert User');
+        if (createUserResult.numInsertedOrUpdatedRows !== 1n) {
             throw Error('DB_INSERT_FAILED');
         }
 
-        return userId;
+        const createAuthKeyResult = await trx
+            .insertInto('AuthKey')
+            .values({
+                authUserId: authUserId,
+                id: authKeyId,
+                keyType: KeyType.CREDENTIAL_HASH,
+                keyValue: keyValue
+            })
+            .executeTakeFirst();
+
+        if (createAuthKeyResult.numInsertedOrUpdatedRows !== 1n) {
+            throw Error('DB_INSERT_FAILED');
+        }
     });
 
-    return userId;
+    return authUserId;
 };
 
 /**
@@ -223,55 +179,47 @@ const createUser = async (email: string, password: string, name: string): Promis
  * @throws {Error} Throws an error if the email or password is invalid, or session creation fails.
  */
 const login = async (email: string, password: string): Promise<string> => {
-    const conn = db.connection();
-    const getAuthUser = 'SELECT id FROM auth_user WHERE email = ?';
-    const authUserResult = await conn.execute(getAuthUser, [email]);
+    const loginResult = await db
+        .selectFrom('AuthUser')
+        .innerJoin('AuthKey', 'AuthKey.authUserId', 'AuthUser.id')
+        .where('AuthUser.email', '=', email)
+        .where('keyType', '=', KeyType.CREDENTIAL_HASH)
+        .selectAll('AuthUser')
+        .select(['AuthKey.keyValue'])
+        .executeTakeFirst();
 
-    if (authUserResult === undefined || authUserResult.rows.length !== 1) {
+    if (loginResult === undefined || loginResult?.id === undefined) {
         console.error('AuthUser Not Found');
         throw Error('AUTH_INVALID_CREDENTIALS');
     }
 
-    const user = authUserResult.rows[0] as { id: string };
-
-    if (user === undefined) {
-        console.error('AuthUser Not Found');
-        throw Error('AUTH_INVALID_CREDENTIALS');
-    }
-
-    if (user.id === undefined) {
-        console.error('AuthUser Not Found');
-        throw Error('AUTH_INVALID_CREDENTIALS');
-    }
-
-    const getHashedPassword =
-        'SELECT hashed_password as hashedPassword FROM auth_key WHERE auth_user_id = ?';
-    const hashedPasswordResult = await conn.execute(getHashedPassword, [user.id]);
-
-    if (hashedPasswordResult === undefined || hashedPasswordResult.rows.length !== 1) {
-        console.error('AuthKey not found');
-        throw Error('DB_SELECT_FAILED');
-    }
-    const { hashedPassword } = hashedPasswordResult.rows[0] as { hashedPassword: string };
-
-    if (hashedPassword === undefined) {
+    if (loginResult.keyValue === undefined) {
         console.error('AuthKey not found');
         throw Error('DB_SELECT_FAILED');
     }
 
-    const isValid = await comparePassword(password, hashedPassword);
+    const isValid = await comparePassword(password, loginResult.keyValue);
 
     if (!isValid) {
         console.error('Invalid Password');
         throw Error('AUTH_INVALID_CREDENTIALS');
     }
 
-    const sessionId = v4();
-    const createSession =
-        'INSERT INTO auth_session (id, auth_user_id, expires) VALUES (?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 30 DAY))';
-    const sessionResult = await conn.execute(createSession, [sessionId, user.id]);
+    const currentDate = new Date();
+    const expirationDate = new Date(currentDate);
+    expirationDate.setDate(expirationDate.getDate() + 30);
 
-    if (sessionResult.insertId === null) {
+    const sessionId = cuid();
+    const createSessionResult = await db
+        .insertInto('AuthSession')
+        .values({
+            authUserId: loginResult.id,
+            expirationDate: expirationDate,
+            id: sessionId
+        })
+        .executeTakeFirstOrThrow();
+
+    if (createSessionResult.numInsertedOrUpdatedRows !== 1n) {
         console.error('Unable to create session');
         throw Error('DB_INSERT_FAILED');
     }
@@ -287,22 +235,7 @@ const login = async (email: string, password: string): Promise<string> => {
  * @throws {Error} Throws an error if the session is invalid or deletion fails.
  */
 const logout = async (sessionId: string): Promise<void> => {
-    const conn = db.connection();
-    const selectQuery = 'SELECT id FROM auth_session WHERE id = ?';
-    const selectResult = await conn.execute(selectQuery, [sessionId]);
-
-    if (selectResult.rows.length !== 1) {
-        console.error('Session not found');
-        throw Error('AUTH_INVALID_SESSION');
-    }
-
-    const deleteSessionQuery = 'DELETE FROM auth_session WHERE id = ?';
-    const result = await conn.execute(deleteSessionQuery, [sessionId]);
-
-    if (result.rowsAffected === 0) {
-        console.error('Unable to delete session');
-        throw Error('DB_DELETE_FAILED');
-    }
+    await db.deleteFrom('AuthSession').where('id', '=', sessionId).execute();
 
     return;
 };
@@ -315,27 +248,7 @@ const logout = async (sessionId: string): Promise<void> => {
  * @throws {Error} Throws an error if the user or sessions are not found, or deletion fails.
  */
 const logoutAll = async (authUserId: string): Promise<void> => {
-    const conn = db.connection();
-    const findUserQuery = 'SELECT id FROM auth_user WHERE id = ?';
-    const findUserResult = await conn.execute(findUserQuery, [authUserId]);
-    if (findUserResult.rows.length !== 1) {
-        console.error('User not found');
-        throw Error('AUTH_INVALID_SESSION');
-    }
-
-    const findSessionsQuery = 'SELECT id FROM auth_session WHERE auth_user_id = ?';
-    const findSessionsResult = await conn.execute(findSessionsQuery, [authUserId]);
-    if (findSessionsResult.rows.length === 0) {
-        console.error('No sessions found for User');
-        throw Error('AUTH_INVALID_SESSION');
-    }
-
-    const deleteSessionsQuery = 'DELETE FROM auth_session WHERE auth_user_id = ?';
-    const deleteSessionsResult = await conn.execute(deleteSessionsQuery, [authUserId]);
-    if (deleteSessionsResult.rowsAffected === 0) {
-        console.error('Unable to delete sessions');
-        throw Error('DB_DELETE_FAILED');
-    }
+    await db.deleteFrom('AuthSession').where('AuthSession.authUserId', '=', authUserId).execute();
 
     return;
 };
@@ -347,10 +260,21 @@ const logoutAll = async (authUserId: string): Promise<void> => {
  * @returns {Promise<boolean>} A Promise that resolves to true if the session is valid, false otherwise.
  */
 const validateSession = async (sessionId: string): Promise<boolean> => {
-    const conn = db.connection();
-    const query = 'SELECT id FROM auth_session WHERE id = ?';
-    const result = await conn.execute(query, [sessionId]);
-    return result.rows.length === 1;
+    try {
+        const session = await db
+            .selectFrom('AuthSession')
+            .selectAll()
+            .where('AuthSession.id', '=', sessionId)
+            .executeTakeFirst();
+
+        if (session === undefined || session.expirationDate === undefined) {
+            return false;
+        } else {
+            return session.expirationDate > new Date();
+        }
+    } catch {
+        return false;
+    }
 };
 
 /**
@@ -443,26 +367,25 @@ const deleteUserIfExists = async (email: string): Promise<void> => {
         return;
     }
 
-    const conn = db.connection();
+    try {
+        const { authUserId } = await db
+            .selectFrom('AuthUser')
+            .select('id as authUserId')
+            .where('AuthUser.email', '=', email)
+            .executeTakeFirstOrThrow();
 
-    const result = await conn.execute('SELECT id FROM auth_user WHERE email = ?', [email]);
-
-    // It is safe to extract the first row because it will not throw
-    // an error if the email does not exist. We also check if the
-    // id is undefined to ensure that the row is valid.
-
-    const resultObj = result.rows[0] as { id: string | undefined };
-
-    if (resultObj?.id !== undefined) {
-        await conn.transaction(async (tx) => {
-            await tx.execute('DELETE FROM auth_user WHERE id = ?', [resultObj.id]);
-            await tx.execute('DELETE FROM auth_key WHERE auth_user_id = ?', [resultObj.id]);
-            await tx.execute('DELETE FROM auth_session WHERE auth_user_id = ?', [resultObj.id]);
-            await tx.execute('DELETE FROM User WHERE auth_user_id = ?', [resultObj.id]);
+        await db.transaction().execute(async (trx: Transaction) => {
+            await trx.deleteFrom('User').where('User.authUserId', '=', authUserId).execute();
+            await trx.deleteFrom('AuthKey').where('AuthKey.authUserId', '=', authUserId).execute();
+            await trx
+                .deleteFrom('AuthSession')
+                .where('AuthSession.authUserId', '=', authUserId)
+                .execute();
+            await trx.deleteFrom('AuthUser').where('AuthUser.id', '=', authUserId).execute();
         });
+    } catch {
+        return;
     }
-
-    return;
 };
 
 /**

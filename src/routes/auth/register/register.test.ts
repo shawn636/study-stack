@@ -2,9 +2,8 @@
  * @vitest-environment jsdom
  */
 import { COOKIE_NAME as AUTH_COOKIE_NAME, auth } from '$lib/server/auth';
-import { isUUID } from '$lib/server/crypto';
 import { COOKIE_NAME as CSRF_COOKIE_NAME, csrf } from '$lib/server/csrf';
-import { db } from '$lib/server/database';
+import { db, sql } from '$lib/server/database';
 import { faker } from '@faker-js/faker';
 
 interface Account {
@@ -23,9 +22,10 @@ const accounts: Account[] = new Array(5).fill(null).map(() => {
 
 describe('register', () => {
     beforeAll(async () => {
-        for (const account of accounts) {
+        const promises = accounts.map(async (account) => {
             await auth.deleteUserIfExists(account.email);
-        }
+        });
+        await Promise.all(promises);
     });
     afterAll(async () => {
         for (const account of accounts) {
@@ -33,12 +33,12 @@ describe('register', () => {
         }
     });
     it('should be able to communicate with database', async () => {
-        expect(db).toBeDefined();
         expect(db).toBeTruthy();
 
-        const conn = db.connection();
-        expect(conn).toBeDefined();
-        expect(conn).toBeTruthy();
+        const result = await sql<{ solution: number }>`SELECT 1 + 1 as solution`.execute(db);
+
+        expect(result.rows).toHaveLength(1);
+        expect(Number(result.rows[0].solution)).toBe(2);
     });
 
     it('should successfully create account and create cookie', async () => {
@@ -66,8 +66,17 @@ describe('register', () => {
             const authCookie = splitCookies.find((cookie) => cookie.startsWith(AUTH_COOKIE_NAME));
             const cookieValue = authCookie?.split('=').at(-1) ?? '';
 
-            expect(cookieValue).toBeDefined();
-            expect(isUUID(cookieValue)).toBe(true);
+            expect(cookieValue).toBeTruthy();
+
+            const session = await db
+                .selectFrom('AuthSession')
+                .selectAll()
+                .where('AuthSession.id', '=', cookieValue)
+                .executeTakeFirst();
+
+            expect(session).toBeTruthy();
+            expect(session?.id).toBeTruthy();
+            expect(session?.id).toBe(cookieValue);
         }
     }, 20000);
 });

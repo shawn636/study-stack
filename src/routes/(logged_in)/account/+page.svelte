@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { User } from '$lib/models/database.types';
     import type { ToastSettings } from '@skeletonlabs/skeleton';
 
     import { formatPhoneNumber, initials as getInitials } from '$lib/client/util';
@@ -14,7 +15,7 @@
     export let data: PageServerData;
 
     const toastStore = getToastStore();
-    $: phone = formatPhoneNumber((data.user.area_code ?? '') + (data.user.phone_number ?? ''));
+    $: phone = formatPhoneNumber((data.user?.areaCode ?? '') + (data.user?.phoneNumber ?? ''));
     let profileImgInput: HTMLInputElement;
 
     let editMode = false;
@@ -53,23 +54,15 @@
 
         const phoneTemp = phone.replace(/\s/g, '');
 
-        const user = {
-            area_code: phoneTemp.slice(0, 3) === '' ? null : phoneTemp.slice(0, 3),
-            bio: data.user.bio === '' ? null : data.user.bio,
-            city: data.user.city === '' ? null : data.user.city,
-            country_code: '+1',
-            email: data.user.email,
-            id: data.user.id,
-            name: data.user.name,
-            phone_number: phoneTemp.slice(3, 10) === '' ? null : phoneTemp.slice(3, 10),
-            photo_url: data.user.photo_url === '' ? null : data.user.photo_url,
-            state: data.user.state === '' ? null : data.user.state
+        const user: User = {
+            ...data.user,
+            areaCode: phoneTemp.slice(0, 3) === '' ? null : phoneTemp.slice(0, 3),
+            countryCode: '+1',
+            phoneNumber: phoneTemp.slice(3, 10) === '' ? null : phoneTemp.slice(3, 10)
         };
 
         const response = await fetch('/api/user', {
-            body: JSON.stringify({
-                user
-            }),
+            body: JSON.stringify({ user }),
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -80,8 +73,8 @@
             originalData = data;
 
             const phoneTemp = phone.replace(/\s/g, '');
-            originalData.user.area_code = phoneTemp.slice(0, 3);
-            originalData.user.phone_number = phoneTemp.slice(3, 10);
+            originalData.user.areaCode = phoneTemp.slice(0, 3);
+            originalData.user.phoneNumber = phoneTemp.slice(3, 10);
             isLoading = false;
             toastStore.trigger(successToast);
 
@@ -102,8 +95,8 @@
             reader.readAsDataURL(image);
             reader.onload = async () => {
                 const formData = new FormData();
-                formData.append('profile_photo', image);
-                formData.append('user_id', data.user.id);
+                formData.append('profilePhoto', image);
+                formData.append('userId', data.user.id.toString());
 
                 const response = await fetch('/api/user/photo', {
                     body: formData,

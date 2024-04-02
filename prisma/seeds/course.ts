@@ -3,13 +3,14 @@ import type { Course, PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { Prisma } from '@prisma/client';
 
+import { cuid } from './utils';
+
 export async function seedCourse(client: PrismaClient) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [categories, users, organizations, lessons] = await Promise.all([
+    const [categories, users, organizations] = await Promise.all([
         client.category.findMany(),
         client.user.findMany(),
-        client.organization.findMany(),
-        client.lesson.findMany()
+        client.organization.findMany()
     ]);
 
     const difficulties = ['Beginner', 'Intermediate', 'Advanced'];
@@ -26,32 +27,26 @@ export async function seedCourse(client: PrismaClient) {
         const instructor = faker.helpers.arrayElement(users);
         const hasOrg = instructor.organizationId !== null;
         const organization = hasOrg
-            ? String(organizations.find((org) => org.id === instructor.organizationId))
+            ? organizations.find((org) => org.id === instructor.organizationId)
             : null;
 
-        const lessonCnt = lessons.filter((lesson) => {
-            lesson.courseId === i + 1;
-        }).length;
-
         const course: Course = {
-            category: category.title,
             categoryId: category.id,
-            current_price: new Prisma.Decimal(discountedPrice),
+            currentPrice: new Prisma.Decimal(discountedPrice),
             description: faker.commerce.productDescription(),
             difficulty: faker.helpers.arrayElement(difficulties),
-            estimated_time_hours: faker.number.int({ max: 100, min: 0 }),
-            estimated_time_minutes: faker.number.int({ max: 59, min: 0 }),
-            id: i + 1,
-            img_href: 'images/course-image.webp',
-            instructor: instructor.name,
+            estimatedTimeHours: faker.number.int({ max: 100, min: 0 }),
+            estimatedTimeMinutes: faker.number.int({ max: 59, min: 0 }),
+            id: cuid(),
+            imgHref: 'images/course-image.webp',
             instructorId: instructor.id,
-            lesson_cnt: lessonCnt,
-            organization: hasOrg ? organization : null,
-            original_price: isDiscounted
+            lessonCount: 0,
+            organizationId: organization?.id ?? null,
+            originalPrice: isDiscounted
                 ? new Prisma.Decimal(price)
                 : new Prisma.Decimal(discountedPrice),
-            rating_avg: faker.number.float({ max: 5, min: 0 }),
-            rating_cnt: faker.number.int({ max: 1000, min: 0 }),
+            ratingAverage: faker.number.float({ max: 5, min: 0 }),
+            ratingCount: faker.number.int({ max: 1000, min: 0 }),
             title: faker.commerce.productName()
         };
 

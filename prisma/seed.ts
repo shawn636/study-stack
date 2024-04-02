@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
 import { seedCategory } from './seeds/category';
-import { seedContentType } from './seeds/content-type';
 import { seedCourse } from './seeds/course';
 import { seedCourseContent } from './seeds/course-content';
 import { deleteAll } from './seeds/delete';
@@ -12,11 +11,10 @@ const prisma = new PrismaClient();
 
 async function main() {
     await deleteAll(prisma);
-
     await seedOrganization(prisma);
     await Promise.all([seedCategory(prisma), seedUser(prisma)]);
     await seedCourse(prisma);
-    await Promise.all([seedContentType(prisma), seedLesson(prisma)]);
+    await seedLesson(prisma);
     await seedCourseContent(prisma);
 }
 main()

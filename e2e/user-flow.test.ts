@@ -28,9 +28,10 @@ const ACCOUNTS = [
 
 test.describe('all-user-flow', async () => {
     test.beforeAll(async () => {
-        for (const account of ACCOUNTS) {
+        const promises = ACCOUNTS.map(async (account) => {
             await auth.deleteUserIfExists(account.email);
-        }
+        });
+        await Promise.all(promises);
     });
     test.afterAll(async () => {
         for (const account of ACCOUNTS) {

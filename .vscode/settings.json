@@ -29,5 +29,8 @@
         "editor.codeActionsOnSave": {
             "source.fixAll": "explicit"
         }
+    },
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
     }
 }

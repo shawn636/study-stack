@@ -33,9 +33,9 @@ const config: PlaywrightTestConfig = defineConfig({
     retries: 3,
     testDir: 'e2e',
     testMatch: /(.+\.)?(test|spec)\.[jt]s/,
-    use: {
-        baseURL: 'http://localhost:3005'
-    },
+    // use: {
+    //     baseURL: 'http://localhost:3005'
+    // },
     webServer: {
         command: 'pnpm vercel-e2e-test',
         port: 3005

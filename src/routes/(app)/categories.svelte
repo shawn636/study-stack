@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type Category from '$lib/models/category';
+    import type CategorySummary from '$lib/models/category-summary';
 
     import CategoryCard from '$lib/components/category-card.svelte';
-    export let categories: Category[];
+    export let categorySummaries: CategorySummary[];
 </script>
 
 <div class="grid justify-items-center">
@@ -14,9 +14,9 @@
     <div
         class="grid max-w-7xl grid-cols-1 gap-8 pb-8 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-6"
     >
-        {#each categories as category, index}
+        {#each categorySummaries as categorySummary, index}
             <span data-testid="category-card-{index}">
-                <CategoryCard {category} />
+                <CategoryCard {categorySummary} />
             </span>
         {/each}
     </div>

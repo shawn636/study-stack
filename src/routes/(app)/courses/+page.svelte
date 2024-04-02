@@ -1,4 +1,6 @@
 <script lang="ts">
+    import type { Course, User } from '$lib/models/database.types';
+
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
     import { sortBy } from '$lib/stores/controls';
@@ -12,18 +14,17 @@
     let isLoading = false;
     export let data: PageData;
 
-    const getCourses = async (
+    const getCoursesWithInstructors = async (
         query: string | undefined = undefined,
-        sortBy: string | undefined = undefined,
-        expandQuery: boolean | undefined = undefined
+        sortBy: string | undefined = undefined
     ) => {
         if (!query) {
             try {
                 isLoading = true;
                 const res = await fetch('/api/courses');
-                return await res.json();
+                return (await res.json()) as (Course & User)[];
             } catch (error) {
-                console.log(error);
+                console.error(error);
             } finally {
                 isLoading = false;
             }
@@ -31,14 +32,12 @@
             try {
                 isLoading = true;
                 let url = `/api/search/${query}`;
-                url += sortBy || expandQuery ? '?' : '';
-                url += sortBy ? `sort_by=${sortBy}` : '';
-                url += sortBy && expandQuery ? '&' : '';
-                url += expandQuery ? `expand_query=${expandQuery}` : '';
+                url += sortBy ? `?sort_by=${sortBy}` : '';
+
                 const res = await fetch(url);
                 return await res.json();
             } catch (error) {
-                console.log(error);
+                console.error(error);
             } finally {
                 isLoading = false;
             }
@@ -47,11 +46,10 @@
 
     // Search Options
     $: sortByText = $sortBy.toLowerCase().replace(/\s/g, '_');
-    const expandQuery = true;
 
     const handleKeydown = async (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
-            data.courses = await getCourses($search, sortByText, expandQuery);
+            data.coursesWithInstructors = await getCoursesWithInstructors($search, sortByText);
         }
     };
 </script>
@@ -63,7 +61,7 @@
         <Controls
             {handleKeydown}
             on:change={async () => {
-                await getCourses();
+                await getCoursesWithInstructors();
             }}
         />
 
@@ -77,7 +75,7 @@
                     </div>
                 {/each}
             </div>
-        {:else if data.courses.length === 0}
+        {:else if data.coursesWithInstructors.length === 0}
             <div class="content-visibility-auto mb-6 mt-8 grid items-center justify-items-center">
                 <div class="flex-flow-col card flex items-center gap-x-2 p-4">
                     <Fa class="text-xl" icon={faBinoculars} />
@@ -88,8 +86,8 @@
             <div
                 class="grid grid-flow-row grid-cols-1 justify-items-center gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
             >
-                {#each data.courses as course}
-                    <CourseGridItem {course} />
+                {#each data.coursesWithInstructors as courseWithInstructor}
+                    <CourseGridItem {courseWithInstructor} />
                 {/each}
             </div>
         {/if}

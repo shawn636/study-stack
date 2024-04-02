@@ -14,4 +14,4 @@
     <meta content="Cybernetically enhanced web apps" name="Description" />
 </svelte:head>
 <HeroBanner />
-<Categories categories={data.categories} />
+<Categories categorySummaries={data.categorySummaries} />

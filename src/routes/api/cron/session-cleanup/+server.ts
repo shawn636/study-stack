@@ -2,21 +2,40 @@ import { db } from '$lib/server/database';
 
 import type { RequestHandler } from './$types';
 
+/**
+ * Session Cleanup API Endpoint (/api/cron/session-cleanup)
+ *
+ * This endpoint is responsible for cleaning up expired sessions and CSRF tokens
+ * in the database. It is typically used as part of a scheduled job (cron) to
+ * maintain the efficiency and security of the application.
+ *
+ * @method GET
+ *
+ * @returns A JSON response containing the count of deleted auth sessions
+ *          and CSRF tokens, or an error message in case of failure.
+ *
+ * @example
+ * // Response on success
+ * {
+ *   "authSessionsFlushed": 5,
+ *   "csrfTokensFlushed": 7
+ * }
+ *
+ * // Response on failure
+ * "Internal Server Error"
+ */
 export const GET: RequestHandler = async () => {
     try {
-        const conn = db.connection();
-
-        const csrfFlush = await conn.execute(
-            'DELETE FROM csrf_token WHERE CAST(expires AS DATETIME) <= CURRENT_TIMESTAMP();'
-        );
-
-        const authSessionFlush = await conn.execute(
-            'DELETE FROM auth_session WHERE expires <= CURRENT_TIMESTAMP();'
-        );
-
+        const [csrfFlush, authSessionFlush] = await Promise.all([
+            db.deleteFrom('CsrfToken').where('expirationDate', '<=', new Date()).executeTakeFirst(),
+            db
+                .deleteFrom('AuthSession')
+                .where('expirationDate', '<=', new Date())
+                .executeTakeFirst()
+        ]);
         const json = JSON.stringify({
-            auth_sessions_flushed: authSessionFlush.rowsAffected,
-            csrf_tokens_flushed: csrfFlush.rowsAffected
+            authSessionsFlushed: Number(authSessionFlush.numDeletedRows),
+            csrfTokensFlushed: Number(csrfFlush.numDeletedRows)
         });
 
         return new Response(json, {

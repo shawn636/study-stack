@@ -1,63 +1,91 @@
-import { Client } from '@planetscale/database';
-import { v4 } from 'uuid';
+import { init } from '@paralleldrive/cuid2';
+import { Kysely, Transaction } from 'kysely';
+import { PlanetScaleDialect } from 'kysely-planetscale';
 
+import { DB, KeyType } from '../../src/lib/models/database.types';
 import { hashPassword } from './crypto';
 import { DATABASE_URL } from './env';
 
-export const db = new Client({
-    url: DATABASE_URL
+const cuid = init({
+    length: 30
+});
+
+export const db = new Kysely<DB>({
+    dialect: new PlanetScaleDialect({
+        url: DATABASE_URL
+    })
 });
 
 const createUser = async (email: string, password: string, name: string): Promise<string> => {
-    const conn = db.connection();
+    const keyValue = await hashPassword(password);
 
-    // Create auth_user
-    const userId = v4();
-    const query = 'INSERT INTO auth_user (id, email) VALUES (?, ?);';
-    const userResult = await conn.execute(query, [userId, email]);
+    const authUserId = cuid();
+    const userId = cuid();
+    const authKeyId = cuid();
 
-    if (userResult.insertId === null) {
-        console.error('Unable to insert auth_user');
-        throw Error('DB_INSERT_FAILED');
-    }
+    await db.transaction().execute(async (trx: Transaction<DB>) => {
+        const createAuthUserResult = await trx
+            .insertInto('AuthUser')
+            .values({
+                email: email,
+                id: authUserId
+            })
+            .executeTakeFirst();
 
-    // Create auth_key
-    const keyId = v4();
-    const hashedPassword = await hashPassword(password);
-    const keyQuery = 'INSERT INTO auth_key (id, auth_user_id, hashed_password) VALUES (?, ?, ?);';
-    const keyResult = await conn.execute(keyQuery, [keyId, userId, hashedPassword]);
+        if (createAuthUserResult.numInsertedOrUpdatedRows !== 1n) {
+            throw new Error('Failed to create AuthUser');
+        }
 
-    if (keyResult.insertId === null) {
-        console.error('Unable to insert auth_key');
-        throw new Error('DB_INSERT_FAILED');
-    }
+        const createAuthKeyResult = await trx
+            .insertInto('AuthKey')
+            .values({
+                authUserId: authUserId,
+                id: authKeyId,
+                keyType: KeyType.CREDENTIAL_HASH,
+                keyValue: keyValue
+            })
+            .executeTakeFirst();
 
-    // Create User Profile
-    const userProfileQuery = 'INSERT INTO User (auth_user_id, name, email) VALUES (?, ?, ?);';
-    const userProfileResult = await conn.execute(userProfileQuery, [userId, name, email]);
+        if (createAuthKeyResult.numInsertedOrUpdatedRows !== 1n) {
+            throw new Error('Failed to create AuthKey');
+        }
 
-    if (userProfileResult.insertId === null) {
-        console.error('Unable to insert User');
-        throw Error('DB_INSERT_FAILED');
-    }
+        const createUserResult = await trx
+            .insertInto('User')
+            .values({
+                authUserId: authUserId,
+                email: email,
+                id: userId,
+                name: name,
+                role: 'user'
+            })
+            .executeTakeFirst();
+
+        if (createUserResult.numInsertedOrUpdatedRows !== 1n) {
+            throw new Error('Failed to create User');
+        }
+    });
 
     return userId;
 };
 
 const deleteUserIfExists = async (email: string): Promise<void> => {
-    const conn = db.connection();
+    const authUserResult = await db
+        .selectFrom('AuthUser')
+        .select('id')
+        .where('AuthUser.email', '=', email)
+        .executeTakeFirst();
 
-    const result = await conn.execute('SELECT id FROM auth_user WHERE email = ?', [email]);
-    const resultObject = result.rows[0] as { id: string | undefined };
-
-    if (resultObject?.id !== undefined) {
-        await conn.execute('DELETE FROM auth_user WHERE id = ?', [resultObject.id]);
-        await conn.execute('DELETE FROM auth_key WHERE auth_user_id = ?', [resultObject.id]);
-        await conn.execute('DELETE FROM auth_session WHERE auth_user_id = ?', [resultObject.id]);
-        await conn.execute('DELETE FROM User WHERE auth_user_id = ?', [resultObject.id]);
+    if (authUserResult?.id === undefined) {
+        return;
     }
+    const authUserId = authUserResult.id;
 
-    return;
+    await db.transaction().execute(async (trx: Transaction<DB>) => {
+        await trx.deleteFrom('User').where('User.authUserId', '=', authUserId).execute();
+        await trx.deleteFrom('AuthKey').where('AuthKey.authUserId', '=', authUserId).execute();
+        await trx.deleteFrom('AuthUser').where('AuthUser.id', '=', authUserId).execute();
+    });
 };
 
 export const auth = {

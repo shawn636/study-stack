@@ -1,6 +1,7 @@
 <script lang="ts">
-    import type Course from '$lib/models/course';
-    import type CourseProgress from '$lib/models/course-progress';
+    import type { Course, CourseProgress } from '$lib/models/database.types';
+
+    import { init } from '@paralleldrive/cuid2';
 
     import type { PageServerData } from './$types';
 
@@ -8,28 +9,30 @@
 
     export let data: PageServerData;
 
+    const cuid = init();
+
     let course: Course = {
-        category: 'Programming',
-        current_price: 29.99,
+        categoryId: cuid(),
+        currentPrice: 29.99,
         description: 'Learn the basics of TypeScript programming language.',
         difficulty: 'Beginner',
-        estimated_time_hours: 2,
-        estimated_time_minutes: 30,
-        id: '123456',
-        img_href: '/images/course-image.webp',
-        instructor: 'John Doe',
-        lesson_cnt: 11,
-        organization: null,
-        original_price: 49.99,
-        rating_avg: 4.5,
-        rating_cnt: 50,
+        estimatedTimeHours: 2,
+        estimatedTimeMinutes: 30,
+        id: cuid(),
+        imgHref: '/images/course-image.webp',
+        instructorId: cuid(),
+        lessonCount: 11,
+        organizationId: null,
+        originalPrice: 49.99,
+        ratingAverage: 4.5,
+        ratingCount: 50,
         title: 'Introduction to TypeScript'
     };
 
     let courseProgress: CourseProgress = {
-        course_id: course.id,
-        lessons_completed: 6,
-        user_id: data.user.id
+        courseId: course.id,
+        lessonsCompleted: 6,
+        userId: data.user.id
     };
 </script>
 

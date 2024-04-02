@@ -1,7 +1,6 @@
 import type { Cookies } from '@sveltejs/kit';
 
-import { db } from '$lib/server/database';
-import { v4 as uuidv4 } from 'uuid';
+import { cuid, db } from '$lib/server/database';
 
 export const COOKIE_NAME = 'x-csrf-token';
 
@@ -12,13 +11,15 @@ export const COOKIE_NAME = 'x-csrf-token';
  * @returns {Promise<boolean>} A Promise that resolves to true if the token is valid, false otherwise.
  */
 const validateToken = async (token: string): Promise<boolean> => {
-    const conn = db.connection();
     try {
-        const result = await conn.execute(
-            'SELECT * FROM csrf_token WHERE token = ? AND expires > CURRENT_TIMESTAMP;',
-            [token]
-        );
-        return result.rows.length > 0;
+        const tokenResult = await db
+            .selectFrom('CsrfToken')
+            .select(({ fn }) => fn.countAll<number>().as('tokenCount'))
+            .where('token', '=', token)
+            .where('expirationDate', '>', new Date())
+            .executeTakeFirst();
+
+        return Number(tokenResult?.tokenCount) === 1;
     } catch (e) {
         console.error('Something went wrong while validating token');
         return false;
@@ -31,16 +32,27 @@ const validateToken = async (token: string): Promise<boolean> => {
  * @returns {Promise<string | null>} A Promise that resolves to the generated CSRF token, or null if insertion fails.
  */
 const generateToken = async (): Promise<null | string> => {
-    const newToken: string = uuidv4();
-    const conn = db.connection();
     try {
-        await conn.execute(
-            'INSERT INTO csrf_token (token, expires) VALUES (?, DATE_ADD(NOW(), INTERVAL 30 DAY)   );',
-            [newToken]
-        );
+        const currentDate = new Date();
+        const expirationDate = new Date();
+        expirationDate.setDate(currentDate.getDate() + 30);
+        const newToken = cuid();
+
+        const createToken = await db
+            .insertInto('CsrfToken')
+            .values({
+                expirationDate: expirationDate,
+                token: newToken
+            })
+            .executeTakeFirstOrThrow();
+
+        if (createToken.numInsertedOrUpdatedRows !== 1n) {
+            console.error('Unable to insert token into database');
+            return null;
+        }
+
         return newToken;
     } catch (e) {
-        console.log(e);
         console.error('Unable to insert token into database');
         return null;
     }
@@ -54,14 +66,14 @@ const generateToken = async (): Promise<null | string> => {
  * @returns {Cookies} The updated cookies object.
  */
 const setCookie = (token: string, cookies: Cookies): Cookies => {
-    cookies.set(COOKIE_NAME, token, {
+    const newCookies = cookies;
+    newCookies.set(COOKIE_NAME, token, {
         httpOnly: true,
-        maxAge: 0,
         path: '/',
         sameSite: 'strict',
         secure: true
     });
-    return cookies;
+    return newCookies;
 };
 
 /**
@@ -71,18 +83,19 @@ const setCookie = (token: string, cookies: Cookies): Cookies => {
  * @returns {Promise<Cookies>} A Promise that resolves to the updated cookies object.
  */
 const validateAndSetCookie = async (cookies: Cookies): Promise<Cookies> => {
+    let newCookies = cookies;
     const token = cookies.get(COOKIE_NAME);
     const isValid = await validateToken(token ?? '');
 
     if (!isValid) {
         const token = await generateToken();
         if (token) {
-            cookies = setCookie(token, cookies);
+            newCookies = setCookie(token, cookies);
         } else {
             console.error('Unable to store csrf token in cookie');
         }
     }
-    return cookies;
+    return newCookies;
 };
 
 /**

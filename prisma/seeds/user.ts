@@ -2,6 +2,8 @@ import type { AuthUser, Organization, PrismaClient, User } from '@prisma/client'
 
 import { faker } from '@faker-js/faker';
 
+import { cuid } from './utils';
+
 export async function seedUser(client: PrismaClient) {
     const organizations: Organization[] = await client.organization.findMany();
 
@@ -13,31 +15,32 @@ export async function seedUser(client: PrismaClient) {
         const includeOrganization = faker.datatype.boolean();
 
         const email = faker.internet.email();
-        const authUserId = faker.string.uuid();
-        const userId = i + 1;
+        const authUserId = faker.string.uuid().slice(0, 30);
+        const userId = cuid();
 
         const authUser: AuthUser = {
             email: email,
-            id: authUserId,
-            user_id: userId
+            id: authUserId
         };
 
         const user: User = {
-            area_code: faker.phone.number().slice(0, 3),
-            auth_user_id: authUserId,
+            areaCode: faker.phone.number().slice(0, 3),
+            authUserId: authUser.id,
             bio: faker.lorem.paragraph(),
             city: faker.location.city(),
-            country_code: faker.location.countryCode(),
+            countryCode: faker.location.countryCode(),
             email: faker.internet.email(),
             id: userId,
             name: faker.person.fullName(),
             organizationId: includeOrganization
                 ? faker.helpers.arrayElement(organizations).id
                 : null,
-            phone_number: faker.phone.number().slice(3, 10),
-            photo_url: faker.image.avatar(),
+            phoneNumber: faker.phone.number().slice(3, 10),
+            photoUrl: faker.image.avatar(),
+            role: faker.helpers.arrayElement(['admin', 'user']),
             state: faker.location.state()
         };
+
         authUsers.push(authUser);
         users.push(user);
     }

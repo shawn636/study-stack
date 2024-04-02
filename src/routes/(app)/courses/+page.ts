@@ -1,9 +1,9 @@
-import type Course from '$lib/models/course';
+import type { Course, User } from '$lib/models/database.types';
 
 import type { PageLoad } from './$types';
 
 export const load = (async ({ fetch }) => {
     const res = await fetch('/api/courses');
-    const courses = (await res.json()) as Course[];
-    return { courses };
+    const coursesWithInstructors: (Course & User)[] = await res.json();
+    return { coursesWithInstructors };
 }) satisfies PageLoad;

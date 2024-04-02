@@ -1,4 +1,4 @@
-import type User from '$lib/models/user';
+import type { User } from '$lib/models/database.types';
 
 import { COOKIE_NAME, auth } from '$lib/server/auth';
 
@@ -6,7 +6,37 @@ import { COOKIE_NAME, auth } from '$lib/server/auth';
  * @vitest-environment jsdom
  */
 describe('/api/user', () => {
-    // Define any necessary variables or constants for the tests
+    interface TestAccount {
+        email: string;
+        name: string;
+        password: string;
+    }
+
+    const testAccounts: TestAccount[] = [
+        {
+            email: 'johnny_testerson@testy.com',
+            name: 'Johnny Testerson',
+            password: 'test'
+        },
+        {
+            email: 'someone_else@gmail.com',
+            name: 'Someone Else',
+            password: 'test'
+        }
+    ];
+
+    beforeAll(async () => {
+        for (const account of testAccounts) {
+            await auth.deleteUserIfExists(account.email);
+            await auth.createUser(account.email, account.password, account.name);
+        }
+    });
+
+    afterAll(async () => {
+        // for (const account of testAccounts) {
+        //     await auth.deleteUserIfExists(account.email);
+        // }
+    });
 
     it('should throw error if user is not logged in', async () => {
         // Call the PUT endpoint
@@ -18,15 +48,7 @@ describe('/api/user', () => {
     });
 
     it('should update the user with valid data', async () => {
-        const email = 'johnny_testerson@testy.com';
-        const pw = 'test';
-        const name = 'Johnny Testerson';
-
-        await auth.deleteUserIfExists('johnny_testerson@testy.com');
-        await auth.createUser(email, pw, name);
-
-        const sessionId = await auth.login('johnny_testerson@testy.com', 'test');
-
+        const sessionId = await auth.login(testAccounts[0].email, testAccounts[0].password);
         const user: User = await auth.getUser(sessionId);
 
         const response = await fetch('http://localhost:3004/api/user', {
@@ -40,9 +62,9 @@ describe('/api/user', () => {
 
         expect(response.status).toBe(200);
 
-        user.country_code = '+1';
-        user.area_code = '123';
-        user.phone_number = '4567890';
+        user.countryCode = '+1';
+        user.areaCode = '123';
+        user.phoneNumber = '4567890';
         user.bio = 'I am a test user';
 
         const response2 = await fetch('http://localhost:3004/api/user', {
@@ -57,30 +79,15 @@ describe('/api/user', () => {
         expect(response2.status).toBe(200);
 
         const updatedUser = await auth.getUser(sessionId);
-        expect(updatedUser.country_code).toBe(user.country_code);
-        expect(updatedUser.area_code).toBe(user.area_code);
-        expect(updatedUser.phone_number).toBe(user.phone_number);
+        expect(updatedUser.countryCode).toBe(user.countryCode);
+        expect(updatedUser.areaCode).toBe(user.areaCode);
+        expect(updatedUser.phoneNumber).toBe(user.phoneNumber);
     });
 
     it('should throw error if a user tries to update another', async () => {
-        const email1 = 'johnny_testerson@testy.com';
-        const pw1 = 'test';
-        const name1 = 'Johnny Testerson';
-
-        const email2 = 'someone_else@gmail.com';
-        const pw2 = 'test';
-        const name2 = 'Someone Else';
-
-        await Promise.all([auth.deleteUserIfExists(email1), auth.deleteUserIfExists(email2)]);
-
-        await Promise.all([
-            await auth.createUser(email1, pw1, name1),
-            await auth.createUser(email2, pw2, name2)
-        ]);
-
         const [user1SessionId, user2SessionId] = await Promise.all([
-            await auth.login(email1, pw1),
-            await auth.login(email2, pw2)
+            await auth.login(testAccounts[0].email, testAccounts[0].password),
+            await auth.login(testAccounts[1].email, testAccounts[1].password)
         ]);
 
         const user2: User = await auth.getUser(user2SessionId);

@@ -1,6 +1,9 @@
 /**
  * @vitest-environment jsdom
  */
+import type { Transaction } from '$lib/server/database';
+
+import { KeyType } from '$lib/models/database.types';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/database';
 
@@ -45,23 +48,37 @@ const accounts = [
 
 describe('auth', () => {
     beforeAll(async () => {
-        const conn = db.connection();
-        const deleteAuthUser = 'DELETE FROM auth_user WHERE email = ?';
-        const deleteUser = 'DELETE FROM User WHERE email = ?';
+        const promises = accounts.map(async (account) => {
+            const authUser = await db
+                .selectFrom('AuthUser')
+                .select('id')
+                .where('AuthUser.email', '=', account.email)
+                .executeTakeFirst();
 
-        await Promise.all(
-            accounts.map(async (account) => {
-                await conn.execute(deleteAuthUser, [account.email]);
-                await conn.execute(deleteUser, [account.email]);
-            })
-        );
+            if (authUser) {
+                await db.transaction().execute(async (trx: Transaction) => {
+                    await trx
+                        .deleteFrom('User')
+                        .where('User.authUserId', '=', authUser.id)
+                        .execute();
+                    await trx
+                        .deleteFrom('AuthKey')
+                        .where('AuthKey.authUserId', '=', authUser.id)
+                        .execute();
+                    await trx
+                        .deleteFrom('AuthSession')
+                        .where('AuthSession.authUserId', '=', authUser.id)
+                        .execute();
+                    await trx.deleteFrom('AuthUser').where('id', '=', authUser.id).execute();
+                });
+            }
+        });
+        await Promise.all(promises);
 
         return async () => Promise.resolve();
     }, 20000);
 
     it('should create a valid user from createUser()', async () => {
-        const conn = db.connection();
-
         const actIdx = 0;
 
         const userId = await auth.createUser(
@@ -72,23 +89,23 @@ describe('auth', () => {
         expect(userId).toBeDefined();
         expect(userId).toBeTruthy();
 
-        const authUserResult = await conn.execute('SELECT * FROM auth_user WHERE email = ?', [
-            accounts[actIdx].email
-        ]);
-        expect(authUserResult.rows.length).toBe(1);
-        expect(authUserResult.rows[actIdx]).toBeTruthy();
+        const results = await db
+            .selectFrom('AuthUser')
+            .innerJoin('AuthKey', 'AuthUser.id', 'AuthKey.authUserId')
+            .innerJoin('User', 'AuthUser.id', 'User.authUserId')
+            .select(['AuthUser.id as authUserId', 'User.id as userId', 'AuthKey.id as authKeyId'])
+            .where('AuthUser.email', '=', accounts[actIdx].email)
+            .where('AuthKey.keyType', '=', KeyType.CREDENTIAL_HASH)
+            .execute();
 
-        const userResult = await conn.execute('SELECT * FROM User WHERE email = ?', [
-            accounts[actIdx].email
-        ]);
-        expect(userResult.rows.length).toBe(1);
-        expect(userResult.rows[actIdx]).toBeTruthy();
+        expect(results).toBeTruthy();
 
-        const authKeyResult = await conn.execute('SELECT * FROM auth_key WHERE auth_user_id = ?', [
-            userId
-        ]);
-        expect(authKeyResult.rows.length).toBe(1);
-        expect(authKeyResult.rows[actIdx]).toBeTruthy();
+        expect(results.length).toBe(1);
+        const result = results[0];
+
+        expect(result.authUserId).toBeTruthy();
+        expect(result.userId).toBeTruthy();
+        expect(result.authKeyId).toBeTruthy;
     });
 
     it('should fail to create a user from createUser() if they already have an account', async () => {
@@ -109,19 +126,19 @@ describe('auth', () => {
 
     it('should successfully login a valid user from login()', async () => {
         const actIdx = 2;
-        const userId = await auth.createUser(
+        const authUserId = await auth.createUser(
             accounts[actIdx].email,
             accounts[actIdx].password,
             accounts[actIdx].name
         );
-        expect(userId).toBeDefined();
-        expect(userId).toBeTruthy();
+        expect(authUserId).toBeDefined();
+        expect(authUserId).toBeTruthy();
 
         const session = await auth.login(accounts[actIdx].email, accounts[actIdx].password);
         expect(session).toBeDefined();
         expect(session).toBeTruthy();
 
-        const allSessionsResults = await auth.getAllSessions(userId);
+        const allSessionsResults = await auth.getAllSessions(authUserId);
         expect(allSessionsResults).toBeDefined();
         expect(allSessionsResults).toBeTruthy();
         expect(allSessionsResults.length).toBe(1);
@@ -131,7 +148,7 @@ describe('auth', () => {
         expect(newSession).toBeTruthy();
         expect(newSession).not.toBe(session);
 
-        const allSessionsResults2 = await auth.getAllSessions(userId);
+        const allSessionsResults2 = await auth.getAllSessions(authUserId);
         expect(allSessionsResults2).toBeDefined();
         expect(allSessionsResults2).toBeTruthy();
         expect(allSessionsResults2.length).toBe(2);

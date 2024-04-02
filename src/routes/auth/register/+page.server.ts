@@ -37,7 +37,6 @@ export const actions: Actions = {
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             cookies = auth.setSessionCookie(sessionId, cookies);
-            console.log('Successfully logged in and set cookie');
         } catch (e: unknown) {
             await errorPadding();
             handleError(e);
@@ -46,9 +45,7 @@ export const actions: Actions = {
 };
 
 const handleError = (e: unknown) => {
-    // console.log(e)
     if (e instanceof ValidationError) {
-        console.log(e.message);
         error(400, 'data provided is invalid');
     } else if (!(e instanceof Error))
         error(500, 'An unknown error ocurred, please try again later.');

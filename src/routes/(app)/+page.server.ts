@@ -1,15 +1,14 @@
-import type Category from '$lib/models/category';
+import type CategorySummary from '$lib/models/category-summary';
 
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ fetch }) => {
     try {
         const response = await fetch('/api/top-categories');
-        const categories: Category[] = await response.json();
-
-        return { categories };
+        const categorySummaries: CategorySummary[] = await response.json();
+        return { categorySummaries };
     } catch (error) {
         console.error('Error loading top categories', error);
-        return { categories: [] as Category[] };
+        return { categorySummaries: [] as CategorySummary[] };
     }
 }) satisfies PageServerLoad;

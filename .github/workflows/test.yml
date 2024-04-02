@@ -2,90 +2,149 @@ name: Test
 
 on:
     pull_request:
-        branches: ['preview', 'main']
+        branches: ['main']
     push:
-        branches: ['preview', 'main']
+        branches: ['main']
 
 jobs:
-    unit-tests:
+    prepare:
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
         env:
+            PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+            PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
             PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
-            DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
             PEPPER: ${{ secrets.PEPPER }}
+            GH_TOKEN: ${{ github.token }}
         steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-            - name: Install Node.js
-              uses: actions/setup-node@v3
+            - uses: actions/checkout@v3
+            - uses: planetscale/setup-pscale-action@v1
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+            - uses: actions/setup-node@v3
               with:
                   node-version: '20.x'
-            - uses: pnpm/action-setup@v2
-              name: Install pnpm
-              with:
-                version: 8
-                run_install: false
-            
-            - name: Get pnpm store directory
-              shell: bash
-              run: |
-                echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-            
-            - uses: actions/cache@v3
-              name: Setup pnpm cache
-              with:
-                path: ${{ env.STORE_PATH }}
-                key: ${{ runner.os }}-pnpm-store-
-            - name: Install dependencies
-              run: pnpm install
-            
-            - name: Build
-              run: pnpm build:production
+                  cache: 'pnpm'
+            - run: pnpm install
+            - run: pnpm pscale:branch:create
+            - run: pnpm pscale:cred:create "ga-prepare-${{ github.run_number }}"
 
-            - name: Run Unit tests
-              run: pnpm test:unit
-    end-to-end:
+    unit-tests:
+        needs: prepare
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
         env:
+            PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+            PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
             PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
-            DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
             PEPPER: ${{ secrets.PEPPER }}
+            GH_TOKEN: ${{ github.token }}
         steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-            - name: Install Node.js
-              uses: actions/setup-node@v3
+            - uses: actions/checkout@v3
+            - uses: planetscale/setup-pscale-action@v1
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+            - uses: actions/setup-node@v3
               with:
                   node-version: '20.x'
+                  cache: 'pnpm'
+
+            - run: pnpm install
+            - run: pnpm pscale:cred:create "ga-unit-tests-${{ github.run_number }}"
+            - run: pnpm vercel:settings:pull
+            - run: pnpm exec vercel build --prod
+            - run: pnpm test:unit
+
+    e2e-tests:
+        needs: prepare
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
+        env:
+            PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+            PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+            PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+            VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+            PEPPER: ${{ secrets.PEPPER }}
+            GH_TOKEN: ${{ github.token }}
+        steps:
+            - uses: actions/checkout@v3
+            - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v2
-              name: Install pnpm
               with:
-                version: 8
-                run_install: false
-            
-            - name: Get pnpm store directory
-              shell: bash
-              run: |
-                echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-            
-            - uses: actions/cache@v3
-              name: Setup pnpm cache
+                  version: 8
+            - uses: actions/setup-node@v3
               with:
-                path: ${{ env.STORE_PATH }}
-                key: ${{ runner.os }}-pnpm-store-
-            - name: Install dependencies
-              run: pnpm install
-            
-            - name: Install Playwright
-              run: pnpm exec playwright install --with-deps
-            
-            - name: Install Edge for Playwright
-              run: pnpm exec playwright install msedge
-            
-            - name: Build
-              run: pnpm build:production
-            
-            - name: Run End to End tests
-              run: pnpm test
+                  node-version: '20.x'
+                  cache: 'pnpm'
+
+            - run: pnpm install
+            - run: pnpm exec playwright install --with-deps
+            - run: pnpm exec playwright install msedge
+            - run: pnpm pscale:cred:create "ga-e2e-tests-${{ github.run_number }}"
+            - run: pnpm vercel:settings:pull
+            - run: pnpm exec vercel build --prod
+            - run: pnpm test
+
+    deploy-preview:
+        needs: [unit-tests, e2e-tests]
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
+        env:
+            PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+            PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+            PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+            VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+            PEPPER: ${{ secrets.PEPPER }}
+            GH_TOKEN: ${{ github.token }}
+        steps:
+            - uses: actions/checkout@v3
+            - uses: planetscale/setup-pscale-action@v1
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: '20.x'
+                  cache: 'pnpm'
+
+            - run: pnpm install
+            - run: pnpm pscale:cred:create "ga-deploy-preview-${{ github.run_number }}"
+            - run: pnpm vercel:settings:pull
+            - run: pnpm exec vercel build --prod
+            - run: pnpm pscale:dr:create
+            - run: pnpm vercel:deploy:preview
+
+    cleanup:
+        needs: [deploy-preview]
+        if: always()
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
+        env:
+            PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+            PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+        steps:
+            - uses: actions/checkout@v3
+            - uses: planetscale/setup-pscale-action@v1
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: '20.x'
+                  cache: 'pnpm'
+
+            - run: pnpm pscale:cred:delete-all-ci "ga-"
