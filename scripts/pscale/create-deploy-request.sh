@@ -111,7 +111,7 @@ function get_open_dr_cnt() {
     local branch_name=$1
 
     local matching_dr_count=0
-    matching_dr_count=$(pscale deploy-request list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r "[[.[] | select(.state == \"open\")] | .[] | select(.branch == \"$branch_name\")] | length")
+    matching_dr_count=$(pscale deploy-request list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r "[[.[] | select(.state == 'open')] | .[] | select(.branch == \"$branch_name\")] | length")
     local status_code=$?
 
     if [ "$status_code" -ne 0 ]; then
