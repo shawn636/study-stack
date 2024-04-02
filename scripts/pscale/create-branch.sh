@@ -50,13 +50,6 @@ function check_branch_creation_possible() {
         echo " Database Branch $(branch_name_from_git) already exists. Nothing to do. Exiting..."
         exit 0
     fi
-
-    # if branch_cnt gt 0 exit 1 because max 1 dev branch cap reached
-    if [ "$dev_branch_cnt" -gt 0 ]; then
-        echo "Error: Maximum number of database branches reached. Please delete a branch before creating a new one."
-        echo "Existing branches: $dev_branch_names"
-        exit 1
-    fi
 }
 
 function create_branch() {
