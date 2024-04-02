@@ -111,7 +111,8 @@ function get_open_dr_cnt() {
     local branch_name=$1
 
     local matching_dr_count=0
-    matching_dr_count=$(pscale deploy-request list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r "[[.[] | select(.state == 'open')] | .[] | select(.branch == \"$branch_name\")] | length")
+    matching_dr_count=$(pscale deploy-request list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r "[[.[] | select(.state == \"open\")] | .[] | select(.branch == \"$branch_name\")] | length")
+
     local status_code=$?
 
     if [ "$status_code" -ne 0 ]; then
@@ -129,10 +130,12 @@ function main() {
     branch_name=$(branch_name_from_git) || exit $?
 
     local open_dr_cnt=0
-    open_dr_cnt=get_open_dr_cnt "$branch_name" || exit $?
+    open_dr_cnt=$(get_open_dr_cnt "$branch_name") || exit $?
 
     if [ "$open_dr_cnt" -eq 0 ]; then
         create_deploy_request "$branch_name"
+    else
+        echo "Deploy request for branch $branch_name already exists. Skipping..."
     fi
 }
 main
