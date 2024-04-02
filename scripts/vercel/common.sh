@@ -95,5 +95,5 @@ function add_secret() {
     # Try to delete the secret first in case it already exists
     pnpm exec vercel env rm "$secret_name" "$environment" --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" || true
     
-    echo "$secret_value" | pnpm exec vercel env add "$secret_name" "$environment" --sensitive --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN"
+    echo "$secret_value" | pnpm exec vercel env add "$secret_name" "$environment" --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN"
 }
