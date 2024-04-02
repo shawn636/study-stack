@@ -37,6 +37,7 @@ const generateToken = async (): Promise<null | string> => {
         const expirationDate = new Date();
         expirationDate.setDate(currentDate.getDate() + 30);
         const newToken = cuid();
+
         const createToken = await db
             .insertInto('CsrfToken')
             .values({
