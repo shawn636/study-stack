@@ -60,6 +60,9 @@ function create_branch() {
     fi
 
     pscale branch create "$PSCALE_DB_NAME" "$new_branch_name" --from "$cur_prod_branch" --wait --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+
+    # Branch creation fails if the branch already exists, but if it already exists, we don't need to do anything, thus exit 0
+    return 0
 }
 
 # --- MAIN ---
@@ -69,7 +72,7 @@ function main() {
     check_for_required_env_vars || exit $?
     check_branch_creation_possible "$new_branch_name" || exit $?
 
-    create_branch "$new_branch_name" || exit $?
+    create_branch "$new_branch_name"
 
     DB_URL=$(generate_credentials "$new_branch_name") || exit $?
     update_var_in_dotenv "DATABASE_URL" "$DB_URL" || exit $?
