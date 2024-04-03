@@ -32,8 +32,7 @@ jobs:
                   cache: 'pnpm'
 
             - run: pnpm install
-            - run: pnpm pscale:branch:create
-            - run: pnpm pscale:cred:create "ga-deploy-prod-${{ github.run_number }}"
+            - run: pnpm pscale:cred:create "ga-deploy-prod-${{ github.run_number }}" "main"
             - run: pnpm vercel:settings:pull
             - run: pnpm exec vercel build --prod
             - run: pnpm pscale:dr:apply

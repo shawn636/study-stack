@@ -5,6 +5,7 @@ source scripts/pscale/common.sh
 
 # Script Arguments
 cred_name=$1
+branch_target=$2
 
 
 # --- FUNCTIONS ---
@@ -96,8 +97,12 @@ function get_cred_id() {
 
 # --- MAIN ---
 function main() {
-    cred_name=$1
-    new_branch_name=$(branch_name_from_git) || exit $?
+    local cred_name=$1
+    local new_branch_name=$2
+
+    if [ -z "$new_branch_name" ]; then
+        new_branch_name=$(branch_name_from_git) || exit $?
+    fi
 
     check_for_required_env_vars || exit $?
     delete_cred_if_exists "$new_branch_name" "$cred_name" || exit $?
@@ -106,4 +111,4 @@ function main() {
     update_var_in_dotenv "DATABASE_URL" "$cred" || exit $?
     printf "Password \033[31m%s\033[0m was successfully generated for \033[32m%s\033[0m\n" "$cred_id" "$new_branch_name" || exit $?
 }
-main "$cred_name"
+main "$cred_name" "$branch_target"
