@@ -107,8 +107,25 @@ function branch_name_from_git() {
     local git_branch_name=""
     if [ -n "$CI" ]; then
         git_branch_name=$GITHUB_HEAD_REF
+        if [ -z "$git_branch_name" ]; then
+            git_branch_name=$GITHUB_REF_NAME
+        fi
+
+        if [ "$git_branch_name" = "main" ]; then
+            git_branch_name="$git_branch_name-$GITHUB_RUN_ID"
+        fi
     else
         git_branch_name=$(git branch --show-current)
+        
+        if [ "$git_branch_name" = "main" ]; then
+            branch_suffix=$(git config user.email)
+            
+            if [ -z "$branch_suffix" ]; then
+                branch_suffix=$(git config user.name)
+            fi
+
+            git_branch_name="$git_branch_name-$branch_suffix"
+        fi
     fi
 
     local PSCALE_BRANCH_NAME=""
@@ -381,4 +398,56 @@ function get_dr_number() {
     fi
 
     echo "$dr_number"
+}
+
+
+function wait_for_deploy_request_merged() {
+    local retries=3
+    local max_timeout=600
+    local dr_number=$1
+
+    local count=0
+    local wait=1
+
+    echo "Checking if deploy request $dr_number is ready for use..."
+    while true; do
+        # local raw_output=`pscale deploy-request list "$db" --org "$org" --format json`
+        local deployment_state
+        local status_code
+        
+        deployment_state=$(pscale deploy-request list "$PLANETSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq ".[] | select(.number == $dr_number) | .deployment.state")
+        status_code=$?
+        
+        if [ $status_code -ne 0 ]; then
+            echo "Error: pscale deploy-request list returned non-zero exit code $status_code. Exiting..."
+            return 1
+        fi
+        
+        # test whether output is pending, if so, increase wait timeout exponentially
+        if [ "$deployment_state" = "\"pending\"" ] || [ "$deployment_state" = "\"in_progress\"" ] || [ "$deployment_state" = "\"submitting\"" ]; then
+            
+            # increase wait variable exponentially but only if it is less than max_timeout
+            if [ $((wait * 2)) -le $max_timeout ]; then
+                wait=$((wait * 2))
+            else
+                wait=$max_timeout
+            fi  
+
+            count=$((count+1))
+            if [ $count -ge $retries ]; then
+                echo  "Deploy request $dr_number is not ready after $retries retries. Exiting..."
+                exit 2
+            fi
+            echo  "Deploy-request $dr_number is not deployed yet. Current status:"
+            echo "show vitess_migrations\G" | pscale shell "$PLANETSCALE_DB_NAME" main --org "$PLANETSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+            echo "Retrying in $wait seconds..."
+            sleep $wait
+        elif [ "$deployment_state" = "\"complete\"" ] || [ "$deployment_state" = "\"complete_pending_revert\"" ]; then
+            echo  "Deploy-request $dr_number has been deployed successfully."
+            exit 0
+        else
+            echo  "Deploy-request $dr_number with unknown status: $deployment_state. Exiting..."
+            exit 3
+        fi
+    done
 }

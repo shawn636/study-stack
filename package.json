@@ -15,6 +15,7 @@
         "pscale:dr:apply": "scripts/pscale/apply-deploy-request.sh",
         "postinstall": "prisma generate",
         "vercel:deploy:preview": "scripts/vercel/deploy-preview.sh",
+        "vercel:deploy:production": "scripts/vercel/deploy-production.sh",
         "vercel:settings:pull": "scripts/vercel/pull-settings.sh",
         "_vercel-start": "vercel dev --scope equipped-team --token $VERCEL_TOKEN --yes --listen $PORT",
         "vercel-dev": "dotenv -v PORT=3000 -- pnpm _vercel-start",

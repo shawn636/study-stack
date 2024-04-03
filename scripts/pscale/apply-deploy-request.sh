@@ -42,7 +42,7 @@ function get_common_branches() {
     # Transform github branch names to match planet scale dr names
     while IFS= read -r line; do
         echo "$line" | tr -cd '[:alnum:]-/' | tr '/' '-' | tr '[:upper:]' '[:lower:]'=
-        echo ""c
+        echo ""
     done <<< "$closed_pull_requests" > closed_pull_requests.txt
 
     sort open_deploy_requests.txt -o open_deploy_requests.txt
@@ -52,7 +52,7 @@ function get_common_branches() {
     common_branches=$(comm -12 open_deploy_requests.txt closed_pull_requests.txt)
 
     if [ -f open_deploy_requests.txt ]; then rm open_deploy_requests.txt; fi
-    if [ -f closed_pull_requests.txt ]; then m closed_pull_requests.txt; fi
+    if [ -f closed_pull_requests.txt ]; then rm closed_pull_requests.txt; fi
 
     echo "$common_branches"
 }
@@ -63,7 +63,6 @@ function apply_dep_reqs_for_branches() {
     while IFS= read -r branch; do
         echo "Applying deploy request for branch: $branch"
 
-        # pscale deploy-request apply "$PSCALE_DB_NAME" --branch "$branch" --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
         dr_number=$(pscale deploy-request list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r "[.[] | select(.branch == \"$branch\")] | .[] | select(.state == \"open\") | .number")
         local status_code=$?
 
@@ -73,13 +72,28 @@ function apply_dep_reqs_for_branches() {
         fi
 
         if [ -n "$dr_number" ]; then
-            pscale deploy-request apply "$PSCALE_DB_NAME" "$dr_number" --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+
+            if [ -n "$CI" ]; then
+                pscale deploy-request review --approve --comment "Deploy request approved by GitHub Actions - Commit ID: $GITHUB_SHA" "$PSCALE_DB_NAME" "$dr_number" --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+            else
+                pscale deploy-request review --approve --comment "Deploy request approved by $(git config user.name)" "$PSCALE_DB_NAME" "$dr_number" --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+            fi
             local status_code=$?
 
             if [ "$status_code" -ne 0 ]; then
                 echo "Error: failed to apply deploy request for branch: $branch"
                 exit 1
             fi
+
+            pscale deploy-request deploy "$PSCALE_DB_NAME" "$dr_number" --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+            status_code=$?
+            if [ "$status_code" -ne 0 ]; then
+                echo "Error: failed to apply deploy request for branch: $branch"
+                exit 1
+            fi
+
+            wait_for_deploy_request_merged "$dr_number" || exit $?
+            delete_branch "$branch" || exit $?
         else
             echo "No open deploy request found for branch: $branch. Skipping..."
         fi
@@ -95,7 +109,12 @@ function main() {
     local closed_pull_requests
 
     open_deploy_requests=$(get_open_deploy_requests) || exit $?
+
+    echo "Open deploy requests: $open_deploy_requests"
+
     closed_pull_requests=$(get_closed_pull_requests) || exit $?
+
+    echo "Closed pull requests: $closed_pull_requests"
 
     local common_branches
     common_branches=$(get_common_branches "$open_deploy_requests" "$closed_pull_requests" || exit $?)
