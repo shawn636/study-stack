@@ -61,6 +61,9 @@ function apply_dep_reqs_for_branches() {
     local branches=$1
 
     while IFS= read -r branch; do
+        if [ -z "$branch" ] || [ "$branch" = "" ]; then
+            continue
+        fi
         echo "Applying deploy request for branch: $branch"
 
         dr_number=$(pscale deploy-request list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r "[.[] | select(.branch == \"$branch\")] | .[] | select(.state == \"open\") | .number")
@@ -110,11 +113,7 @@ function main() {
 
     open_deploy_requests=$(get_open_deploy_requests) || exit $?
 
-    echo "Open deploy requests: $open_deploy_requests"
-
     closed_pull_requests=$(get_closed_pull_requests) || exit $?
-
-    echo "Closed pull requests: $closed_pull_requests"
 
     local common_branches
     common_branches=$(get_common_branches "$open_deploy_requests" "$closed_pull_requests" || exit $?)

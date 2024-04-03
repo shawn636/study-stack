@@ -5,7 +5,6 @@ source scripts/pscale/common.sh
 
 # Script Arguments
 cred_name=$1
-branch_target=$2
 
 
 # --- FUNCTIONS ---
@@ -95,12 +94,35 @@ function get_cred_id() {
     echo "$matching_cred_id"
 }
 
+function purge_old_production_credentials() {
+    local current_cred_id=$1
+
+    if [ -z "$current_cred_id" ]; then
+        echo "Error: missing argument current_cred_id. Please use the format: purge_old_production_credentials <current_cred_id>"
+        exit 1
+    fi
+
+    credential_ids=$(pscale password list "$PSCALE_DB_NAME" "main" --format=json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r "[.[] | select(.id != \"$current_cred_id\")] | .[] | .id")
+
+    for credential_id in $credential_ids; do
+            delete_credential "main" "$credential_id" || exit $?
+    done
+}
+
 # --- MAIN ---
 function main() {
     local cred_name=$1
-    local new_branch_name=$2
+    local new_branch_name=""
 
-    if [ -z "$new_branch_name" ]; then
+    local is_main=false
+
+    if { [ -z "$CI" ] && [ "$(git branch --show-current)" = "main" ]; } || { [ -n "$CI" ] && [ "$GITHUB_REF_NAME" = "main" ]; }; then
+        is_main=true
+    fi
+
+    if $is_main; then
+        new_branch_name="main"
+    else
         new_branch_name=$(branch_name_from_git) || exit $?
     fi
 
@@ -108,7 +130,12 @@ function main() {
     delete_cred_if_exists "$new_branch_name" "$cred_name" || exit $?
     cred=$(generate_credentials "$new_branch_name" "$cred_name") || exit $?
     cred_id=$(get_cred_id "$new_branch_name" "$cred_name") || exit $?
+
     update_var_in_dotenv "DATABASE_URL" "$cred" || exit $?
     printf "Password \033[31m%s\033[0m was successfully generated for \033[32m%s\033[0m\n" "$cred_id" "$new_branch_name" || exit $?
+
+    if $is_main; then
+        purge_old_production_credentials "$cred_id" || exit $?
+    fi
 }
-main "$cred_name" "$branch_target"
+main "$cred_name"

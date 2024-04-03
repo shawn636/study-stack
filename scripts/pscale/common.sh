@@ -176,26 +176,11 @@ function generate_credentials() {
     # Clean the cred name
     cred_name=$(echo "$cred_name" | tr -cd '[:alnum:]-/' | tr '/' '-' | tr '[:upper:]' '[:lower:]')
 
-    cred_results_raw=$(pscale password create "$PSCALE_DB_NAME" "$branch_name" "$cred_name" --role admin --ttl 2592000 --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID")
+    parsed_url=$(pscale password create "$PSCALE_DB_NAME" "$branch_name" "$cred_name" --role admin --ttl 2592000 --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r ". | (\"mysql://\" + .username + \":\" + .plain_text + \"@\" + .access_host_url + \"/$PSCALE_DB_NAME?sslaccept=strict\")")
 
     status_code=$?
     if [ "$status_code" -ne 0 ]; then
         echo "Error: Unable to create credentials. Exiting..."
-        exit 1
-    fi
-
-    cred_results_json=$(echo "$cred_results_raw" | tr -d '\000-\031')
-    status_code=$?
-    if [ "$status_code" -ne 0 ]; then
-        echo "Error: Unable to parse credential results. Exiting..."
-        exit 1
-    fi
-
-
-    parsed_url=$(echo "$cred_results_json" | jq -r '. | .connection_strings | .prisma' | grep -o 'url = "[^"]*' | sed 's/url = "//')
-    status_code=$?
-    if [ "$status_code" -ne 0 ] || [ -z "$parsed_url" ]; then
-        echo "Error: Unable to parse credential URL. Exiting..."
         exit 1
     fi
     
