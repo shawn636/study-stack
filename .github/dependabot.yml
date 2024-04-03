@@ -4,3 +4,8 @@ updates:
       directory: '/' # Location of package manifests
       schedule:
           interval: 'daily'
+      groups:
+          all-packages:
+              applies-to: version-updates
+              patterns:
+                  - '*'
