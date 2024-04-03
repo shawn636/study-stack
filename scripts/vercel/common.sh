@@ -61,11 +61,15 @@ function deploy() {
     local code=$?
     if [ $code -eq 0 ]; then
         deployment_url=$(cat "$url_file")
-        add_pr_comment 'string' ":white_check_mark: Successfully deployed to Vercel. [View deployment]($deployment_url)" || exit $?
+        if [ -n "$CI" ] && [ -n "$GITHUB_EVENT_NAME" ] && [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            add_pr_comment 'string' ":white_check_mark: Successfully deployed to Vercel. [View deployment]($deployment_url)" || exit $?
+        fi
         echo "Successfully deployed to Vercel. [View deployment]($deployment_url)"
     else
         error_log=$(cat "$log_file")
-        add_pr_comment 'string' ":rotating_light: Error: failed to deploy to Vercel. $error_log" || exit $?
+        if [ -n "$CI" ] && [ -n "$GITHUB_EVENT_NAME" ] && [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            add_pr_comment 'string' ":rotating_light: Error: failed to deploy to Vercel. $error_log" || exit $?
+        fi
         echo "Error: failed to deploy to Vercel. $error_log"
         exit $code
     fi
