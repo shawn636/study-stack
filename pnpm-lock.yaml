@@ -47,8 +47,8 @@ devDependencies:
     specifier: ^1.42.1
     version: 1.42.1
   '@prisma/adapter-planetscale':
-    specifier: ^5.11.0
-    version: 5.11.0(@planetscale/database@1.16.0)
+    specifier: ^5.12.0
+    version: 5.12.0(@planetscale/database@1.16.0)
   '@prisma/client':
     specifier: ^5.11.0
     version: 5.11.0(prisma@5.12.0)
@@ -1269,13 +1269,13 @@ packages:
     resolution: {integrity: sha512-j7P6Rgr3mmtdkeDGTe0E/aYyWEWVtc5yFXtHCRHs28/jptDEWfaVOc5T7cblqy1XKPPfCxJc/8DwQ5YgLOZOVQ==}
     dev: true
 
-  /@prisma/adapter-planetscale@5.11.0(@planetscale/database@1.16.0):
-    resolution: {integrity: sha512-Z7MoNtisYsDcghw+8UYJW05+3hFV90Qkvh0iuD1hMpqCCTqB9YwrxBvExr3uxL3B97NGeHOqHNfQxCANehd3yg==}
+  /@prisma/adapter-planetscale@5.12.0(@planetscale/database@1.16.0):
+    resolution: {integrity: sha512-IIWKvKfPCvv1GRkQyER+ZDg4ggIOi+13OrmvxiAWH4+o0zCv+67S6JHmg3AXhY5GbFg/YJAp0DRrW8vbmmh7Tw==}
     peerDependencies:
       '@planetscale/database': ^1.15.0
     dependencies:
       '@planetscale/database': 1.16.0
-      '@prisma/driver-adapter-utils': 5.11.0
+      '@prisma/driver-adapter-utils': 5.12.0
     dev: true
 
   /@prisma/client@5.11.0(prisma@5.12.0):
@@ -1309,10 +1309,10 @@ packages:
       - supports-color
     dev: true
 
-  /@prisma/driver-adapter-utils@5.11.0:
-    resolution: {integrity: sha512-C2Qa/HZXZNwDBZCHJxlV4eibqXakbOBLd+mUeNCxSfaM8yi8Qi8zToN8Kb3M60Kr1ymr+tzzw/wVqYIfIfUiXw==}
+  /@prisma/driver-adapter-utils@5.12.0:
+    resolution: {integrity: sha512-B57KUrKmRlax4sE4pc2VKPtG5U9XGm5kjtqSWBUd83NopIZVuvKunH3ETrOShwBCqWZXZolHvdDjDwHyiT2HRQ==}
     dependencies:
-      '@prisma/debug': 5.11.0
+      '@prisma/debug': 5.12.0
     dev: true
 
   /@prisma/engines-version@5.12.0-21.473ed3124229e22d881cb7addf559799debae1ab:
