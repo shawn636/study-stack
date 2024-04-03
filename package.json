@@ -73,7 +73,7 @@
         "@testing-library/jest-dom": "^6.4.2",
         "@testing-library/svelte": "^4.1.0",
         "@types/bcryptjs": "^2.4.6",
-        "@types/node": "^20.12.3",
+        "@types/node": "^20.12.4",
         "@types/uuid": "^9.0.8",
         "@typescript-eslint/eslint-plugin": "^7.5.0",
         "@typescript-eslint/parser": "^7.5.0",
