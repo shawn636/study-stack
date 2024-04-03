@@ -31,13 +31,6 @@ function check_branch_creation_possible() {
         exit 1
     fi
 
-    dev_branch_names=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name' | tr '\n' ' ')
-    status_code=$?
-    if [ "$status_code" -ne 0 ]; then
-        echo "Error: Unable to parse branch list. Exiting..."
-        exit 1
-    fi
-
     dev_branch_name=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name' | head -n 1)
     status_code=$?
     if [ "$status_code" -ne 0 ]; then
@@ -49,13 +42,6 @@ function check_branch_creation_possible() {
     if [ "$dev_branch_cnt" -eq 1 ] && [ "$dev_branch_name" == "$(branch_name_from_git)" ]; then
         echo " Database Branch $(branch_name_from_git) already exists. Nothing to do. Exiting..."
         exit 0
-    fi
-
-    # if branch_cnt gt 0 exit 1 because max 1 dev branch cap reached
-    if [ "$dev_branch_cnt" -gt 0 ]; then
-        echo "Error: Maximum number of database branches reached. Please delete a branch before creating a new one."
-        echo "Existing branches: $dev_branch_names"
-        exit 1
     fi
 }
 
