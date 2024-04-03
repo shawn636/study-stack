@@ -71,7 +71,7 @@ const setCookie = (token: string, cookies: Cookies): Cookies => {
         httpOnly: true,
         path: '/',
         sameSite: 'strict',
-        secure: true
+        secure: false
     });
     return newCookies;
 };
