@@ -12,7 +12,7 @@
 
     export let user: User | undefined;
 
-    $: headerLinks = getHeaderLinks(user === null ? false : true);
+    $: headerLinks = getHeaderLinks(user === undefined ? false : true);
 
     const drawerStore = getDrawerStore();
     const drawerSettings: DrawerSettings = {
