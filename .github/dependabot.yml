@@ -1,11 +1,26 @@
 version: 2
 updates:
     - package-ecosystem: 'npm' # See documentation for possible values
-      directory: '/' # Location of package manifests
-      schedule:
-          interval: 'daily'
-      groups:
-          all-packages:
-              applies-to: version-updates
-              patterns:
-                  - '*'
+        directory: '/' # Location of package manifests
+        schedule:
+            interval: 'weekly'
+        reviewers:
+            - "shawnlong636"
+        groups:
+            dev-packages-non-major:
+                applies-to: version-updates
+                update-types:
+                    - "minor"
+                    - "patch"
+                patterns:
+                    - '*'
+            dev-packages-major:
+                applies-to: version-updates
+                update-types:
+                    - "major"
+                patterns:
+                    - '*'
+    - package-ecosystem: 'github-actions'
+        directory: "/"
+        schedule:
+            interval: 'weekly'
