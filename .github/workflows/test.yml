@@ -31,7 +31,7 @@ jobs:
                   node-version: '20.x'
                   cache: 'pnpm'
             - run: pnpm install
-            - run: pnpm pscale:branch:create
+            - run: pnpm pscale:branch:create || true # Ignore error if branch already exists
             - run: pnpm pscale:cred:create "ga-prepare-${{ github.run_number }}"
 
     unit-tests:
