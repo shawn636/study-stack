@@ -13,8 +13,10 @@ export const load = (async ({ cookies, parent }) => {
     if (isValid) {
         try {
             user = await auth.getUser(sessionId ?? '');
-        } catch {
-            // Igbnore any errors. The user will be undefined.
+        } catch (error) {
+            if (error instanceof Error && error.message !== 'AUTH_INVALID_SESSION' && isValid) {
+                console.error(error.message);
+            }
         }
     }
 
