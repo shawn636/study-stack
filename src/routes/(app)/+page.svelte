@@ -9,9 +9,9 @@
 <svelte:head>
     <title>Equipped Online Learning</title>
 
-    <meta content="Svelte" name="twitter:title" />
-    <meta content="Cybernetically enhanced web apps" name="twitter:description" />
-    <meta content="Cybernetically enhanced web apps" name="Description" />
+    <meta content="Equipped" name="twitter:title" />
+    <meta content="Deepen your faith and study the Bible" name="twitter:description" />
+    <meta content="Deepen your faith and study the Bible" name="Description" />
 </svelte:head>
 <HeroBanner />
 <Categories categorySummaries={data.categorySummaries} />

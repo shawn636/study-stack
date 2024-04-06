@@ -34,7 +34,7 @@
                 <a class="variant-ringed-secondary btn btn-lg text-secondary-500" href="/courses"
                     >Find Courses</a
                 >
-                <a class="variant-filled-secondary btn btn-lg" href="/auth/register"
+                <a class="variant-filled-secondary btn btn-lg text-black" href="/auth/register"
                     >Join For Free</a
                 >
             </div>

@@ -1,7 +1,6 @@
 import type { User } from '$lib/models/types/database.types';
 
 import { auth } from '$lib/server/auth';
-import { redirect } from '@sveltejs/kit';
 
 import type { PageServerLoad } from './$types';
 
@@ -11,11 +10,9 @@ export const load = (async ({ cookies, parent }) => {
     const isValid = await auth.validateSession(sessionId ?? '');
     let user: User | undefined;
 
-    if (isValid && sessionId) {
-        user = await auth.getUser(sessionId);
-    } else {
-        cookies = auth.deleteSessionCookie(cookies);
-        redirect(302, '/auth/login');
+    if (isValid) {
+        user = await auth.getUser(sessionId ?? '');
     }
+
     return { user };
 }) satisfies PageServerLoad;

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Course, User } from '$lib/models/database.types';
+    import type { Course, User } from '$lib/models/types/database.types';
 
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';

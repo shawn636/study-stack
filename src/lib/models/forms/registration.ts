@@ -20,3 +20,10 @@ export const registrationForm = object().shape({
         .oneOf([ref('password1')], 'Passwords should match.')
         .required('Please confirm your password.')
 });
+
+export type RegistrationForm = {
+    email: string;
+    name: string;
+    password1: string;
+    password2: string;
+};

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Course, User } from '$lib/models/database.types';
+    import type { Course, User } from '$lib/models/types/database.types';
 
     import Image from '$lib/components/image.svelte';
     import {

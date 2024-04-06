@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
+    import { registrationForm } from '$lib/models/forms/registration';
     import { faApple, faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
     import {
         faChevronLeft,
@@ -14,8 +15,6 @@
     import { fly, slide } from 'svelte/transition';
     import Fa from 'svelte-fa';
     import { createForm } from 'svelte-forms-lib';
-
-    import { registrationForm } from './registration-form-schema';
 
     // Controls
     let showPassword1 = false;

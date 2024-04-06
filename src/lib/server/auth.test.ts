@@ -3,7 +3,7 @@
  */
 import type { Transaction } from '$lib/server/database';
 
-import { KeyType } from '$lib/models/database.types';
+import { KeyType } from '$lib/models/types/database.types';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/database';
 

@@ -13,7 +13,7 @@
     import Fa from 'svelte-fa';
     import { createForm } from 'svelte-forms-lib';
 
-    import { loginForm } from './login-form-schema';
+    import { loginForm } from '../../../lib/models/forms/login';
 
     // Form Validation
     const { errors, form, handleChange, handleSubmit, touched, validateField } = createForm({

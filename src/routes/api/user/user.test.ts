@@ -1,4 +1,4 @@
-import type { User } from '$lib/models/database.types';
+import type { User } from '$lib/models/types/database.types';
 
 import { COOKIE_NAME, auth } from '$lib/server/auth';
 

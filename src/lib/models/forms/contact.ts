@@ -1,6 +1,6 @@
 import { object, string } from 'yup';
 
-export const loginForm = object().shape({
+export const contactForm = object().shape({
     email: string()
         .email('Oops! The email you entered is invalid.')
         .matches(
@@ -8,5 +8,12 @@ export const loginForm = object().shape({
             'Oops! The email you entered is invalid.'
         )
         .required('Oops! The email you entered is invalid.'),
-    password: string().required('Please enter your password.')
+    message: string().required('Please enter a message to send.'),
+    name: string().required('Please enter your name.')
 });
+
+export type ContactForm = {
+    email: string;
+    message: string;
+    name: string;
+};

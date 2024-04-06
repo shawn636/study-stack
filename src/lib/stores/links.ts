@@ -1,4 +1,4 @@
-import type Link from '$lib/models/link';
+import type Link from '$lib/models/types/link';
 
 import { faCircleUser, faHome } from '@fortawesome/free-solid-svg-icons';
 

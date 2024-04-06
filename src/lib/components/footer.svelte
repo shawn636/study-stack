@@ -7,14 +7,59 @@
         faLinkedinIn,
         faTwitter
     } from '@fortawesome/free-brands-svg-icons';
-    import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
+    import {
+        Accordion,
+        AccordionItem,
+        type ToastSettings,
+        getToastStore
+    } from '@skeletonlabs/skeleton';
     import Fa from 'svelte-fa';
+
+    let email: string = '';
+
+    const subscribe = async () => {
+        if (!email) {
+            toastStore.trigger({
+                autohide: true,
+                classes: 'bg-warning-500 text-black',
+                message: 'Please enter a valid email address.',
+                timeout: 3000
+            });
+            return;
+        }
+        const request = await fetch('/api/subscribe', {
+            body: JSON.stringify({ email }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        });
+        let toastSettings: ToastSettings | undefined;
+
+        if (request.ok) {
+            toastSettings = {
+                autohide: true,
+                classes: 'text-white bg-primary-500',
+                message: 'You have successfully subscribed to our newsletter!',
+                timeout: 3000
+            };
+        } else {
+            toastSettings = {
+                autohide: true,
+                classes: 'bg-error-500',
+                message: 'Something went wrong. Please try again later.',
+                timeout: 3000
+            };
+        }
+        toastStore.trigger(toastSettings);
+    };
+    const toastStore = getToastStore();
 </script>
 
 <div class="w-full bg-gray-800 p-4 text-white sm:p-10">
     <!-- Logo and Social Media Bar (Below) -->
     <div class="grid-rows grid items-center justify-items-center sm:grid-cols-[auto_1fr]">
-        <Logo />
+        <Logo colorClass="text-white" />
         <div
             class="grid grid-flow-row items-center gap-y-2 sm:grid-flow-col sm:gap-x-2 sm:justify-self-end"
         >
@@ -67,7 +112,7 @@
                 />
                 <button
                     aria-label="Submit Email Address"
-                    class="variant-filled-secondary btn rounded-l-none rounded-r-full font-medium"
+                    class=" variant-filled-secondary btn rounded-l-none rounded-r-full font-medium text-primary-500"
                     type="button">Submit</button
                 >
             </div>
@@ -89,7 +134,6 @@
                             <li><a href="/">Careers</a></li>
                             <li><a href="/">Press</a></li>
                             <li><a href="/">Leadership</a></li>
-                            <li><a href="/">Contact Us</a></li>
                         </ul>
                     </div>
                 </svelte:fragment>
@@ -119,9 +163,9 @@
                     <div class="list-nav">
                         <ul>
                             <li><a href="/">Documentation</a></li>
-                            <li><a href="/">FAQs</a></li>
-                            <li><a href="/">Dashboard</a></li>
-                            <li><a href="/">Contact</a></li>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/home">Dashboard</a></li>
+                            <li><a href="/contact">Contact Us</a></li>
                         </ul>
                     </div>
                 </svelte:fragment>
@@ -156,7 +200,6 @@
                 <li><a href="/">Careers</a></li>
                 <li><a href="/">Press</a></li>
                 <li><a href="/">Leadership</a></li>
-                <li><a href="/">Contact Us</a></li>
             </ul>
         </div>
         <!-- SUPPORT -->
@@ -164,9 +207,9 @@
             <h4 class="h4 grid pb-2 uppercase">Support</h4>
             <ul class="grid gap-y-1">
                 <li><a href="/">Documentation</a></li>
-                <li><a href="/">FAQs</a></li>
-                <li><a href="/">Dashboard</a></li>
-                <li><a href="/">Contact</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/home">Dashboard</a></li>
+                <li><a href="/contact">Contact Us</a></li>
             </ul>
         </div>
 
@@ -179,6 +222,7 @@
             <div class="relative mt-2">
                 <div class="flex">
                     <input
+                        bind:value={email}
                         class="input w-full rounded-l-full rounded-r-none !border-0 !bg-surface-100 text-surface-600 placeholder-surface-400"
                         name="email"
                         placeholder="Email Address"
@@ -188,6 +232,7 @@
                     <button
                         aria-label="Submit Email Address"
                         class="variant-filled-secondary btn rounded-l-none rounded-r-full font-medium active:scale-100"
+                        on:click={subscribe}
                         type="button">Submit</button
                     >
                 </div>

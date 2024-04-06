@@ -1,5 +1,6 @@
 import type { Actions } from '@sveltejs/kit';
 
+import { type LoginForm, loginForm } from '$lib/models/forms/login';
 import { auth } from '$lib/server/auth';
 import { csrf } from '$lib/server/csrf';
 import { errorPadding } from '$lib/server/util';
@@ -9,19 +10,12 @@ import { ValidationError } from 'yup';
 
 import type { PageServerLoad } from './$types';
 
-import { loginForm } from './login-form-schema';
-
-interface FormData {
-    email: string;
-    password: string;
-}
-
 export const actions: Actions = {
     default: async ({ cookies, request }) => {
         await csrf.validateCookies(cookies);
 
         const form = await request.formData();
-        const values: FormData = {
+        const values: LoginForm = {
             email: form.get('email') as string,
             password: form.get('password') as string
         };

@@ -1,4 +1,4 @@
-import type { Course, User } from '$lib/models/database.types';
+import type { Course, User } from '$lib/models/types/database.types';
 
 import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
