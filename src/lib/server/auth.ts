@@ -1,8 +1,8 @@
-import type { User } from '$lib/models/database.types';
+import type { User } from '$lib/models/types/database.types';
 import type { Cookies } from '@sveltejs/kit';
 
 import { dev } from '$app/environment';
-import { KeyType } from '$lib/models/database.types';
+import { KeyType } from '$lib/models/types/database.types';
 import { comparePassword, hashPassword } from '$lib/server/crypto';
 import { type Transaction, cuid, db } from '$lib/server/database';
 

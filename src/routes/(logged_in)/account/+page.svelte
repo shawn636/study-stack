@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { User } from '$lib/models/database.types';
+    import type { User } from '$lib/models/types/database.types';
     import type { ToastSettings } from '@skeletonlabs/skeleton';
 
     import { formatPhoneNumber, initials as getInitials } from '$lib/client/util';

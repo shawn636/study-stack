@@ -1,4 +1,4 @@
-import type { Course, User } from '$lib/models/database.types';
+import type { Course, User } from '$lib/models/types/database.types';
 /**
  * @vitest-environment jsdom
  */

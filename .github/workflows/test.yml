@@ -19,6 +19,7 @@ jobs:
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
             PEPPER: ${{ secrets.PEPPER }}
             GH_TOKEN: ${{ github.token }}
+            MAILERSEND_API_KEY: ${{ secrets.MAILERSEND_API_KEY }}
         steps:
             - uses: actions/checkout@v3
             - uses: planetscale/setup-pscale-action@v1
@@ -46,6 +47,7 @@ jobs:
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
             PEPPER: ${{ secrets.PEPPER }}
             GH_TOKEN: ${{ github.token }}
+            MAILERSEND_API_KEY: ${{ secrets.MAILERSEND_API_KEY }}
         steps:
             - uses: actions/checkout@v3
             - uses: planetscale/setup-pscale-action@v1
@@ -76,6 +78,7 @@ jobs:
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
             PEPPER: ${{ secrets.PEPPER }}
             GH_TOKEN: ${{ github.token }}
+            MAILERSEND_API_KEY: ${{ secrets.MAILERSEND_API_KEY }}
         steps:
             - uses: actions/checkout@v3
             - uses: planetscale/setup-pscale-action@v1
@@ -109,6 +112,7 @@ jobs:
             VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
             PEPPER: ${{ secrets.PEPPER }}
             GH_TOKEN: ${{ github.token }}
+            MAILERSEND_API_KEY: ${{ secrets.MAILERSEND_API_KEY }}
         steps:
             - uses: actions/checkout@v3
             - uses: planetscale/setup-pscale-action@v1

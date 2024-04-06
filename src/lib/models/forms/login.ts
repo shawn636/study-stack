@@ -10,3 +10,8 @@ export const loginForm = object().shape({
         .required('Oops! The email you entered is invalid.'),
     password: string().required('Please enter your password.')
 });
+
+export type LoginForm = {
+    email: string;
+    password: string;
+};

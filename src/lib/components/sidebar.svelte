@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { User } from '$lib/models/database.types';
+    import type { User } from '$lib/models/types/database.types';
 
     import { page } from '$app/stores';
     import { getHeaderLinks } from '$lib/stores/links';

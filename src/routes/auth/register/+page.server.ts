@@ -1,5 +1,6 @@
 import type { Actions } from '@sveltejs/kit';
 
+import { type RegistrationForm, registrationForm } from '$lib/models/forms/registration';
 import { auth } from '$lib/server/auth';
 import { csrf } from '$lib/server/csrf';
 import { errorPadding } from '$lib/server/util';
@@ -9,21 +10,12 @@ import { ValidationError } from 'yup';
 
 import type { PageServerLoad } from './$types';
 
-import { registrationForm } from './registration-form-schema';
-
-interface FormData {
-    email: string;
-    name: string;
-    password1: string;
-    password2: string;
-}
-
 export const actions: Actions = {
     default: async ({ cookies, request }) => {
         await csrf.validateCookies(cookies);
         const form = await request.formData();
 
-        const values: FormData = {
+        const values: RegistrationForm = {
             email: form.get('email') as string,
             name: form.get('name') as string,
             password1: form.get('password1') as string,

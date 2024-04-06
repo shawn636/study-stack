@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import type CategorySummary from '$lib/models/category-summary';
+import type CategorySummary from '$lib/models/types/category-summary';
 
 import { db, sql } from '$lib/server/database';
 

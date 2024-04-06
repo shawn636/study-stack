@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Course, CourseProgress } from '$lib/models/database.types';
+    import type { Course, CourseProgress } from '$lib/models/types/database.types';
 
     import { init } from '@paralleldrive/cuid2';
 

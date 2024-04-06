@@ -1,4 +1,4 @@
-import type CategorySummary from '$lib/models/category-summary';
+import type CategorySummary from '$lib/models/types/category-summary';
 
 import type { PageServerLoad } from './$types';
 

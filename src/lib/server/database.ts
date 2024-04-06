@@ -1,4 +1,4 @@
-import type { DB } from '$lib/models/database.types';
+import type { DB } from '$lib/models/types/database.types';
 
 import { DATABASE_URL } from '$env/static/private';
 import { init } from '@paralleldrive/cuid2';

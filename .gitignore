@@ -11,8 +11,7 @@ node_modules
 /package
 deployment-url.txt
 error-log.txt
-src/lib/server/database.types.ts
-src/lib/models/database.types.ts
+src/lib/models/types/database.types.ts
 closed_pull_requests.txt
 open_deploy_requests.txt
 

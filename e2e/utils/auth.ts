@@ -2,7 +2,7 @@ import { init } from '@paralleldrive/cuid2';
 import { Kysely, Transaction } from 'kysely';
 import { PlanetScaleDialect } from 'kysely-planetscale';
 
-import { DB, KeyType } from '../../src/lib/models/database.types';
+import { DB, KeyType } from '../../src/lib/models/types/database.types';
 import { hashPassword } from './crypto';
 import { DATABASE_URL } from './env';
 

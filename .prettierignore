@@ -15,4 +15,4 @@ package-lock.json
 yarn.lock
 
 *.nnb
-src/lib/server/database.types.ts
+src/lib/models/types/database.types.ts

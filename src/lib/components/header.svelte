@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { User } from '$lib/models/database.types';
+    import type { User } from '$lib/models/types/database.types';
 
     import { page } from '$app/stores';
     import Logo from '$lib/components/logo.svelte';
@@ -12,7 +12,7 @@
 
     export let user: User | undefined;
 
-    $: headerLinks = getHeaderLinks(user === null ? false : true);
+    $: headerLinks = getHeaderLinks(user === undefined ? false : true);
 
     const drawerStore = getDrawerStore();
     const drawerSettings: DrawerSettings = {
