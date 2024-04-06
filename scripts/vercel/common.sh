@@ -8,6 +8,7 @@ REQUIRED_ENV_VARS=(
     "DATABASE_URL" # Must already have been set to properly build and deploy
     "PEPPER"
     "PUBLIC_AMPLITUDE_API_KEY"
+    "MAILERSEND_API_KEY"
 )
 
 export VERCEL_SCOPE="equipped-team"
