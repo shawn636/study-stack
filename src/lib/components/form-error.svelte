@@ -18,6 +18,7 @@
             duration: 300,
             easing: cubicInOut
         }}
+        role="alert"
     >
         <Fa class="text-error-500" icon={faCircleExclamation} size="sm" />
         <small class="text-error-500">{error}</small>

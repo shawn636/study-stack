@@ -20,6 +20,7 @@
             duration: 300,
             easing: cubicInOut
         }}
+        role="alert"
     >
         <div class="w-ful grid h-full grid-cols-[auto_1fr] items-center gap-x-4">
             <Fa
@@ -46,6 +47,7 @@
             duration: 300,
             easing: cubicInOut
         }}
+        role="alert"
     >
         <div class="alert-message grid grid-flow-col items-center gap-x-2 text-center">
             <Fa icon={faCircleCheck} />

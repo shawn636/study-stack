@@ -18,7 +18,8 @@
     let messageInput: HTMLTextAreaElement;
 
     onMount(() => {
-        if (data.user) {
+        const { user } = data;
+        if (user) {
             messageInput.focus();
         }
     });

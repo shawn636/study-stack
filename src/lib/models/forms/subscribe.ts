@@ -1,17 +1,13 @@
 import { object, string } from 'yup';
 
 const invalidEmailMesasge = 'Oops! The email you entered is invalid.';
-export const contactForm = object().shape({
+export const subscribeForm = object().shape({
     email: string()
         .email(invalidEmailMesasge)
         .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, invalidEmailMesasge)
-        .required(invalidEmailMesasge),
-    message: string().required('Please enter a message to send.'),
-    name: string().required('Please enter your name.')
+        .required(invalidEmailMesasge)
 });
 
-export type ContactForm = {
+export type SubscribeForm = {
     email: string;
-    message: string;
-    name: string;
 };

@@ -54,10 +54,10 @@ function deploy() {
 
     if [ "$deployment_target" = "production" ]; then
         echo "Deploying to production..."
-        pnpm exec vercel --prod --yes --env DATABASE_URL="$DATABASE_URL" --env PEPPER="$PEPEPR" --env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" --scope "equipped-team" --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
+        pnpm exec vercel --prod --yes --env DATABASE_URL="$DATABASE_URL" --env PEPPER="$PEPEPR" --env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" --env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" --scope "equipped-team" --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     else
         echo "Deploying preview..."
-        pnpm exec vercel --yes --env DATABASE_URL="$DATABASE_URL" --env PEPPER="$PEPEPR" --env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" --scope "equipped-team" --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
+        pnpm exec vercel --yes --env DATABASE_URL="$DATABASE_URL" --env PEPPER="$PEPEPR" --env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" --env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" --scope "equipped-team" --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     fi
 
     local code=$?

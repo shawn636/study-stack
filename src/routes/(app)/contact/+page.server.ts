@@ -11,7 +11,11 @@ export const load = (async ({ cookies, parent }) => {
     let user: User | undefined;
 
     if (isValid) {
-        user = await auth.getUser(sessionId ?? '');
+        try {
+            user = await auth.getUser(sessionId ?? '');
+        } catch {
+            // Igbnore any errors. The user will be undefined.
+        }
     }
 
     return { user };

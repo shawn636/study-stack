@@ -27,11 +27,10 @@
             });
             return;
         }
+        const formData = new FormData();
+        formData.append('email', email);
         const request = await fetch('/api/subscribe', {
-            body: JSON.stringify({ email }),
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            body: formData,
             method: 'POST'
         });
         let toastSettings: ToastSettings | undefined;
