@@ -1,6 +1,11 @@
 <!-- eslint-disable -->
 <script lang="ts">
-    import { faBookBible, faChalkboardTeacher, faChurch } from '@fortawesome/free-solid-svg-icons';
+    import {
+        faBookBible,
+        faChalkboardTeacher,
+        faChurch,
+        faUpRightFromSquare
+    } from '@fortawesome/free-solid-svg-icons';
     import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
     import Fa from 'svelte-fa';
 
@@ -34,15 +39,19 @@
 
 <div class="grid w-full justify-items-center">
     <div class="grid max-w-2xl grid-cols-4 gap-y-10 p-5">
+        <!-- TITLE -->
         <div class="col-span-full row-span-1 text-center">
             <h1 class="text-4xl font-bold">About Us</h1>
         </div>
 
+        <!-- HEADER IMAGE -->
         <img
             alt={aboutUsAlt}
             class="col-span-full h-64 w-full justify-self-center rounded-md object-cover object-top"
             src={aboutUsLink}
         />
+
+        <!-- WHO WE ARE -->
         <aside class="col-span-1">
             <h2 class="h2">Who</h2>
             <h4 class="h4 pl-6 text-gray-600 dark:text-gray-400">we are</h4>
@@ -59,6 +68,7 @@
             </p>
         </section>
 
+        <!-- WHO THIS IS FOR -->
         <aside class="col-span-1">
             <h2 class="h2">Who</h2>
             <h4 class="h4 pl-6 text-gray-600 dark:text-gray-400">this is for</h4>
@@ -74,6 +84,7 @@
             </p>
         </section>
 
+        <!-- FREQUENTLY ASKED QUESTIONS -->
         <h2 class="h2 col-span-full text-center">Frequently Asked Questions</h2>
 
         <Accordion autocollapse class="col-span-full">
@@ -97,5 +108,41 @@
                 </AccordionItem>
             {/each}
         </Accordion>
+
+        <!-- ADDITIONAL LINKS BAR -->
+        <section class="col-span-full grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2">
+            <!-- LINK 1 -->
+            <a
+                class="relative h-48 w-64 overflow-hidden rounded-xl bg-surface-100/30 transition-transform hover:-translate-y-2 hover:shadow-md dark:bg-surface-800"
+                href="/beliefs"
+            >
+                <div class="space-y-4 p-4">
+                    <h6 class="h5 font-bold">What We Believe</h6>
+                    <p class="text-black dark:text-surface-300">
+                        Take a look at the core doctrines that we hold to and teach.
+                    </p>
+                </div>
+                <Fa
+                    class="absolute bottom-0 right-0 m-4 text-gray-400"
+                    icon={faUpRightFromSquare}
+                />
+            </a>
+            <!-- LINK 2 -->
+            <a
+                class="relative h-48 w-64 overflow-hidden rounded-xl bg-surface-100/30 transition-transform hover:-translate-y-2 hover:shadow-md dark:bg-surface-800"
+                href="/beliefs"
+            >
+                <div class="space-y-4 p-4">
+                    <h6 class="h5 font-bold">What We Believe</h6>
+                    <p class="text-black dark:text-surface-300">
+                        Take a look at the core doctrines that we hold to and teach.
+                    </p>
+                </div>
+                <Fa
+                    class="absolute bottom-0 right-0 m-4 text-gray-400"
+                    icon={faUpRightFromSquare}
+                />
+            </a>
+        </section>
     </div>
 </div>
