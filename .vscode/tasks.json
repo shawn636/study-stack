@@ -17,9 +17,6 @@
             },
             "icon": {
                 "id": "code"
-            },
-            "runOptions": {
-                "runOn": "folderOpen"
             }
         },
         {
@@ -38,9 +35,6 @@
             },
             "icon": {
                 "id": "globe"
-            },
-            "runOptions": {
-                "runOn": "folderOpen"
             }
         },
         {
@@ -77,9 +71,6 @@
             },
             "icon": {
                 "id": "database"
-            },
-            "runOptions": {
-                "runOn": "folderOpen"
             }
         }
     ]
