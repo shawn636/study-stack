@@ -20,6 +20,8 @@ updates:
                   - 'major'
               patterns:
                   - '*'
+              exclude-patterns:
+                  - 'eslint' # Can't migrate to v9 yet - waiting for updates to our eslint plugins
     - package-ecosystem: 'github-actions'
       directory: '/'
       schedule:
@@ -27,7 +29,7 @@ updates:
       reviewers:
           - 'shawnlong636'
       groups:
-          all-packages:
+          github-actions-all:
               applies-to: version-updates
               patterns:
                   - '*'
