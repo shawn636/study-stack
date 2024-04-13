@@ -40,7 +40,7 @@
             >
                 <Fa icon={faBars} size="lg" />
             </button>
-            <a href="/"><Logo color="black" /></a>
+            <a href="/"><Logo colorClass="text-white" /></a>
         </div>
     </svelte:fragment>
     <div class="hidden grid-flow-col items-center lg:grid">

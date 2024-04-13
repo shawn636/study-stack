@@ -19,7 +19,6 @@ export const POST = (async ({ cookies, request }) => {
         };
 
         await subscribeForm.validate(form, { abortEarly: true });
-        console.log(`Subscriber added: ${JSON.stringify(form)}`);
     } catch (e: unknown) {
         console.error(e);
         await errorPadding();
