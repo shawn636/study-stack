@@ -1,6 +1,9 @@
 import type { Course } from '$lib/models/types/database.types';
 
-import { SortBy, type SortByValue } from '$lib/models/types/sort-by';
+import {
+    type CourseSortByOption,
+    CourseSortByOptions
+} from '$lib/models/types/course-sort-by-options';
 import { csrf } from '$lib/server/csrf';
 import { db, sql } from '$lib/server/database';
 import { error } from '@sveltejs/kit';
@@ -10,20 +13,20 @@ import type { RequestHandler } from './$types';
 export const GET = (async ({ cookies, url }) => {
     await csrf.validateCookies(cookies);
 
-    let sortByValue: SortByValue = SortBy.RELEVANCE;
+    let sortByValue: CourseSortByOption = CourseSortByOptions.RELEVANCE;
 
     if (url.searchParams.get('sort_by') !== null) {
         const sortByParam: string = url.searchParams.get('sort_by') ?? '';
         if (
-            !Object.values(SortBy)
+            !Object.values(CourseSortByOptions)
                 .map((value) => value.param)
                 .includes(sortByParam)
         ) {
             return error(400, `Invalid sort_by parameter: ${sortByParam}`);
         }
 
-        sortByValue = Object.values(SortBy).find(
-            (value: SortByValue) => value.param === sortByParam
+        sortByValue = Object.values(CourseSortByOptions).find(
+            (value: CourseSortByOption) => value.param === sortByParam
         );
     }
 

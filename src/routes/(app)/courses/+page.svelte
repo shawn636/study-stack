@@ -1,8 +1,11 @@
 <script lang="ts">
+    import type { CourseSortByOption } from '$lib/models/types/course-sort-by-options';
+
+    import SortByDropdown from '$lib/components/controls/sort-by-dropdown.svelte';
     import ViewToggle from '$lib/components/controls/view-toggle.svelte';
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
-    import { faBinoculars, faChevronDown, faSearch } from '@fortawesome/free-solid-svg-icons';
+    import { faBinoculars, faSearch } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
 
     import type { PageData } from './$types';
@@ -10,7 +13,14 @@
     export let data: PageData;
 
     let selectedView: 'grid' | 'list' = 'grid';
+    let sortByOption: CourseSortByOption;
 </script>
+
+<!--
+<div id="debug-bar">
+    <h3 class="h3">View Selection: {selectedView}</h3>
+    <h3 class="h3">Sort By Selection: {sortByOption?.label}</h3>
+</div> -->
 
 <div class="grid justify-items-center gap-y-4 p-5">
     <div class="container grid max-w-5xl gap-y-4">
@@ -18,7 +28,7 @@
         <div class="grid grid-cols-[1fr_min-content_min-content_min-content] gap-x-2">
             <div class="relative w-full">
                 <input
-                    class="w-full rounded-lg border-none bg-surface-100 pr-10 font-light text-surface-800 outline-none placeholder:text-surface-400"
+                    class="w-full rounded-lg border-none bg-surface-100 pr-10 font-light text-surface-800 outline-none placeholder:text-gray-600"
                     placeholder="Search..."
                 />
                 <Fa
@@ -26,12 +36,7 @@
                     icon={faSearch}
                 />
             </div>
-            <button
-                class="variant-filled-primary btn grid grid-flow-col items-center justify-items-center gap-x-1 text-surface-500 text-white"
-            >
-                Sort by
-                <Fa class="text-white" icon={faChevronDown} size="sm" />
-            </button>
+            <SortByDropdown bind:value={sortByOption} />
             <ViewToggle bind:value={selectedView} />
             <!-- <div class="w-24 rounded-lg bg-surface-100"></div> -->
             <div class="w-24 rounded-lg bg-surface-100"></div>
