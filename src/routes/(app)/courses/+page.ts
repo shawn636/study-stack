@@ -1,10 +1,13 @@
 import type { Course, User } from '$lib/models/types/database.types';
 
-import { SortBy, type SortByValue } from '$lib/models/types/sort-by';
+import {
+    type CourseSortByOption,
+    CourseSortByOptions
+} from '$lib/models/types/course-sort-by-options';
 
 import type { PageLoad } from './$types';
 
-const sortByValue: SortByValue = SortBy.RELEVANCE;
+const sortByValue: CourseSortByOption = CourseSortByOptions.RELEVANCE;
 
 export const load = (async ({ fetch }) => {
     const res = await fetch(`/api/search?sort_by=${sortByValue.param}`);
