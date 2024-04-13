@@ -1,5 +1,6 @@
 import type { Course } from '$lib/models/types/database.types';
 
+import { SortBy, type SortByValue } from '$lib/models/types/sort-by';
 import { csrf } from '$lib/server/csrf';
 import { db, sql } from '$lib/server/database';
 import { error } from '@sveltejs/kit';
@@ -54,28 +55,18 @@ export const GET = (async ({ cookies, params, url }) => {
 
     const searchParam = params.slug;
 
-    const sortByParam = url.searchParams.get('sort_by') ?? 'relevance';
+    let sortByValue: SortByValue = SortBy.RELEVANCE;
 
-    if (!['highest_rated', 'lowest_price', 'relevance'].includes(sortByParam)) {
-        error(400, 'Invalid sort_by parameter');
-    }
+    if (url.searchParams.get('sort_by') !== null) {
+        const sortByParam: string = url.searchParams.get('sort_by') ?? '';
 
-    let orderByTerm: '_relevance' | 'currentPrice' | 'ratingAverage' = '_relevance';
-    let orderByDirection: 'asc' | 'desc' = 'desc';
+        if (!(sortByParam in Object.values(SortBy).map((value) => value.param))) {
+            return error(400, `Invalid sort_by parameter: ${sortByParam}`);
+        }
 
-    switch (sortByParam) {
-        case 'highest_rated':
-            orderByTerm = 'ratingAverage';
-            orderByDirection = 'desc';
-            break;
-        case 'lowest_price':
-            orderByTerm = 'currentPrice';
-            orderByDirection = 'asc';
-            break;
-        case 'relevance':
-            orderByTerm = '_relevance';
-            orderByDirection = 'desc';
-            break;
+        sortByValue = Object.values(SortBy).find(
+            (value: SortByValue) => value.param === sortByParam
+        );
     }
 
     const courseResultQuery = db.selectFrom('Course').selectAll();
@@ -91,13 +82,13 @@ export const GET = (async ({ cookies, params, url }) => {
             .where(
                 sql<boolean>`MATCH(title, description) AGAINST (${searchParam} IN NATURAL LANGUAGE MODE)`
             )
-            .orderBy(orderByTerm, orderByDirection)
+            .orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
             .limit(20)
             .execute();
     } else {
         courseResults = await courseResultQuery
             .select(sql<number>`0`.as('_relevance'))
-            .orderBy(orderByTerm, orderByDirection)
+            .orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
             .limit(20)
             .execute();
     }

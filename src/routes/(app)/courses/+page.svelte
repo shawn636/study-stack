@@ -1,70 +1,41 @@
 <script lang="ts">
-    import type { Course, User } from '$lib/models/types/database.types';
-
+    import ViewToggle from '$lib/components/controls/view-toggle.svelte';
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
-    import { sortBy } from '$lib/stores/controls';
-    import { search } from '$lib/stores/controls';
-    import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
+    import { faBinoculars, faChevronDown, faSearch } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
 
     import type { PageData } from './$types';
-
-    import Controls from './controls.svelte';
-    let isLoading = false;
+    const isLoading = false;
     export let data: PageData;
 
-    const getCoursesWithInstructors = async (
-        query: string | undefined = undefined,
-        sortBy: string | undefined = undefined
-    ) => {
-        if (!query) {
-            try {
-                isLoading = true;
-                const res = await fetch('/api/courses');
-                return (await res.json()) as (Course & User)[];
-            } catch (error) {
-                console.error(error);
-            } finally {
-                isLoading = false;
-            }
-        } else {
-            try {
-                isLoading = true;
-                let url = `/api/search/${query}`;
-                url += sortBy ? `?sort_by=${sortBy}` : '';
-
-                const res = await fetch(url);
-                return await res.json();
-            } catch (error) {
-                console.error(error);
-            } finally {
-                isLoading = false;
-            }
-        }
-    };
-
-    // Search Options
-    $: sortByText = $sortBy.toLowerCase().replace(/\s/g, '_');
-
-    const handleKeydown = async (e: KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            data.coursesWithInstructors = await getCoursesWithInstructors($search, sortByText);
-        }
-    };
+    let selectedView: 'grid' | 'list' = 'grid';
 </script>
 
 <div class="grid justify-items-center gap-y-4 p-5">
     <div class="container grid max-w-5xl gap-y-4">
         <h1 class="text-lg font-bold">Find a Course</h1>
-
-        <Controls
-            {handleKeydown}
-            on:change={async () => {
-                await getCoursesWithInstructors();
-            }}
-        />
-
+        <div class="grid grid-cols-[1fr_min-content_min-content_min-content] gap-x-2">
+            <div class="relative w-full">
+                <input
+                    class="w-full rounded-lg border-none bg-surface-100 pr-10 font-light text-surface-800 outline-none placeholder:text-surface-400"
+                    placeholder="Search..."
+                />
+                <Fa
+                    class="absolute right-5 top-1/2 -translate-y-1/2 transform text-surface-400"
+                    icon={faSearch}
+                />
+            </div>
+            <button
+                class="variant-filled-primary btn grid grid-flow-col items-center justify-items-center gap-x-1 text-surface-500 text-white"
+            >
+                Sort by
+                <Fa class="text-white" icon={faChevronDown} size="sm" />
+            </button>
+            <ViewToggle bind:value={selectedView} />
+            <!-- <div class="w-24 rounded-lg bg-surface-100"></div> -->
+            <div class="w-24 rounded-lg bg-surface-100"></div>
+        </div>
         {#if isLoading}
             <div
                 class="content-visibility-auto grid grid-flow-row grid-cols-1 justify-items-center gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
@@ -84,7 +55,7 @@
             </div>
         {:else}
             <div
-                class="grid grid-flow-row grid-cols-1 justify-items-center gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
+                class="grid grid-flow-row grid-cols-1 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
             >
                 {#each data.coursesWithInstructors as courseWithInstructor}
                     <CourseGridItem {courseWithInstructor} />

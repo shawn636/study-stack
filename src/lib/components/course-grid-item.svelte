@@ -31,10 +31,10 @@
 <div class={containerBaseClass}>
     <Image
         alt="an open bible"
-        class="aspect-auto rounded-md"
+        class="aspect-auto rounded-md p-0"
         {height}
         src={courseWithInstructor.imgHref}
-        {width}
+        width="w-full"
     />
 
     <!-- Ratings (Below)-->
