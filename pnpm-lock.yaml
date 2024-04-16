@@ -219,8 +219,8 @@ devDependencies:
     specifier: ^9.0.1
     version: 9.0.1
   vercel:
-    specifier: ^33.7.0
-    version: 33.7.0
+    specifier: ^34.0.0
+    version: 34.0.0
   vite:
     specifier: ^5.2.8
     version: 5.2.8(@types/node@20.12.7)
@@ -2178,8 +2178,8 @@ packages:
       ts-morph: 12.0.0
     dev: true
 
-  /@vercel/next@4.1.6:
-    resolution: {integrity: sha512-+U/D75RZFIe6Z9EA4kDLDZgP0hEl4ONWqFg47EtJpigWl5ulJ9YYsMD2nQZF5sq/YKbqy/7/sUDRIL0Co+3JuA==}
+  /@vercel/next@4.2.0:
+    resolution: {integrity: sha512-2KSXdPHpfPWaf0tKTBxOWvdc8e9TPNARjmqtgYUsrl1TVaBNFsZ0GV0kWaVLEw4o7CWfREt8ZY064sNVb1BcAQ==}
     dependencies:
       '@vercel/nft': 0.26.4
     transitivePeerDependencies:
@@ -7874,8 +7874,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vercel@33.7.0:
-    resolution: {integrity: sha512-zP2NwI4qwF78AtmJ19GSwyeeAR5WVW8+Jvbnt480GVS7VO4NCAwIeoQmZ1irCD9iKINAO6bM96ry/btZmd+SZw==}
+  /vercel@34.0.0:
+    resolution: {integrity: sha512-0Gewf/gB/UDnkGA/wyAzf3wxXuDqCvPFKFkAcByV3PuoCF5j71MqjV3GpFC0rQREF7CZZflFMhoaQO70a9x/fA==}
     engines: {node: '>= 16'}
     hasBin: true
     dependencies:
@@ -7883,7 +7883,7 @@ packages:
       '@vercel/fun': 1.1.0
       '@vercel/go': 3.1.1
       '@vercel/hydrogen': 1.0.2
-      '@vercel/next': 4.1.6
+      '@vercel/next': 4.2.0
       '@vercel/node': 3.0.26
       '@vercel/python': 4.1.1
       '@vercel/redwood': 2.0.8
