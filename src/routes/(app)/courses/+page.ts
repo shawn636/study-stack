@@ -1,4 +1,4 @@
-import type { Course, User } from '$lib/models/types/database.types';
+import type { CourseSearchResult } from '$lib/models/types/api';
 
 import {
     type CourseSortByOption,
@@ -10,7 +10,9 @@ import type { PageLoad } from './$types';
 const sortByValue: CourseSortByOption = CourseSortByOptions.RELEVANCE;
 
 export const load = (async ({ fetch }) => {
-    const res = await fetch(`/api/search?sort_by=${sortByValue.param}`);
-    const coursesWithInstructors: (Course & User)[] = await res.json();
-    return { coursesWithInstructors };
+    const response = await fetch(
+        `/api/search/courses?sort_by=${sortByValue.param}&page=1&page_size=20`
+    );
+    const result: CourseSearchResult = await response.json();
+    return result;
 }) satisfies PageLoad;

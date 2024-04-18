@@ -6,21 +6,18 @@
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
     import { faBinoculars, faSearch } from '@fortawesome/free-solid-svg-icons';
+    import { Paginator } from '@skeletonlabs/skeleton';
     import Fa from 'svelte-fa';
 
     import type { PageData } from './$types';
     const isLoading = false;
     export let data: PageData;
 
-    let selectedView: 'grid' | 'list' = 'grid';
+    // Control State
+    let selectedView: 'grid' | 'list';
     let sortByOption: CourseSortByOption;
+    // TODO: Add Result Count and Page to API Endpoint
 </script>
-
-<!--
-<div id="debug-bar">
-    <h3 class="h3">View Selection: {selectedView}</h3>
-    <h3 class="h3">Sort By Selection: {sortByOption?.label}</h3>
-</div> -->
 
 <div class="grid justify-items-center gap-y-4 p-5">
     <div class="container grid max-w-5xl gap-y-4">
@@ -38,8 +35,6 @@
             </div>
             <SortByDropdown bind:value={sortByOption} />
             <ViewToggle bind:value={selectedView} />
-            <!-- <div class="w-24 rounded-lg bg-surface-100"></div> -->
-            <div class="w-24 rounded-lg bg-surface-100"></div>
         </div>
         {#if isLoading}
             <div
@@ -51,7 +46,7 @@
                     </div>
                 {/each}
             </div>
-        {:else if data.coursesWithInstructors.length === 0}
+        {:else if data.courses.length === 0}
             <div class="content-visibility-auto mb-6 mt-8 grid items-center justify-items-center">
                 <div class="flex-flow-col card flex items-center gap-x-2 p-4">
                     <Fa class="text-xl" icon={faBinoculars} />
@@ -62,10 +57,18 @@
             <div
                 class="grid grid-flow-row grid-cols-1 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
             >
-                {#each data.coursesWithInstructors as courseWithInstructor}
+                {#each data.courses as courseWithInstructor}
                     <CourseGridItem {courseWithInstructor} />
                 {/each}
             </div>
         {/if}
+        <div class="grid grid-cols-[1fr_min-content_min-content_min-content] gap-x-2">
+            <Paginator
+                settings={{ amounts: [1, 2, 5, 10], limit: 5, page: 0, size: 20 }}
+                showFirstLastButtons={false}
+                showNumerals={true}
+                showPreviousNextButtons={true}
+            />
+        </div>
     </div>
 </div>
