@@ -4,7 +4,6 @@
     import { CourseSortByOptions } from '$lib/models/types/course-sort-by-options';
     import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
     import { type PopupSettings, RadioGroup, RadioItem, popup } from '@skeletonlabs/skeleton';
-    // RadioGroup, RadioItem
     import Fa from 'svelte-fa';
 
     const sortByOptions: CourseSortByOption[] = Object.values(CourseSortByOptions);
@@ -24,20 +23,23 @@
     export let value: CourseSortByOption = CourseSortByOptions.RELEVANCE;
 </script>
 
-<button
-    aria-expanded={isOpen}
-    bind:this={buttonElement}
-    class="variant-filled-primary btn grid grid-flow-col items-center justify-items-center gap-x-1 text-surface-500 text-white"
-    type="button"
-    use:popup={popupSettings}
->
-    Sort by
-    <Fa class="text-white" icon={faChevronDown} size="sm" />
-</button>
+<div class="flex items-center gap-1">
+    <aside class="text-nowrap">Sort By:</aside>
+    <button
+        aria-expanded={isOpen}
+        bind:this={buttonElement}
+        class="variant-filled-primary btn grid grid-flow-col items-center justify-items-center gap-x-1 text-white dark:text-white"
+        type="button"
+        use:popup={popupSettings}
+    >
+        {value.label}
+        <Fa class="text-white" icon={faChevronDown} size="sm" />
+    </button>
+</div>
 
 <div class="card z-10" data-popup="course-sortby-menu">
     <RadioGroup
-        active="variant-filled-primary text-white"
+        active="variant-filled-primary text-white dark:text-white"
         background="bg-surface-100-800-token"
         border="border-none"
         flexDirection="flex-col"
