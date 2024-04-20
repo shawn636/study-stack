@@ -9,7 +9,7 @@ import { error } from '@sveltejs/kit';
 
 // CUSTOM ERROR CLASSES AND HANDLER
 
-class HandledError extends Error {
+export class HandledError extends Error {
     public statusCode: number;
 
     constructor(message: string) {
@@ -19,7 +19,7 @@ class HandledError extends Error {
     }
 }
 
-class InvalidParameterError extends HandledError {
+export class InvalidParameterError extends HandledError {
     public statusCode: number;
 
     constructor(message: string) {
@@ -49,7 +49,7 @@ const handleErrors = (e: unknown) => {
 };
 
 // SYNCHRONOUS HELPER FUNCTIONS
-const parseSortByParam = (
+export const parseSortByParam = (
     sortByParam: null | string,
     requestContainsSearchTerm: boolean
 ): CourseSortByOption => {
@@ -72,7 +72,7 @@ const parseSortByParam = (
 };
 
 // ASYNCHRONOUS HELPER FUNCTIONS
-const fetchCourseCount = async (searchTerm: String | null): Promise<number> => {
+export const fetchCourseCount = async (searchTerm: String | null): Promise<number> => {
     try {
         let courseCountQuery = db
             .selectFrom('Course')
@@ -92,7 +92,7 @@ const fetchCourseCount = async (searchTerm: String | null): Promise<number> => {
     }
 };
 
-const fetchCourses = async (
+export const fetchCourses = async (
     searchTerm: null | string,
     pageNo: number,
     pageSize: number,
