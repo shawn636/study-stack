@@ -81,7 +81,7 @@
 
 <form
     class="grid h-full w-full items-center"
-    data-test-id="sign-in-form"
+    data-testid="sign-in-form"
     id="register-form"
     on:submit={handleSubmit}
 >

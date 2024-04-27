@@ -1,6 +1,5 @@
 <script lang="ts">
     import Logo from '$lib/components/logo.svelte';
-    import { pageHeight, scrollPosition } from '$lib/stores/scroll';
     import {
         faFacebookF,
         faInstagram,
@@ -243,7 +242,3 @@
 
     <p class="mt-8">© 2023 Equipped LLC.</p>
 </div>
-
-{#if $scrollPosition > $pageHeight}
-    <div class="absolute bottom-0 -z-10 h-64 w-full bg-gray-800" />
-{/if}

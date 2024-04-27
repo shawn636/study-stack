@@ -1,6 +1,5 @@
 <script lang="ts">
     import HeroCollage from '$lib/components/hero-collage.svelte';
-    import { scrollPosition } from '$lib/stores/scroll';
 
     const cta = 'Learn New Skills Online With Top ';
     const ctaUnderline = 'Educators';
@@ -9,10 +8,6 @@
                                             Universities And Companies`;
     const tags = ['Over 12 million students', 'More than 60,000 courses', 'Learn anything online'];
 </script>
-
-{#if $scrollPosition < 0}
-    <div class="absolute -z-10 h-64 w-full bg-primary-500 dark:bg-primary-700" />
-{/if}
 
 <div class="z-10 grid justify-items-center bg-primary-500 text-white dark:bg-primary-700">
     <div

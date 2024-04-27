@@ -4,9 +4,12 @@
     import { CourseSortByOptions } from '$lib/models/types/course-sort-by-options';
     import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
     import { type PopupSettings, RadioGroup, RadioItem, popup } from '@skeletonlabs/skeleton';
+    import { createEventDispatcher } from 'svelte';
     import Fa from 'svelte-fa';
 
     const sortByOptions: CourseSortByOption[] = Object.values(CourseSortByOptions);
+
+    const dispatch = createEventDispatcher();
 
     let isOpen = false;
     const popupSettings: PopupSettings = {
@@ -20,7 +23,7 @@
 
     let buttonElement: HTMLButtonElement;
 
-    export let value: CourseSortByOption = CourseSortByOptions.RELEVANCE;
+    export let value: CourseSortByOption;
 </script>
 
 <div class="flex items-center gap-1">
@@ -52,6 +55,7 @@
                 name="sort-by"
                 on:click={() => {
                     buttonElement.click();
+                    dispatch('valuechange', sortByOption);
                 }}
                 value={sortByOption}
             >

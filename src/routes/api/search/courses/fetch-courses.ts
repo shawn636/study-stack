@@ -48,6 +48,26 @@ const handleErrors = (e: unknown) => {
     return error(500, 'An unexpected error occurred.');
 };
 
+export const searchParamsAreValid = (
+    urlSearchParams: URLSearchParams,
+    requiredSearchParams: string[]
+) => {
+    let containsRequiredParams = true;
+    let containsInvalidParams = true;
+    if (!requiredSearchParams.every((param) => urlSearchParams.has(param))) {
+        console.error('Missing required search params:', requiredSearchParams);
+        containsRequiredParams = false;
+    }
+
+    const invalidSearchParams = Object.keys(urlSearchParams).filter(
+        (key) => !requiredSearchParams.includes(key)
+    );
+
+    containsInvalidParams = invalidSearchParams.length > 0;
+
+    return containsRequiredParams && !containsInvalidParams;
+};
+
 // SYNCHRONOUS HELPER FUNCTIONS
 export const parseSortByParam = (
     sortByParam: null | string,
@@ -74,16 +94,15 @@ export const parseSortByParam = (
 // ASYNCHRONOUS HELPER FUNCTIONS
 export const fetchCourseCount = async (searchTerm: String | null): Promise<number> => {
     try {
-        let courseCountQuery = db
+        const courseCountResult = await db
             .selectFrom('Course')
-            .select(({ fn }) => [fn.count<number>('id').as('courseCount')]);
-
-        if (searchTerm !== '' && searchTerm !== null && searchTerm !== undefined) {
-            courseCountQuery = courseCountQuery.where(
-                sql<boolean>`MATCH(title, description) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
-            );
-        }
-        const courseCountResult = await courseCountQuery.executeTakeFirstOrThrow();
+            .select(({ fn }) => [fn.count<number>('id').as('courseCount')])
+            .$if(searchTerm !== '' && searchTerm !== null && searchTerm !== undefined, (qb) =>
+                qb.where(
+                    sql<boolean>`MATCH(title, description) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
+                )
+            )
+            .executeTakeFirstOrThrow();
         const courseCount = Number(courseCountResult.courseCount) ?? 0;
 
         return courseCount;
@@ -99,32 +118,42 @@ export const fetchCourses = async (
     sortByValue: CourseSortByOption
 ): Promise<CourseWithInstructor[]> => {
     try {
-        let courseResultQuery = db
+        const requestContainsSearchTerm =
+            searchTerm !== '' && searchTerm !== null && searchTerm !== undefined;
+        const sortByIsRelevance = sortByValue === CourseSortByOptions.RELEVANCE;
+        const courseResultQuery = db
             .selectFrom('Course')
             .innerJoin('User', 'Course.instructorId', 'User.id')
             .selectAll(['Course', 'User'])
-            .select(
-                sql<number>`MATCH(title, description) 
-                    AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)
-                    `.as('_relevance')
-            );
-
-        if (searchTerm !== '' && searchTerm !== null && searchTerm !== undefined) {
-            courseResultQuery = courseResultQuery.where(
-                sql<boolean>`MATCH(title, description) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
-            );
-        }
-        courseResultQuery = courseResultQuery
-            .orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
+            .$if(requestContainsSearchTerm, (qb) =>
+                qb
+                    .select(
+                        sql<number>`MATCH(title) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`.as(
+                            '_relevance'
+                        )
+                    )
+                    .where(
+                        sql<boolean>`MATCH(title) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
+                    )
+            )
+            .$if(requestContainsSearchTerm || !sortByIsRelevance, (qb) =>
+                qb.orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
+            )
             .limit(pageSize)
-            .offset((pageNo - 1) * pageSize);
+            .offset(pageNo * pageSize);
 
-        const courseResults: (CourseWithInstructor & { _relevance: number })[] =
+        const courseResults: (CourseWithInstructor & { _relevance?: number })[] =
             await courseResultQuery.execute();
 
-        const courses: CourseWithInstructor[] = courseResults.map(
-            ({ _relevance, ...course }) => course
-        );
+        // Filter out the _relevance field if it exists
+        const courses: CourseWithInstructor[] = courseResults.map((course) => {
+            if (Object.keys(course).includes('_relevance')) {
+                const { _relevance, ...rest } = course;
+                return rest;
+            } else {
+                return course;
+            }
+        });
 
         return courses;
     } catch (e) {

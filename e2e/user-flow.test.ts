@@ -70,7 +70,7 @@ test.describe('all-user-flow', async () => {
         await page.goto('/auth/register');
         await page.waitForLoadState('networkidle');
         expect(page).toHaveURL('/auth/register');
-        await expect(page.locator('[data-test-id="sign-up-form"]')).toBeVisible();
+        await expect(page.locator('[data-testid="sign-up-form"]')).toBeVisible();
 
         await expect(page.getByRole('heading', { name: 'Welcome to Equipped' })).toBeVisible();
         await page.getByPlaceholder('Name').click();
@@ -151,38 +151,38 @@ test.describe('all-user-flow', async () => {
         await page.getByRole('link', { name: 'Sign in' }).click();
         await page.waitForURL('/auth/login');
         expect(page).toHaveURL('/auth/login');
-        await expect(page.locator('[data-test-id="sign-in-form"]')).toBeVisible();
+        await expect(page.locator('[data-testid="sign-in-form"]')).toBeVisible();
 
-        await page.locator('[data-test-id="sign-in-form"]').getByPlaceholder('Email').click();
-        await page.locator('[data-test-id="sign-in-form"]').click();
+        await page.locator('[data-testid="sign-in-form"]').getByPlaceholder('Email').click();
+        await page.locator('[data-testid="sign-in-form"]').click();
         await expect(
             page
-                .locator('[data-test-id="sign-in-form"]')
+                .locator('[data-testid="sign-in-form"]')
                 .getByText('Oops! The email you entered is invalid')
         ).toBeInViewport();
 
         await page.getByPlaceholder('Password').click();
-        await page.locator('[data-test-id="sign-in-form"]').click();
+        await page.locator('[data-testid="sign-in-form"]').click();
         await expect(
-            page.locator('[data-test-id="sign-in-form"]').getByText('Please enter your password')
+            page.locator('[data-testid="sign-in-form"]').getByText('Please enter your password')
         ).toBeInViewport();
 
-        await page.locator('[data-test-id="sign-in-form"]').getByPlaceholder('Email').fill(email);
-        await page.locator('[data-test-id="sign-in-form"]').click();
+        await page.locator('[data-testid="sign-in-form"]').getByPlaceholder('Email').fill(email);
+        await page.locator('[data-testid="sign-in-form"]').click();
         await expect(
             page
-                .locator('[data-test-id="sign-in-form"]')
+                .locator('[data-testid="sign-in-form"]')
                 .getByText('Oops! The email you entered is invalid')
         ).not.toBeInViewport();
 
         await page.getByPlaceholder('Password').fill(pass);
-        await page.locator('[data-test-id="sign-in-form"]').click();
+        await page.locator('[data-testid="sign-in-form"]').click();
         await expect(
-            page.locator('[data-test-id="sign-in-form"]').getByText('Please enter your password')
+            page.locator('[data-testid="sign-in-form"]').getByText('Please enter your password')
         ).not.toBeInViewport();
 
         await page
-            .locator('[data-test-id="sign-in-form"]')
+            .locator('[data-testid="sign-in-form"]')
             .getByRole('button', { name: 'continue' })
             .click();
 
