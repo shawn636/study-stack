@@ -1,9 +1,16 @@
-import type { Course, User } from '$lib/models/types/database.types';
+import type { CourseSearchResult } from '$lib/models/types/api';
 
 import type { PageLoad } from './$types';
 
 export const load = (async ({ fetch }) => {
-    const res = await fetch('/api/courses');
-    const coursesWithInstructors: (Course & User)[] = await res.json();
-    return { coursesWithInstructors };
+    const response = await fetch('/api/search/courses?page=0&page_size=20&sort_by=relevance', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'GET'
+    });
+
+    const result = (await response.json()) as CourseSearchResult;
+
+    return { result: result };
 }) satisfies PageLoad;

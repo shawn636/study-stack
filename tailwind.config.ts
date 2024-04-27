@@ -18,6 +18,10 @@ const config = {
     plugins: [forms, typography, skeleton({ themes: { custom: [equippedTheme] } })],
     theme: {
         extend: {
+            animation: {
+                blinking: 'blink 1s step-start infinite',
+                'fade-in-once': 'fadeIn 1s cubic-bezier(0, 0, 0.2, 1)'
+            },
             colors: {
                 carnation: '#f4665e',
                 'light-blue': '#03a9f4',
@@ -38,6 +42,13 @@ const config = {
                 'neon-carrot': '#ff922b',
                 olivine: '#99b971',
                 safron: '#ffc600'
+            },
+            keyframes: {
+                blink: { '50%': { opacity: '0' } },
+                fadeIn: {
+                    '0%': { opacity: '0', transform: 'translateY(25%)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' }
+                }
             },
             screens: {
                 xs: '414px'

@@ -1,9 +1,6 @@
 <script lang="ts">
-    import type { CssClasses } from '@skeletonlabs/skeleton';
-    const width: CssClasses = 'w-1/2';
-    const height: CssClasses = 'h-px';
-
-    $: baseClass = `${width} ${height} bg-surface-500`;
+    import ViewToggle from '$lib/components/controls/view-toggle.svelte';
+    let buttonValue: 'grid' | 'list';
 </script>
 
 <div class="grid grid-flow-row p-5">
@@ -11,9 +8,7 @@
 
     <div class="border border-dashed border-pink-500 p-4">
         <!-- ENTER CODE BELOW -->
-
-        <!-- <div class="w-{width} h-{height} bg-surface-500"></div> -->
-        <div class={baseClass}></div>
+        <ViewToggle bind:value={buttonValue} />
 
         <!-- ENTER CODE ABOVE -->
     </div>

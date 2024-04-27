@@ -1,70 +1,85 @@
 <script lang="ts">
-    import type { Course, User } from '$lib/models/types/database.types';
+    import type { CourseSearchResult, CourseWithInstructor } from '$lib/models/types/api';
 
+    import SortByDropdown from '$lib/components/controls/sort-by-dropdown.svelte';
+    import ViewToggle from '$lib/components/controls/view-toggle.svelte';
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
-    import { sortBy } from '$lib/stores/controls';
-    import { search } from '$lib/stores/controls';
-    import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
+    import {
+        type CourseSortByOption,
+        CourseSortByOptions
+    } from '$lib/models/types/course-sort-by-options';
+    import { faBinoculars, faSearch } from '@fortawesome/free-solid-svg-icons';
+    import { Paginator } from '@skeletonlabs/skeleton';
+    import { onMount } from 'svelte';
     import Fa from 'svelte-fa';
 
     import type { PageData } from './$types';
 
-    import Controls from './controls.svelte';
-    let isLoading = false;
     export let data: PageData;
 
-    const getCoursesWithInstructors = async (
-        query: string | undefined = undefined,
-        sortBy: string | undefined = undefined
-    ) => {
-        if (!query) {
-            try {
-                isLoading = true;
-                const res = await fetch('/api/courses');
-                return (await res.json()) as (Course & User)[];
-            } catch (error) {
-                console.error(error);
-            } finally {
-                isLoading = false;
-            }
-        } else {
-            try {
-                isLoading = true;
-                let url = `/api/search/${query}`;
-                url += sortBy ? `?sort_by=${sortBy}` : '';
+    // State
+    let isLoading = false;
+    let courses: CourseWithInstructor[] = data.result.courses;
+    let selectedView: 'grid' | 'list';
+    let sortByOption: CourseSortByOption = CourseSortByOptions.RELEVANCE;
+    let searchQuery: string;
 
-                const res = await fetch(url);
-                return await res.json();
-            } catch (error) {
-                console.error(error);
-            } finally {
-                isLoading = false;
-            }
-        }
+    let paginationSettings = {
+        amounts: [10, 20],
+        limit: 20,
+        page: 0,
+        size: 0
     };
 
-    // Search Options
-    $: sortByText = $sortBy.toLowerCase().replace(/\s/g, '_');
+    onMount(() => {
+        paginationSettings.size = data.result.courseCount;
+    });
 
-    const handleKeydown = async (e: KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            data.coursesWithInstructors = await getCoursesWithInstructors($search, sortByText);
+    // Methods
+    const getCourses = async () => {
+        isLoading = false;
+        let url = '/api/search/courses';
+        if (searchQuery) {
+            url += `/${searchQuery}`;
         }
+        url += `?sort_by=${sortByOption.param}&page=${paginationSettings.page}&page_size=${paginationSettings.limit}`;
+
+        const response = await fetch(url);
+        const result = (await response.json()) as CourseSearchResult;
+        isLoading = false;
+        courses = result.courses;
+        paginationSettings.size = result.courseCount;
+        window.scrollTo({ behavior: 'smooth', top: 0 });
     };
 </script>
 
 <div class="grid justify-items-center gap-y-4 p-5">
     <div class="container grid max-w-5xl gap-y-4">
         <h1 class="text-lg font-bold">Find a Course</h1>
-
-        <Controls
-            {handleKeydown}
-            on:change={async () => {
-                await getCoursesWithInstructors();
-            }}
-        />
-
+        <div class="grid grid-cols-[1fr_min-content_min-content_min-content] gap-x-2">
+            <div class="relative w-full">
+                <input
+                    bind:value={searchQuery}
+                    class="w-full rounded-lg border-none bg-surface-100 pr-10 font-light text-surface-800 outline-none placeholder:text-gray-600"
+                    on:input={() => getCourses()}
+                    placeholder="Search..."
+                />
+                <Fa
+                    class="absolute right-5 top-1/2 -translate-y-1/2 transform text-surface-400"
+                    icon={faSearch}
+                />
+            </div>
+            <SortByDropdown
+                bind:value={sortByOption}
+                on:valuechange={(event) => {
+                    sortByOption = event.detail;
+                    paginationSettings.page = 0;
+                    getCourses();
+                }}
+            />
+            <ViewToggle bind:value={selectedView} />
+        </div>
         {#if isLoading}
             <div
                 class="content-visibility-auto grid grid-flow-row grid-cols-1 justify-items-center gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
@@ -75,7 +90,7 @@
                     </div>
                 {/each}
             </div>
-        {:else if data.coursesWithInstructors.length === 0}
+        {:else if courses.length === 0}
             <div class="content-visibility-auto mb-6 mt-8 grid items-center justify-items-center">
                 <div class="flex-flow-col card flex items-center gap-x-2 p-4">
                     <Fa class="text-xl" icon={faBinoculars} />
@@ -84,12 +99,22 @@
             </div>
         {:else}
             <div
-                class="grid grid-flow-row grid-cols-1 justify-items-center gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
+                class="grid grid-flow-row grid-cols-1 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
             >
-                {#each data.coursesWithInstructors as courseWithInstructor}
+                {#each courses as courseWithInstructor}
                     <CourseGridItem {courseWithInstructor} />
                 {/each}
             </div>
         {/if}
+        <div class="grid grid-cols-[1fr_min-content_min-content_min-content] gap-x-2">
+            <Paginator
+                bind:settings={paginationSettings}
+                on:amount={getCourses}
+                on:page={getCourses}
+                showFirstLastButtons={false}
+                showNumerals={true}
+                showPreviousNextButtons={true}
+            />
+        </div>
     </div>
 </div>

@@ -56,8 +56,6 @@ export const POST = (async ({ cookies, request }) => {
         if (!response.ok) {
             throw new Error(`Failed to send email: ${JSON.stringify(response)}`);
         }
-
-        console.log(`Contact form submitted: ${JSON.stringify(form)}`);
     } catch (e: unknown) {
         console.error(e);
         await errorPadding();

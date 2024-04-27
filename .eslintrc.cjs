@@ -109,7 +109,7 @@ module.exports = {
             {
                 '.js': /^\+?[a-z]*(-[a-z]*)*(.(config|server|test|worker|d|tmp))?.js$/,
                 '.svelte': /^\+?[a-z]*(-[a-z]*)*(.(config|server|test|worker|d|tmp))?.svelte$/,
-                '.ts': /^\+?[a-z]*(-[a-z]*)*(.(config|server|test|worker|d|tmp))?.ts$/
+                '.ts': /^\+?[a-z]*(-[a-z]*)*(.(config|server|test|worker|d|tmp|types))?.ts$/
             }
         ],
         'no-restricted-properties': [
