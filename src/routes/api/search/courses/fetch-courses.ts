@@ -53,7 +53,6 @@ export const searchParamsAreValid = (
     requiredSearchParams: string[]
 ) => {
     let containsRequiredParams = true;
-    let containsInvalidParams = true;
     if (!requiredSearchParams.every((param) => urlSearchParams.has(param))) {
         console.error('Missing required search params:', requiredSearchParams);
         containsRequiredParams = false;
@@ -63,7 +62,7 @@ export const searchParamsAreValid = (
         (key) => !requiredSearchParams.includes(key)
     );
 
-    containsInvalidParams = invalidSearchParams.length > 0;
+    const containsInvalidParams = invalidSearchParams.length > 0;
 
     return containsRequiredParams && !containsInvalidParams;
 };
