@@ -172,8 +172,8 @@ describe('Course Fetching Utility Functions', () => {
         });
         it('should return a properly sorted array of courses when matching terms exist in the database', async () => {
             const [coursesByLowestPrice, coursesByHighestRating] = await Promise.all([
-                fetchCourses(cuidKeyword, 1, 5, CourseSortByOptions.LOWEST_PRICE),
-                fetchCourses(cuidKeyword, 1, 5, CourseSortByOptions.HIGHEST_RATING)
+                fetchCourses(cuidKeyword, 0, 5, CourseSortByOptions.LOWEST_PRICE),
+                fetchCourses(cuidKeyword, 0, 5, CourseSortByOptions.HIGHEST_RATING)
             ]);
 
             expect(coursesByLowestPrice).toBeInstanceOf(Array);
