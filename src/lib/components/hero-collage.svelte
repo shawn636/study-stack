@@ -5,7 +5,7 @@
 
 <div class="hidden grid-cols-2 grid-rows-2 lg:grid">
     <div
-        class="left-0 z-[1] col-start-1 col-end-3 row-start-1 row-end-3 grid h-16 w-48 grid-cols-[auto_1fr] items-center justify-items-start gap-x-2 self-center rounded bg-slate-100 px-4 py-3 font-medium text-light-blue-800 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg"
+        class="left-0 z-[1] col-start-1 col-end-3 row-start-1 row-end-3 grid h-16 w-48 grid-cols-[auto_1fr] items-center justify-items-start gap-x-2 self-center rounded bg-slate-100 px-4 py-3 font-medium text-blue-500 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg"
     >
         <Fa
             class="z-[1] col-start-1 row-start-1 items-center justify-items-center justify-self-center"
@@ -17,7 +17,7 @@
             class="z-0 col-start-1 row-start-1 h-9 w-9 justify-self-center rounded-full bg-blue-100"
         />
         <div class="col-start-2 row-start-1 my-0 grid grid-flow-row py-0 text-left text-sm">
-            <div class="text-sm font-medium text-light-blue-800">3000+</div>
+            <div class="text-sm font-medium text-blue-500">3000+</div>
             <div class="whitespace-nowrap text-sm font-normal text-slate-400">Free Courses</div>
         </div>
     </div>
@@ -35,14 +35,14 @@
             src="images/home-profile-image-4-optimized.webp"
         />
         <div class="grid grid-flow-row items-center justify-items-start">
-            <span class="text-sm font-medium text-light-blue-800">Jack Matheusen</span>
+            <span class="text-sm font-medium text-blue-500">Jack Matheusen</span>
             <span class="text-sm font-normal text-slate-400">Biblical Studies</span>
             <span class="grid grid-cols-5 justify-items-start gap-x-0.5">
-                <Fa class="text-secondary-500" icon={faStar} size="xs" />
-                <Fa class="text-secondary-500" icon={faStar} size="xs" />
-                <Fa class="text-secondary-500" icon={faStar} size="xs" />
-                <Fa class="text-secondary-500" icon={faStar} size="xs" />
-                <Fa class="text-secondary-500" icon={faStar} size="xs" />
+                <Fa class="text-yellow-500" icon={faStar} size="xs" />
+                <Fa class="text-yellow-500" icon={faStar} size="xs" />
+                <Fa class="text-yellow-500" icon={faStar} size="xs" />
+                <Fa class="text-yellow-500" icon={faStar} size="xs" />
+                <Fa class="text-yellow-500" icon={faStar} size="xs" />
             </span>
         </div>
     </div>
@@ -59,9 +59,7 @@
             icon={faCheck}
             size="1.5x"
         />
-        <div class="row-span-1 row-start-1 px-3 text-sm font-medium text-light-blue-800">
-            Congrats!
-        </div>
+        <div class="row-span-1 row-start-1 px-3 text-sm font-medium text-blue-500">Congrats!</div>
         <div class="row-span-1 row-start-2 whitespace-nowrap px-3 text-sm text-slate-400">
             Your admission completed
         </div>

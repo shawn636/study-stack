@@ -1,11 +1,11 @@
 <script lang="ts">
     import type { User } from '$lib/models/types/database.types';
-    import type { ToastSettings } from '@skeletonlabs/skeleton';
+    // import type { ToastSettings } from '@skeletonlabs/skeleton';
 
     import { formatPhoneNumber, initials as getInitials } from '$lib/client/util';
     import Avatar from '$lib/components/avatar.svelte';
     import { faEnvelope, faPenToSquare, faPhone } from '@fortawesome/free-solid-svg-icons';
-    import { ProgressRadial, getToastStore } from '@skeletonlabs/skeleton';
+    import { ProgressRadial } from '@skeletonlabs/skeleton';
     import { onMount } from 'svelte';
     import Fa from 'svelte-fa';
 
@@ -14,30 +14,18 @@
     export let originalData: PageServerData;
     export let data: PageServerData;
 
-    const toastStore = getToastStore();
     $: phone = formatPhoneNumber((data.user?.areaCode ?? '') + (data.user?.phoneNumber ?? ''));
     let profileImgInput: HTMLInputElement;
 
     let editMode = false;
     let isLoading = false;
 
-    const errorToast: ToastSettings = {
-        background: 'bg-error-500',
-        classes: 'text-white',
-        message: 'There was an error saving your changes.'
-    };
-
-    const successToast: ToastSettings = {
-        background: 'bg-success-600',
-        message: 'Your changes have been saved.'
-    };
-
     onMount(() => {
         originalData = data;
     });
 
     const updatePhoneNumber = (
-        event: Event & { currentTarget: EventTarget & HTMLInputElement }
+        event: { currentTarget: EventTarget & HTMLInputElement } & Event
     ) => {
         const inputNumber = event.currentTarget.value;
         phone = formatPhoneNumber(inputNumber);
@@ -76,18 +64,18 @@
             originalData.user.areaCode = phoneTemp.slice(0, 3);
             originalData.user.phoneNumber = phoneTemp.slice(3, 10);
             isLoading = false;
-            toastStore.trigger(successToast);
+            // toastStore.trigger(successToast);
 
             isLoading = false;
             editMode = !editMode;
         } else {
             isLoading = false;
-            toastStore.trigger(errorToast);
+            // toastStore.trigger(errorToast);
         }
     };
 
     const onFileSelected = async (
-        event: Event & { currentTarget: EventTarget & HTMLInputElement }
+        event: { currentTarget: EventTarget & HTMLInputElement } & Event
     ) => {
         if (event.currentTarget && event.currentTarget.files) {
             const image = event.currentTarget.files[0];
@@ -158,7 +146,7 @@
                         icon={faEnvelope}
                     />
                     <input
-                        class="w-full rounded-md border border-surface-50 p-1 pl-8 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:border-surface-700 dark:bg-surface-900 dark:text-gray-200 dark:shadow-sm dark:disabled:bg-surface-900 dark:disabled:text-gray-50"
+                        class="border-surface-50 dark:border-surface-700 dark:bg-surface-900 dark:disabled:bg-surface-900 w-full rounded-md border p-1 pl-8 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:text-gray-200 dark:shadow-sm dark:disabled:text-gray-50"
                         disabled={!editMode}
                         name="email"
                         value={data.user.email}
@@ -174,7 +162,7 @@
                         icon={faPhone}
                     />
                     <input
-                        class="w-full rounded-md border border-surface-50 p-1 pl-8 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:border-surface-700 dark:bg-surface-900 dark:text-gray-200 dark:shadow-sm dark:disabled:bg-surface-900 dark:disabled:text-gray-50"
+                        class="border-surface-50 dark:border-surface-700 dark:bg-surface-900 dark:disabled:bg-surface-900 w-full rounded-md border p-1 pl-8 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:text-gray-200 dark:shadow-sm dark:disabled:text-gray-50"
                         disabled={!editMode}
                         id="phone-input"
                         maxlength="12"
@@ -194,7 +182,7 @@
                 <p class="h-auto font-bold text-gray-600 dark:text-gray-400">City</p>
                 <input
                     bind:value={data.user.city}
-                    class="w-full rounded-md border border-surface-50 p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:border-surface-700 dark:bg-surface-900 dark:text-gray-200 dark:shadow-sm dark:disabled:bg-surface-900 dark:disabled:text-gray-50"
+                    class="border-surface-50 dark:border-surface-700 dark:bg-surface-900 dark:disabled:bg-surface-900 w-full rounded-md border p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:text-gray-200 dark:shadow-sm dark:disabled:text-gray-50"
                     disabled={!editMode}
                     id="phone-input"
                 />
@@ -205,7 +193,7 @@
                 <p class="h-auto font-bold text-gray-600 dark:text-gray-400">State</p>
                 <input
                     bind:value={data.user.state}
-                    class="w-full rounded-md border border-surface-50 p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:border-surface-700 dark:bg-surface-900 dark:text-gray-200 dark:shadow-sm dark:disabled:bg-surface-900 dark:disabled:text-gray-50"
+                    class="border-surface-50 dark:border-surface-700 dark:bg-surface-900 dark:disabled:bg-surface-900 w-full rounded-md border p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:text-gray-200 dark:shadow-sm dark:disabled:text-gray-50"
                     disabled={!editMode}
                     id="phone-input"
                 />
@@ -221,7 +209,7 @@
                     <p class="h-auto font-bold text-gray-600 dark:text-gray-400">Bio</p>
                     <textarea
                         bind:value={data.user.bio}
-                        class="h-24 w-full min-w-full resize-none rounded-md border border-surface-50 p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:border-surface-700 dark:bg-surface-900 dark:text-gray-200 dark:shadow-sm dark:disabled:bg-surface-900 dark:disabled:text-gray-50"
+                        class="border-surface-50 dark:border-surface-700 dark:bg-surface-900 dark:disabled:bg-surface-900 h-24 w-full min-w-full resize-none rounded-md border p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:text-gray-200 dark:shadow-sm dark:disabled:text-gray-50"
                         disabled={!editMode}
                         id="phone-input"
                     />

@@ -4,16 +4,16 @@
     <div class="placeholder h-[139px] w-[232px] animate-pulse" />
 
     <!-- Ratings -->
-    <div class="placeholder h-5 w-36 animate-pulse bg-surface-300" />
+    <div class="placeholder bg-surface-300 h-5 w-36 animate-pulse" />
 
     <!-- Title -->
     <div class="placeholder h-6 animate-pulse" />
 
     <!-- Course Stats -->
     <div class="item-center grid grid-flow-col justify-items-stretch gap-x-4">
-        <div class="placeholder h-4 animate-pulse bg-surface-200" />
-        <div class="placeholder h-4 animate-pulse bg-surface-200" />
-        <div class="placeholder h-4 animate-pulse bg-surface-200" />
+        <div class="placeholder bg-surface-200 h-4 animate-pulse" />
+        <div class="placeholder bg-surface-200 h-4 animate-pulse" />
+        <div class="placeholder bg-surface-200 h-4 animate-pulse" />
     </div>
 
     <hr class="mx-2" />
@@ -26,7 +26,7 @@
                 <div class="placeholder h-6 w-6 animate-pulse rounded-full" />
 
                 <!-- Instructor Name -->
-                <div class="placeholder h-4 w-12 animate-pulse bg-surface-200" />
+                <div class="placeholder bg-surface-200 h-4 w-12 animate-pulse" />
             </div>
         </div>
 
@@ -35,10 +35,10 @@
                 class=" grid h-min grid-flow-col grid-cols-[1fr_auto] items-center justify-items-end gap-2"
             >
                 <!-- Original price -->
-                <div class="placeholder h-4 w-8 animate-pulse bg-surface-200" />
+                <div class="placeholder bg-surface-200 h-4 w-8 animate-pulse" />
 
                 <!-- Discounted price -->
-                <div class="placeholder h-6 w-12 animate-pulse bg-surface-300" />
+                <div class="placeholder bg-surface-300 h-6 w-12 animate-pulse" />
             </div>
             <div class="grid grid-cols-[1fr_auto] items-center justify-items-end gap-x-1">
                 <!-- Little Button -->

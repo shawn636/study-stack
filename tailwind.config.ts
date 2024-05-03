@@ -1,60 +1,71 @@
 import type { Config } from 'tailwindcss';
 
-import { skeleton } from '@skeletonlabs/tw-plugin';
-import forms from '@tailwindcss/forms';
-import typography from '@tailwindcss/typography';
-import { join } from 'path';
+import { fontFamily } from 'tailwindcss/defaultTheme';
 
-import { equippedTheme } from './equipped-theme';
-
-const config = {
-    content: [
-        './src/**/*.{html,js,svelte,ts}',
-        join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
-    ],
-    darkMode: 'class',
-    mode: 'jit',
-
-    plugins: [forms, typography, skeleton({ themes: { custom: [equippedTheme] } })],
+const config: Config = {
+    content: ['./src/**/*.{html,js,svelte,ts}'],
+    darkMode: ['class'],
+    safelist: ['dark'],
     theme: {
+        container: {
+            center: true,
+            padding: '2rem',
+            screens: {
+                '2xl': '1400px'
+            }
+        },
         extend: {
-            animation: {
-                blinking: 'blink 1s step-start infinite',
-                'fade-in-once': 'fadeIn 1s cubic-bezier(0, 0, 0.2, 1)'
+            borderRadius: {
+                lg: 'var(--radius)',
+                md: 'calc(var(--radius) - 2px)',
+                sm: 'calc(var(--radius) - 4px)'
             },
             colors: {
-                carnation: '#f4665e',
-                'light-blue': '#03a9f4',
-                'light-blue-50': '#e1f5fe',
-                'light-blue-100': '#b3e5fc',
-                'light-blue-100-accent': '#80d8ff',
-                'light-blue-200': '#81d4fa',
-                'light-blue-200-accent': '#40c4ff',
-                'light-blue-300': '#4fc3f7',
-                'light-blue-400': '#29b6f6',
-                'light-blue-400-accent': '#00b0ff',
-                'light-blue-500': '#03a9f4',
-                'light-blue-600': '#039be5',
-                'light-blue-700': '#0288d1',
-                'light-blue-700-accent': '#0091ea',
-                'light-blue-800': '#0277bd',
-                'light-blue-900': '#01579b',
-                'neon-carrot': '#ff922b',
-                olivine: '#99b971',
-                safron: '#ffc600'
-            },
-            keyframes: {
-                blink: { '50%': { opacity: '0' } },
-                fadeIn: {
-                    '0%': { opacity: '0', transform: 'translateY(25%)' },
-                    '100%': { opacity: '1', transform: 'translateY(0)' }
+                accent: {
+                    DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
+                    foreground: 'hsl(var(--accent-foreground) / <alpha-value>)'
+                },
+                background: 'hsl(var(--background) / <alpha-value>)',
+                border: 'hsl(var(--border) / <alpha-value>)',
+                card: {
+                    DEFAULT: 'hsl(var(--card) / <alpha-value>)',
+                    foreground: 'hsl(var(--card-foreground) / <alpha-value>)'
+                },
+                destructive: {
+                    DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
+                    foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)'
+                },
+                'equipped-blue': {
+                    DEFAULT: '#2678BD'
+                },
+                foreground: 'hsl(var(--foreground) / <alpha-value>)',
+                input: 'hsl(var(--input) / <alpha-value>)',
+                muted: {
+                    DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
+                    foreground: 'hsl(var(--muted-foreground) / <alpha-value>)'
+                },
+                popover: {
+                    DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
+                    foreground: 'hsl(var(--popover-foreground) / <alpha-value>)'
+                },
+                primary: {
+                    DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
+                    foreground: 'hsl(var(--primary-foreground) / <alpha-value>)'
+                },
+                ring: 'hsl(var(--ring) / <alpha-value>)',
+                secondary: {
+                    DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
+                    foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)'
                 }
             },
+            fontFamily: {
+                sans: [...fontFamily.sans]
+            },
             screens: {
-                xs: '414px'
+                xs: '380px'
             }
         }
     }
-} satisfies Config;
+};
 
 export default config;

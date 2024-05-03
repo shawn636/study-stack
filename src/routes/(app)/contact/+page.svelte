@@ -81,7 +81,7 @@
 </script>
 
 <div class="card mx-auto my-20 max-w-2xl p-8">
-    <h3 class="h3 text-center font-bold text-primary-700">Contact Us</h3>
+    <h3 class="h3 text-primary-700 text-center font-bold">Contact Us</h3>
     <p class="text-center">Have a question? We're here to help!</p>
 
     <form

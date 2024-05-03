@@ -84,9 +84,8 @@ function create_deploy_request() {
             exit 1
         fi
 
-
         close_deploy_request "$dr_number" "No migration changes detected"
-        
+
         status_code=$?
         if [ "$status_code" -ne 0 ]; then
             echo "Error: failed to close deploy request $dr_number"
@@ -94,9 +93,9 @@ function create_deploy_request() {
         fi
 
     else
-         # shellcheck disable=SC2129
+        # shellcheck disable=SC2129
         echo "\`\`\`diff" >> migration-message.txt
-        pscale deploy-request diff "$PSCALE_DB_NAME" "$dr_number"  --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r '.[].raw' >> migration-message.txt
+        pscale deploy-request diff "$PSCALE_DB_NAME" "$dr_number" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r '.[].raw' >> migration-message.txt
         echo "\`\`\`" >> migration-message.txt
 
         add_pr_comment 'file' 'migration-message.txt'

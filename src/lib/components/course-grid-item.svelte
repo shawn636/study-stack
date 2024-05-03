@@ -1,14 +1,16 @@
 <script lang="ts">
     import type { Course, User } from '$lib/models/types/database.types';
 
+    import { initials } from '$lib/client/util';
     import Image from '$lib/components/image.svelte';
+    import * as Avatar from '$lib/components/ui/avatar/index';
+    import { Button } from '$lib/components/ui/button';
     import {
         faHeart as faHeartOutline,
         faStar as faStarOutline
     } from '@fortawesome/free-regular-svg-icons';
     import { faClock, faFileLines } from '@fortawesome/free-regular-svg-icons';
-    import { faCircle, faHeart, faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
-    import { Ratings } from '@skeletonlabs/skeleton';
+    import { faHeart, faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
 
     export let courseWithInstructor: Course & User;
@@ -45,17 +47,17 @@
             <p class="text-secondary-600">
                 {Math.round(courseWithInstructor.ratingAverage * 100) / 100}
             </p>
-            <Ratings max={5} value={ratingAvgRounded}>
-                <svelte:fragment slot="empty">
-                    <Fa class="text-yellow-500" icon={faStarOutline} />
-                </svelte:fragment>
-                <svelte:fragment slot="half">
-                    <Fa class="text-yellow-500" icon={faStarHalfAlt} />
-                </svelte:fragment>
-                <svelte:fragment slot="full">
-                    <Fa class="text-yellow-500" icon={faStar} />
-                </svelte:fragment>
-            </Ratings>
+
+            {#each Array.from({ length: 5 }, (_, i) => i + 1) as starIdx}
+                <Fa
+                    class="text-yellow-500"
+                    icon={starIdx <= ratingAvgRounded
+                        ? faStar
+                        : starIdx - 0.5 === ratingAvgRounded
+                          ? faStarHalfAlt
+                          : faStarOutline}
+                />
+            {/each}
             <p class="text-xs text-gray-400">({courseWithInstructor.ratingCount})</p>
         </div>
     </div>
@@ -84,41 +86,32 @@
     </div>
     <!-- Course Stats (Above) -->
 
-    <hr class="mx-2" />
+    <hr />
 
-    <div class="grid grid-flow-col grid-cols-[1fr_1fr]">
-        <!-- Instructor Row-->
-        <div class="grid grid-flow-col items-center justify-items-start px-2">
-            <div class="flex-flow-col flex items-center gap-x-1">
-                <Fa class="text-surface-400" icon={faCircle} size="2x" />
-                <p class="text-sm text-gray-500">{courseWithInstructor.name}</p>
-            </div>
-        </div>
+    <div class="grid w-full grid-cols-[auto_1fr_auto] items-center gap-x-2">
+        <Avatar.Root class="h-6 w-6 text-xs">
+            <Avatar.Fallback>{initials(courseWithInstructor.name)}</Avatar.Fallback>
+        </Avatar.Root>
+        <p class="text-sm text-gray-500">{courseWithInstructor.name}</p>
+    </div>
 
-        <div class="grid grid-rows-[1fr_1fr]">
-            <div class=" grid h-min grid-flow-col grid-cols-[1fr_auto] justify-items-end gap-2">
-                {#if courseWithInstructor.currentPrice < courseWithInstructor.originalPrice}
-                    <p class="text-gray-400 line-through">
-                        ${Number(courseWithInstructor.currentPrice).toFixed(2)}
-                    </p>
-                {/if}
-
-                <p class="font-semibold text-gray-600">
+    <div class="grid grid-rows-2 items-center">
+        <div class="grid grid-cols-[auto_1fr_auto] items-center justify-items-end gap-x-2">
+            <button aria-label="Toggle Favorite" on:click={handleToggle}>
+                <Fa class="text-pink-500" icon={toggled ? faHeart : faHeartOutline} size="lg" />
+            </button>
+            {#if Number(courseWithInstructor.currentPrice) < Number(courseWithInstructor.originalPrice)}
+                <p class="text-sm text-gray-400 line-through">
                     ${Number(courseWithInstructor.originalPrice).toFixed(2)}
                 </p>
-            </div>
-            <div class="grid grid-cols-[1fr_auto] justify-items-end">
-                <button
-                    aria-label="Toggle Favorite"
-                    class="btn-icon btn-icon-sm"
-                    on:click={handleToggle}
-                >
-                    <Fa class="text-pink-500" icon={toggled ? faHeart : faHeartOutline} />
-                </button>
-                <button aria-label="Enroll" class="variant-filled-secondary btn btn-sm">
-                    <p class="text-sm font-medium">Enroll Now</p>
-                </button>
-            </div>
+            {/if}
+
+            <p class="font-semibold">
+                ${Number(courseWithInstructor.currentPrice).toFixed(2)}
+            </p>
         </div>
+        <Button aria-label="Enroll" class="variant-filled-secondary">
+            <p class="text-sm font-medium">Enroll Now</p>
+        </Button>
     </div>
 </div>

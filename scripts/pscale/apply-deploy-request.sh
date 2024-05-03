@@ -5,7 +5,6 @@ source scripts/pscale/common.sh
 
 # --- FUNCTIONS ---
 
-
 function get_open_deploy_requests() {
     local dep_reqs
     dep_reqs=$(pscale deploy-request list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r ".[] | select(.state == \"open\") | .branch")

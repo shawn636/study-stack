@@ -37,10 +37,10 @@ const config: PlaywrightTestConfig = defineConfig({
     //     baseURL: 'http://localhost:3005'
     // },
     webServer: {
-        command: 'pnpm vercel-e2e-test',
+        command: 'pnpm preview-e2e-test',
         port: 3005
-    },
-    workers: 1
+    }
+    // workers: 1
 });
 
 export default config;

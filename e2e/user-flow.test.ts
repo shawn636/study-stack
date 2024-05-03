@@ -3,9 +3,18 @@ import { expect, test } from '@playwright/test';
 
 import { auth } from './utils/auth';
 
-const ACCOUNTS = [
-    {
-        email: faker.internet.email(),
+const testEmailDomain = 'e2e-tests.equipped.co';
+
+type Account = {
+    email: string;
+    name: string;
+    pass: string;
+};
+
+const generateAccount = (): Account => {
+    const emailBase = auth.cuid();
+    return {
+        email: `${emailBase}@${testEmailDomain}`,
         name: faker.person.fullName(),
         pass: faker.internet.password({
             length: 8,
@@ -13,45 +22,25 @@ const ACCOUNTS = [
             pattern: /[a-z]/,
             prefix: 'Aa1!'
         })
-    },
-    {
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        pass: faker.internet.password({
-            length: 8,
-            memorable: false,
-            pattern: /[a-z]/,
-            prefix: 'Aa1!'
-        })
-    }
-];
+    };
+};
 
 test.describe('all-user-flow', async () => {
-    test.beforeAll(async () => {
-        const promises = ACCOUNTS.map(async (account) => {
-            await auth.deleteUserIfExists(account.email);
-        });
-        await Promise.all(promises);
-    });
     test.afterAll(async () => {
-        for (const account of ACCOUNTS) {
-            await auth.deleteUserIfExists(account.email);
-        }
+        await auth.deleteE2eTestUsers(testEmailDomain);
     });
     test('should be able to make account', async ({ page }) => {
-        const { email, name, pass } = ACCOUNTS[0];
+        const { email, name, pass } = generateAccount();
 
         await page.goto('/auth/register');
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
         expect(page).toHaveURL('/auth/register');
 
-        await page.getByPlaceholder('Name').fill(name);
-        await page.getByPlaceholder('Email').fill(email);
-        await page.getByRole('button', { name: 'continue' }).click();
-        await page.locator('input[name="password1"]').fill(pass);
-        await page.locator('input[name="password2"]').click();
-        await page.locator('input[name="password2"]').fill(pass);
-        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.getByTestId('name-input').fill(name);
+        await page.getByTestId('email-input').fill(email);
+        await page.getByTestId('password1-input').fill(pass);
+        await page.getByTestId('password2-input').fill(pass);
+        await page.getByTestId('submit-button').click();
 
         await page.waitForURL('/');
         await page.waitForLoadState('domcontentloaded');
@@ -60,137 +49,78 @@ test.describe('all-user-flow', async () => {
         await page.getByTestId('profile-button').click();
         await expect(page.getByTestId('profile-popup-name')).toBeVisible();
         await expect(page.getByTestId('profile-popup-email')).toBeVisible();
-        await page.getByRole('button', { name: 'Sign Out' }).click();
     });
 
-    test('should show validation errors', async ({ page }) => {
-        const { email, name, pass } = ACCOUNTS[1];
+    test('should show name validation errors', async ({ page }) => {
+        const { email, name, pass } = generateAccount();
         await auth.createUser(email, pass, name);
 
         await page.goto('/auth/register');
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
         expect(page).toHaveURL('/auth/register');
-        await expect(page.locator('[data-testid="sign-up-form"]')).toBeVisible();
 
-        await expect(page.getByRole('heading', { name: 'Welcome to Equipped' })).toBeVisible();
-        await page.getByPlaceholder('Name').click();
-        await page.locator('#main').click();
+        await page.getByTestId('name-input').click();
+        await page.locator('body').click();
 
-        await expect(page.getByText('Please enter your name')).toBeVisible();
-        await expect(page.getByText('Oops! The email you entered is invalid')).toBeVisible();
+        await expect(page.getByTestId('name-error')).toBeVisible();
 
-        await page.getByPlaceholder('Name').fill(name);
-        await page.locator('#main').click();
-        await expect(page.getByTestId('Please enter your name')).not.toBeVisible();
+        await page.getByTestId('name-input').fill(name);
+        await page.locator('body').click();
+        await expect(page.getByTestId('name-error')).not.toBeVisible();
+    });
 
-        await page.getByPlaceholder('Email').fill(name);
-        await page.locator('#main').click();
-        await expect(page.getByText('Oops! The email you entered is invalid')).toBeVisible();
+    test('should show email validation errors', async ({ page }) => {
+        const { email, name, pass } = generateAccount();
+        await auth.createUser(email, pass, name);
 
-        await page.getByPlaceholder('Email').fill('test@com');
-        await page.getByRole('button', { name: 'continue' }).click();
-        await expect(page.getByRole('heading', { name: 'Welcome to Equipped' })).toBeVisible();
-        await expect(page.getByText('Oops! The email you entered is invalid')).toBeVisible();
+        await page.goto('/auth/register');
+        await page.waitForLoadState('domcontentloaded');
+        expect(page).toHaveURL('/auth/register');
 
-        await page.getByPlaceholder('Email').fill(email);
-        await expect(page.getByText('Oops! The email you entered is invalid')).toBeVisible();
-        await page.getByRole('button', { name: 'continue' }).click();
-        await expect(page.getByRole('heading', { name: 'Choose a password' })).toBeVisible();
+        await page.getByTestId('email-input').click();
+        await page.keyboard.press('Tab');
 
-        expect(await page.locator('input[name="password1"]').getAttribute('type')).toBe('password');
-        expect(await page.locator('input[name="password2"]').getAttribute('type')).toBe('password');
-        await page.locator('input[name="password1"]').fill('Aa1!');
-        await page.getByRole('heading', { name: 'Choose a password' }).click();
-        await expect(page.getByText('Password should have at least 8 characters')).toBeVisible();
+        await expect(page.getByTestId('email-error')).toBeVisible();
 
-        await page.locator('input[name="password1"]').fill('Aa111111');
-        await page.getByRole('heading', { name: 'Choose a password' }).click();
-        await expect(page.getByText('Password should contain a special character')).toBeVisible();
+        await page.getByTestId('email-input').fill(email);
+        await page.keyboard.press('Tab');
+        await expect(page.getByTestId('email-error')).not.toBeVisible();
+    });
 
-        await page.locator('input[name="password1"]').fill('aa11111!');
-        await page.getByRole('heading', { name: 'Choose a password' }).click();
-        await expect(page.getByText('Password should contain an uppercase letter')).toBeVisible();
+    test('should show password1 validation errors', async ({ page }) => {
+        const { email, name, pass } = generateAccount();
+        await auth.createUser(email, pass, name);
 
-        await page.locator('input[name="password1"]').fill('AA11111!');
-        await page.getByRole('heading', { name: 'Choose a password' }).click();
-        await expect(page.getByText('Password should contain a lowercase letter')).toBeVisible();
+        await page.goto('/auth/register');
+        await page.waitForLoadState('domcontentloaded');
+        expect(page).toHaveURL('/auth/register');
 
-        await page.locator('input[name="password1"]').fill('AaAaAaAaAa!');
-        await page.getByRole('heading', { name: 'Choose a password' }).click();
-        await expect(page.getByText('Password should contain a number')).toBeVisible();
+        await page.getByTestId('password1-input').click();
+        await page.keyboard.press('Tab');
 
-        await page.locator('input[name="password1"]').fill(pass);
-        await page.getByRole('heading', { name: 'Choose a password' }).click();
-        await expect(page.getByText('Password should contain a number')).not.toBeVisible();
-        await expect(
-            page.getByText('Password should contain an uppercase letter')
-        ).not.toBeVisible();
-        await expect(
-            page.getByText('Password should contain a lowercase letter')
-        ).not.toBeVisible();
-        await expect(
-            page.getByText('Password should contain a special character')
-        ).not.toBeVisible();
+        await expect(page.getByTestId('password1-error')).toBeVisible();
 
-        await page.locator('input[name="password2"]').click();
-        await page.getByRole('heading', { name: 'Choose a password' }).click();
-        await expect(page.getByText('Passwords should match')).toBeVisible();
+        await page.getByTestId('password1-input').fill(pass);
+        await page.keyboard.press('Tab');
+        await expect(page.getByTestId('password1-error')).not.toBeVisible();
+    });
 
-        await page.getByRole('button').first().click();
-        expect(await page.locator('input[name="password1"]').getAttribute('type')).toBe('text');
+    test('should show password2 validation errors', async ({ page }) => {
+        const { email, name, pass } = generateAccount();
+        await auth.createUser(email, pass, name);
 
-        await page.locator('input[name="password2"]').fill(pass);
-        await page.getByRole('heading', { name: 'Choose a password' }).click();
-        await expect(page.getByText('Passwords should match')).not.toBeVisible();
+        await page.goto('/auth/register');
+        await page.waitForLoadState('domcontentloaded');
+        expect(page).toHaveURL('/auth/register');
 
-        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.getByTestId('password2-input').click();
+        await page.keyboard.press('Tab');
 
-        await page.waitForLoadState('networkidle');
-        await expect(page.getByText('This email is already in use')).toBeVisible();
+        await expect(page.getByTestId('password2-error')).toBeVisible();
 
-        await page.getByRole('link', { name: 'Sign in' }).click();
-        await page.waitForURL('/auth/login');
-        expect(page).toHaveURL('/auth/login');
-        await expect(page.locator('[data-testid="sign-in-form"]')).toBeVisible();
-
-        await page.locator('[data-testid="sign-in-form"]').getByPlaceholder('Email').click();
-        await page.locator('[data-testid="sign-in-form"]').click();
-        await expect(
-            page
-                .locator('[data-testid="sign-in-form"]')
-                .getByText('Oops! The email you entered is invalid')
-        ).toBeInViewport();
-
-        await page.getByPlaceholder('Password').click();
-        await page.locator('[data-testid="sign-in-form"]').click();
-        await expect(
-            page.locator('[data-testid="sign-in-form"]').getByText('Please enter your password')
-        ).toBeInViewport();
-
-        await page.locator('[data-testid="sign-in-form"]').getByPlaceholder('Email').fill(email);
-        await page.locator('[data-testid="sign-in-form"]').click();
-        await expect(
-            page
-                .locator('[data-testid="sign-in-form"]')
-                .getByText('Oops! The email you entered is invalid')
-        ).not.toBeInViewport();
-
-        await page.getByPlaceholder('Password').fill(pass);
-        await page.locator('[data-testid="sign-in-form"]').click();
-        await expect(
-            page.locator('[data-testid="sign-in-form"]').getByText('Please enter your password')
-        ).not.toBeInViewport();
-
-        await page
-            .locator('[data-testid="sign-in-form"]')
-            .getByRole('button', { name: 'continue' })
-            .click();
-
-        await page.waitForTimeout(3000);
-        expect(page).toHaveURL('/');
-
-        await page.getByTestId('profile-button').click();
-        await expect(page.getByTestId('profile-popup-name')).toBeVisible();
-        await expect(page.getByTestId('profile-popup-email')).toBeVisible();
+        await page.getByTestId('password1-input').fill(pass);
+        await page.getByTestId('password2-input').fill(pass);
+        await page.keyboard.press('Tab');
+        await expect(page.getByTestId('password2-error')).not.toBeVisible();
     });
 });

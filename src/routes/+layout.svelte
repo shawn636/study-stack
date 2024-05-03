@@ -8,53 +8,21 @@
     import * as amplitude from '@amplitude/analytics-browser';
     import { onMount } from 'svelte';
     import { PUBLIC_AMPLITUDE_API_KEY } from '$env/static/public';
-    import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
-    import { storePopup } from '@skeletonlabs/skeleton';
-    import { setModeCurrent, initializeStores } from '@skeletonlabs/skeleton';
-
-    // Required for Skeleton-UI Popups and Modals
-    initializeStores();
-    storePopup.set({
-        computePosition,
-        autoUpdate,
-        offset,
-        shift,
-        flip,
-        arrow
-    });
+    import { ModeWatcher } from 'mode-watcher';
+    import { Toaster } from '$lib/components/ui/sonner';
 
     onMount(() => {
-        amplitude.init(PUBLIC_AMPLITUDE_API_KEY, undefined, {
-            defaultTracking: {
-                sessions: true,
-                pageViews: true,
-                formInteractions: true,
-                fileDownloads: true
-            }
-        });
-
-        // Set the theme based on the user's preference
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        mediaQuery.addEventListener('change', updateTheme);
-        updateTheme();
-
-        return () => {
-            mediaQuery.removeEventListener('change', updateTheme);
-        };
-    });
-
-    // Update the theme based on the user's preference
-    const updateTheme = () => {
-        const colorPref = localStorage.getItem('color-theme');
-        const prefersDark =
-            !('color-theme' in localStorage) &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (colorPref === 'dark' || prefersDark) {
-            setModeCurrent(false);
-        } else {
-            setModeCurrent(true);
+        if (!dev) {
+            amplitude.init(PUBLIC_AMPLITUDE_API_KEY, undefined, {
+                defaultTracking: {
+                    sessions: true,
+                    pageViews: true,
+                    formInteractions: true,
+                    fileDownloads: true
+                }
+            });
         }
-    };
+    });
 
     // Inject Vercel analytics, based on Dev Environment
     inject({ mode: dev ? 'development' : 'production' });
@@ -62,4 +30,6 @@
     injectSpeedInsights();
 </script>
 
+<ModeWatcher />
+<Toaster />
 <slot />

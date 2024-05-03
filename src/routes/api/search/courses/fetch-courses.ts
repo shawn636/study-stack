@@ -141,7 +141,7 @@ export const fetchCourses = async (
             .limit(pageSize)
             .offset(pageNo * pageSize);
 
-        const courseResults: (CourseWithInstructor & { _relevance?: number })[] =
+        const courseResults: ({ _relevance?: number } & CourseWithInstructor)[] =
             await courseResultQuery.execute();
 
         // Filter out the _relevance field if it exists

@@ -10,6 +10,6 @@
         ? 'col'
         : 'row'} justify-items-center gap-x-2"
 >
-    <div class="h-8 w-8 rounded-md bg-surface-400" />
+    <div class="h-8 w-8 rounded-md bg-slate-400" />
     <p class={baseClass}>Equipped</p>
 </div>

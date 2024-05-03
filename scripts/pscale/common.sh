@@ -9,7 +9,7 @@ fi
 # shellcheck disable=SC1091
 source scripts/shared/github.sh
 
-# --- GLOBAL VARS --- 
+# --- GLOBAL VARS ---
 REQUIRED_ENV_VARS=(
     "PLANETSCALE_SERVICE_TOKEN_ID"
     "PLANETSCALE_SERVICE_TOKEN"
@@ -67,7 +67,7 @@ function cleanup_dotenv() {
     local env_file=$1
 
     if [ -f .env ]; then
-          # Use awk to remove empty lines, but retain the last empty line if it exists
+        # Use awk to remove empty lines, but retain the last empty line if it exists
         awk 'NF && !found {print; found=1; next} NF {print}' "$env_file" > temp_env_file
         mv temp_env_file "$env_file"
     fi
@@ -90,7 +90,7 @@ function remove_credentials_from_dotenv() {
         else
             # Linux
             sed -i "s|^$var_name=.*||" .env
-            
+
             status_code=$?
             if [ "$status_code" -ne 0 ]; then
                 echo "Error: Unable to remove credentials from .env file. Exiting..."
@@ -99,7 +99,6 @@ function remove_credentials_from_dotenv() {
         fi
     fi
 
-   
 }
 
 # --- GIT METHODS ---
@@ -116,10 +115,10 @@ function branch_name_from_git() {
         fi
     else
         git_branch_name=$(git branch --show-current)
-        
+
         if [ "$git_branch_name" = "main" ]; then
             branch_suffix=$(git config user.email)
-            
+
             if [ -z "$branch_suffix" ]; then
                 branch_suffix=$(git config user.name)
             fi
@@ -133,7 +132,6 @@ function branch_name_from_git() {
 
     echo "$PSCALE_BRANCH_NAME"
 }
-
 
 # --- PLANETSCALE METHODS ---
 function generate_credentials() {
@@ -160,7 +158,7 @@ function generate_credentials() {
             git_user_name=$(git config user.name)
             git_user_email=$(git config user.email)
             local_user=$(whoami)
-            
+
             if [ -n "$git_user_name" ]; then
                 cred_name="local-dev-$git_user_name"
             elif [ -n "$git_user_email" ]; then
@@ -183,7 +181,7 @@ function generate_credentials() {
         echo "Error: Unable to create credentials. Exiting..."
         exit 1
     fi
-    
+
     echo "$parsed_url"
 }
 
@@ -201,7 +199,7 @@ function delete_credential() {
         echo "Error: missing argument credential_id. Please use the format: delete_credential <branch_name> <credential_id>"
         exit 1
     fi
-    
+
     pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$credential_id" --force --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
 
     status_code=$?
@@ -225,7 +223,7 @@ function get_dev_branches() {
     fi
 
     dev_branches=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name')
-    
+
     status_code=$?
     if [ "$status_code" -ne 0 ]; then
         echo "Error: Unable to parse branch list. Exiting..."
@@ -236,7 +234,7 @@ function get_dev_branches() {
         echo "No dev branches found. Exiting..."
         exit 1
     fi
-    
+
     echo "$dev_branches"
 }
 
@@ -385,7 +383,6 @@ function get_dr_number() {
     echo "$dr_number"
 }
 
-
 function wait_for_deploy_request_merged() {
     local retries=3
     local max_timeout=600
@@ -399,39 +396,39 @@ function wait_for_deploy_request_merged() {
         # local raw_output=`pscale deploy-request list "$db" --org "$org" --format json`
         local deployment_state
         local status_code
-        
+
         deployment_state=$(pscale deploy-request list "$PLANETSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq ".[] | select(.number == $dr_number) | .deployment.state")
         status_code=$?
-        
+
         if [ $status_code -ne 0 ]; then
             echo "Error: pscale deploy-request list returned non-zero exit code $status_code. Exiting..."
             return 1
         fi
-        
+
         # test whether output is pending, if so, increase wait timeout exponentially
         if [ "$deployment_state" = "\"pending\"" ] || [ "$deployment_state" = "\"in_progress\"" ] || [ "$deployment_state" = "\"submitting\"" ]; then
-            
+
             # increase wait variable exponentially but only if it is less than max_timeout
             if [ $((wait * 2)) -le $max_timeout ]; then
                 wait=$((wait * 2))
             else
                 wait=$max_timeout
-            fi  
+            fi
 
-            count=$((count+1))
+            count=$((count + 1))
             if [ $count -ge $retries ]; then
-                echo  "Deploy request $dr_number is not ready after $retries retries. Exiting..."
+                echo "Deploy request $dr_number is not ready after $retries retries. Exiting..."
                 exit 2
             fi
-            echo  "Deploy-request $dr_number is not deployed yet. Current status:"
+            echo "Deploy-request $dr_number is not deployed yet. Current status:"
             echo "show vitess_migrations\G" | pscale shell "$PLANETSCALE_DB_NAME" main --org "$PLANETSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
             echo "Retrying in $wait seconds..."
             sleep $wait
         elif [ "$deployment_state" = "\"complete\"" ] || [ "$deployment_state" = "\"complete_pending_revert\"" ]; then
-            echo  "Deploy-request $dr_number has been deployed successfully."
+            echo "Deploy-request $dr_number has been deployed successfully."
             exit 0
         else
-            echo  "Deploy-request $dr_number with unknown status: $deployment_state. Exiting..."
+            echo "Deploy-request $dr_number with unknown status: $deployment_state. Exiting..."
             exit 3
         fi
     done

@@ -3,7 +3,7 @@
 
 import type { Course, User } from '$lib/models/types/database.types';
 
-type Instructor = Omit<User, 'id'> & { instructorId: string };
+type Instructor = { instructorId: string } & Omit<User, 'id'>;
 export type CourseWithInstructor = Course & Instructor;
 
 export type Result = {

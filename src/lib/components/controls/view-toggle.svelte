@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { AnimationItem } from 'lottie-web';
 
+    import { Button } from '$lib/components/ui/button';
     import animationData from '$lib/lottie/grid-list-toggle.json';
     import lottie from 'lottie-web';
     import { onMount } from 'svelte';
@@ -15,7 +16,6 @@
 
     export let value: 'grid' | 'list' = 'grid';
 
-    // let animationContainer: HTMLElement;
     let animationContainer: HTMLElement;
     let animation: AnimationItem | null = null;
 
@@ -47,9 +47,9 @@
     };
 </script>
 
-<button
+<Button
     aria-label={value === 'grid' ? 'Switch to list view' : 'Switch to grid view'}
-    class="variant-filled-primary btn m-0 h-10 w-10 p-0 text-white"
+    class="m-0 h-10 w-10 bg-equipped-blue p-0 text-white transition-all hover:scale-105 hover:bg-equipped-blue"
     on:click={toggle}
     style="position: relative; overflow: hidden; width: 40px; height: 40px;"
 >
@@ -67,4 +67,4 @@
             width={value === 'grid' ? '25px' : '23.5px'}
         />
     </div>
-</button>
+</Button>

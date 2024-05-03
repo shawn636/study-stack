@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { Button } from '$lib/components/ui/button';
     import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
 
@@ -36,11 +37,11 @@
     >
         {#if showEditPhotoOverlay && editFunction}
             <div
-                class="absolute inset-0 flex items-center justify-center rounded-full bg-surface-500/10 opacity-0 transition-all duration-200 ease-in-out hover:bg-surface-500/80 hover:opacity-100 dark:bg-surface-700 dark:hover:bg-surface-900/70"
+                class="bg-surface-500/10 hover:bg-surface-500/80 dark:bg-surface-700 dark:hover:bg-surface-900/70 absolute inset-0 flex items-center justify-center rounded-full opacity-0 transition-all duration-200 ease-in-out hover:opacity-100"
             >
-                <button class="btn-icon w-full" on:click={editFunction}>
+                <Button class="w-full" on:click={editFunction}>
                     <Fa class="z-10 text-white" icon={faPenToSquare} size="lg" />
-                </button>
+                </Button>
             </div>
         {/if}
         {#if photoUrl}
