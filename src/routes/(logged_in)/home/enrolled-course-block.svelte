@@ -2,6 +2,7 @@
     import type { Course, CourseProgress } from '$lib/models/types/database.types';
 
     import Image from '$lib/components/image.svelte';
+    import { Button } from '$lib/components/ui/button';
 
     export let course: Course;
     export let courseProgress: CourseProgress;
@@ -16,9 +17,9 @@
     <Image alt="Course 1" class="rounded-lg" height="151" src={course.imgHref} width="252" />
     <p class="text-lg font-bold">{course.title}</p>
     <div class="grid grid-cols-[1fr_auto] items-center gap-x-2">
-        <div class="relative h-2 w-full rounded-full bg-surface-300 dark:bg-surface-700">
+        <div class="bg-surface-300 dark:bg-surface-700 relative h-2 w-full rounded-full">
             <div
-                class="absolute inset-0 rounded-full bg-primary-500"
+                class="bg-primary-500 absolute inset-0 rounded-full"
                 style={`width: ${percentComplete}%`}
             />
         </div>
@@ -26,5 +27,5 @@
             {Math.round(percentComplete)} %
         </p>
     </div>
-    <button class="variant-filled btn btn-sm justify-self-start">Resume</button>
+    <Button class="variant-filled justify-self-start">Resume</Button>
 </div>

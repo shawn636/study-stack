@@ -21,7 +21,7 @@ function get_credential_ids() {
         echo "Error: Unable to retrieve credential list. Exiting..."
         exit 1
     fi
-    
+
     echo "$credential_ids"
 }
 

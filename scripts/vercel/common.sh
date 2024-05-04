@@ -37,7 +37,6 @@ function build() {
     pnpm exec vercel build --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN"
 }
 
-
 function deploy() {
     local deployment_target=${1:-preview}
     local url_file='deployment-url.txt'
@@ -121,6 +120,6 @@ function add_secret() {
 
     # Try to delete the secret first in case it already exists
     pnpm exec vercel env rm "$secret_name" "$environment" --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN" || true
-    
+
     echo "$secret_value" | pnpm exec vercel env add "$secret_name" "$environment" --yes --scope "$VERCEL_SCOPE" --token "$VERCEL_TOKEN"
 }

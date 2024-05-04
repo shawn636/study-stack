@@ -10,7 +10,7 @@ const cuid = init({
     length: 30
 });
 
-export const db = new Kysely<DB>({
+const db = new Kysely<DB>({
     dialect: new PlanetScaleDialect({
         url: DATABASE_URL
     })
@@ -88,7 +88,26 @@ const deleteUserIfExists = async (email: string): Promise<void> => {
     });
 };
 
+const deleteE2eTestUsers = async (domain: string): Promise<void> => {
+    const authUsersResult = await db
+        .selectFrom('AuthUser')
+        .select('id')
+        .where('AuthUser.email', 'like', `%${domain}`)
+        .execute();
+
+    for (const authUser of authUsersResult) {
+        await db.transaction().execute(async (trx: Transaction<DB>) => {
+            await trx.deleteFrom('User').where('User.authUserId', '=', authUser.id).execute();
+            await trx.deleteFrom('AuthKey').where('AuthKey.authUserId', '=', authUser.id).execute();
+            await trx.deleteFrom('AuthUser').where('AuthUser.id', '=', authUser.id).execute();
+        });
+    }
+};
+
 export const auth = {
     createUser,
+    cuid,
+    db,
+    deleteE2eTestUsers,
     deleteUserIfExists
 };

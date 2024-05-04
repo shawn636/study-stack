@@ -3,7 +3,7 @@ import type { CourseSearchResult } from '$lib/models/types/api';
 import type { PageLoad } from './$types';
 
 export const load = (async ({ fetch }) => {
-    const response = await fetch('/api/search/courses?page=0&page_size=20&sort_by=relevance', {
+    const response = await fetch('/api/search/courses?page=0&page_size=12&sort_by=relevance', {
         headers: {
             'Content-Type': 'application/json'
         },

@@ -8,7 +8,7 @@ source scripts/pscale/common.sh
 # --- MAIN ---
 function main() {
     check_for_required_env_vars || exit $?
-    
+
     local branch_name=""
     branch_name=$(branch_name_from_git) || exit $?
 

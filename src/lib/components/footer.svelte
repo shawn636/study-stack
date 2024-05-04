@@ -1,29 +1,22 @@
 <script lang="ts">
     import Logo from '$lib/components/logo.svelte';
+    import * as Accordion from '$lib/components/ui/accordion/index';
+    import { Button } from '$lib/components/ui/button';
+    import { Input } from '$lib/components/ui/input';
     import {
         faFacebookF,
         faInstagram,
         faLinkedinIn,
         faTwitter
     } from '@fortawesome/free-brands-svg-icons';
-    import {
-        Accordion,
-        AccordionItem,
-        type ToastSettings,
-        getToastStore
-    } from '@skeletonlabs/skeleton';
     import Fa from 'svelte-fa';
+    import { toast } from 'svelte-sonner';
 
     let email: string = '';
 
     const subscribe = async () => {
         if (!email) {
-            toastStore.trigger({
-                autohide: true,
-                classes: 'bg-warning-500 text-black',
-                message: 'Please enter a valid email address.',
-                timeout: 3000
-            });
+            toast.error('Please enter a valid email address');
             return;
         }
         const formData = new FormData();
@@ -32,26 +25,13 @@
             body: formData,
             method: 'POST'
         });
-        let toastSettings: ToastSettings | undefined;
 
         if (request.ok) {
-            toastSettings = {
-                autohide: true,
-                classes: 'text-white bg-primary-500',
-                message: 'You have successfully subscribed to our newsletter!',
-                timeout: 3000
-            };
+            toast.success('You have successfully subscribed to our newsletter!');
         } else {
-            toastSettings = {
-                autohide: true,
-                classes: 'bg-error-500',
-                message: 'Something went wrong. Please try again later.',
-                timeout: 3000
-            };
+            toast.error('Something went wrong. Please try again later');
         }
-        toastStore.trigger(toastSettings);
     };
-    const toastStore = getToastStore();
 </script>
 
 <div class="w-full bg-gray-800 p-4 text-white sm:p-10">
@@ -64,25 +44,25 @@
             <aside class="font-light">Follow Us On Social Media</aside>
             <div class="grid grid-flow-col items-center">
                 <a
-                    class="grid h-8 w-8 items-center justify-items-center rounded-full p-1 hover:bg-primary-800"
+                    class="hover:bg-primary-800 grid h-8 w-8 items-center justify-items-center rounded-full p-1"
                     href="https://www.facebook.com/"
                 >
                     <Fa icon={faFacebookF} size="lg" />
                 </a>
                 <a
-                    class="grid h-8 w-8 items-center justify-items-center rounded-full p-1 hover:bg-primary-800"
+                    class="hover:bg-primary-800 grid h-8 w-8 items-center justify-items-center rounded-full p-1"
                     href="https://www.twitter.com/"
                 >
                     <Fa icon={faTwitter} size="lg" />
                 </a>
                 <a
-                    class="grid h-8 w-8 items-center justify-items-center rounded-full p-1 hover:bg-primary-800"
+                    class="hover:bg-primary-800 grid h-8 w-8 items-center justify-items-center rounded-full p-1"
                     href="https://www.instagram.com/"
                 >
                     <Fa icon={faInstagram} size="lg" />
                 </a>
                 <a
-                    class="grid h-8 w-8 items-center justify-items-center rounded-full p-1 hover:bg-primary-800"
+                    class="hover:bg-primary-800 grid h-8 w-8 items-center justify-items-center rounded-full p-1"
                     href="https://www.linkedin.com/"
                 >
                     <Fa icon={faLinkedinIn} size="lg" />
@@ -100,18 +80,21 @@
         <p class="pb-2 pl-4 font-semibold uppercase">Get In Touch</p>
         <p class="pl-4">Don't worry, we don't send spam.</p>
         <div class="relative mt-2">
-            <div class="flex">
-                <input
-                    class="input w-full rounded-l-full rounded-r-none !border-0 !bg-surface-100 placeholder-surface-500"
+            <div class="flex items-center gap-2">
+                <Input
+                    bind:value={email}
+                    class="bg-white text-black placeholder:text-gray-500"
                     name="email"
                     placeholder="Email Address"
                     required
                     type="text"
                 />
-                <button
+                <Button
                     aria-label="Submit Email Address"
-                    class=" variant-filled-secondary btn rounded-l-none rounded-r-full font-medium text-primary-500"
-                    type="button">Submit</button
+                    class="bg-white text-black hover:bg-gray-100"
+                    on:click={subscribe}
+                    type="button"
+                    variant="secondary">Submit</Button
                 >
             </div>
         </div>
@@ -121,54 +104,125 @@
     <!-- Only for <= sm breakpoint -->
     <!-- Link Accordion (Below) -->
     <div class="block sm:hidden">
-        <Accordion>
-            <AccordionItem>
-                <svelte:fragment slot="summary"><p class="uppercase">About</p></svelte:fragment>
-                <svelte:fragment slot="content">
-                    <div class="list-nav">
+        <Accordion.Root>
+            <Accordion.Item value="about">
+                <Accordion.Trigger>About</Accordion.Trigger>
+                <Accordion.Content>
+                    <div data-testid="about-navlist">
                         <ul>
-                            <li><a href="/about">About Us</a></li>
-                            <li><a href="/">Learner Stories</a></li>
-                            <li><a href="/">Careers</a></li>
-                            <li><a href="/">Press</a></li>
-                            <li><a href="/">Leadership</a></li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to about us page"
+                                    class="text-primary-foreground"
+                                    href="/about"
+                                    role="link"
+                                    variant="link">About Us</Button
+                                >
+                            </li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to some page"
+                                    class="text-primary-foreground"
+                                    href="/beliefs"
+                                    role="link"
+                                    variant="link">What We Believe</Button
+                                >
+                            </li>
                         </ul>
                     </div>
-                </svelte:fragment>
-            </AccordionItem>
-            <AccordionItem>
-                <svelte:fragment slot="summary"><p class="uppercase">Categories</p></svelte:fragment
-                >
-                <svelte:fragment slot="content">
-                    <div class="list-nav">
+                </Accordion.Content>
+            </Accordion.Item>
+            <Accordion.Item value="categories">
+                <Accordion.Trigger>Categories</Accordion.Trigger>
+                <Accordion.Content>
+                    <div data-testid="categories-navlist">
                         <ul>
-                            <li><a href="/">Biblical Studies</a></li>
-                            <li><a href="/">Theology & Doctrine</a></li>
-                            <li><a href="/">Spiritual Formation & Discipleship</a></li>
-                            <li><a href="/">Christian Ministry & Mission:</a></li>
-                            <li><a href="/">Worship and Creative Arts</a></li>
-                            <li><a href="/">Biblical Languages</a></li>
-                            <li><a href="/">Christian Counseling & Psychology</a></li>
-                            <li><a href="/">Christian Missions & Outreach</a></li>
-                            <li><a href="/">Church Administration & Management</a></li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to categories page"
+                                    class="text-primary-foreground"
+                                    href="/"
+                                    role="link"
+                                    variant="link">Biblical Studies</Button
+                                >
+                            </li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to categories page"
+                                    class="text-primary-foreground"
+                                    href="/"
+                                    role="link"
+                                    variant="link">Theology & Doctrine</Button
+                                >
+                            </li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to categories page"
+                                    class="text-primary-foreground"
+                                    href="/"
+                                    role="link"
+                                    variant="link">Spiritual Formation & Discipleship</Button
+                                >
+                            </li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to categories page"
+                                    class="text-primary-foreground"
+                                    href="/"
+                                    role="link"
+                                    variant="link">Christian Ministry & Mission</Button
+                                >
+                            </li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to categories page"
+                                    class="text-primary-foreground"
+                                    href="/"
+                                    role="link"
+                                    variant="link">Worship and Creative Arts</Button
+                                >
+                            </li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to categories page"
+                                    class="text-primary-foreground"
+                                    href="/"
+                                    role="link"
+                                    variant="link">Biblical Languages</Button
+                                >
+                            </li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to categories page"
+                                    class="text-primary-foreground"
+                                    href="/"
+                                    role="link"
+                                    variant="link">Christian Counseling & Psychology</Button
+                                >
+                            </li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to categories page"
+                                    class="text-primary-foreground"
+                                    href="/"
+                                    role="link"
+                                    variant="link">Christian Missions & Outreach</Button
+                                >
+                            </li>
+                            <li>
+                                <Button
+                                    aria-label="Navigate to categories page"
+                                    class="text-primary-foreground"
+                                    href="/"
+                                    role="link"
+                                    variant="link">Church Administration & Management</Button
+                                >
+                            </li>
                         </ul>
                     </div>
-                </svelte:fragment>
-            </AccordionItem>
-            <AccordionItem>
-                <svelte:fragment slot="summary"><p class="uppercase">Support</p></svelte:fragment>
-                <svelte:fragment slot="content">
-                    <div class="list-nav">
-                        <ul>
-                            <li><a href="/">Documentation</a></li>
-                            <li><a href="/about">About Us</a></li>
-                            <li><a href="/home">Dashboard</a></li>
-                            <li><a href="/contact">Contact Us</a></li>
-                        </ul>
-                    </div>
-                </svelte:fragment>
-            </AccordionItem>
-        </Accordion>
+                </Accordion.Content>
+            </Accordion.Item>
+        </Accordion.Root>
     </div>
     <!-- Link Accordion (Above) -->
 
@@ -213,25 +267,26 @@
 
         <!-- Contact Us Box (Below) -->
         <div
-            class="col-span-2 col-start-1 row-span-1 row-start-2 justify-self-start lg:col-span-1 lg:col-start-4 lg:row-start-1"
+            class="col-span-2 col-start-1 row-span-1 row-start-2 justify-self-start pl-4 lg:col-span-1 lg:col-start-4 lg:row-start-1"
         >
-            <p class="pb-2 pl-4 font-semibold uppercase">Get In Touch</p>
-            <p class="pl-4">Don't worry, we don't send spam.</p>
+            <p class="pb-1 font-semibold uppercase">Get In Touch</p>
+            <p>Don't worry, we don't send spam.</p>
             <div class="relative mt-2">
-                <div class="flex">
-                    <input
+                <div class="flex items-center gap-2">
+                    <Input
                         bind:value={email}
-                        class="input w-full rounded-l-full rounded-r-none !border-0 !bg-surface-100 text-surface-600 placeholder-surface-400"
+                        class="bg-white text-black placeholder:text-gray-500"
                         name="email"
                         placeholder="Email Address"
                         required
                         type="text"
                     />
-                    <button
+                    <Button
                         aria-label="Submit Email Address"
-                        class="variant-filled-secondary btn rounded-l-none rounded-r-full font-medium active:scale-100"
+                        class="bg-white text-black hover:bg-gray-100"
                         on:click={subscribe}
-                        type="button">Submit</button
+                        type="button"
+                        variant="secondary">Submit</Button
                     >
                 </div>
             </div>

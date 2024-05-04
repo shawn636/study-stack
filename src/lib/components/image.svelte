@@ -1,16 +1,11 @@
 <script lang="ts">
-    import type { CssClasses } from '@skeletonlabs/skeleton';
-
     import { afterUpdate, onDestroy, onMount } from 'svelte';
 
     export let src: string;
     export let alt: string;
 
-    // export let widthUnits: number;
-    // export let heightUnits: number;
-
-    export let width: CssClasses;
-    export let height: CssClasses;
+    export let width;
+    export let height;
 
     export let error = false;
 

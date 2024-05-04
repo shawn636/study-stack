@@ -5,14 +5,18 @@
     import ViewToggle from '$lib/components/controls/view-toggle.svelte';
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
+    import { Input } from '$lib/components/ui/input/index';
+    import * as Pagination from '$lib/components/ui/pagination/index';
+    import { CourseSortByOptions } from '$lib/models/types/course-sort-by-options';
     import {
-        type CourseSortByOption,
-        CourseSortByOptions
-    } from '$lib/models/types/course-sort-by-options';
-    import { faBinoculars, faSearch } from '@fortawesome/free-solid-svg-icons';
-    import { Paginator } from '@skeletonlabs/skeleton';
+        faBinoculars,
+        faChevronLeft,
+        faChevronRight,
+        faSearch
+    } from '@fortawesome/free-solid-svg-icons';
     import { onMount } from 'svelte';
     import Fa from 'svelte-fa';
+    import { mediaQuery } from 'svelte-legos';
 
     import type { PageData } from './$types';
 
@@ -22,18 +26,14 @@
     let isLoading = false;
     let courses: CourseWithInstructor[] = data.result.courses;
     let selectedView: 'grid' | 'list';
-    let sortByOption: CourseSortByOption = CourseSortByOptions.RELEVANCE;
+    let sortByOption = {
+        label: CourseSortByOptions.RELEVANCE.label,
+        value: CourseSortByOptions.RELEVANCE
+    };
     let searchQuery: string;
 
-    let paginationSettings = {
-        amounts: [10, 20],
-        limit: 20,
-        page: 0,
-        size: 0
-    };
-
     onMount(() => {
-        paginationSettings.size = data.result.courseCount;
+        count = data.result.courseCount;
     });
 
     // Methods
@@ -43,15 +43,21 @@
         if (searchQuery) {
             url += `/${searchQuery}`;
         }
-        url += `?sort_by=${sortByOption.param}&page=${paginationSettings.page}&page_size=${paginationSettings.limit}`;
-
+        url += `?sort_by=${sortByOption.value.param}&page=${page - 1}&page_size=${pageSize}`;
         const response = await fetch(url);
         const result = (await response.json()) as CourseSearchResult;
         isLoading = false;
         courses = result.courses;
-        paginationSettings.size = result.courseCount;
+        count = result.courseCount;
         window.scrollTo({ behavior: 'smooth', top: 0 });
     };
+
+    const isDesktop = mediaQuery('(min-width: 768px)');
+
+    let count = 20;
+    let page = 1;
+    $: pageSize = isDesktop ? 12 : 6;
+    $: siblingCount = $isDesktop ? 1 : 0;
 </script>
 
 <div class="grid justify-items-center gap-y-4 p-5">
@@ -59,14 +65,15 @@
         <h1 class="text-lg font-bold">Find a Course</h1>
         <div class="grid grid-cols-[1fr_min-content_min-content_min-content] gap-x-2">
             <div class="relative w-full">
-                <input
+                <Input
                     bind:value={searchQuery}
-                    class="w-full rounded-lg border-none bg-surface-100 pr-10 font-light text-surface-800 outline-none placeholder:text-gray-600"
+                    class="w-full"
                     on:input={() => getCourses()}
                     placeholder="Search..."
+                    type="email"
                 />
                 <Fa
-                    class="absolute right-5 top-1/2 -translate-y-1/2 transform text-surface-400"
+                    class="text-surface-400 absolute right-5 top-1/2 -translate-y-1/2 transform"
                     icon={faSearch}
                 />
             </div>
@@ -74,7 +81,8 @@
                 bind:value={sortByOption}
                 on:valuechange={(event) => {
                     sortByOption = event.detail;
-                    paginationSettings.page = 0;
+                    // paginationSettings.page = 0;
+                    page = 1;
                     getCourses();
                 }}
             />
@@ -106,15 +114,46 @@
                 {/each}
             </div>
         {/if}
-        <div class="grid grid-cols-[1fr_min-content_min-content_min-content] gap-x-2">
-            <Paginator
-                bind:settings={paginationSettings}
-                on:amount={getCourses}
-                on:page={getCourses}
-                showFirstLastButtons={false}
-                showNumerals={true}
-                showPreviousNextButtons={true}
-            />
-        </div>
+
+        <Pagination.Root
+            bind:page
+            {count}
+            let:currentPage
+            let:pages
+            onPageChange={(newPage) => {
+                page = newPage;
+                getCourses();
+            }}
+            perPage={pageSize}
+            {siblingCount}
+        >
+            <Pagination.Content>
+                <Pagination.Item>
+                    <Pagination.PrevButton>
+                        <Fa class="h-4 w-4" icon={faChevronLeft} />
+                        <span class="hidden sm:block">Previous</span>
+                    </Pagination.PrevButton>
+                </Pagination.Item>
+                {#each pages as page (page.key)}
+                    {#if page.type === 'ellipsis'}
+                        <Pagination.Item>
+                            <Pagination.Ellipsis />
+                        </Pagination.Item>
+                    {:else}
+                        <Pagination.Item>
+                            <Pagination.Link isActive={currentPage === page.value} {page}>
+                                {page.value}
+                            </Pagination.Link>
+                        </Pagination.Item>
+                    {/if}
+                {/each}
+                <Pagination.Item>
+                    <Pagination.NextButton>
+                        <span class="hidden sm:block">Next</span>
+                        <Fa class="h-4 w-4" icon={faChevronRight} />
+                    </Pagination.NextButton>
+                </Pagination.Item>
+            </Pagination.Content>
+        </Pagination.Root>
     </div>
 </div>

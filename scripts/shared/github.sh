@@ -2,11 +2,10 @@
 
 # --- GITHUB METHODS ---
 function add_pr_comment() {
-    local arg_type=$1 # Either 'file' or 'string'
-    local arg_val=$2 # Either the file_path or the string value
+    local arg_type=$1    # Either 'file' or 'string'
+    local arg_val=$2     # Either the file_path or the string value
     local head_branch=$3 # Optional head branch name
     local status_code=""
-
 
     if [ -z "$arg_type" ] || { [ "$arg_type" != 'file' ] && [ "$arg_type" != 'string' ]; }; then
         echo "Error: missing or invalid argument type. Please use the format: add_pr_comment ['file'|'string'] <file_path|str_val> [head_branch (optional)]"

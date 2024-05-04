@@ -1,12 +1,12 @@
-<!-- eslint-disable -->
 <script lang="ts">
+    import * as Accordion from '$lib/components/ui/accordion/index';
     import {
         faBookBible,
         faChalkboardTeacher,
         faChurch,
         faUpRightFromSquare
     } from '@fortawesome/free-solid-svg-icons';
-    import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
+    import sanitizeHtml from 'sanitize-html';
     import Fa from 'svelte-fa';
 
     import type { FaqProps } from './faq-models';
@@ -25,7 +25,7 @@
             question: 'What is Equipped?'
         },
         {
-            answer: `<p>We aren't directly affiliated with a specific church, though both of the founders belong to the same local body in Southern California. Pastor <a href="${pastorJeffLink}" style="text-decoration: underline;">Jeff Carver</a> is the administrative leader of Equipped and a senior pastor at <a href="${btmLink}" style="text-decoration: underline">Be the Message Church</a>.</p>`,
+            answer: `<p>We aren't directly affiliated with a specific church, though both of the founders belong to the same local body in Southern California. Pastor <a href="${pastorJeffLink}" style="text-decoration: underline; ">Jeff Carver</a> is the administrative leader of Equipped and a senior pastor at <a href="${btmLink}" style="text-decoration: underline">Be the Message Church</a>.</p>`,
             icon: faChurch,
             question: 'Is Equipped associated with a specific church?'
         },
@@ -35,6 +35,18 @@
             question: 'Who can teach on Equipped?'
         }
     ];
+
+    const sanitizeHtmlSettings = {
+        allowedAttributes: {
+            a: ['style', 'href']
+        },
+        allowedStyles: {
+            a: {
+                'text-decoration': [/^underline$/]
+            }
+        },
+        allowedTags: sanitizeHtml.defaults.allowedTags
+    };
 </script>
 
 <div class="grid w-full justify-items-center">
@@ -87,38 +99,31 @@
         <!-- FREQUENTLY ASKED QUESTIONS -->
         <h2 class="h2 col-span-full text-center">Frequently Asked Questions</h2>
 
-        <Accordion autocollapse class="col-span-full">
-            {#each faqs as faq}
-                <AccordionItem>
-                    <svelte:fragment slot="lead">
-                        <Fa class="text-primary" icon={faq.icon} size="lg" />
-                    </svelte:fragment>
-                    <svelte:fragment slot="summary"
-                        ><h4 class="font-semibold">{faq.question}</h4></svelte:fragment
-                    >
-                    <svelte:fragment slot="content">
-                        <!-- @html is safe here because the content is defined as a static object -->
-                        <!-- Using @html at all here is simply a way of cleaning up the code -->
-                        <!-- When svelte compiles this, the @html will basically disappear -->
-
-                        <!-- eslint-disable svelte/no-at-html-tags -->
-                        {@html faq.answer}
-                        <!-- eslint-disable svelte/no-at-html-tags -->
-                    </svelte:fragment>
-                </AccordionItem>
+        <Accordion.Root class="col-span-full w-full">
+            {#each faqs as faq, i}
+                <Accordion.Item value={`faq-${i}`}>
+                    <Accordion.Trigger>
+                        {faq.question}
+                    </Accordion.Trigger>
+                    <Accordion.Content>
+                        <!-- Disabling sanitize html warning since input is sanitized -->
+                        <!-- eslint-disable-next-line -->
+                        {@html sanitizeHtml(faq.answer, sanitizeHtmlSettings)}
+                    </Accordion.Content>
+                </Accordion.Item>
             {/each}
-        </Accordion>
+        </Accordion.Root>
 
         <!-- ADDITIONAL LINKS BAR -->
         <section class="col-span-full grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2">
             <!-- LINK 1 -->
             <a
-                class="relative h-48 w-64 overflow-hidden rounded-xl bg-surface-100/30 transition-transform hover:-translate-y-2 hover:shadow-md dark:bg-surface-800"
+                class="bg-surface-100/30 dark:bg-surface-800 relative h-48 w-64 overflow-hidden rounded-xl transition-transform hover:-translate-y-2 hover:shadow-md"
                 href="/beliefs"
             >
                 <div class="space-y-4 p-4">
                     <h6 class="h5 font-bold">What We Believe</h6>
-                    <p class="text-black dark:text-surface-300">
+                    <p class="dark:text-surface-300 text-black">
                         Take a look at the core doctrines that we hold to and teach.
                     </p>
                 </div>
@@ -129,12 +134,12 @@
             </a>
             <!-- LINK 2 -->
             <a
-                class="relative h-48 w-64 overflow-hidden rounded-xl bg-surface-100/30 transition-transform hover:-translate-y-2 hover:shadow-md dark:bg-surface-800"
+                class="bg-surface-100/30 dark:bg-surface-800 relative h-48 w-64 overflow-hidden rounded-xl transition-transform hover:-translate-y-2 hover:shadow-md"
                 href="/beliefs"
             >
                 <div class="space-y-4 p-4">
                     <h6 class="h5 font-bold">What We Believe</h6>
-                    <p class="text-black dark:text-surface-300">
+                    <p class="dark:text-surface-300 text-black">
                         Take a look at the core doctrines that we hold to and teach.
                     </p>
                 </div>
@@ -146,3 +151,6 @@
         </section>
     </div>
 </div>
+
+<style>
+</style>

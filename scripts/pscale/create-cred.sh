@@ -6,7 +6,6 @@ source scripts/pscale/common.sh
 # Script Arguments
 cred_name=$1
 
-
 # --- FUNCTIONS ---
 function delete_cred_if_exists() {
     branch_name=$1
@@ -24,7 +23,7 @@ function delete_cred_if_exists() {
     fi
 
     cur_creds_json=$(pscale password list "$PSCALE_DB_NAME" "$branch_name" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID")
-    
+
     status_code=$?
 
     if [ "$status_code" -ne 0 ]; then
@@ -43,7 +42,7 @@ function delete_cred_if_exists() {
 
     if [ -n "$matching_cred_id" ]; then
         pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$matching_cred_id" --force --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
-        
+
         status_code=$?
 
         if [ "$status_code" -ne 0 ]; then
@@ -105,7 +104,7 @@ function purge_old_production_credentials() {
     credential_ids=$(pscale password list "$PSCALE_DB_NAME" "main" --format=json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r "[.[] | select(.id != \"$current_cred_id\")] | .[] | .id")
 
     for credential_id in $credential_ids; do
-            delete_credential "main" "$credential_id" || exit $?
+        delete_credential "main" "$credential_id" || exit $?
     done
 }
 

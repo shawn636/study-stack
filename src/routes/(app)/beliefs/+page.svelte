@@ -33,11 +33,11 @@
     <div class="my-10 grid grid-cols-1 justify-items-center gap-y-10 md:grid-cols-2 lg:grid-cols-3">
         {#each beliefs as { content, icon, title }}
             <div
-                class="col-span-1 flex w-72 flex-col items-start gap-y-5 rounded-xl border-none bg-surface-50/30 px-6 py-10 outline-none transition-transform hover:-translate-y-2 hover:shadow-md dark:bg-surface-800/30"
+                class="bg-surface-50/30 dark:bg-surface-800/30 col-span-1 flex w-72 flex-col items-start gap-y-5 rounded-xl border-none px-6 py-10 outline-none transition-transform hover:-translate-y-2 hover:shadow-md"
             >
                 <Fa class="text-primary-800 dark:text-white" {icon} size="lg" />
-                <h4 class="h2 font-black text-primary-800 dark:text-white">{title}</h4>
-                <p class="tracking-wider text-slate-700 dark:text-surface-300">{content}</p>
+                <h4 class="h2 text-primary-800 font-black dark:text-white">{title}</h4>
+                <p class="dark:text-surface-300 tracking-wider text-slate-700">{content}</p>
             </div>
         {/each}
     </div>

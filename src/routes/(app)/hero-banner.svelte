@@ -1,5 +1,6 @@
 <script lang="ts">
     import HeroCollage from '$lib/components/hero-collage.svelte';
+    import { Button } from '$lib/components/ui/button';
 
     const cta = 'Learn New Skills Online With Top ';
     const ctaUnderline = 'Educators';
@@ -9,7 +10,9 @@
     const tags = ['Over 12 million students', 'More than 60,000 courses', 'Learn anything online'];
 </script>
 
-<div class="z-10 grid justify-items-center bg-primary-500 text-white dark:bg-primary-700">
+<div
+    class="dark:bg-primary-700 z-10 grid justify-items-center border border-equipped-blue bg-equipped-blue text-white"
+>
     <div
         class="grid max-w-7xl grid-cols-1 justify-items-center gap-x-5 px-5 pb-7 pt-3 md:px-24 lg:grid-cols-[1fr_350px]"
     >
@@ -23,15 +26,17 @@
 
             <p class="col-span-2 row-start-2">{subheading}</p>
 
-            <div
-                class="grid-row-[auto_auto] col-span-2 my-4 grid gap-x-3 gap-y-6 justify-self-center xs:grid-cols-[auto_auto] xs:grid-rows-[auto] lg:justify-self-start"
-            >
-                <a class="variant-ringed-secondary btn btn-lg text-secondary-500" href="/courses"
-                    >Find Courses</a
+            <div class="col-span-2 grid grid-flow-row gap-4 sm:grid-flow-col">
+                <Button
+                    class="bg-white text-black hover:bg-slate-100"
+                    href="/courses"
+                    role="link"
+                    variant="secondary">Find Courses</Button
                 >
-                <a
-                    class="variant-filled-secondary btn btn-lg text-black dark:text-black"
-                    href="/auth/register">Join For Free</a
+                <Button
+                    class="bg-black text-white hover:bg-slate-800"
+                    href="/auth/register"
+                    role="link">Join For Free</Button
                 >
             </div>
 
@@ -53,7 +58,7 @@
     </div>
 </div>
 <svg
-    class="z-negative w-full fill-primary-500 dark:fill-primary-700 lg:h-20"
+    class="z-negative w-full fill-equipped-blue lg:h-20"
     height="56"
     preserveAspectRatio="none"
     viewBox="0 0 1024 56"

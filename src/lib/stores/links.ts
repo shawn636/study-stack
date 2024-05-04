@@ -1,24 +1,19 @@
 import type Link from '$lib/models/types/link';
 
-import { faCircleUser, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 
 const headerLoggedOutLinks: Array<Link> = [
-    { href: '/', icon: undefined, name: 'Home' },
     { href: '/courses', icon: undefined, name: 'Find Courses' },
     { href: '/courses/create', icon: undefined, name: 'Create a Course' },
     { href: '/about', icon: undefined, name: 'About' }
 ];
 
 const headerLoggedInLinks: Array<Link> = [
-    { href: '/home', icon: undefined, name: 'Home' },
     { href: '/courses', icon: undefined, name: 'Find Courses' },
     { href: '/courses/create', icon: undefined, name: 'Create a Course' }
 ];
 
-const sidebarLinks: Array<Link> = [
-    { href: '/home', icon: faHome, name: 'Home' },
-    { href: '/account', icon: faCircleUser, name: 'My Account' }
-];
+const sidebarLinks: Array<Link> = [{ href: '/profile', icon: faCircleUser, name: 'Profile' }];
 
 export const getHeaderLinks = (loggedIn: boolean) => {
     return loggedIn ? headerLoggedInLinks : headerLoggedOutLinks;
