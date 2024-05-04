@@ -10,6 +10,6 @@
             <span class="text-error-500 font-semibold">Oops!</span> Page {$page.error?.message}
         </h2>
         <p>The page you’re looking for doesn’t exist.</p>
-        <a class="variant-filled btn w-full" href="/">Go home</a>
+        <a class="w-full" href="/">Go home</a>
     </div>
 </div>

@@ -2,6 +2,7 @@
     import type { Course, CourseProgress } from '$lib/models/types/database.types';
 
     import Image from '$lib/components/image.svelte';
+    import { Button } from '$lib/components/ui/button';
 
     export let course: Course;
     export let courseProgress: CourseProgress;
@@ -26,5 +27,5 @@
             {Math.round(percentComplete)} %
         </p>
     </div>
-    <button class="variant-filled btn btn-sm justify-self-start">Resume</button>
+    <Button class="variant-filled justify-self-start">Resume</Button>
 </div>

@@ -13,7 +13,7 @@ const headerLoggedInLinks: Array<Link> = [
     { href: '/courses/create', icon: undefined, name: 'Create a Course' }
 ];
 
-const sidebarLinks: Array<Link> = [{ href: '/account', icon: faCircleUser, name: 'My Account' }];
+const sidebarLinks: Array<Link> = [{ href: '/profile', icon: faCircleUser, name: 'Profile' }];
 
 export const getHeaderLinks = (loggedIn: boolean) => {
     return loggedIn ? headerLoggedInLinks : headerLoggedOutLinks;

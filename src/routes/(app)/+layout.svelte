@@ -5,8 +5,6 @@
     import { afterNavigate } from '$app/navigation';
     import Footer from '$lib/components/footer.svelte';
     import Header from '$lib/components/header.svelte';
-    // import Sidebar from '$lib/components/sidebar.svelte';
-    // import { Toast } from '@skeletonlabs/skeleton';
 
     import type { LayoutData } from './$types';
 

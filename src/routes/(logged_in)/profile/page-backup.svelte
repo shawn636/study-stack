@@ -1,13 +1,20 @@
 <script lang="ts">
     import type { User } from '$lib/models/types/database.types';
-    // import type { ToastSettings } from '@skeletonlabs/skeleton';
 
     import { formatPhoneNumber, initials as getInitials } from '$lib/client/util';
     import Avatar from '$lib/components/avatar.svelte';
-    import { faEnvelope, faPenToSquare, faPhone } from '@fortawesome/free-solid-svg-icons';
-    import { ProgressRadial } from '@skeletonlabs/skeleton';
+    import { Button } from '$lib/components/ui/button';
+    import { Input } from '$lib/components/ui/input';
+    import { Textarea } from '$lib/components/ui/textarea';
+    import {
+        faEnvelope,
+        faPenToSquare,
+        faPhone,
+        faSpinner
+    } from '@fortawesome/free-solid-svg-icons';
     import { onMount } from 'svelte';
     import Fa from 'svelte-fa';
+    import { toast } from 'svelte-sonner';
 
     import type { PageServerData } from './$types';
 
@@ -64,13 +71,13 @@
             originalData.user.areaCode = phoneTemp.slice(0, 3);
             originalData.user.phoneNumber = phoneTemp.slice(3, 10);
             isLoading = false;
-            // toastStore.trigger(successToast);
+            toast.success('Profile updated successfully');
 
             isLoading = false;
             editMode = !editMode;
         } else {
             isLoading = false;
-            // toastStore.trigger(errorToast);
+            toast.error('An error occurred while updating your profile');
         }
     };
 
@@ -104,12 +111,10 @@
     $: initials = getInitials(data.user.name);
 </script>
 
-<div class="grid items-center justify-items-center md:p-6">
-    <div
-        class="card container grid max-w-sm grid-flow-row gap-y-4 bg-white p-6 shadow md:max-w-5xl"
-    >
+<div class="mx-auto grid max-w-xl justify-items-center">
+    <div class="grid w-full grid-flow-row justify-items-stretch gap-y-4">
         <!-- Name Block -->
-        <div class="grid justify-items-center">
+        <div class="grid">
             <div
                 class="grid grid-flow-row items-center justify-items-center gap-x-2 md:grid-flow-col md:grid-cols-[auto_1fr] md:justify-items-start"
             >
@@ -139,33 +144,28 @@
 
         <div class="grid grid-rows-2 gap-x-4 gap-y-4 md:grid-cols-2 md:gap-y-0">
             <!-- Email -->
-            <div class="grid min-w-full items-center text-gray-500">
+            <div class="grid min-w-full items-center">
                 <div class="relative min-w-full">
                     <Fa
-                        class="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-400"
+                        class="absolute left-2 top-1/2 -translate-y-1/2 transform "
                         icon={faEnvelope}
                     />
-                    <input
-                        class="border-surface-50 dark:border-surface-700 dark:bg-surface-900 dark:disabled:bg-surface-900 w-full rounded-md border p-1 pl-8 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:text-gray-200 dark:shadow-sm dark:disabled:text-gray-50"
-                        disabled={!editMode}
-                        name="email"
-                        value={data.user.email}
-                    />
+                    <Input class="pl-8" disabled={!editMode} name="email" value={data.user.email} />
                 </div>
             </div>
 
             <!-- Phone -->
-            <div class="grid min-w-full items-center gap-x-2 text-gray-500">
+            <div class="grid min-w-full items-center gap-x-2">
                 <div class="relative min-w-full">
                     <Fa
-                        class="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-400"
+                        class="absolute left-2 top-1/2 -translate-y-1/2 transform "
                         icon={faPhone}
                     />
-                    <input
-                        class="border-surface-50 dark:border-surface-700 dark:bg-surface-900 dark:disabled:bg-surface-900 w-full rounded-md border p-1 pl-8 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:text-gray-200 dark:shadow-sm dark:disabled:text-gray-50"
+                    <Input
+                        class="pl-8"
                         disabled={!editMode}
                         id="phone-input"
-                        maxlength="12"
+                        maxlength={12}
                         on:input={updatePhoneNumber}
                         type="tel"
                         value={phone}
@@ -179,41 +179,22 @@
 
             <!-- City -->
             <div class="min-w-full">
-                <p class="h-auto font-bold text-gray-600 dark:text-gray-400">City</p>
-                <input
-                    bind:value={data.user.city}
-                    class="border-surface-50 dark:border-surface-700 dark:bg-surface-900 dark:disabled:bg-surface-900 w-full rounded-md border p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:text-gray-200 dark:shadow-sm dark:disabled:text-gray-50"
-                    disabled={!editMode}
-                    id="phone-input"
-                />
+                <p class="h-auto font-bold">City</p>
+                <Input bind:value={data.user.city} disabled={!editMode} id="phone-input" />
             </div>
 
             <!-- State -->
             <div class="min-w-full">
-                <p class="h-auto font-bold text-gray-600 dark:text-gray-400">State</p>
-                <input
-                    bind:value={data.user.state}
-                    class="border-surface-50 dark:border-surface-700 dark:bg-surface-900 dark:disabled:bg-surface-900 w-full rounded-md border p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:text-gray-200 dark:shadow-sm dark:disabled:text-gray-50"
-                    disabled={!editMode}
-                    id="phone-input"
-                />
+                <p class="h-auto font-bold">State</p>
+                <Input bind:value={data.user.state} disabled={!editMode} id="phone-input" />
             </div>
         </div>
 
         <div class="grid grid-flow-row items-center justify-items-center gap-y-1">
             <!-- Bio -->
-            <div
-                class="grid min-w-full grid-flow-col grid-cols-[auto_1fr] items-center gap-x-2 text-gray-500"
-            >
-                <div class="min-w-full">
-                    <p class="h-auto font-bold text-gray-600 dark:text-gray-400">Bio</p>
-                    <textarea
-                        bind:value={data.user.bio}
-                        class="border-surface-50 dark:border-surface-700 dark:bg-surface-900 dark:disabled:bg-surface-900 h-24 w-full min-w-full resize-none rounded-md border p-1 pl-2 text-gray-700 shadow-sm disabled:bg-gray-100 disabled:text-black dark:border-2 dark:text-gray-200 dark:shadow-sm dark:disabled:text-gray-50"
-                        disabled={!editMode}
-                        id="phone-input"
-                    />
-                </div>
+            <div class="grid min-w-full grid-flow-row grid-rows-[auto_1fr] items-center gap-x-2">
+                <p class="font-bold">Bio</p>
+                <Textarea bind:value={data.user.bio} disabled={!editMode} id="phone-input" />
             </div>
         </div>
     </div>
@@ -221,36 +202,37 @@
     <div class="grid w-full max-w-screen-xs justify-items-end px-4 md:max-w-5xl">
         {#if editMode}
             <div class="grid grid-flow-col items-center gap-x-2 justify-self-end">
-                <button
+                <Button
                     aria-label="Cancel Changes"
-                    class="btn btn-sm mt-4 justify-self-end text-gray-700 dark:text-gray-500"
+                    class="mt-4 justify-self-end "
                     on:click={cancelChanges}
+                    variant="ghost"
                 >
                     Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                     aria-label="Save Changes"
-                    class="variant-filled-primary btn btn-sm mt-4 grid grid-flow-col items-center gap-x-2 justify-self-end"
+                    class="variant-filled-primary mt-4 grid grid-flow-col items-center gap-x-2 justify-self-end"
                     disabled={isLoading}
                     on:click={saveChanges}
                 >
                     {#if isLoading}
-                        <ProgressRadial stroke={100} width="w-6" />
+                        <Fa class="animate-spin" icon={faSpinner} />
                     {/if}
                     Save Changes
-                </button>
+                </Button>
             </div>
         {:else}
-            <button
+            <Button
                 aria-label="Edit Profile"
-                class="variant-soft btn btn-sm mt-4 justify-self-end"
+                class="mt-4 justify-self-end"
                 on:click={() => {
                     editMode = !editMode;
                 }}
             >
                 <Fa class="mr-2" icon={faPenToSquare} />
                 Edit Profile
-            </button>
+            </Button>
         {/if}
     </div>
 </div>

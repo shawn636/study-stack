@@ -80,18 +80,21 @@
         <p class="pb-2 pl-4 font-semibold uppercase">Get In Touch</p>
         <p class="pl-4">Don't worry, we don't send spam.</p>
         <div class="relative mt-2">
-            <div class="flex">
-                <input
-                    class="input !bg-surface-100 placeholder-surface-500 w-full rounded-l-full rounded-r-none !border-0"
+            <div class="flex items-center gap-2">
+                <Input
+                    bind:value={email}
+                    class="bg-white text-black placeholder:text-gray-500"
                     name="email"
                     placeholder="Email Address"
                     required
                     type="text"
                 />
-                <button
+                <Button
                     aria-label="Submit Email Address"
-                    class=" variant-filled-secondary btn text-primary-500 rounded-l-none rounded-r-full font-medium"
-                    type="button">Submit</button
+                    class="bg-white text-black hover:bg-gray-100"
+                    on:click={subscribe}
+                    type="button"
+                    variant="secondary">Submit</Button
                 >
             </div>
         </div>
@@ -272,11 +275,19 @@
                 <div class="flex items-center gap-2">
                     <Input
                         bind:value={email}
-                        class="text-foreground"
+                        class="bg-white text-black placeholder:text-gray-500"
+                        name="email"
                         placeholder="Email Address"
-                        type="email"
+                        required
+                        type="text"
                     />
-                    <Button on:click={subscribe} type="submit" variant="secondary">Submit</Button>
+                    <Button
+                        aria-label="Submit Email Address"
+                        class="bg-white text-black hover:bg-gray-100"
+                        on:click={subscribe}
+                        type="button"
+                        variant="secondary">Submit</Button
+                    >
                 </div>
             </div>
         </div>

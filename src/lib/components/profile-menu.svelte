@@ -77,22 +77,22 @@
 
                     <!-- Settings -->
                     <li class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <a class="flex items-center gap-2" href="/account">
+                        <a class="flex items-center gap-2" href="/profile">
                             <Fa class="text-gray-500 dark:text-gray-200" icon={faUser} />
                             <span>My Account</span>
                         </a>
                     </li>
                     <!-- Sign Out -->
                     <li class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <button
+                        <Button
                             aria-label="Sign Out"
                             class="flex items-center gap-2"
                             data-testid="sign-out-button"
                             on:click={signOut}
                         >
-                            <Fa class="text-gray-600 dark:text-gray-200" icon={faDoorOpen} />
+                            <Fa class="text-primary-foreground" icon={faDoorOpen} />
                             <span>Sign Out</span>
-                        </button>
+                        </Button>
                     </li>
                 </ul>
             </nav>

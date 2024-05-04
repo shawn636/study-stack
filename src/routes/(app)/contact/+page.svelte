@@ -2,9 +2,12 @@
     import { goto } from '$app/navigation';
     import FormError from '$lib/components/form-error.svelte';
     import SubmissionError from '$lib/components/submission-error.svelte';
+    import { Button } from '$lib/components/ui/button';
+    import { Input } from '$lib/components/ui/input';
     import { type ContactForm, contactForm } from '$lib/models/forms/contact';
-    import { ProgressRadial } from '@skeletonlabs/skeleton';
+    import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     import { onMount } from 'svelte';
+    import Fa from 'svelte-fa';
     import { createForm } from 'svelte-forms-lib';
 
     import type { PageServerData } from './$types';
@@ -91,7 +94,7 @@
     >
         <div>
             <label aria-hidden class="label hidden" for="name">Name</label>
-            <input
+            <Input
                 bind:value={$form.name}
                 class={nameClass}
                 id="name-input"
@@ -99,7 +102,6 @@
                 on:blur={handleChange}
                 on:change={handleChange}
                 placeholder="Name"
-                tabindex="0"
                 type="text"
             />
             <FormError bind:error={$errors.name} />
@@ -107,7 +109,7 @@
 
         <div>
             <label aria-hidden class="label hidden" for="email">Email</label>
-            <input
+            <Input
                 bind:value={$form.email}
                 class={emailClass}
                 id="email-input"
@@ -115,7 +117,6 @@
                 on:blur={handleChange}
                 on:change={handleChange}
                 placeholder="Email"
-                tabindex="0"
                 type="email"
             />
             <FormError bind:error={$errors.email} />
@@ -138,17 +139,13 @@
         </div>
 
         <div class="col-span-2 grid grid-flow-row justify-items-center">
-            <button
-                class="variant-filled-primary btn w-40 font-medium text-white"
-                tabindex="0"
-                type="submit"
-            >
+            <Button class="variant-filled-primary w-40 font-medium text-white" type="submit">
                 {#if isSubmitting}
-                    <ProgressRadial stroke={100} width="w-6" />
+                    <Fa class="animate-spin" icon={faSpinner} />
                 {:else}
                     Send
                 {/if}
-            </button>
+            </Button>
             <SubmissionError
                 {showSuccess}
                 {submissionError}

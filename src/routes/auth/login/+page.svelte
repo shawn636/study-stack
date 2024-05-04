@@ -1,6 +1,6 @@
 <script lang="ts">
     import AuthFooter from '../auth-footer.svelte';
-    import AuthHeader from '../auth-header.svelte'; // import { ProgressRadial } from '@skeletonlabs/skeleton';
+    import AuthHeader from '../auth-header.svelte';
     import Divider from '../divider.svelte';
     import LoginForm from './login-form.svelte';
     import OauthButtons from './oauth-buttons.svelte';
