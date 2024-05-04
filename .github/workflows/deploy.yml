@@ -33,7 +33,7 @@ jobs:
                   cache: 'pnpm'
 
             - run: pnpm install
-            - run: pnpm pscale:cred:create "production"
+            - run: pnpm pscale:cred:create "production" "prod"
             - run: pnpm vercel:settings:pull
             - run: pnpm exec vercel build --prod
             - run: pnpm pscale:dr:apply

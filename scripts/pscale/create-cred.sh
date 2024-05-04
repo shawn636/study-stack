@@ -5,6 +5,7 @@ source scripts/pscale/common.sh
 
 # Script Arguments
 cred_name=$1
+mode=${2:-"dev"} # Accept "dev" or "prod"
 
 # --- FUNCTIONS ---
 function delete_cred_if_exists() {
@@ -111,6 +112,7 @@ function purge_old_production_credentials() {
 # --- MAIN ---
 function main() {
     local cred_name=$1
+    local mode=$2
     local new_branch_name=""
 
     local is_main=false
@@ -119,7 +121,7 @@ function main() {
         is_main=true
     fi
 
-    if $is_main; then
+    if [[ $is_main && $mode == "prod" ]]; then
         new_branch_name="main"
     else
         new_branch_name=$(branch_name_from_git) || exit $?
@@ -133,8 +135,8 @@ function main() {
     update_var_in_dotenv "DATABASE_URL" "$cred" || exit $?
     printf "Password \033[31m%s\033[0m was successfully generated for \033[32m%s\033[0m\n" "$cred_id" "$new_branch_name" || exit $?
 
-    if $is_main; then
+    if [[ $is_main && $mode == "prod" ]]; then
         purge_old_production_credentials "$cred_id" || exit $?
     fi
 }
-main "$cred_name"
+main "$cred_name" "$mode"
