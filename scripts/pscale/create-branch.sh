@@ -41,7 +41,7 @@ function check_branch_creation_possible() {
     # if branch_cnt eq 1 and branch_name eq current branch name, exit 0 because nothing to do
     if [ "$dev_branch_cnt" -eq 1 ] && [ "$dev_branch_name" == "$(branch_name_from_git)" ]; then
         echo " Database Branch $(branch_name_from_git) already exists. Nothing to do. Exiting..."
-        exit 2
+        exit 0
     fi
 }
 
@@ -67,19 +67,20 @@ function create_branch() {
 
 # --- MAIN ---
 function main() {
+    local new_branch_name=""
+    local cred_name=""
+    local DB_URL=""
+
     new_branch_name=$(branch_name_from_git) || exit $?
 
     check_for_required_env_vars || exit $?
+    check_branch_creation_possible "$new_branch_name" || exit $?
 
-    local status_code=""
-    check_branch_creation_possible "$new_branch_name"
+    create_branch "$new_branch_name"
 
-    if [ "$status_code" -eq 2 ]; then
-        # Branch already exists, nothing to do
-        exit 0
-    fi
+    cred_name=$(get_cred_name)
 
-    create_branch "$new_branch_name" || exit $?
+    delete_credential_if_exists "$new_branch_name" "$cred_name"
 
     DB_URL=$(generate_credentials "$new_branch_name") || exit $?
     update_var_in_dotenv "DATABASE_URL" "$DB_URL" || exit $?
