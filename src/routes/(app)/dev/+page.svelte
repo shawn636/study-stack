@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ViewToggle from '$lib/components/controls/view-toggle.svelte';
+    import ViewToggle from '$lib/components/controls/animated-view-toggle.svelte';
     let buttonValue: 'grid' | 'list';
 </script>
 

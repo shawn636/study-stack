@@ -4,6 +4,7 @@
     import SortByDropdown from '$lib/components/controls/sort-by-dropdown.svelte';
     import ViewToggle from '$lib/components/controls/view-toggle.svelte';
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
+    import CourseListItem from '$lib/components/course-list-item.svelte';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
     import { Input } from '$lib/components/ui/input/index';
     import * as Pagination from '$lib/components/ui/pagination/index';
@@ -18,13 +19,11 @@
     import Fa from 'svelte-fa';
     import { mediaQuery } from 'svelte-legos';
 
-    import type { PageData } from './$types';
-
-    export let data: PageData;
+    const result: CourseSearchResult = { courseCount: 0, courses: [] };
 
     // State
-    let isLoading = false;
-    let courses: CourseWithInstructor[] = data.result.courses;
+    let isLoading = true;
+    let courses: CourseWithInstructor[] = result.courses;
     let selectedView: 'grid' | 'list';
     let sortByOption = {
         label: CourseSortByOptions.RELEVANCE.label,
@@ -32,13 +31,14 @@
     };
     let searchQuery: string;
 
-    onMount(() => {
-        count = data.result.courseCount;
+    onMount(async () => {
+        // count = result.courseCount;
+        await getCourses();
     });
 
     // Methods
     const getCourses = async () => {
-        isLoading = false;
+        isLoading = true;
         let url = '/api/search/courses';
         if (searchQuery) {
             url += `/${searchQuery}`;
@@ -46,9 +46,9 @@
         url += `?sort_by=${sortByOption.value.param}&page=${page - 1}&page_size=${pageSize}`;
         const response = await fetch(url);
         const result = (await response.json()) as CourseSearchResult;
-        isLoading = false;
         courses = result.courses;
         count = result.courseCount;
+        isLoading = false;
         window.scrollTo({ behavior: 'smooth', top: 0 });
     };
 
@@ -61,10 +61,12 @@
 </script>
 
 <div class="grid justify-items-center gap-y-4 p-5">
-    <div class="container grid max-w-5xl gap-y-4">
+    <div class="grid max-w-5xl gap-y-4">
         <h1 class="text-lg font-bold">Find a Course</h1>
-        <div class="grid grid-cols-[1fr_min-content_min-content_min-content] gap-x-2">
-            <div class="relative w-full">
+        <div
+            class="grid grid-cols-[1fr_auto] grid-rows-2 gap-x-2 gap-y-2 sm:grid-cols-[1fr_auto_auto]"
+        >
+            <div class="relative col-span-full w-full md:col-span-1">
                 <Input
                     bind:value={searchQuery}
                     class="w-full"
@@ -81,7 +83,6 @@
                 bind:value={sortByOption}
                 on:valuechange={(event) => {
                     sortByOption = event.detail;
-                    // paginationSettings.page = 0;
                     page = 1;
                     getCourses();
                 }}
@@ -90,7 +91,7 @@
         </div>
         {#if isLoading}
             <div
-                class="content-visibility-auto grid grid-flow-row grid-cols-1 justify-items-center gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
+                class="grid justify-center gap-y-4 sm:grid-cols-[repeat(2,auto)] sm:justify-between lg:grid-cols-[repeat(3,auto)]"
             >
                 {#each Array(20) as _}
                     <div class="!-z-20">
@@ -105,9 +106,15 @@
                     <span>No courses found</span>
                 </div>
             </div>
+        {:else if selectedView === 'list'}
+            <div class="flex flex-col gap-y-4">
+                {#each courses as courseWithInstructor}
+                    <CourseListItem {courseWithInstructor} />
+                {/each}
+            </div>
         {:else}
             <div
-                class="grid grid-flow-row grid-cols-1 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
+                class="grid justify-center gap-y-4 sm:grid-cols-[repeat(2,auto)] sm:justify-between lg:grid-cols-[repeat(3,auto)]"
             >
                 {#each courses as courseWithInstructor}
                     <CourseGridItem {courseWithInstructor} />
