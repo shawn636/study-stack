@@ -1,4 +1,10 @@
 <script lang="ts">
+    /**
+     * This component is currently deprecated and not in use. The functionality has been moved
+     * to the `ViewToggle` component. This component is remaining as a lottie animation example,
+     * however tests need to be written should this component be used in the future.
+     */
+
     import type { AnimationItem } from 'lottie-web';
 
     import { Button } from '$lib/components/ui/button';
