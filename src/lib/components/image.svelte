@@ -1,5 +1,8 @@
 <script lang="ts">
+    import { Skeleton } from '$lib/components/ui/skeleton';
+    import { faImage } from '@fortawesome/free-solid-svg-icons';
     import { afterUpdate, onDestroy, onMount } from 'svelte';
+    import Fa from 'svelte-fa';
 
     export let src: string;
     export let alt: string;
@@ -21,8 +24,8 @@
 
     $: containerBaseClass = `${width} ${height}`;
     $: imageLoadedBaseClass = `object-cover object-center ${width} ${height} ${classString}`;
-    $: imageErrorBaseClass = `placeholder ${width} ${height}`;
-    $: imageLoadingBaseClass = `placeholder animate-pulse asbolute ${width} ${height}`;
+    $: imageErrorBaseClass = `${width} ${height} bg-muted-foreground/25 rounded-xl`;
+    $: imageLoadingBaseClass = `${width} ${height}`;
 
     const loadWorker = async () => {
         const imageWorker = await import('$lib/workers/image.worker?worker');
@@ -84,13 +87,14 @@
         <img {alt} class={imageLoadedBaseClass} role="presentation" src={imageUrl} />
     {:else if error}
         <div class={imageErrorBaseClass}>
-            <div
-                class={'grid h-full items-center justify-items-center text-center text-gray-400 dark:text-gray-500'}
-            >
-                <p class="text-gray-700 dark:text-white">Image failed to load</p>
+            <div class="grid h-full w-full place-items-center">
+                <div class="flex flex-col items-center justify-center text-center">
+                    <Fa class="text-6xl text-muted-foreground/60" icon={faImage} />
+                    <p class="text-muted-foreground">Not Found</p>
+                </div>
             </div>
         </div>
     {:else}
-        <div class={imageLoadingBaseClass} />
+        <Skeleton class={imageLoadingBaseClass} />
     {/if}
 </div>

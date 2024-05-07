@@ -2,25 +2,20 @@
     import type { Course, User } from '$lib/models/types/database.types';
 
     import { initials } from '$lib/client/util';
+    import CourseRating from '$lib/components/course-rating.svelte';
     import Image from '$lib/components/image.svelte';
     import * as Avatar from '$lib/components/ui/avatar/index';
     import { Button } from '$lib/components/ui/button';
-    import {
-        faHeart as faHeartOutline,
-        faStar as faStarOutline
-    } from '@fortawesome/free-regular-svg-icons';
+    import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
     import { faClock, faFileLines } from '@fortawesome/free-regular-svg-icons';
-    import { faHeart, faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
+    import { faHeart } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
 
     export let courseWithInstructor: Course & User;
 
-    $: ratingAvgRounded = Math.round(courseWithInstructor.ratingAverage * 2) / 2;
-
     let toggled = false;
 
     const handleToggle = () => {
-        // TODO:if not logged in, redirect to login page
         toggled = !toggled;
     };
 
@@ -39,29 +34,11 @@
         width="w-full"
     />
 
-    <!-- Ratings (Below)-->
-    <div class="grid items-center justify-items-start">
-        <div
-            class="flex-flow-col text flex items-center justify-items-center gap-x-2 px-2 text-sm font-medium"
-        >
-            <p class="text-secondary-600">
-                {Math.round(courseWithInstructor.ratingAverage * 100) / 100}
-            </p>
-
-            {#each Array.from({ length: 5 }, (_, i) => i + 1) as starIdx}
-                <Fa
-                    class="text-yellow-500"
-                    icon={starIdx <= ratingAvgRounded
-                        ? faStar
-                        : starIdx - 0.5 === ratingAvgRounded
-                          ? faStarHalfAlt
-                          : faStarOutline}
-                />
-            {/each}
-            <p class="text-xs text-gray-400">({courseWithInstructor.ratingCount})</p>
-        </div>
-    </div>
-    <!-- Ratings (Above) -->
+    <CourseRating
+        class="pl-2"
+        rating={courseWithInstructor.ratingAverage}
+        ratingCount={courseWithInstructor.ratingCount}
+    />
 
     <h3 class="px-2 text-start text-lg font-medium">
         {courseWithInstructor.title.length > 40

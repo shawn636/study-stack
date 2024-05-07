@@ -67,12 +67,20 @@ function create_branch() {
 
 # --- MAIN ---
 function main() {
+    local new_branch_name=""
+    local cred_name=""
+    local DB_URL=""
+
     new_branch_name=$(branch_name_from_git) || exit $?
 
     check_for_required_env_vars || exit $?
     check_branch_creation_possible "$new_branch_name" || exit $?
 
     create_branch "$new_branch_name"
+
+    cred_name=$(get_cred_name)
+
+    delete_credential_if_exists "$new_branch_name" "$cred_name"
 
     DB_URL=$(generate_credentials "$new_branch_name") || exit $?
     update_var_in_dotenv "DATABASE_URL" "$DB_URL" || exit $?

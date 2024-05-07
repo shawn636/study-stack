@@ -134,6 +134,36 @@ function branch_name_from_git() {
 }
 
 # --- PLANETSCALE METHODS ---
+function get_cred_name() {
+    local cred_name=""
+    if [ -n "$CI" ]; then
+        if [ -n "$GITHUB_ACTOR" ]; then
+            cred_name="ga-$GITHUB_ACTOR"
+        elif [ -n "$GITHUB_RUN_ID" ]; then
+            cred_name="ga-$GITHUB_RUN_ID"
+        else
+            cred_name="ga-$RANDOM"
+        fi
+    else
+        git_user_name=$(git config user.name)
+        git_user_email=$(git config user.email)
+        local_user=$(whoami)
+
+        if [ -n "$git_user_name" ]; then
+            cred_name="local-dev-$git_user_name"
+        elif [ -n "$git_user_email" ]; then
+            cred_name="local-dev-$git_user_email"
+        elif [ -n "$local_user" ]; then
+            cred_name="local-dev-$local_user"
+        else
+            cred_name="local-dev-$RANDOM"
+        fi
+    fi
+
+    echo "$cred_name" | tr -cd '[:alnum:]-/' | tr '/' '-' | tr '[:upper:]' '[:lower:]'
+}
+
+
 function generate_credentials() {
     branch_name=$1
     cred_name=$2
@@ -146,29 +176,7 @@ function generate_credentials() {
 
     # If cred name is blank, determine from github or local env
     if [ -z "$cred_name" ]; then
-        if [ -n "$CI" ]; then
-            if [ -n "$GITHUB_ACTOR" ]; then
-                cred_name="ga-$GITHUB_ACTOR"
-            elif [ -n "$GITHUB_RUN_ID" ]; then
-                cred_name="ga-$GITHUB_RUN_ID"
-            else
-                cred_name="ga-$RANDOM"
-            fi
-        else
-            git_user_name=$(git config user.name)
-            git_user_email=$(git config user.email)
-            local_user=$(whoami)
-
-            if [ -n "$git_user_name" ]; then
-                cred_name="local-dev-$git_user_name"
-            elif [ -n "$git_user_email" ]; then
-                cred_name="local-dev-$git_user_email"
-            elif [ -n "$local_user" ]; then
-                cred_name="local-dev-$local_user"
-            else
-                cred_name="local-dev-$RANDOM"
-            fi
-        fi
+        cred_name=$(get_cred_name)
     fi
 
     # Clean the cred name
@@ -208,6 +216,27 @@ function delete_credential() {
         echo "Error: Unable to delete credential. Exiting..."
         exit 1
     fi
+}
+
+function delete_credential_if_exists() {
+    branch_name=$1
+    credential_id=$2
+    local status_code=""
+
+    if [ -z "$branch_name" ]; then
+        echo "Error: missing argument branch_name. Please use the format: delete_credential <branch_name> <credential_id>"
+        exit 1
+    fi
+
+    if [ -z "$credential_id" ]; then
+        echo "Error: missing argument credential_id. Please use the format: delete_credential <branch_name> <credential_id>"
+        exit 1
+    fi
+
+    pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$credential_id" --force --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+
+    # Ignore if password deleting fails, as it may not exist
+    exit 0
 }
 
 function get_dev_branches() {
