@@ -18,6 +18,7 @@
     import { onMount } from 'svelte';
     import Fa from 'svelte-fa';
     import { mediaQuery } from 'svelte-legos';
+    import { toast } from 'svelte-sonner';
 
     const result: CourseSearchResult = { courseCount: 0, courses: [] };
 
@@ -32,7 +33,6 @@
     let searchQuery: string;
 
     onMount(async () => {
-        // count = result.courseCount;
         await getCourses();
     });
 
@@ -44,10 +44,18 @@
             url += `/${searchQuery}`;
         }
         url += `?sort_by=${sortByOption.value.param}&page=${page - 1}&page_size=${pageSize}`;
-        const response = await fetch(url);
-        const result = (await response.json()) as CourseSearchResult;
-        courses = result.courses;
-        count = result.courseCount;
+        try {
+            const response = await fetch(url);
+            if (response.ok) {
+                const result = (await response.json()) as CourseSearchResult;
+                courses = result.courses;
+                count = result.courseCount;
+            } else {
+                toast.error('An error occurred while fetching courses. Please try again later.');
+            }
+        } catch (error) {
+            toast.error('An error occurred while fetching courses. Please try again later.');
+        }
         isLoading = false;
         window.scrollTo({ behavior: 'smooth', top: 0 });
     };

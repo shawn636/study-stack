@@ -7,10 +7,30 @@
     import { onMount } from 'svelte';
 
     type ViewOption = 'grid' | 'list';
+    /**
+     * Represents an animation configuration.
+     */
     interface Animation {
+        /**
+         * The frame number where the animation ends.
+         */
         end: number;
+
+        /**
+         * The direction in which the animation should play.
+         * -1 represents reverse direction, 1 represents forward direction.
+         */
         playDirection: -1 | 1;
+
+        /**
+         * The speed at which the animation should play.
+         * A value of 1 represents normal speed.
+         */
         playSpeed: number;
+
+        /**
+         * The frame number where the animation starts.
+         */
         start: number;
     }
 
