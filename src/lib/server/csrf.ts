@@ -15,8 +15,8 @@ const validateToken = async (token: string): Promise<boolean> => {
         const tokenResult = await db
             .selectFrom('CsrfToken')
             .select(({ fn }) => fn.countAll<number>().as('tokenCount'))
-            .where('token', '=', token)
-            .where('expirationDate', '>', new Date())
+            .where('CsrfToken.csrfToken', '=', token)
+            .where('CsrfToken.csrfTokenExpirationDate', '>', new Date())
             .executeTakeFirst();
 
         return Number(tokenResult?.tokenCount) === 1;
@@ -41,8 +41,8 @@ const generateToken = async (): Promise<null | string> => {
         const createToken = await db
             .insertInto('CsrfToken')
             .values({
-                expirationDate: expirationDate,
-                token: newToken
+                csrfToken: newToken,
+                csrfTokenExpirationDate: expirationDate
             })
             .executeTakeFirstOrThrow();
 

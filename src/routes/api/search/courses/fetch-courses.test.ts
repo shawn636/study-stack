@@ -18,25 +18,25 @@ import {
 } from './fetch-courses';
 
 const mockInstructor: User = {
-    areaCode: null,
     authUserId: null,
-    bio: null,
-    city: null,
-    countryCode: null,
-    email: 'instructor1@example.com',
-    id: cuid(),
-    name: 'Instructor 1',
     organizationId: null,
-    phoneNumber: null,
-    photoUrl: null,
-    role: 'user',
-    state: null
+    userAreaCode: null,
+    userBio: null,
+    userCity: null,
+    userCountryCode: null,
+    userEmail: 'instructor1@example.com',
+    userId: cuid(),
+    userName: 'Instructor 1',
+    userPhoneNumber: null,
+    userPhotoUrl: null,
+    userRole: 'user',
+    userState: null
 };
 
 const mockCategory: Category = {
-    id: cuid(),
-    imgHref: '',
-    title: 'Test Category'
+    categoryId: cuid(),
+    categoryImgHref: '',
+    categoryTitle: 'Test Category'
 };
 
 const cuidKeyword = cuid();
@@ -44,55 +44,55 @@ const cuidKeyword = cuid();
 // 2 Courses out of the 3 contain the cuidKeyword in the title
 const mockCourses: Course[] = [
     {
-        categoryId: mockCategory.id,
-        currentPrice: 100,
-        description: 'Test Course - Delete Me',
-        difficulty: 'medium',
+        categoryId: mockCategory.categoryId,
+        courseCurrentPrice: 100,
+        courseDescription: 'Test Course - Delete Me',
+        courseDifficulty: 'medium',
+        courseId: cuid(),
+        courseImgHref: '',
+        courseOriginalPrice: 100,
+        courseRatingAverage: 5,
+        courseRatingCount: 1,
+        courseTitle: `Test Course 1: ${cuidKeyword}`,
         estimatedTimeHours: 0,
         estimatedTimeMinutes: 0,
-        id: cuid(),
-        imgHref: '',
-        instructorId: mockInstructor.id,
+        instructorId: mockInstructor.userId,
         lessonCount: 0,
-        organizationId: null,
-        originalPrice: 100,
-        ratingAverage: 5,
-        ratingCount: 1,
-        title: `Test Course 1: ${cuidKeyword}`
+        organizationId: null
     },
     {
-        categoryId: mockCategory.id,
-        currentPrice: 100,
-        description: 'Test Course - Delete Me',
-        difficulty: 'medium',
+        categoryId: mockCategory.categoryId,
+        courseCurrentPrice: 100,
+        courseDescription: 'Test Course - Delete Me',
+        courseDifficulty: 'medium',
+        courseId: cuid(),
+        courseImgHref: '',
+        courseOriginalPrice: 100,
+        courseRatingAverage: 5,
+        courseRatingCount: 1,
+        courseTitle: `Test Course 2: ${cuidKeyword}`,
         estimatedTimeHours: 0,
         estimatedTimeMinutes: 0,
-        id: cuid(),
-        imgHref: '',
-        instructorId: mockInstructor.id,
+        instructorId: mockInstructor.userId,
         lessonCount: 0,
-        organizationId: null,
-        originalPrice: 100,
-        ratingAverage: 5,
-        ratingCount: 1,
-        title: `Test Course 2: ${cuidKeyword}`
+        organizationId: null
     },
     {
-        categoryId: mockCategory.id,
-        currentPrice: 100,
-        description: 'Test Course - Delete Me',
-        difficulty: 'medium',
+        categoryId: mockCategory.categoryId,
+        courseCurrentPrice: 100,
+        courseDescription: 'Test Course - Delete Me',
+        courseDifficulty: 'medium',
+        courseId: cuid(),
+        courseImgHref: '',
+        courseOriginalPrice: 100,
+        courseRatingAverage: 5,
+        courseRatingCount: 1,
+        courseTitle: 'Test Course 3',
         estimatedTimeHours: 0,
         estimatedTimeMinutes: 0,
-        id: cuid(),
-        imgHref: '',
-        instructorId: mockInstructor.id,
+        instructorId: mockInstructor.userId,
         lessonCount: 0,
-        organizationId: null,
-        originalPrice: 100,
-        ratingAverage: 5,
-        ratingCount: 1,
-        title: 'Test Course 3'
+        organizationId: null
     }
 ];
 
@@ -106,10 +106,13 @@ const createMockCourses = async (): Promise<void> => {
 const deleteMockCourses = async (): Promise<void> => {
     await db
         .deleteFrom('Course')
-        .where('Course.description', '=', 'Test Course - Delete Me')
+        .where('Course.courseDescription', '=', 'Test Course - Delete Me')
         .execute();
-    await db.deleteFrom('User').where('User.id', '=', mockInstructor.id).execute();
-    await db.deleteFrom('Category').where('Category.id', '=', mockCategory.id).execute();
+    await db.deleteFrom('User').where('User.userId', '=', mockInstructor.userId).execute();
+    await db
+        .deleteFrom('Category')
+        .where('Category.categoryId', '=', mockCategory.categoryId)
+        .execute();
 };
 
 describe('Course Fetching Utility Functions', () => {
@@ -182,8 +185,12 @@ describe('Course Fetching Utility Functions', () => {
             expect(coursesByLowestPrice.length).toBe(coursesByHighestRating.length);
             expect(coursesByLowestPrice.length).toBeGreaterThan(0);
 
-            const coursePrices = coursesByLowestPrice.map((course) => Number(course.currentPrice));
-            const courseRatings = coursesByHighestRating.map((course) => course.ratingAverage);
+            const coursePrices = coursesByLowestPrice.map((course) =>
+                Number(course.courseCurrentPrice)
+            );
+            const courseRatings = coursesByHighestRating.map(
+                (course) => course.courseRatingAverage
+            );
 
             const courseCount = coursePrices.length;
 

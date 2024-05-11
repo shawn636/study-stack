@@ -35,10 +35,10 @@
         >
             <Avatar.Root class="m-0 h-6 w-6 p-0">
                 <Avatar.Fallback class="bg-gray-200 text-black "
-                    >{initials(user.name)}</Avatar.Fallback
+                    >{initials(user.userName)}</Avatar.Fallback
                 >
             </Avatar.Root>
-            <span class="hidden text-black xs:block">{user.name}</span>
+            <span class="hidden text-black xs:block">{user.userName}</span>
             <Fa class="text-black" icon={faChevronDown} size="sm" />
         </Button>
     </DropdownMenu.Trigger>
@@ -50,15 +50,15 @@
                     <div class="col-start-1 row-start-1 row-end-3">
                         <Avatar.Root>
                             <Avatar.Fallback class="h-8 w-8 text-sm"
-                                >{initials(user.name)}</Avatar.Fallback
+                                >{initials(user.userName)}</Avatar.Fallback
                             >
                         </Avatar.Root>
                     </div>
                     <span class="row-start-1 text-sm font-semibold" data-testid="profile-popup-name"
-                        >{user.name}</span
+                        >{user.userName}</span
                     >
                     <span class="row-start-2 text-xs" data-testid="profile-popup-email"
-                        >{user.email}</span
+                        >{user.userEmail}</span
                     >
                 </div>
 

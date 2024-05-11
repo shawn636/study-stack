@@ -42,13 +42,13 @@ import type { RequestHandler } from './$types';
 export const GET = (async () => {
     const results = await db
         .selectFrom('Category')
-        .innerJoin('Course', 'Category.id', 'Course.categoryId')
+        .innerJoin('Course', 'Category.categoryId', 'Course.categoryId')
         .select([
-            'Category.imgHref',
-            'Category.title',
+            'Category.categoryImgHref',
+            'Category.categoryTitle',
             ({ fn }) => fn.countAll<number>().as('count')
         ])
-        .groupBy(['Category.imgHref', 'Category.title'])
+        .groupBy(['Category.categoryImgHref', 'Category.categoryTitle'])
         .orderBy('count', 'desc')
         .limit(6)
         .execute();

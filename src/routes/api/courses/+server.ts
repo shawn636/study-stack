@@ -50,7 +50,7 @@ export const GET = (async ({ cookies }) => {
 
     const courseResult = await db
         .selectFrom('Course')
-        .innerJoin('User as Instructor', 'Course.instructorId', 'Instructor.id')
+        .innerJoin('User as Instructor', 'Course.instructorId', 'Instructor.userId')
         .selectAll('Course')
         .selectAll('Instructor')
         .limit(20)

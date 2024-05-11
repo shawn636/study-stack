@@ -71,12 +71,12 @@ describe('register', () => {
             const session = await db
                 .selectFrom('AuthSession')
                 .selectAll()
-                .where('AuthSession.id', '=', cookieValue)
+                .where('AuthSession.authSessionId', '=', cookieValue)
                 .executeTakeFirst();
 
             expect(session).toBeTruthy();
-            expect(session?.id).toBeTruthy();
-            expect(session?.id).toBe(cookieValue);
+            expect(session?.authSessionId).toBeTruthy();
+            expect(session?.authSessionId).toBe(cookieValue);
         }
     }, 20000);
 });

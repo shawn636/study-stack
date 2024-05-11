@@ -19,7 +19,7 @@
         <img
             alt="Course Thumbnail"
             class="absolute inset-0 h-full w-full rounded-lg object-cover"
-            src={courseWithInstructor.imgHref}
+            src={courseWithInstructor.courseImgHref}
         />
     </div>
 
@@ -29,12 +29,12 @@
     >
         <div>
             <CourseRating
-                rating={courseWithInstructor.ratingAverage}
-                ratingCount={courseWithInstructor.ratingCount}
+                rating={courseWithInstructor.courseRatingAverage}
+                ratingCount={courseWithInstructor.courseRatingCount}
             />
-            <h2 class="line-clamp-1 font-bold sm:text-lg">{courseWithInstructor.title}</h2>
+            <h2 class="line-clamp-1 font-bold sm:text-lg">{courseWithInstructor.courseTitle}</h2>
             <p class="line-clamp-1 text-sm sm:line-clamp-2 md:line-clamp-3">
-                {courseWithInstructor.description}
+                {courseWithInstructor.courseDescription}
             </p>
         </div>
         <Separator class="my-2 md:hidden" orientation="horizontal" />
@@ -46,10 +46,10 @@
                     data-test-id="list-item-price-block"
                 >
                     <span class="m-0 p-0 text-sm text-muted-foreground/50 line-through"
-                        >${Math.round(courseWithInstructor.originalPrice * 100) / 100}</span
+                        >${Math.round(courseWithInstructor.courseOriginalPrice * 100) / 100}</span
                     >
                     <span class="m-0 p-0 text-lg font-bold"
-                        >${Math.round(courseWithInstructor.originalPrice * 100) / 100}</span
+                        >${Math.round(courseWithInstructor.courseOriginalPrice * 100) / 100}</span
                     >
                 </div>
                 <div

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type CategorySummary from '$lib/models/category-summary';
+    import type CategorySummary from '$lib/models/types/category-summary';
 
     import CategoryCard from '$lib/components/category-card.svelte';
     export let categorySummaries: CategorySummary[];

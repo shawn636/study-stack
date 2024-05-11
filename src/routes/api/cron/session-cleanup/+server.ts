@@ -27,10 +27,13 @@ import type { RequestHandler } from './$types';
 export const GET: RequestHandler = async () => {
     try {
         const [csrfFlush, authSessionFlush] = await Promise.all([
-            db.deleteFrom('CsrfToken').where('expirationDate', '<=', new Date()).executeTakeFirst(),
+            db
+                .deleteFrom('CsrfToken')
+                .where('csrfTokenExpirationDate', '<=', new Date())
+                .executeTakeFirst(),
             db
                 .deleteFrom('AuthSession')
-                .where('expirationDate', '<=', new Date())
+                .where('authSessionExpirationDate', '<=', new Date())
                 .executeTakeFirst()
         ]);
         const json = JSON.stringify({

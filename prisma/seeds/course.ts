@@ -27,27 +27,27 @@ export async function seedCourse(client: PrismaClient) {
         const instructor = faker.helpers.arrayElement(users);
         const hasOrg = instructor.organizationId !== null;
         const organization = hasOrg
-            ? organizations.find((org) => org.id === instructor.organizationId)
+            ? organizations.find((org) => org.organizationId === instructor.organizationId)
             : null;
 
         const course: Course = {
-            categoryId: category.id,
-            currentPrice: new Prisma.Decimal(discountedPrice),
-            description: faker.commerce.productDescription(),
-            difficulty: faker.helpers.arrayElement(difficulties),
-            estimatedTimeHours: faker.number.int({ max: 100, min: 0 }),
-            estimatedTimeMinutes: faker.number.int({ max: 59, min: 0 }),
-            id: cuid(),
-            imgHref: 'images/course-image.webp',
-            instructorId: instructor.id,
-            lessonCount: 0,
-            organizationId: organization?.id ?? null,
-            originalPrice: isDiscounted
+            categoryId: category.categoryId,
+            courseCurrentPrice: new Prisma.Decimal(discountedPrice),
+            courseDescription: faker.commerce.productDescription(),
+            courseDifficulty: faker.helpers.arrayElement(difficulties),
+            courseId: cuid(),
+            courseImgHref: 'images/course-image.webp',
+            courseOriginalPrice: isDiscounted
                 ? new Prisma.Decimal(price)
                 : new Prisma.Decimal(discountedPrice),
-            ratingAverage: faker.number.float({ max: 5, min: 0 }),
-            ratingCount: faker.number.int({ max: 1000, min: 0 }),
-            title: faker.commerce.productName()
+            courseRatingAverage: faker.number.float({ max: 5, min: 0 }),
+            courseRatingCount: faker.number.int({ max: 1000, min: 0 }),
+            courseTitle: faker.commerce.productName(),
+            estimatedTimeHours: faker.number.int({ max: 100, min: 0 }),
+            estimatedTimeMinutes: faker.number.int({ max: 59, min: 0 }),
+            instructorId: instructor.userId,
+            lessonCount: 0,
+            organizationId: organization?.organizationId ?? null
         };
 
         courses.push(course);
