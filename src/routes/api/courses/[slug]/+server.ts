@@ -29,6 +29,9 @@ export const GET = (async ({ cookies, params }) => {
         });
     } catch (e) {
         console.log(e);
-        return new Response(null, { status: 404 });
+        return new Response('{"error": "Not found"}', {
+            headers: { 'content-type': 'application/json;charset=UTF-8' },
+            status: 404
+        });
     }
 }) satisfies RequestHandler;
