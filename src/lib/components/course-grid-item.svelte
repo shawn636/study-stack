@@ -26,13 +26,15 @@
 </script>
 
 <div class={containerBaseClass}>
-    <Image
-        alt="an open bible"
-        class="aspect-auto rounded-md p-0"
-        {height}
-        src={courseWithInstructor.courseImgHref}
-        width="w-full"
-    />
+    <a href={`/courses/${courseWithInstructor.courseId}`}>
+        <Image
+            alt="an open bible"
+            class="aspect-auto rounded-md p-0"
+            {height}
+            src={courseWithInstructor.courseImgHref}
+            width="w-full"
+        />
+    </a>
 
     <CourseRating
         class="pl-2"
@@ -40,11 +42,13 @@
         ratingCount={courseWithInstructor.courseRatingCount}
     />
 
-    <h3 class="px-2 text-start text-lg font-medium">
-        {courseWithInstructor.courseTitle.length > 40
-            ? courseWithInstructor.courseTitle.substring(0, 40) + '...'
-            : courseWithInstructor.courseTitle}
-    </h3>
+    <Button class="m-0 p-0" href={`/courses/${courseWithInstructor.courseId}`} variant="link">
+        <h3 class="px-2 text-start text-lg font-medium">
+            {courseWithInstructor.courseTitle.length > 40
+                ? courseWithInstructor.courseTitle.substring(0, 40) + '...'
+                : courseWithInstructor.courseTitle}
+        </h3>
+    </Button>
 
     <!-- Course Stats (Below) -->
     <div

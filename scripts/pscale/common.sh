@@ -163,7 +163,6 @@ function get_cred_name() {
     echo "$cred_name" | tr -cd '[:alnum:]-/' | tr '/' '-' | tr '[:upper:]' '[:lower:]'
 }
 
-
 function generate_credentials() {
     branch_name=$1
     cred_name=$2

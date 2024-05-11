@@ -12,16 +12,6 @@ describe('/api/courses', () => {
             .selectAll(['Course', 'User'])
             .executeTakeFirstOrThrow();
 
-        // There appears to be a kysely bug that causes
-        // the output of the above query to contain
-        // only one id field which is (sometimes)
-        // the id of the instructor, not the course.
-        // Waiting for a workaround or fix.
-
-        // If no fix is found, will have to rename
-        // primary keys of all tables to avoid
-        // this issue.
-
         const response = await fetch(
             `http://localhost:3004/api/courses/${someCourseWithInstructor.courseId}`
         );
