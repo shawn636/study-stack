@@ -1,6 +1,8 @@
+import type { User } from '$lib/models/types/database.types';
+
 import { auth } from '$lib/server/auth';
 import { csrf } from '$lib/server/csrf';
-import { type User, db } from '$lib/server/database';
+import { db } from '$lib/server/database';
 import { error } from '@sveltejs/kit';
 
 import type { RequestHandler } from './$types';
@@ -64,7 +66,7 @@ export const PUT = (async ({ cookies, request }) => {
     ]);
 
     const userFromRequest: User = requestData.user;
-    const userIdFromRequest: string = requestData.user.id;
+    const userIdFromRequest: string = requestData.user.userId;
 
     if (userIdFromRequest !== userIdFromSession) {
         error(403, 'You are not authorized to update this user.');
@@ -73,7 +75,7 @@ export const PUT = (async ({ cookies, request }) => {
     // Ignoring unused variables in order to remove foreign keys from the user object
     //
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { authUserId, id, organizationId, ...userFromRequestWithoutForeignKeys } =
+    const { authUserId, organizationId, userId, ...userFromRequestWithoutForeignKeys } =
         userFromRequest;
     try {
         await db
@@ -81,7 +83,7 @@ export const PUT = (async ({ cookies, request }) => {
             .set({
                 ...userFromRequestWithoutForeignKeys
             })
-            .where('id', '=', userIdFromRequest)
+            .where('userId', '=', userIdFromRequest)
             .execute();
     } catch (e) {
         console.error(e);

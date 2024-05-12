@@ -101,6 +101,13 @@ function remove_credentials_from_dotenv() {
 
 }
 
+function debug_log() {
+    message=$1
+    if [ "$DEBUG_MODE" == "true" ]; then
+        echo "DEBUG: $message"
+    fi
+}
+
 # --- GIT METHODS ---
 function branch_name_from_git() {
     local git_branch_name=""
@@ -163,7 +170,6 @@ function get_cred_name() {
     echo "$cred_name" | tr -cd '[:alnum:]-/' | tr '/' '-' | tr '[:upper:]' '[:lower:]'
 }
 
-
 function generate_credentials() {
     branch_name=$1
     cred_name=$2
@@ -222,6 +228,7 @@ function delete_credential_if_exists() {
     branch_name=$1
     credential_id=$2
     local status_code=""
+    local output=""
 
     if [ -z "$branch_name" ]; then
         echo "Error: missing argument branch_name. Please use the format: delete_credential <branch_name> <credential_id>"
@@ -233,10 +240,14 @@ function delete_credential_if_exists() {
         exit 1
     fi
 
-    pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$credential_id" --force --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+    output=$(pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$credential_id" --force --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" 2>&1)
+    status_code=$?
+    
+    if [ $status_code -eq 0 ]; then
+        echo "$output"
+    fi
 
-    # Ignore if password deleting fails, as it may not exist
-    exit 0
+    return 0
 }
 
 function get_dev_branches() {

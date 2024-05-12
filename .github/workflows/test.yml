@@ -67,6 +67,8 @@ jobs:
             - run: pnpm pscale:cred:create "ga-unit-tests-${{ github.run_number }}"
             - run: pnpm vercel:settings:pull
             - run: pnpm exec vercel build --prod
+            - run: pnpm prisma db push --accept-data-loss
+            - run: pnpm prisma generate
             - run: pnpm test:unit
 
     e2e-tests:
@@ -100,6 +102,8 @@ jobs:
             - run: pnpm pscale:cred:create "ga-e2e-tests-${{ github.run_number }}"
             - run: pnpm vercel:settings:pull
             - run: pnpm exec vercel build --prod
+            - run: pnpm prisma db push --accept-data-loss
+            - run: pnpm prisma generate
             - run: pnpm test
 
     deploy-preview:

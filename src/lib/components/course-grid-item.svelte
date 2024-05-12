@@ -26,25 +26,29 @@
 </script>
 
 <div class={containerBaseClass}>
-    <Image
-        alt="an open bible"
-        class="aspect-auto rounded-md p-0"
-        {height}
-        src={courseWithInstructor.imgHref}
-        width="w-full"
-    />
+    <a href={`/courses/${courseWithInstructor.courseId}`}>
+        <Image
+            alt="an open bible"
+            class="aspect-auto rounded-md p-0"
+            {height}
+            src={courseWithInstructor.courseImgHref}
+            width="w-full"
+        />
+    </a>
 
     <CourseRating
         class="pl-2"
-        rating={courseWithInstructor.ratingAverage}
-        ratingCount={courseWithInstructor.ratingCount}
+        rating={courseWithInstructor.courseRatingAverage}
+        ratingCount={courseWithInstructor.courseRatingCount}
     />
 
-    <h3 class="px-2 text-start text-lg font-medium">
-        {courseWithInstructor.title.length > 40
-            ? courseWithInstructor.title.substring(0, 40) + '...'
-            : courseWithInstructor.title}
-    </h3>
+    <Button class="m-0 p-0" href={`/courses/${courseWithInstructor.courseId}`} variant="link">
+        <h3 class="px-2 text-start text-lg font-medium">
+            {courseWithInstructor.courseTitle.length > 40
+                ? courseWithInstructor.courseTitle.substring(0, 40) + '...'
+                : courseWithInstructor.courseTitle}
+        </h3>
+    </Button>
 
     <!-- Course Stats (Below) -->
     <div
@@ -67,9 +71,9 @@
 
     <div class="grid w-full grid-cols-[auto_1fr_auto] items-center gap-x-2">
         <Avatar.Root class="h-6 w-6 text-xs">
-            <Avatar.Fallback>{initials(courseWithInstructor.name)}</Avatar.Fallback>
+            <Avatar.Fallback>{initials(courseWithInstructor.userName)}</Avatar.Fallback>
         </Avatar.Root>
-        <p class="text-sm text-gray-500">{courseWithInstructor.name}</p>
+        <p class="text-sm text-gray-500">{courseWithInstructor.userName}</p>
     </div>
 
     <div class="grid grid-rows-2 items-center">
@@ -77,14 +81,14 @@
             <button aria-label="Toggle Favorite" on:click={handleToggle}>
                 <Fa class="text-pink-500" icon={toggled ? faHeart : faHeartOutline} size="lg" />
             </button>
-            {#if Number(courseWithInstructor.currentPrice) < Number(courseWithInstructor.originalPrice)}
+            {#if Number(courseWithInstructor.courseCurrentPrice) < Number(courseWithInstructor.courseOriginalPrice)}
                 <p class="text-sm text-gray-400 line-through">
-                    ${Number(courseWithInstructor.originalPrice).toFixed(2)}
+                    ${Number(courseWithInstructor.courseOriginalPrice).toFixed(2)}
                 </p>
             {/if}
 
             <p class="font-semibold">
-                ${Number(courseWithInstructor.currentPrice).toFixed(2)}
+                ${Number(courseWithInstructor.courseCurrentPrice).toFixed(2)}
             </p>
         </div>
         <Button aria-label="Enroll" class="variant-filled-secondary">

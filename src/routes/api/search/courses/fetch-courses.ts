@@ -95,10 +95,10 @@ export const fetchCourseCount = async (searchTerm: String | null): Promise<numbe
     try {
         const courseCountResult = await db
             .selectFrom('Course')
-            .select(({ fn }) => [fn.count<number>('id').as('courseCount')])
+            .select(({ fn }) => [fn.count<number>('courseId').as('courseCount')])
             .$if(searchTerm !== '' && searchTerm !== null && searchTerm !== undefined, (qb) =>
                 qb.where(
-                    sql<boolean>`MATCH(title, description) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
+                    sql<boolean>`MATCH(courseTitle, courseDescription) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
                 )
             )
             .executeTakeFirstOrThrow();
@@ -122,17 +122,17 @@ export const fetchCourses = async (
         const sortByIsRelevance = sortByValue === CourseSortByOptions.RELEVANCE;
         const courseResultQuery = db
             .selectFrom('Course')
-            .innerJoin('User', 'Course.instructorId', 'User.id')
+            .innerJoin('User', 'Course.instructorId', 'User.userId')
             .selectAll(['Course', 'User'])
             .$if(requestContainsSearchTerm, (qb) =>
                 qb
                     .select(
-                        sql<number>`MATCH(title) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`.as(
+                        sql<number>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`.as(
                             '_relevance'
                         )
                     )
                     .where(
-                        sql<boolean>`MATCH(title) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
+                        sql<boolean>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
                     )
             )
             .$if(requestContainsSearchTerm || !sortByIsRelevance, (qb) =>

@@ -16,11 +16,13 @@
 <div class="grid grid-flow-row grid-cols-[minmax(150px,_1fr)_3fr] items-center gap-x-2">
     <div class="relative w-full self-start sm:self-center" style="padding-top: 100%;">
         <!-- This padding top keeps the aspect ratio 1:1 -->
-        <img
-            alt="Course Thumbnail"
-            class="absolute inset-0 h-full w-full rounded-lg object-cover"
-            src={courseWithInstructor.imgHref}
-        />
+        <a href={`/courses/${courseWithInstructor.courseId}`}>
+            <img
+                alt="Course Thumbnail"
+                class="absolute inset-0 h-full w-full rounded-lg object-cover"
+                src={courseWithInstructor.courseImgHref}
+            />
+        </a>
     </div>
 
     <div
@@ -29,12 +31,20 @@
     >
         <div>
             <CourseRating
-                rating={courseWithInstructor.ratingAverage}
-                ratingCount={courseWithInstructor.ratingCount}
+                rating={courseWithInstructor.courseRatingAverage}
+                ratingCount={courseWithInstructor.courseRatingCount}
             />
-            <h2 class="line-clamp-1 font-bold sm:text-lg">{courseWithInstructor.title}</h2>
+            <Button
+                class="m-0 p-0"
+                href={`/courses/${courseWithInstructor.courseId}`}
+                variant="link"
+            >
+                <h2 class="line-clamp-1 font-bold sm:text-lg">
+                    {courseWithInstructor.courseTitle}
+                </h2>
+            </Button>
             <p class="line-clamp-1 text-sm sm:line-clamp-2 md:line-clamp-3">
-                {courseWithInstructor.description}
+                {courseWithInstructor.courseDescription}
             </p>
         </div>
         <Separator class="my-2 md:hidden" orientation="horizontal" />
@@ -46,10 +56,10 @@
                     data-test-id="list-item-price-block"
                 >
                     <span class="m-0 p-0 text-sm text-muted-foreground/50 line-through"
-                        >${Math.round(courseWithInstructor.originalPrice * 100) / 100}</span
+                        >${Math.round(courseWithInstructor.courseOriginalPrice * 100) / 100}</span
                     >
                     <span class="m-0 p-0 text-lg font-bold"
-                        >${Math.round(courseWithInstructor.originalPrice * 100) / 100}</span
+                        >${Math.round(courseWithInstructor.courseCurrentPrice * 100) / 100}</span
                     >
                 </div>
                 <div

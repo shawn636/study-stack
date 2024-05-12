@@ -74,19 +74,32 @@ function main() {
     new_branch_name=$(branch_name_from_git) || exit $?
 
     check_for_required_env_vars || exit $?
+    debug_log "required env vars present"
     check_branch_creation_possible "$new_branch_name" || exit $?
+    debug_log "checked branch creation possible"
 
     create_branch "$new_branch_name"
+    debug_log "branch created"
 
     cred_name=$(get_cred_name)
+    debug_log "cred name retrieved"
 
     delete_credential_if_exists "$new_branch_name" "$cred_name"
+    debug_log "safely deleted credentials (if they existed)"
 
     DB_URL=$(generate_credentials "$new_branch_name") || exit $?
+    debug_log "credentials generated"
+
     update_var_in_dotenv "DATABASE_URL" "$DB_URL" || exit $?
-    pnpm build || exit $?
-    pnpm prisma db push || exit $?
+    debug_log "db url updated in .env"
+
+    pnpm prisma db push --accept-data-loss || exit $?
+    debug_log "db schema pushed"    
     pnpm prisma generate || exit $?
+    debug_log "prisma client generated"
     pnpm prisma db seed || exit $?
+    debug_log "db seeded"
+    pnpm build || exit $?
+    debug_log "build successful"
 }
 main

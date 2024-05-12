@@ -19,43 +19,43 @@ datasource db {
 }
 
 model Category {
-  id String @id @default(cuid()) @db.VarChar(30)
+  categoryId String @id @default(cuid()) @db.VarChar(30)
 
   courses Course[]
 
-  imgHref String @db.Text
-  title   String @unique
+  categoryImgHref String @db.Text
+  categoryTitle   String @unique
 }
 
 model Course {
-  id String @id @default(cuid()) @db.VarChar(30)
+  courseId String @id @default(cuid()) @db.VarChar(30)
 
-  category           Category         @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Restrict)
+  category           Category         @relation(fields: [categoryId], references: [categoryId], onUpdate: Cascade, onDelete: Restrict)
   courseProgressions CourseProgress[]
-  instructor         User             @relation(fields: [instructorId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  instructor         User             @relation(fields: [instructorId], references: [userId], onUpdate: Cascade, onDelete: Cascade)
   lessons            Lesson[]
-  organization       Organization?    @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+  organization       Organization?    @relation(fields: [organizationId], references: [organizationId], onUpdate: Cascade, onDelete: SetNull)
 
   categoryId           String
-  currentPrice         Decimal
-  description          String  @db.Text
-  difficulty           String
+  courseCurrentPrice   Decimal
+  courseDescription    String  @db.Text
+  courseDifficulty     String
   estimatedTimeHours   Int
   estimatedTimeMinutes Int
-  imgHref              String
+  courseImgHref        String
   instructorId         String
   lessonCount          Int
   organizationId       String?
-  originalPrice        Decimal
-  ratingAverage        Float
-  ratingCount          Int
-  title                String  @db.Text
+  courseOriginalPrice  Decimal
+  courseRatingAverage  Float
+  courseRatingCount    Int
+  courseTitle          String  @db.Text
 
   @@index([categoryId])
   @@index([instructorId])
   @@index([organizationId])
-  @@fulltext([title])
-  @@fulltext([title, description])
+  @@fulltext([courseTitle])
+  @@fulltext([courseTitle, courseDescription])
 }
 
 enum ContentType {
@@ -65,22 +65,22 @@ enum ContentType {
 }
 
 model CourseContent {
-  id String @id @default(cuid()) @db.VarChar(30)
+  courseContentId String @id @default(cuid()) @db.VarChar(30)
 
   contentType ContentType
 
   authorId String
   content  Json
   lessonId String?
-  Lesson   Lesson? @relation(fields: [lessonId], references: [id])
+  Lesson   Lesson? @relation(fields: [lessonId], references: [lessonId])
 
   @@index([authorId])
   @@index([lessonId])
 }
 
 model CourseProgress {
-  course Course @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [courseId], onUpdate: Cascade, onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [userId], onUpdate: Cascade, onDelete: Cascade)
 
   courseId         String
   lessonsCompleted Int
@@ -92,48 +92,48 @@ model CourseProgress {
 }
 
 model Lesson {
-  id String @id @default(cuid()) @db.VarChar(30)
+  lessonId String @id @default(cuid()) @db.VarChar(30)
 
-  course         Course?         @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  course         Course?         @relation(fields: [courseId], references: [courseId], onUpdate: Cascade, onDelete: Cascade)
   courseContents CourseContent[]
 
-  courseId String?
-  title    String
+  courseId    String?
+  lessonTitle String
 
   @@index([courseId])
 }
 
 model Organization {
-  id String @id @default(cuid()) @db.VarChar(30)
+  organizationId String @id @default(cuid()) @db.VarChar(30)
 
   courses Course[]
 
-  description String? @db.Text
-  name        String  @db.Text
-  User        User[]
+  organizationDescription String? @db.Text
+  organizationName        String  @db.Text
+  User                    User[]
 }
 
 model User {
-  id String @id @default(cuid()) @db.VarChar(30)
+  userId String @id @default(cuid()) @db.VarChar(30)
 
-  AuthUser           AuthUser?        @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  AuthUser           AuthUser?        @relation(fields: [authUserId], references: [authUserId], onUpdate: Cascade, onDelete: Cascade)
   courses            Course[]
   courseProgressions CourseProgress[]
-  organization       Organization?    @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+  organization       Organization?    @relation(fields: [organizationId], references: [organizationId], onUpdate: Cascade, onDelete: SetNull)
   permissions        Permission[]
 
-  areaCode       String? @db.VarChar(5)
-  authUserId     String? @unique @db.VarChar(30)
-  bio            String? @db.Text
-  city           String? @db.Text
-  countryCode    String? @db.VarChar(5)
-  email          String  @unique
-  name           String  @db.Text
-  organizationId String?
-  phoneNumber    String? @db.VarChar(15)
-  photoUrl       String? @db.Text
-  role           String
-  state          String?
+  userAreaCode    String? @db.VarChar(5)
+  authUserId      String? @unique @db.VarChar(30)
+  userBio         String? @db.Text
+  userCity        String? @db.Text
+  userCountryCode String? @db.VarChar(5)
+  userEmail       String  @unique
+  userName        String  @db.Text
+  organizationId  String?
+  userPhoneNumber String? @db.VarChar(15)
+  userPhotoUrl    String? @db.Text
+  userRole        String
+  userState       String?
 
   @@index([authUserId])
   @@index([organizationId])
@@ -145,42 +145,42 @@ enum KeyType {
 }
 
 model AuthKey {
-  id String @id @default(cuid()) @db.VarChar(30)
+  authKeyId String @id @default(cuid()) @db.VarChar(30)
 
-  authUser AuthUser @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  authUser AuthUser @relation(fields: [authUserId], references: [authUserId], onUpdate: Cascade, onDelete: Cascade)
 
-  authUserId String  @db.VarChar(30)
-  keyValue   String
-  keyType    KeyType
+  authUserId   String  @db.VarChar(30)
+  authKeyValue String
+  authKeyType  KeyType
 
   @@index([authUserId])
 }
 
 model AuthSession {
-  id String @id @default(cuid()) @db.VarChar(30)
+  authSessionId String @id @default(cuid()) @db.VarChar(30)
 
-  authUser AuthUser @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  authUser AuthUser @relation(fields: [authUserId], references: [authUserId], onUpdate: Cascade, onDelete: Cascade)
 
-  authUserId     String   @db.VarChar(30)
-  expirationDate DateTime
+  authUserId                String   @db.VarChar(30)
+  authSessionExpirationDate DateTime
 
   @@index([authUserId])
 }
 
 model AuthUser {
-  id String @id @default(cuid()) @db.VarChar(30)
+  authUserId String @id @default(cuid()) @db.VarChar(30)
 
   authKeys     AuthKey[]
   authSessions AuthSession[]
   user         User?
 
-  email String @unique
+  authUserEmail String @unique
 }
 
 model CsrfToken {
-  token String @id @default(cuid()) @db.VarChar(30)
+  csrfToken String @id @default(cuid()) @db.VarChar(30)
 
-  expirationDate DateTime
+  csrfTokenExpirationDate DateTime
 }
 
 enum PermissionType {
@@ -196,9 +196,9 @@ enum ResourceType {
 }
 
 model Permission {
-  id String @id @default(cuid()) @db.VarChar(30)
+  permissionId String @id @default(cuid()) @db.VarChar(30)
 
-  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user User @relation(fields: [userId], references: [userId], onUpdate: Cascade, onDelete: Cascade)
 
   permissionType PermissionType
   resourceId     String // Eventually shift this to another table

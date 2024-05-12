@@ -19,26 +19,26 @@ export async function seedUser(client: PrismaClient) {
         const userId = cuid();
 
         const authUser: AuthUser = {
-            email: email,
-            id: authUserId
+            authUserEmail: email,
+            authUserId: authUserId
         };
 
         const user: User = {
-            areaCode: faker.phone.number().slice(0, 3),
-            authUserId: authUser.id,
-            bio: faker.lorem.paragraph(),
-            city: faker.location.city(),
-            countryCode: faker.location.countryCode(),
-            email: faker.internet.email(),
-            id: userId,
-            name: faker.person.fullName(),
+            authUserId: authUser.authUserId,
             organizationId: includeOrganization
-                ? faker.helpers.arrayElement(organizations).id
+                ? faker.helpers.arrayElement(organizations).organizationId
                 : null,
-            phoneNumber: faker.phone.number().slice(3, 10),
-            photoUrl: faker.image.avatar(),
-            role: faker.helpers.arrayElement(['admin', 'user']),
-            state: faker.location.state()
+            userAreaCode: faker.phone.number().slice(0, 3),
+            userBio: faker.lorem.paragraph(),
+            userCity: faker.location.city(),
+            userCountryCode: faker.location.countryCode(),
+            userEmail: faker.internet.email(),
+            userId: userId,
+            userName: faker.person.fullName(),
+            userPhoneNumber: faker.phone.number().slice(3, 10),
+            userPhotoUrl: faker.image.avatar(),
+            userRole: faker.helpers.arrayElement(['admin', 'user']),
+            userState: faker.location.state()
         };
 
         authUsers.push(authUser);

@@ -13,15 +13,15 @@ export async function seedLesson(client: PrismaClient) {
     for (const course of courses) {
         const numLessons = faker.number.int({ max: 10, min: 0 });
         courseUpdates.push({
-            id: course.id,
+            courseId: course.courseId,
             lessonCount: numLessons
         });
 
         for (let i = 0; i < numLessons; i++) {
             const lesson: Lesson = {
-                courseId: course.id,
-                id: cuid(),
-                title: faker.lorem.sentence()
+                courseId: course.courseId,
+                lessonId: cuid(),
+                lessonTitle: faker.lorem.sentence()
             };
             lessons.push(lesson);
         }
@@ -33,7 +33,7 @@ export async function seedLesson(client: PrismaClient) {
         courseUpdates.map(async (course) => {
             await client.course.update({
                 data: { lessonCount: course.lessonCount },
-                where: { id: course.id }
+                where: { courseId: course.courseId }
             });
         })
     );

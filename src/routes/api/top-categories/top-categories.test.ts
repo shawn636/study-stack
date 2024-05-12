@@ -30,23 +30,23 @@ describe('top-categories', () => {
 
         categorySummaries = categorySummaries.map((categorySummary: CategorySummary) => {
             return {
-                count: Number(categorySummary.count),
-                imgHref: categorySummary.imgHref,
-                title: categorySummary.title
+                categoryImgHref: categorySummary.categoryImgHref,
+                categoryTitle: categorySummary.categoryTitle,
+                count: Number(categorySummary.count)
             };
         });
 
         expect(categorySummaries.length).toBe(6);
 
         for (const categorySummary of categorySummaries) {
-            expect(categorySummary.title).toBeTruthy();
-            expect(typeof categorySummary.title).toBe('string');
+            expect(categorySummary.categoryTitle).toBeTruthy();
+            expect(typeof categorySummary.categoryTitle).toBe('string');
 
             expect(categorySummary.count).toBeTruthy();
             expect(categorySummary.count).toBeGreaterThanOrEqual(1);
 
-            expect(categorySummary.imgHref).toBeTruthy();
-            expect(typeof categorySummary.imgHref).toBe('string');
+            expect(categorySummary.categoryImgHref).toBeTruthy();
+            expect(typeof categorySummary.categoryImgHref).toBe('string');
         }
     });
 });

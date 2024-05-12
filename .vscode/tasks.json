@@ -58,7 +58,7 @@
         {
             "label": "Prisma Studio",
             "type": "shell",
-            "command": "BROWSER=none pnpm prisma studio",
+            "command": "pnpm prisma studio",
             "group": "none",
             "isBackground": true,
             "presentation": {

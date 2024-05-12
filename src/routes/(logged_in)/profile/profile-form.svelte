@@ -15,14 +15,14 @@
     let profilePhotoFile: File;
 
     onMount(() => {
-        phone.set(formatPhoneNumber((user?.areaCode ?? '') + (user?.phoneNumber ?? '')));
+        phone.set(formatPhoneNumber((user?.userAreaCode ?? '') + (user?.userPhoneNumber ?? '')));
     });
 
     const saveChanges = async () => {
         const phoneTemp = $phone.replace(/\s/g, '');
-        user.areaCode = phoneTemp.slice(0, 3) === '' ? null : phoneTemp.slice(0, 3);
-        user.phoneNumber = phoneTemp.slice(3, 10) === '' ? null : phoneTemp.slice(3, 10);
-        user.countryCode = user.areaCode ? '+1' : null;
+        user.userAreaCode = phoneTemp.slice(0, 3) === '' ? null : phoneTemp.slice(0, 3);
+        user.userPhoneNumber = phoneTemp.slice(3, 10) === '' ? null : phoneTemp.slice(3, 10);
+        user.userCountryCode = user.userAreaCode ? '+1' : null;
 
         const updatedPhoto = await uploadPhoto();
         if (!updatedPhoto.ok) {
@@ -39,7 +39,7 @@
     const uploadPhoto = async (): Promise<Response> => {
         const formData = new FormData();
         formData.append('profilePhoto', profilePhotoFile);
-        formData.append('userId', user.id);
+        formData.append('userId', user.userId);
 
         const response = await fetch('/api/user/photo', {
             body: formData,
@@ -59,7 +59,7 @@
 <form class="space-y-8">
     <div class="space-y-2">
         <Label for="name">Name</Label>
-        <Input bind:value={user.name} id="name" placeholder="Name" type="text" />
+        <Input bind:value={user.userName} id="name" placeholder="Name" type="text" />
     </div>
 
     <div class="space-y-2">
@@ -76,12 +76,12 @@
 
     <div class="space-y-2">
         <Label for="city">City</Label>
-        <Input bind:value={user.city} id="city" placeholder="City" type="text" />
+        <Input bind:value={user.userCity} id="city" placeholder="City" type="text" />
     </div>
 
     <div class="space-y-2">
         <Label for="state">State</Label>
-        <Input bind:value={user.state} id="state" placeholder="State" type="text" />
+        <Input bind:value={user.userState} id="state" placeholder="State" type="text" />
     </div>
 
     <div class="grid w-full max-w-sm items-center gap-1.5">
@@ -91,7 +91,7 @@
 
     <div class="space-y-2">
         <Label for="bio">Bio</Label>
-        <Textarea bind:value={user.bio} id="bio" />
+        <Textarea bind:value={user.userBio} id="bio" />
     </div>
 
     <Button on:click={saveChanges}>Update profile</Button>

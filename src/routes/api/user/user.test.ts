@@ -62,10 +62,10 @@ describe('/api/user', () => {
 
         expect(response.status).toBe(200);
 
-        user.countryCode = '+1';
-        user.areaCode = '123';
-        user.phoneNumber = '4567890';
-        user.bio = 'I am a test user';
+        user.userCountryCode = '+1';
+        user.userAreaCode = '123';
+        user.userPhoneNumber = '4567890';
+        user.userBio = 'I am a test user';
 
         const response2 = await fetch('http://localhost:3004/api/user', {
             body: JSON.stringify({ user }),
@@ -79,9 +79,9 @@ describe('/api/user', () => {
         expect(response2.status).toBe(200);
 
         const updatedUser = await auth.getUser(sessionId);
-        expect(updatedUser.countryCode).toBe(user.countryCode);
-        expect(updatedUser.areaCode).toBe(user.areaCode);
-        expect(updatedUser.phoneNumber).toBe(user.phoneNumber);
+        expect(updatedUser.userCountryCode).toBe(user.userCountryCode);
+        expect(updatedUser.userAreaCode).toBe(user.userAreaCode);
+        expect(updatedUser.userPhoneNumber).toBe(user.userPhoneNumber);
     });
 
     it('should throw error if a user tries to update another', async () => {

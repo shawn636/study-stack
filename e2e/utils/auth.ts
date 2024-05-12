@@ -27,8 +27,8 @@ const createUser = async (email: string, password: string, name: string): Promis
         const createAuthUserResult = await trx
             .insertInto('AuthUser')
             .values({
-                email: email,
-                id: authUserId
+                authUserEmail: email,
+                authUserId: authUserId
             })
             .executeTakeFirst();
 
@@ -39,10 +39,10 @@ const createUser = async (email: string, password: string, name: string): Promis
         const createAuthKeyResult = await trx
             .insertInto('AuthKey')
             .values({
-                authUserId: authUserId,
-                id: authKeyId,
-                keyType: KeyType.CREDENTIAL_HASH,
-                keyValue: keyValue
+                authKeyId: authKeyId,
+                authKeyType: KeyType.CREDENTIAL_HASH,
+                authKeyValue: keyValue,
+                authUserId: authUserId
             })
             .executeTakeFirst();
 
@@ -54,10 +54,10 @@ const createUser = async (email: string, password: string, name: string): Promis
             .insertInto('User')
             .values({
                 authUserId: authUserId,
-                email: email,
-                id: userId,
-                name: name,
-                role: 'user'
+                userEmail: email,
+                userId: userId,
+                userName: name,
+                userRole: 'user'
             })
             .executeTakeFirst();
 
@@ -72,34 +72,43 @@ const createUser = async (email: string, password: string, name: string): Promis
 const deleteUserIfExists = async (email: string): Promise<void> => {
     const authUserResult = await db
         .selectFrom('AuthUser')
-        .select('id')
-        .where('AuthUser.email', '=', email)
+        .select('AuthUser.authUserId')
+        .where('AuthUser.authUserEmail', '=', email)
         .executeTakeFirst();
 
-    if (authUserResult?.id === undefined) {
+    if (authUserResult?.authUserId === undefined) {
         return;
     }
-    const authUserId = authUserResult.id;
+    const authUserId = authUserResult.authUserId;
 
     await db.transaction().execute(async (trx: Transaction<DB>) => {
         await trx.deleteFrom('User').where('User.authUserId', '=', authUserId).execute();
         await trx.deleteFrom('AuthKey').where('AuthKey.authUserId', '=', authUserId).execute();
-        await trx.deleteFrom('AuthUser').where('AuthUser.id', '=', authUserId).execute();
+        await trx.deleteFrom('AuthUser').where('AuthUser.authUserId', '=', authUserId).execute();
     });
 };
 
 const deleteE2eTestUsers = async (domain: string): Promise<void> => {
     const authUsersResult = await db
         .selectFrom('AuthUser')
-        .select('id')
-        .where('AuthUser.email', 'like', `%${domain}`)
+        .select('AuthUser.authUserId')
+        .where('AuthUser.authUserEmail', 'like', `%${domain}`)
         .execute();
 
     for (const authUser of authUsersResult) {
         await db.transaction().execute(async (trx: Transaction<DB>) => {
-            await trx.deleteFrom('User').where('User.authUserId', '=', authUser.id).execute();
-            await trx.deleteFrom('AuthKey').where('AuthKey.authUserId', '=', authUser.id).execute();
-            await trx.deleteFrom('AuthUser').where('AuthUser.id', '=', authUser.id).execute();
+            await trx
+                .deleteFrom('User')
+                .where('User.authUserId', '=', authUser.authUserId)
+                .execute();
+            await trx
+                .deleteFrom('AuthKey')
+                .where('AuthKey.authUserId', '=', authUser.authUserId)
+                .execute();
+            await trx
+                .deleteFrom('AuthUser')
+                .where('AuthUser.authUserId', '=', authUser.authUserId)
+                .execute();
         });
     }
 };

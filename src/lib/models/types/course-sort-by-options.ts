@@ -9,13 +9,13 @@ export type CourseSortByOption = {
 
 export class CourseSortByOptions {
     static HIGHEST_RATING: CourseSortByOption = {
-        dbField: 'ratingAverage',
+        dbField: 'courseRatingAverage',
         dbOrderDirection: 'desc',
         label: 'Highest Rating',
         param: 'highest_rating'
     };
     static LOWEST_PRICE: CourseSortByOption = {
-        dbField: 'currentPrice',
+        dbField: 'courseCurrentPrice',
         dbOrderDirection: 'asc',
         label: 'Lowest Price',
         param: 'lowest_price'
