@@ -97,9 +97,9 @@ function main() {
     debug_log "db schema pushed"    
     pnpm prisma generate || exit $?
     debug_log "prisma client generated"
+    pnpm build || exit $?
+    debug_log "build succfessful"
     pnpm prisma db seed || exit $?
     debug_log "db seeded"
-    pnpm build || exit $?
-    debug_log "build successful"
 }
 main
