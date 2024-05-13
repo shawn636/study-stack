@@ -46,13 +46,13 @@ devDependencies:
     version: 5.13.0(prisma@5.13.0)
   '@sveltejs/adapter-auto':
     specifier: ^3.2.0
-    version: 3.2.0(@sveltejs/kit@2.5.7)
+    version: 3.2.0(@sveltejs/kit@2.5.8)
   '@sveltejs/adapter-vercel':
     specifier: ^5.3.0
-    version: 5.3.0(@sveltejs/kit@2.5.7)
+    version: 5.3.0(@sveltejs/kit@2.5.8)
   '@sveltejs/kit':
-    specifier: ^2.5.7
-    version: 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.16)(vite@5.2.11)
+    specifier: ^2.5.8
+    version: 2.5.8(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.16)(vite@5.2.11)
   '@sveltejs/vite-plugin-svelte':
     specifier: ^3.1.0
     version: 3.1.0(svelte@4.2.16)(vite@5.2.11)
@@ -81,20 +81,20 @@ devDependencies:
     specifier: ^9.0.8
     version: 9.0.8
   '@typescript-eslint/eslint-plugin':
-    specifier: ^7.8.0
-    version: 7.8.0(@typescript-eslint/parser@7.8.0)(eslint@8.57.0)(typescript@5.4.5)
+    specifier: ^7.9.0
+    version: 7.9.0(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)(typescript@5.4.5)
   '@typescript-eslint/parser':
-    specifier: ^7.8.0
-    version: 7.8.0(eslint@8.57.0)(typescript@5.4.5)
+    specifier: ^7.9.0
+    version: 7.9.0(eslint@8.57.0)(typescript@5.4.5)
   '@vercel/analytics':
     specifier: ^1.2.2
     version: 1.2.2
   '@vercel/node':
-    specifier: ^3.1.0
-    version: 3.1.0
+    specifier: ^3.1.3
+    version: 3.1.3
   '@vercel/speed-insights':
     specifier: ^1.0.10
-    version: 1.0.10(@sveltejs/kit@2.5.7)(svelte@4.2.16)
+    version: 1.0.10(@sveltejs/kit@2.5.8)(svelte@4.2.16)
   '@vitest/coverage-v8':
     specifier: ^1.6.0
     version: 1.6.0(vitest@1.6.0)
@@ -213,8 +213,8 @@ devDependencies:
     specifier: ^0.2.2
     version: 0.2.2(svelte@4.2.16)
   svelte-migrate:
-    specifier: ^1.4.0
-    version: 1.4.0
+    specifier: ^1.4.1
+    version: 1.4.1
   svelte-sonner:
     specifier: ^0.3.24
     version: 0.3.24(svelte@4.2.16)
@@ -237,8 +237,8 @@ devDependencies:
     specifier: ^2.6.2
     version: 2.6.2
   tsx:
-    specifier: ^4.10.0
-    version: 4.10.0
+    specifier: ^4.10.2
+    version: 4.10.2
   typescript:
     specifier: ^5.4.5
     version: 5.4.5
@@ -246,8 +246,8 @@ devDependencies:
     specifier: ^9.0.1
     version: 9.0.1
   vercel:
-    specifier: ^34.1.10
-    version: 34.1.10
+    specifier: ^34.1.13
+    version: 34.1.13
   vite:
     specifier: ^5.2.11
     version: 5.2.11(@types/node@20.12.11)
@@ -1430,21 +1430,21 @@ packages:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
     dev: true
 
-  /@sveltejs/adapter-auto@3.2.0(@sveltejs/kit@2.5.7):
+  /@sveltejs/adapter-auto@3.2.0(@sveltejs/kit@2.5.8):
     resolution: {integrity: sha512-She5nKT47kwHE18v9NMe6pbJcvULr82u0V3yZ0ej3n1laWKGgkgdEABE9/ak5iDPs93LqsBkuIo51kkwCLBjJA==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:
-      '@sveltejs/kit': 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.16)(vite@5.2.11)
+      '@sveltejs/kit': 2.5.8(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.16)(vite@5.2.11)
       import-meta-resolve: 4.1.0
     dev: true
 
-  /@sveltejs/adapter-vercel@5.3.0(@sveltejs/kit@2.5.7):
+  /@sveltejs/adapter-vercel@5.3.0(@sveltejs/kit@2.5.8):
     resolution: {integrity: sha512-JzTJVmAWmbyNe3pQU2l0M1ggt4FjIVnKHEQOrqW4XVxYtNGdq3znuMqFSdzsR+5LaIEFqZaLIpm82XZsZroBoQ==}
     peerDependencies:
       '@sveltejs/kit': ^2.4.0
     dependencies:
-      '@sveltejs/kit': 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.16)(vite@5.2.11)
+      '@sveltejs/kit': 2.5.8(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.16)(vite@5.2.11)
       '@vercel/nft': 0.26.5
       esbuild: 0.20.2
     transitivePeerDependencies:
@@ -1452,8 +1452,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.16)(vite@5.2.11):
-    resolution: {integrity: sha512-6uedTzrb7nQrw6HALxnPrPaXdIN2jJJTzTIl96Z3P5NiG+OAfpdPbrWrvkJ3GN4CfWqrmU4dJqwMMRMTD/C7ow==}
+  /@sveltejs/kit@2.5.8(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.16)(vite@5.2.11):
+    resolution: {integrity: sha512-ZQXYaVHd1p0kDGwOi4l82i5kAiUQtrhMthDKtJi0zVzmNupKJ0ZlBVAoceuarCuIntPNctyQchW29h5DkFxd1Q==}
     engines: {node: '>=18.13'}
     hasBin: true
     requiresBuild: true
@@ -1724,8 +1724,8 @@ packages:
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
     dev: true
 
-  /@typescript-eslint/eslint-plugin@7.8.0(@typescript-eslint/parser@7.8.0)(eslint@8.57.0)(typescript@5.4.5):
-    resolution: {integrity: sha512-gFTT+ezJmkwutUPmB0skOj3GZJtlEGnlssems4AjkVweUPGj7jRwwqg0Hhg7++kPGJqKtTYx+R05Ftww372aIg==}
+  /@typescript-eslint/eslint-plugin@7.9.0(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)(typescript@5.4.5):
+    resolution: {integrity: sha512-6e+X0X3sFe/G/54aC3jt0txuMTURqLyekmEHViqyA2VnxhLMpvA6nqmcjIy+Cr9tLDHPssA74BP5Mx9HQIxBEA==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
       '@typescript-eslint/parser': ^7.0.0
@@ -1736,17 +1736,15 @@ packages:
         optional: true
     dependencies:
       '@eslint-community/regexpp': 4.10.0
-      '@typescript-eslint/parser': 7.8.0(eslint@8.57.0)(typescript@5.4.5)
-      '@typescript-eslint/scope-manager': 7.8.0
-      '@typescript-eslint/type-utils': 7.8.0(eslint@8.57.0)(typescript@5.4.5)
-      '@typescript-eslint/utils': 7.8.0(eslint@8.57.0)(typescript@5.4.5)
-      '@typescript-eslint/visitor-keys': 7.8.0
-      debug: 4.3.4
+      '@typescript-eslint/parser': 7.9.0(eslint@8.57.0)(typescript@5.4.5)
+      '@typescript-eslint/scope-manager': 7.9.0
+      '@typescript-eslint/type-utils': 7.9.0(eslint@8.57.0)(typescript@5.4.5)
+      '@typescript-eslint/utils': 7.9.0(eslint@8.57.0)(typescript@5.4.5)
+      '@typescript-eslint/visitor-keys': 7.9.0
       eslint: 8.57.0
       graphemer: 1.4.0
       ignore: 5.3.1
       natural-compare: 1.4.0
-      semver: 7.6.2
       ts-api-utils: 1.3.0(typescript@5.4.5)
       typescript: 5.4.5
     transitivePeerDependencies:
@@ -1774,8 +1772,8 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser@7.8.0(eslint@8.57.0)(typescript@5.4.5):
-    resolution: {integrity: sha512-KgKQly1pv0l4ltcftP59uQZCi4HUYswCLbTqVZEJu7uLX8CTLyswqMLqLN+2QFz4jCptqWVV4SB7vdxcH2+0kQ==}
+  /@typescript-eslint/parser@7.9.0(eslint@8.57.0)(typescript@5.4.5):
+    resolution: {integrity: sha512-qHMJfkL5qvgQB2aLvhUSXxbK7OLnDkwPzFalg458pxQgfxKDfT1ZDbHQM/I6mDIf/svlMkj21kzKuQ2ixJlatQ==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
       eslint: ^8.56.0
@@ -1784,10 +1782,10 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/scope-manager': 7.8.0
-      '@typescript-eslint/types': 7.8.0
-      '@typescript-eslint/typescript-estree': 7.8.0(typescript@5.4.5)
-      '@typescript-eslint/visitor-keys': 7.8.0
+      '@typescript-eslint/scope-manager': 7.9.0
+      '@typescript-eslint/types': 7.9.0
+      '@typescript-eslint/typescript-estree': 7.9.0(typescript@5.4.5)
+      '@typescript-eslint/visitor-keys': 7.9.0
       debug: 4.3.4
       eslint: 8.57.0
       typescript: 5.4.5
@@ -1811,8 +1809,16 @@ packages:
       '@typescript-eslint/visitor-keys': 7.8.0
     dev: true
 
-  /@typescript-eslint/type-utils@7.8.0(eslint@8.57.0)(typescript@5.4.5):
-    resolution: {integrity: sha512-H70R3AefQDQpz9mGv13Uhi121FNMh+WEaRqcXTX09YEDky21km4dV1ZXJIp8QjXc4ZaVkXVdohvWDzbnbHDS+A==}
+  /@typescript-eslint/scope-manager@7.9.0:
+    resolution: {integrity: sha512-ZwPK4DeCDxr3GJltRz5iZejPFAAr4Wk3+2WIBaj1L5PYK5RgxExu/Y68FFVclN0y6GGwH8q+KgKRCvaTmFBbgQ==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    dependencies:
+      '@typescript-eslint/types': 7.9.0
+      '@typescript-eslint/visitor-keys': 7.9.0
+    dev: true
+
+  /@typescript-eslint/type-utils@7.9.0(eslint@8.57.0)(typescript@5.4.5):
+    resolution: {integrity: sha512-6Qy8dfut0PFrFRAZsGzuLoM4hre4gjzWJB6sUvdunCYZsYemTkzZNwF1rnGea326PHPT3zn5Lmg32M/xfJfByA==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
       eslint: ^8.56.0
@@ -1821,8 +1827,8 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/typescript-estree': 7.8.0(typescript@5.4.5)
-      '@typescript-eslint/utils': 7.8.0(eslint@8.57.0)(typescript@5.4.5)
+      '@typescript-eslint/typescript-estree': 7.9.0(typescript@5.4.5)
+      '@typescript-eslint/utils': 7.9.0(eslint@8.57.0)(typescript@5.4.5)
       debug: 4.3.4
       eslint: 8.57.0
       ts-api-utils: 1.3.0(typescript@5.4.5)
@@ -1838,6 +1844,11 @@ packages:
 
   /@typescript-eslint/types@7.8.0:
     resolution: {integrity: sha512-wf0peJ+ZGlcH+2ZS23aJbOv+ztjeeP8uQ9GgwMJGVLx/Nj9CJt17GWgWWoSmoRVKAX2X+7fzEnAjxdvK2gqCLw==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    dev: true
+
+  /@typescript-eslint/types@7.9.0:
+    resolution: {integrity: sha512-oZQD9HEWQanl9UfsbGVcZ2cGaR0YT5476xfWE0oE5kQa2sNK2frxOlkeacLOTh9po4AlUT5rtkGyYM5kew0z5w==}
     engines: {node: ^18.18.0 || >=20.0.0}
     dev: true
 
@@ -1885,6 +1896,28 @@ packages:
       - supports-color
     dev: true
 
+  /@typescript-eslint/typescript-estree@7.9.0(typescript@5.4.5):
+    resolution: {integrity: sha512-zBCMCkrb2YjpKV3LA0ZJubtKCDxLttxfdGmwZvTqqWevUPN0FZvSI26FalGFFUZU/9YQK/A4xcQF9o/VVaCKAg==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/types': 7.9.0
+      '@typescript-eslint/visitor-keys': 7.9.0
+      debug: 4.3.4
+      globby: 11.1.0
+      is-glob: 4.0.3
+      minimatch: 9.0.4
+      semver: 7.6.2
+      ts-api-utils: 1.3.0(typescript@5.4.5)
+      typescript: 5.4.5
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@typescript-eslint/utils@7.8.0(eslint@8.57.0)(typescript@5.4.5):
     resolution: {integrity: sha512-L0yFqOCflVqXxiZyXrDr80lnahQfSOfc9ELAAZ75sqicqp2i36kEZZGuUymHNFoYOqxRT05up760b4iGsl02nQ==}
     engines: {node: ^18.18.0 || >=20.0.0}
@@ -1899,6 +1932,22 @@ packages:
       '@typescript-eslint/typescript-estree': 7.8.0(typescript@5.4.5)
       eslint: 8.57.0
       semver: 7.6.2
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: true
+
+  /@typescript-eslint/utils@7.9.0(eslint@8.57.0)(typescript@5.4.5):
+    resolution: {integrity: sha512-5KVRQCzZajmT4Ep+NEgjXCvjuypVvYHUW7RHlXzNPuak2oWpVoD1jf5xCP0dPAuNIchjC7uQyvbdaSTFaLqSdA==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    peerDependencies:
+      eslint: ^8.56.0
+    dependencies:
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
+      '@typescript-eslint/scope-manager': 7.9.0
+      '@typescript-eslint/types': 7.9.0
+      '@typescript-eslint/typescript-estree': 7.9.0(typescript@5.4.5)
+      eslint: 8.57.0
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -1920,6 +1969,14 @@ packages:
       eslint-visitor-keys: 3.4.3
     dev: true
 
+  /@typescript-eslint/visitor-keys@7.9.0:
+    resolution: {integrity: sha512-iESPx2TNLDNGQLyjKhUvIKprlP49XNEK+MvIf9nIO7ZZaZdbnfWKHnXAgufpxqfA0YryH8XToi4+CjBgVnFTSQ==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    dependencies:
+      '@typescript-eslint/types': 7.9.0
+      eslint-visitor-keys: 3.4.3
+    dev: true
+
   /@ungap/structured-clone@1.2.0:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
     dev: true
@@ -1938,8 +1995,8 @@ packages:
       server-only: 0.0.1
     dev: true
 
-  /@vercel/build-utils@8.0.0:
-    resolution: {integrity: sha512-6vOiAVFA/Uu4+uV3f751rcXgfKVHrgBQFKXwvPTczl1q0djvCHsQDngl1ccu1NSyWSzdem3YhhDkLOUMHLN3xA==}
+  /@vercel/build-utils@8.1.2:
+    resolution: {integrity: sha512-8aGftLLJjv6YfSyRvOgnmT/9NerpMJxS83MfQbJ2yZ6vGUk4A7qcQxIVDEJkP1nqDiMXdGnmypERWp0mv5VQbw==}
     dev: true
 
   /@vercel/error-utils@2.0.2:
@@ -1981,11 +2038,11 @@ packages:
       web-vitals: 0.2.4
     dev: true
 
-  /@vercel/gatsby-plugin-vercel-builder@2.0.26:
-    resolution: {integrity: sha512-9ia4lMCjuMCGKf0u2Oh/xNgNH4WyD1XlJyeT0rdeE2ZaAo0/aEazjAcKSum4WVHnr3BdSIXFVndiudfJA8JtrA==}
+  /@vercel/gatsby-plugin-vercel-builder@2.0.29:
+    resolution: {integrity: sha512-JdaajUUrcXyuOFllum9/KEkzR9irVPHvXUkMSzUqVecEfR5AOLxGULo6duY5MO+k6KQp+NLE/4cJZYibffkbBw==}
     dependencies:
       '@sinclair/typebox': 0.25.24
-      '@vercel/build-utils': 8.0.0
+      '@vercel/build-utils': 8.1.2
       '@vercel/routing-utils': 3.1.0
       esbuild: 0.14.47
       etag: 1.8.1
@@ -2003,32 +2060,10 @@ packages:
       ts-morph: 12.0.0
     dev: true
 
-  /@vercel/next@4.2.9:
-    resolution: {integrity: sha512-ZjhaBQtUnJhxwa3dSZ+toMJ6xZ+JAsuvrhXFsZE5CQPDK5Fo4Q8F7XZ1ra+c0pz19SFbRg3OlarVEj5Q49odCQ==}
+  /@vercel/next@4.2.11:
+    resolution: {integrity: sha512-jCMTa75CIkX8vfY4BiW6BajSLXXQRE1doNeX9nO+gzYtaKTfxB5FiVKNAocjDwP249WIR0o1vziHus5bX84jFg==}
     dependencies:
-      '@vercel/nft': 0.26.4
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: true
-
-  /@vercel/nft@0.26.4:
-    resolution: {integrity: sha512-j4jCOOXke2t8cHZCIxu1dzKLHLcFmYzC3yqAK6MfZznOL1QIJKd0xcFsXK3zcqzU7ScsE2zWkiMMNHGMHgp+FA==}
-    engines: {node: '>=16'}
-    hasBin: true
-    dependencies:
-      '@mapbox/node-pre-gyp': 1.0.11
-      '@rollup/pluginutils': 4.2.1
-      acorn: 8.11.3
-      acorn-import-attributes: 1.9.5(acorn@8.11.3)
-      async-sema: 3.1.1
-      bindings: 1.5.0
-      estree-walker: 2.0.2
-      glob: 7.2.3
-      graceful-fs: 4.2.11
-      micromatch: 4.0.5
-      node-gyp-build: 4.8.1
-      resolve-from: 5.0.0
+      '@vercel/nft': 0.27.0
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -2056,16 +2091,38 @@ packages:
       - supports-color
     dev: true
 
-  /@vercel/node@3.1.0:
-    resolution: {integrity: sha512-Ghx663fSKJoe9NxjEU9i5d9+QcPPEw4HWkSThCCO9OK0Ov2KdeZEBcfZe8OYLiFDY10LN0EPe2Ur3NmofcwyNA==}
+  /@vercel/nft@0.27.0:
+    resolution: {integrity: sha512-W5pValyhToK9hbgEUAM6sLRUIl1I++RsFnXKHXtND50P1+vZ+OYPCzq1OOz0Ok6ghK6aOwae8G/rEAXkLedC+w==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dependencies:
+      '@mapbox/node-pre-gyp': 1.0.11
+      '@rollup/pluginutils': 4.2.1
+      acorn: 8.11.3
+      acorn-import-attributes: 1.9.5(acorn@8.11.3)
+      async-sema: 3.1.1
+      bindings: 1.5.0
+      estree-walker: 2.0.2
+      glob: 7.2.3
+      graceful-fs: 4.2.11
+      micromatch: 4.0.5
+      node-gyp-build: 4.8.1
+      resolve-from: 5.0.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: true
+
+  /@vercel/node@3.1.3:
+    resolution: {integrity: sha512-N4tylb25SoAVfslh0bE+OqelbeIFu9etOwz7Bb7n5HLdO9ZLvRl7qRfmENTV8RleC6nBatJmJHJlbBqx+OWoFQ==}
     dependencies:
       '@edge-runtime/node-utils': 2.3.0
       '@edge-runtime/primitives': 4.1.0
       '@edge-runtime/vm': 3.2.0
       '@types/node': 16.18.11
-      '@vercel/build-utils': 8.0.0
+      '@vercel/build-utils': 8.1.2
       '@vercel/error-utils': 2.0.2
-      '@vercel/nft': 0.26.4
+      '@vercel/nft': 0.27.0
       '@vercel/static-config': 3.0.0
       async-listen: 3.0.0
       cjs-module-lexer: 1.2.3
@@ -2090,10 +2147,10 @@ packages:
     resolution: {integrity: sha512-oubkmRRxWQJGGYFq5Q49/2c94aHKCYXB+DkdtaW55syQ9N0LVBXCnCMZ4ZatSrSI18d9mMoDSx3xi4gtByy9NA==}
     dev: true
 
-  /@vercel/redwood@2.0.8:
-    resolution: {integrity: sha512-hAu7SYXDt+W7kscjtQ5NsuNflXH+QB5/xAdA6FRSS/e41lG6Xq6pqLMDobqq4BR7E2PpppVDw2DUx9KzPNoeEw==}
+  /@vercel/redwood@2.0.9:
+    resolution: {integrity: sha512-zv0uJa+XtCJ15TdfCI5ybZM1hS3OBl28idCfN3vtWR+g5HjDSW8acYOzRw2Xy7wM1f+Fje1/Nx2AdYjCM4TWTA==}
     dependencies:
-      '@vercel/nft': 0.26.4
+      '@vercel/nft': 0.27.0
       '@vercel/routing-utils': 3.1.0
       semver: 6.3.1
     transitivePeerDependencies:
@@ -2101,11 +2158,11 @@ packages:
       - supports-color
     dev: true
 
-  /@vercel/remix-builder@2.1.5:
-    resolution: {integrity: sha512-VaDhsNg/1lZ7h6GJnaykActeZTRtFQz45qDNwKrHM+Nw5/ocwTun9sCJZY/ziECUNuQEJv95z3wUDhNweG+/9w==}
+  /@vercel/remix-builder@2.1.6:
+    resolution: {integrity: sha512-n2gnNW9HTWlTuEwTbtVI9GRHoQi/2kPu44l0zvFDw8GlsswW0/qJPvr8SFG83FDylQcafvW8LUWO9oXefuVrFA==}
     dependencies:
       '@vercel/error-utils': 2.0.2
-      '@vercel/nft': 0.26.4
+      '@vercel/nft': 0.27.0
       '@vercel/static-config': 3.0.0
       ts-morph: 12.0.0
     transitivePeerDependencies:
@@ -2125,7 +2182,7 @@ packages:
     resolution: {integrity: sha512-UZYwlSEEfVnfzTmgkD+kxex9/gkZGt7unOWNyWFN7V/ZnZSsGBUgv6hXLnwejdRi3EztgRQEBd1kUKlXdIeC0Q==}
     dev: true
 
-  /@vercel/speed-insights@1.0.10(@sveltejs/kit@2.5.7)(svelte@4.2.16):
+  /@vercel/speed-insights@1.0.10(@sveltejs/kit@2.5.8)(svelte@4.2.16):
     resolution: {integrity: sha512-4uzdKB0RW6Ff2FkzshzjZ+RlJfLPxgm/00i0XXgxfMPhwnnsk92YgtqsxT9OcPLdJUyVU1DqFlSWWjIQMPkh0g==}
     requiresBuild: true
     peerDependencies:
@@ -2149,15 +2206,15 @@ packages:
       vue-router:
         optional: true
     dependencies:
-      '@sveltejs/kit': 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.16)(vite@5.2.11)
+      '@sveltejs/kit': 2.5.8(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.16)(vite@5.2.11)
       svelte: 4.2.16
     dev: true
 
-  /@vercel/static-build@2.5.4:
-    resolution: {integrity: sha512-Z7xV4YoYmDW0Y+7doons0iU+qm15+tDpdhZhdgIQT55qPVBc89q5L3e+AFQrXkS6Ki28HMc8w5yXNUuwTAo5xA==}
+  /@vercel/static-build@2.5.7:
+    resolution: {integrity: sha512-w/MIZRoAdFMyL3uGYH6fC+CY5vM93RzOBvn8uCDWZSLouI8L13hxEhoIMUaKDpk3mmUevU1BKthKFiV5cEKWQA==}
     dependencies:
       '@vercel/gatsby-plugin-vercel-analytics': 1.0.11
-      '@vercel/gatsby-plugin-vercel-builder': 2.0.26
+      '@vercel/gatsby-plugin-vercel-builder': 2.0.29
       '@vercel/static-config': 3.0.0
       ts-morph: 12.0.0
     dev: true
@@ -4386,9 +4443,9 @@ packages:
       is-glob: 4.0.3
     dev: true
 
-  /glob@10.3.14:
-    resolution: {integrity: sha512-4fkAqu93xe9Mk7le9v0y3VrPDqLKHarNi2s4Pv7f2yOvfhWfhc7hRPHC/JyqMqb8B/Dt/eGS4n7ykwf3fOsl8g==}
-    engines: {node: '>=16 || 14 >=14.17'}
+  /glob@10.3.15:
+    resolution: {integrity: sha512-0c6RlJt1TICLyvJYIApxb8GsXoai0KUP7AxKKAtsYXdgJR1mGEUa7DgwShbdk1nly0PYoZj01xd4hzbq3fsjpw==}
+    engines: {node: '>=16 || 14 >=14.18'}
     hasBin: true
     dependencies:
       foreground-child: 3.1.1
@@ -6500,7 +6557,7 @@ packages:
     hasBin: true
     dependencies:
       commander: 12.0.0
-      glob: 10.3.14
+      glob: 10.3.15
       postcss: 8.4.38
       postcss-selector-parser: 6.0.16
     dev: true
@@ -7163,7 +7220,7 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       commander: 4.1.1
-      glob: 10.3.14
+      glob: 10.3.15
       lines-and-columns: 1.2.4
       mz: 2.7.0
       pirates: 4.0.6
@@ -7296,8 +7353,8 @@ packages:
       svelte: 4.2.16
     dev: true
 
-  /svelte-migrate@1.4.0:
-    resolution: {integrity: sha512-2mLNcWH6FQKjsHV+a+j3SwtzTJqX2naYR0bAywgQULvEc50oY6wdbFAE0RCZFFbOEd+tKeXTeFo1Gmj12sziAg==}
+  /svelte-migrate@1.4.1:
+    resolution: {integrity: sha512-NmkLyGk2YRxGlySVEmeWFqCeLSRoxr+GKZmOpI/4OZMTF+JUFh2SuclsFPSNAC15so/Lmtc/ho40GsdY4SSE4w==}
     hasBin: true
     dependencies:
       import-meta-resolve: 4.1.0
@@ -7741,8 +7798,8 @@ packages:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
     dev: true
 
-  /tsx@4.10.0:
-    resolution: {integrity: sha512-Ct/j4Yv49EFlr1z5CT++ld+BUhjLRLtimE4hIDaW9zEVIp3xJOQdTDAan+KEXeme7GcYIGzFD421Zcqf9dHomw==}
+  /tsx@4.10.2:
+    resolution: {integrity: sha512-gOfACgv1ElsIjvt7Fp0rMJKGnMGjox0JfGOfX3kmZCV/yZumaNqtHGKBXt1KgaYS9KjDOmqGeI8gHk/W7kWVZg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
@@ -7912,22 +7969,22 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vercel@34.1.10:
-    resolution: {integrity: sha512-fFSC6hZA4JBIf0vVg4hD0KJLlan+x+LGMPRknE5Lcd5gyq/k4mBeG7ctP1uV5hnoiJmwN7UcWTmgjLk+fmi+4g==}
+  /vercel@34.1.13:
+    resolution: {integrity: sha512-Cfbq3A08gHPGdugI7Q2PQFnHF7C+yBjfvP9le6xfjcsPgBKD+9OYO9jj5ybwRg/6WdiIMqOWQ/IeZwlXQ+p4jw==}
     engines: {node: '>= 16'}
     hasBin: true
     dependencies:
-      '@vercel/build-utils': 8.0.0
+      '@vercel/build-utils': 8.1.2
       '@vercel/fun': 1.1.0
       '@vercel/go': 3.1.1
       '@vercel/hydrogen': 1.0.2
-      '@vercel/next': 4.2.9
-      '@vercel/node': 3.1.0
+      '@vercel/next': 4.2.11
+      '@vercel/node': 3.1.3
       '@vercel/python': 4.2.0
-      '@vercel/redwood': 2.0.8
-      '@vercel/remix-builder': 2.1.5
+      '@vercel/redwood': 2.0.9
+      '@vercel/remix-builder': 2.1.6
       '@vercel/ruby': 2.1.0
-      '@vercel/static-build': 2.5.4
+      '@vercel/static-build': 2.5.7
       chokidar: 3.3.1
     transitivePeerDependencies:
       - '@swc/core'
