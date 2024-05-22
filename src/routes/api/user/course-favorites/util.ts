@@ -1,0 +1,47 @@
+import type { Cookies } from '@sveltejs/kit';
+
+import { auth } from '$lib/server/auth';
+import { csrf } from '$lib/server/csrf';
+import { db } from '$lib/server/database';
+import { error } from '@sveltejs/kit';
+
+type ValidatedAPIData = {
+    courseId: string;
+    userId: string;
+};
+
+export const getValidatedApiData = async (
+    cookies: Cookies,
+    url: URL,
+    courseIdRequired = true
+): Promise<ValidatedAPIData> => {
+    await csrf.validateCookies(cookies);
+    const sessionId = auth.getSession(cookies) ?? '';
+    const validSession = auth.validateSession(sessionId);
+
+    if (!sessionId || !validSession) {
+        error(401, 'You are not logged in.');
+    }
+
+    const userId = await auth.getUserId(sessionId);
+    const courseId = url.searchParams.get('course_id');
+
+    if (courseIdRequired && !courseId) {
+        error(400, 'Invalid course ID');
+    }
+    if (!userId) {
+        error(401, 'Invalid user ID');
+    }
+
+    return { courseId: courseId ?? '', userId };
+};
+
+export const courseExists = async (courseId: string): Promise<boolean> => {
+    const course = await db
+        .selectFrom('Course')
+        .select('Course.courseId')
+        .where('Course.courseId', '=', courseId)
+        .executeTakeFirst();
+
+    return !!course;
+};

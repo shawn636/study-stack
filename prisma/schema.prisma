@@ -38,7 +38,7 @@ model Course {
 
   categoryId           String
   courseCurrentPrice   Decimal
-  courseDescription    String  @db.Text
+  courseDescription    String               @db.Text
   courseDifficulty     String
   estimatedTimeHours   Int
   estimatedTimeMinutes Int
@@ -49,13 +49,25 @@ model Course {
   courseOriginalPrice  Decimal
   courseRatingAverage  Float
   courseRatingCount    Int
-  courseTitle          String  @db.Text
+  courseTitle          String               @db.Text
+  UserCourseFavorite   UserCourseFavorite[]
 
   @@index([categoryId])
   @@index([instructorId])
   @@index([organizationId])
   @@fulltext([courseTitle])
   @@fulltext([courseTitle, courseDescription])
+}
+
+model UserCourseFavorite {
+  course   Course @relation(fields: [courseId], references: [courseId], onUpdate: Cascade, onDelete: Cascade)
+  user     User   @relation(fields: [userId], references: [userId], onUpdate: Cascade, onDelete: Cascade)
+  courseId String
+  userId   String
+
+  @@id([userId, courseId])
+  @@index([courseId])
+  @@index([userId])
 }
 
 enum ContentType {
@@ -122,18 +134,19 @@ model User {
   organization       Organization?    @relation(fields: [organizationId], references: [organizationId], onUpdate: Cascade, onDelete: SetNull)
   permissions        Permission[]
 
-  userAreaCode    String? @db.VarChar(5)
-  authUserId      String? @unique @db.VarChar(30)
-  userBio         String? @db.Text
-  userCity        String? @db.Text
-  userCountryCode String? @db.VarChar(5)
-  userEmail       String  @unique
-  userName        String  @db.Text
-  organizationId  String?
-  userPhoneNumber String? @db.VarChar(15)
-  userPhotoUrl    String? @db.Text
-  userRole        String
-  userState       String?
+  userAreaCode       String?              @db.VarChar(5)
+  authUserId         String?              @unique @db.VarChar(30)
+  userBio            String?              @db.Text
+  userCity           String?              @db.Text
+  userCountryCode    String?              @db.VarChar(5)
+  userEmail          String               @unique
+  userName           String               @db.Text
+  organizationId     String?
+  userPhoneNumber    String?              @db.VarChar(15)
+  userPhotoUrl       String?              @db.Text
+  userRole           String
+  userState          String?
+  UserCourseFavorite UserCourseFavorite[]
 
   @@index([authUserId])
   @@index([organizationId])

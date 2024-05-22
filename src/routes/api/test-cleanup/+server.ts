@@ -1,22 +1,16 @@
-import { type SubscribeForm, subscribeForm } from '$lib/models/forms/subscribe';
 import { csrf } from '$lib/server/csrf';
+import { cleanup } from '$lib/server/test-utils/cleanup';
 import { errorPadding } from '$lib/server/util';
 import { error } from '@sveltejs/kit';
 import { ValidationError } from 'yup';
 
 import type { RequestHandler } from './$types';
 
-export const POST = (async ({ cookies, request }) => {
+export const DELETE = (async ({ cookies }) => {
     await csrf.validateCookies(cookies);
 
     try {
-        const data = await request.formData();
-
-        const form: SubscribeForm = {
-            email: data.get('email') as string
-        };
-
-        await subscribeForm.validate(form, { abortEarly: true });
+        await cleanup();
     } catch (e: unknown) {
         console.error(e);
         await errorPadding();
@@ -28,7 +22,7 @@ export const POST = (async ({ cookies, request }) => {
             'cache-control': 'no-store',
             'content-type': 'application/json;charset=utf-8'
         },
-        status: 204
+        status: 200
     });
 }) satisfies RequestHandler;
 

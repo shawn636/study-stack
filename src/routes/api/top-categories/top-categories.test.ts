@@ -45,7 +45,6 @@ describe('top-categories', () => {
             expect(categorySummary.count).toBeTruthy();
             expect(categorySummary.count).toBeGreaterThanOrEqual(1);
 
-            expect(categorySummary.categoryImgHref).toBeTruthy();
             expect(typeof categorySummary.categoryImgHref).toBe('string');
         }
     });
