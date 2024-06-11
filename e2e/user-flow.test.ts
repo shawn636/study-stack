@@ -27,13 +27,13 @@ const generateAccount = (): Account => {
 
 test.describe('all-user-flow', async () => {
     test.afterAll(async () => {
-        await auth.deleteE2eTestUsers(testEmailDomain);
+        await auth.deleteE2eTestUsers();
     });
     test('should be able to make account', async ({ page }) => {
         const { email, name, pass } = generateAccount();
 
         await page.goto('/auth/register');
-        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('networkidle');
         expect(page).toHaveURL('/auth/register');
 
         await page.getByTestId('name-input').fill(name);
@@ -43,7 +43,7 @@ test.describe('all-user-flow', async () => {
         await page.getByTestId('submit-button').click();
 
         await page.waitForURL('/');
-        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('networkidle');
         expect(page).toHaveURL('/');
 
         await page.getByTestId('profile-button').click();
@@ -56,17 +56,20 @@ test.describe('all-user-flow', async () => {
         await auth.createUser(email, pass, name);
 
         await page.goto('/auth/register');
-        await page.waitForLoadState('domcontentloaded');
-        expect(page).toHaveURL('/auth/register');
+        await page.waitForLoadState('networkidle');
+        await expect(page).toHaveURL('/auth/register');
 
-        await page.getByTestId('name-input').click();
-        await page.locator('body').click();
+        const nameInput = page.locator('[data-testid="name-input"]');
+        const nameError = page.locator('[data-testid="name-error"]');
 
-        await expect(page.getByTestId('name-error')).toBeVisible();
+        await nameInput.click();
+        await nameInput.evaluate((input) => input.blur());
 
-        await page.getByTestId('name-input').fill(name);
-        await page.locator('body').click();
-        await expect(page.getByTestId('name-error')).not.toBeVisible();
+        await expect(nameError).toBeVisible();
+
+        await nameInput.fill(name);
+        await nameInput.evaluate((input) => input.blur());
+        await expect(nameError).not.toBeVisible();
     });
 
     test('should show email validation errors', async ({ page }) => {
@@ -74,7 +77,7 @@ test.describe('all-user-flow', async () => {
         await auth.createUser(email, pass, name);
 
         await page.goto('/auth/register');
-        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('networkidle');
         expect(page).toHaveURL('/auth/register');
 
         await page.getByTestId('email-input').click();
@@ -92,7 +95,7 @@ test.describe('all-user-flow', async () => {
         await auth.createUser(email, pass, name);
 
         await page.goto('/auth/register');
-        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('networkidle');
         expect(page).toHaveURL('/auth/register');
 
         await page.getByTestId('password1-input').click();
@@ -110,7 +113,7 @@ test.describe('all-user-flow', async () => {
         await auth.createUser(email, pass, name);
 
         await page.goto('/auth/register');
-        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('networkidle');
         expect(page).toHaveURL('/auth/register');
 
         await page.getByTestId('password2-input').click();

@@ -30,9 +30,9 @@
  * to `cleanup.ts`.
  */
 
-import type { Course } from '$lib/models/types/database.types';
 import type { TestUtil } from '$lib/models/types/test-util';
 
+import { type Course, RecordType } from '$lib/models/types/database.types';
 import { cuid, db } from '$lib/server/database';
 import CategoryTestUtilModule from '$lib/server/test-utils/category';
 import UserTestUtilModule from '$lib/server/test-utils/user';
@@ -67,26 +67,27 @@ const module: CourseTestUtil = {
 
         const courseId = cuid();
 
-        const course: Course = {
-            categoryId: category.categoryId,
+        const course = {
+            courseCategoryId: category.categoryId,
             courseCurrentPrice: 0,
             courseDescription: '',
             courseDifficulty: '',
+            courseEstimatedTimeHours: 0,
+            courseEstimatedTimeMinutes: 0,
             courseId: courseId,
             courseImgHref: '',
+            courseInstructorId: user.userId,
+            courseLessonCount: 0,
+            courseOrganizationId: null,
             courseOriginalPrice: 0,
             courseRatingAverage: 0,
             courseRatingCount: 0,
-            courseTitle: `unit-test-course-${courseId}`,
-            estimatedTimeHours: 0,
-            estimatedTimeMinutes: 0,
-            instructorId: user.userId,
-            lessonCount: 0,
-            organizationId: null
+            courseRecordType: RecordType.TEST_RECORD,
+            courseTitle: `unit-test-course-${courseId}`
         };
         await db.insertInto('Course').values(course).execute();
 
-        return course;
+        return course as unknown as Course;
     },
 
     async getCourses(count: number): Promise<Course[]> {
@@ -95,30 +96,31 @@ const module: CourseTestUtil = {
             UserTestUtilModule.getUser()
         ]);
 
-        const courses: Course[] = Array.from({ length: count }).map(() => {
+        const courses = Array.from({ length: count }).map(() => {
             const courseId = cuid();
-            const course: Course = {
-                categoryId: category.categoryId,
+            const course = {
+                courseCategoryId: category.categoryId,
                 courseCurrentPrice: 0,
                 courseDescription: '',
                 courseDifficulty: '',
+                courseEstimatedTimeHours: 0,
+                courseEstimatedTimeMinutes: 0,
                 courseId: courseId,
                 courseImgHref: '',
+                courseInstructorId: user.userId,
+                courseLessonCount: 0,
+                courseOrganizationId: null,
                 courseOriginalPrice: 0,
                 courseRatingAverage: 0,
                 courseRatingCount: 0,
-                courseTitle: `unit-test-course-${courseId}`,
-                estimatedTimeHours: 0,
-                estimatedTimeMinutes: 0,
-                instructorId: user.userId,
-                lessonCount: 0,
-                organizationId: null
+                courseRecordType: RecordType.TEST_RECORD,
+                courseTitle: `unit-test-course-${courseId}`
             };
             return course;
         });
 
         await db.insertInto('Course').values(courses).execute();
-        return courses;
+        return courses as unknown as Course[];
     }
 };
 

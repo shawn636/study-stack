@@ -21,9 +21,6 @@
     });
 </script>
 
-<!-- <Toast />
-<Sidebar {user} /> -->
-
 <div data-testid="app-shell">
     <Header {user} />
     <slot />

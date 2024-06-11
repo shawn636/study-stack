@@ -1,5 +1,6 @@
 <script lang="ts">
-    import type { CourseSearchResult, CourseWithInstructor } from '$lib/models/types/api';
+    import type { ApiResponse } from '$lib/api/types/common'; // import type { CourseSearchResult } from '$lib/models/types/api';
+    import type { CourseSearchResult } from '$lib/api/types/courses';
 
     import SortByDropdown from '$lib/components/controls/sort-by-dropdown.svelte';
     import ViewToggle from '$lib/components/controls/view-toggle.svelte';
@@ -20,11 +21,11 @@
     import { mediaQuery } from 'svelte-legos';
     import { toast } from 'svelte-sonner';
 
-    const result: CourseSearchResult = { courseCount: 0, courses: [] };
+    import { courseResults, isLoading } from './stores';
+
+    let debounceTimeout: ReturnType<typeof setTimeout>;
 
     // State
-    let isLoading = true;
-    let courses: CourseWithInstructor[] = result.courses;
     let selectedView: 'grid' | 'list';
     let sortByOption = {
         label: CourseSortByOptions.RELEVANCE.label,
@@ -38,26 +39,45 @@
 
     // Methods
     const getCourses = async () => {
-        isLoading = true;
-        let url = '/api/search/courses';
+        isLoading.set(true);
+
+        const params = new URLSearchParams();
         if (searchQuery) {
-            url += `/${searchQuery}`;
+            params.append('query', searchQuery);
         }
-        url += `?sort_by=${sortByOption.value.param}&page=${page - 1}&page_size=${pageSize}`;
+        params.append('sort_by', sortByOption.value.param);
+        params.append('page', (page - 1).toString());
+        params.append('page_size', pageSize.toString());
+
+        const url = `/api/courses?${params.toString()}`;
+
         try {
+            console.log('Fetching Courses');
             const response = await fetch(url);
             if (response.ok) {
-                const result = (await response.json()) as CourseSearchResult;
-                courses = result.courses;
-                count = result.courseCount;
+                const result = (await response.json()) as ApiResponse<CourseSearchResult>;
+                console.log(result);
+                console.log('Courses Fetched Successfully');
+                courseResults.set(result.data.courses);
+                count = result.data.totalCourses;
+                console.log('Courses Set');
             } else {
+                console.log('Response not okay, but no error thrown');
                 toast.error('An error occurred while fetching courses. Please try again later.');
             }
         } catch (error) {
+            console.log('Error thrown while fetching courses', error);
             toast.error('An error occurred while fetching courses. Please try again later.');
         }
-        isLoading = false;
+        isLoading.set(false);
         window.scrollTo({ behavior: 'smooth', top: 0 });
+    };
+
+    const debounceGetCourses = () => {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            getCourses();
+        }, 300); // Adjust the delay (in milliseconds) as needed
     };
 
     const isDesktop = mediaQuery('(min-width: 768px)');
@@ -78,7 +98,7 @@
                 <Input
                     bind:value={searchQuery}
                     class="w-full"
-                    on:input={() => getCourses()}
+                    on:input={() => debounceGetCourses()}
                     placeholder="Search..."
                     type="email"
                 />
@@ -97,7 +117,7 @@
             />
             <ViewToggle bind:value={selectedView} />
         </div>
-        {#if isLoading}
+        {#if $isLoading}
             <div
                 class="grid justify-center gap-y-4 sm:grid-cols-[repeat(2,auto)] sm:justify-between lg:grid-cols-[repeat(3,auto)]"
             >
@@ -107,7 +127,7 @@
                     </div>
                 {/each}
             </div>
-        {:else if courses.length === 0}
+        {:else if $courseResults.length === 0}
             <div class="content-visibility-auto mb-6 mt-8 grid items-center justify-items-center">
                 <div class="flex-flow-col card flex items-center gap-x-2 p-4">
                     <Fa class="text-xl" icon={faBinoculars} />
@@ -116,16 +136,16 @@
             </div>
         {:else if selectedView === 'list'}
             <div class="flex flex-col gap-y-4">
-                {#each courses as courseWithInstructor}
-                    <CourseListItem {courseWithInstructor} />
+                {#each $courseResults as courseResult}
+                    <CourseListItem {courseResult} />
                 {/each}
             </div>
         {:else}
             <div
                 class="grid justify-center gap-y-4 sm:grid-cols-[repeat(2,auto)] sm:justify-between lg:grid-cols-[repeat(3,auto)]"
             >
-                {#each courses as courseWithInstructor}
-                    <CourseGridItem {courseWithInstructor} />
+                {#each $courseResults as courseResult}
+                    <CourseGridItem {courseResult} />
                 {/each}
             </div>
         {/if}

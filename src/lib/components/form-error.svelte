@@ -9,7 +9,7 @@
 
 {#if error}
     <div
-        class="flex items-center gap-x-1"
+        class="flex items-center gap-x-1 pt-2"
         in:slide={{
             duration: 300,
             easing: cubicInOut

@@ -8,7 +8,7 @@ describe('/api/courses', () => {
     it('should return a specific course', { timeout: 10000 }, async () => {
         const someCourseWithInstructor = await db
             .selectFrom('Course')
-            .innerJoin('User', 'Course.instructorId', 'User.userId')
+            .innerJoin('User', 'Course.courseInstructorId', 'User.userId')
             .selectAll(['Course', 'User'])
             .executeTakeFirstOrThrow();
 
@@ -21,6 +21,6 @@ describe('/api/courses', () => {
 
         expect(result.courseId).toBe(someCourseWithInstructor.courseId);
         expect(result.courseTitle).toBe(someCourseWithInstructor.courseTitle);
-        expect(result.instructorId).toBe(someCourseWithInstructor.instructorId);
+        expect(result.courseInstructorId).toBe(someCourseWithInstructor.courseInstructorId);
     });
 });

@@ -8,12 +8,15 @@ import type { RequestHandler } from './$types';
 import { getValidatedApiData } from './util';
 
 export const POST = (async ({ cookies, url }) => {
-    const { courseId, userId } = await getValidatedApiData(cookies, url);
+    const { userCourseFavoriteCourseId, userCourseFavoriteUserId } = await getValidatedApiData(
+        cookies,
+        url
+    );
 
     try {
         const result = await db
             .insertInto('UserCourseFavorite')
-            .values({ courseId, userId })
+            .values({ userCourseFavoriteCourseId, userCourseFavoriteUserId })
             .ignore()
             .executeTakeFirstOrThrow();
 

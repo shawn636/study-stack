@@ -6,8 +6,8 @@ import { db } from '$lib/server/database';
 import { error } from '@sveltejs/kit';
 
 type ValidatedAPIData = {
-    courseId: string;
-    userId: string;
+    userCourseFavoriteCourseId: string;
+    userCourseFavoriteUserId: string;
 };
 
 export const getValidatedApiData = async (
@@ -33,7 +33,7 @@ export const getValidatedApiData = async (
         error(401, 'Invalid user ID');
     }
 
-    return { courseId: courseId ?? '', userId };
+    return { userCourseFavoriteCourseId: courseId ?? '', userCourseFavoriteUserId: userId };
 };
 
 export const courseExists = async (courseId: string): Promise<boolean> => {

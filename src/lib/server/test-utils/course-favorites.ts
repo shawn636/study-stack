@@ -30,9 +30,9 @@
  * to `cleanup.ts`.
  */
 
-import type { Course, User, UserCourseFavorite } from '$lib/models/types/database.types';
 import type { TestUtil } from '$lib/models/types/test-util';
 
+import { type Course, RecordType, type User } from '$lib/models/types/database.types';
 import { db } from '$lib/server/database';
 import CourseTestUtilModule from '$lib/server/test-utils/course';
 import UserTestUtilModule from '$lib/server/test-utils/user';
@@ -74,10 +74,11 @@ const module: CourseFavoritesTestUtil = {
         const { email, password, user } = await UserTestUtilModule.getUserWithCredentials();
         const courses = await CourseTestUtilModule.getCourses(count);
 
-        const userCourseFavorites: UserCourseFavorite[] = courses.map((course) => {
+        const userCourseFavorites = courses.map((course) => {
             return {
-                courseId: course.courseId,
-                userId: user.userId
+                userCourseFavoriteCourseId: course.courseId,
+                userCourseFavoriteRecordType: RecordType.TEST_RECORD,
+                userCourseFavoriteUserId: user.userId
             };
         });
 

@@ -25,16 +25,19 @@ import { getValidatedApiData } from './util';
 
 export const GET = (async ({ cookies, url }) => {
     const courseIdRequired = false;
-    const { userId } = await getValidatedApiData(cookies, url, courseIdRequired);
+    const { userCourseFavoriteUserId } = await getValidatedApiData(cookies, url, courseIdRequired);
 
     try {
         const favorites = await db
             .selectFrom('UserCourseFavorite')
-            .select('UserCourseFavorite.courseId')
-            .where('UserCourseFavorite.userId', '=', userId)
+            .select('UserCourseFavorite.userCourseFavoriteCourseId')
+            .where('UserCourseFavorite.userCourseFavoriteUserId', '=', userCourseFavoriteUserId)
             .execute();
 
-        let favoriteIds = favorites.map((favorite: { courseId: string }) => favorite.courseId);
+        let favoriteIds = favorites.map(
+            (favorite: { userCourseFavoriteCourseId: string }) =>
+                favorite.userCourseFavoriteCourseId
+        );
 
         if (favoriteIds.length === 0) {
             favoriteIds = [];

@@ -69,11 +69,11 @@ const module: UserTestUtil = {
             await db.transaction().execute(async (trx: Transaction<DB>) => {
                 await trx
                     .deleteFrom('User')
-                    .where('User.authUserId', '=', authUser.authUserId)
+                    .where('User.userAuthUserId', '=', authUser.authUserId)
                     .execute();
                 await trx
                     .deleteFrom('AuthKey')
-                    .where('AuthKey.authUserId', '=', authUser.authUserId)
+                    .where('AuthKey.authKeyAuthUserId', '=', authUser.authUserId)
                     .execute();
                 await trx
                     .deleteFrom('AuthUser')

@@ -15,7 +15,7 @@ export const GET = (async ({ cookies, params }) => {
     try {
         const courseWithInstructor = await db
             .selectFrom('Course')
-            .innerJoin('User', 'Course.instructorId', 'User.userId')
+            .innerJoin('User', 'Course.courseInstructorId', 'User.userId')
             .selectAll(['Course', 'User'])
             .where('Course.courseId', '=', slug)
             .executeTakeFirstOrThrow();

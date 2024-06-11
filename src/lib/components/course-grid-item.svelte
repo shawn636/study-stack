@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Course, User } from '$lib/models/types/database.types';
+    import type { CourseResult } from '$lib/api/types/courses';
 
     import { initials } from '$lib/client/util';
     import CourseRating from '$lib/components/course-rating.svelte';
@@ -11,7 +11,8 @@
     import { faHeart } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
 
-    export let courseWithInstructor: Course & User;
+    // export let courseWithInstructor: Course & User;
+    export let courseResult: CourseResult;
 
     let toggled = false;
 
@@ -26,27 +27,27 @@
 </script>
 
 <div class={containerBaseClass}>
-    <a href={`/courses/${courseWithInstructor.courseId}`}>
+    <a href={`/courses/${courseResult.course.courseId}`}>
         <Image
             alt="an open bible"
             class="aspect-auto rounded-md p-0"
             {height}
-            src={courseWithInstructor.courseImgHref}
+            src={courseResult.course.courseImgHref}
             width="w-full"
         />
     </a>
 
     <CourseRating
         class="pl-2"
-        rating={courseWithInstructor.courseRatingAverage}
-        ratingCount={courseWithInstructor.courseRatingCount}
+        rating={courseResult.course.courseRatingAverage}
+        ratingCount={courseResult.course.courseRatingCount}
     />
 
-    <Button class="m-0 p-0" href={`/courses/${courseWithInstructor.courseId}`} variant="link">
+    <Button class="m-0 p-0" href={`/courses/${courseResult.course.courseId}`} variant="link">
         <h3 class="px-2 text-start text-lg font-medium">
-            {courseWithInstructor.courseTitle.length > 40
-                ? courseWithInstructor.courseTitle.substring(0, 40) + '...'
-                : courseWithInstructor.courseTitle}
+            {courseResult.course.courseTitle.length > 40
+                ? courseResult.course.courseTitle.substring(0, 40) + '...'
+                : courseResult.course.courseTitle}
         </h3>
     </Button>
 
@@ -56,12 +57,13 @@
     >
         <span class="flex items-center gap-x-1">
             <Fa icon={faFileLines} size="sm" />
-            <p class="whitespace-nowrap">{courseWithInstructor.lessonCount} Lessons</p>
+            <p class="whitespace-nowrap">{courseResult.course.courseLessonCount} Lessons</p>
         </span>
         <span class="flex items-center gap-x-1">
             <Fa icon={faClock} size="sm" />
             <p class="whitespace-nowrap">
-                {courseWithInstructor.estimatedTimeHours}h {courseWithInstructor.estimatedTimeMinutes}m
+                {courseResult.course.courseEstimatedTimeHours}h {courseResult.course
+                    .courseEstimatedTimeMinutes}m
             </p>
         </span>
     </div>
@@ -71,9 +73,9 @@
 
     <div class="grid w-full grid-cols-[auto_1fr_auto] items-center gap-x-2">
         <Avatar.Root class="h-6 w-6 text-xs">
-            <Avatar.Fallback>{initials(courseWithInstructor.userName)}</Avatar.Fallback>
+            <Avatar.Fallback>{initials(courseResult.instructor.userName)}</Avatar.Fallback>
         </Avatar.Root>
-        <p class="text-sm text-gray-500">{courseWithInstructor.userName}</p>
+        <p class="text-sm text-gray-500">{courseResult.instructor.userName}</p>
     </div>
 
     <div class="grid grid-rows-2 items-center">
@@ -81,14 +83,14 @@
             <button aria-label="Toggle Favorite" on:click={handleToggle}>
                 <Fa class="text-pink-500" icon={toggled ? faHeart : faHeartOutline} size="lg" />
             </button>
-            {#if Number(courseWithInstructor.courseCurrentPrice) < Number(courseWithInstructor.courseOriginalPrice)}
+            {#if Number(courseResult.course.courseCurrentPrice) < Number(courseResult.course.courseOriginalPrice)}
                 <p class="text-sm text-gray-400 line-through">
-                    ${Number(courseWithInstructor.courseOriginalPrice).toFixed(2)}
+                    ${Number(courseResult.course.courseOriginalPrice).toFixed(2)}
                 </p>
             {/if}
 
             <p class="font-semibold">
-                ${Number(courseWithInstructor.courseCurrentPrice).toFixed(2)}
+                ${Number(courseResult.course.courseCurrentPrice).toFixed(2)}
             </p>
         </div>
         <Button aria-label="Enroll" class="variant-filled-secondary">

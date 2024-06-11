@@ -3,7 +3,6 @@
  */
 import { COOKIE_NAME as AUTH_COOKIE_NAME, auth } from '$lib/server/auth';
 import { COOKIE_NAME as CSRF_COOKIE_NAME, csrf } from '$lib/server/csrf';
-// import { prisma } from '$lib/server/database';
 import { db, sql } from '$lib/server/database';
 import { faker } from '@faker-js/faker';
 

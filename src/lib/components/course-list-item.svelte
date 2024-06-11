@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Course, User } from '$lib/models/types/database.types';
+    import type { CourseResult } from '$lib/api/types/courses';
 
     import CourseRating from '$lib/components/course-rating.svelte';
     import { Button } from '$lib/components/ui/button';
@@ -8,7 +8,8 @@
     import { faHeart } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
 
-    export let courseWithInstructor: Course & User;
+    // export let courseWithInstructor: Course & User;
+    export let courseResult: CourseResult;
 
     let toggled = false;
 </script>
@@ -16,11 +17,11 @@
 <div class="grid grid-flow-row grid-cols-[minmax(150px,_1fr)_3fr] items-center gap-x-2">
     <div class="relative w-full self-start sm:self-center" style="padding-top: 100%;">
         <!-- This padding top keeps the aspect ratio 1:1 -->
-        <a href={`/courses/${courseWithInstructor.courseId}`}>
+        <a href={`/courses/${courseResult.course.courseId}`}>
             <img
                 alt="Course Thumbnail"
                 class="absolute inset-0 h-full w-full rounded-lg object-cover"
-                src={courseWithInstructor.courseImgHref}
+                src={courseResult.course.courseImgHref}
             />
         </a>
     </div>
@@ -31,20 +32,20 @@
     >
         <div>
             <CourseRating
-                rating={courseWithInstructor.courseRatingAverage}
-                ratingCount={courseWithInstructor.courseRatingCount}
+                rating={courseResult.course.courseRatingAverage}
+                ratingCount={courseResult.course.courseRatingCount}
             />
             <Button
                 class="m-0 p-0"
-                href={`/courses/${courseWithInstructor.courseId}`}
+                href={`/courses/${courseResult.course.courseId}`}
                 variant="link"
             >
                 <h2 class="line-clamp-1 font-bold sm:text-lg">
-                    {courseWithInstructor.courseTitle}
+                    {courseResult.course.courseTitle}
                 </h2>
             </Button>
             <p class="line-clamp-1 text-sm sm:line-clamp-2 md:line-clamp-3">
-                {courseWithInstructor.courseDescription}
+                {courseResult.course.courseDescription}
             </p>
         </div>
         <Separator class="my-2 md:hidden" orientation="horizontal" />
@@ -56,10 +57,10 @@
                     data-test-id="list-item-price-block"
                 >
                     <span class="m-0 p-0 text-sm text-muted-foreground/50 line-through"
-                        >${Math.round(courseWithInstructor.courseOriginalPrice * 100) / 100}</span
+                        >${Math.round(courseResult.course.courseOriginalPrice * 100) / 100}</span
                     >
                     <span class="m-0 p-0 text-lg font-bold"
-                        >${Math.round(courseWithInstructor.courseCurrentPrice * 100) / 100}</span
+                        >${Math.round(courseResult.course.courseCurrentPrice * 100) / 100}</span
                     >
                 </div>
                 <div

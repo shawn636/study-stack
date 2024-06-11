@@ -8,9 +8,12 @@ import type { RequestHandler } from './$types';
 import { courseExists, getValidatedApiData } from './util';
 
 export const DELETE = (async ({ cookies, url }) => {
-    const { courseId, userId } = await getValidatedApiData(cookies, url);
+    const { userCourseFavoriteCourseId, userCourseFavoriteUserId } = await getValidatedApiData(
+        cookies,
+        url
+    );
 
-    const courseDoesExist = await courseExists(courseId);
+    const courseDoesExist = await courseExists(userCourseFavoriteCourseId);
 
     if (!courseDoesExist) {
         error(404, 'Course not found');
@@ -19,8 +22,8 @@ export const DELETE = (async ({ cookies, url }) => {
     try {
         const result = await db
             .deleteFrom('UserCourseFavorite')
-            .where('UserCourseFavorite.courseId', '=', courseId)
-            .where('UserCourseFavorite.userId', '=', userId)
+            .where('UserCourseFavorite.userCourseFavoriteCourseId', '=', userCourseFavoriteCourseId)
+            .where('UserCourseFavorite.userCourseFavoriteUserId', '=', userCourseFavoriteUserId)
             .executeTakeFirstOrThrow();
 
         const deleted = Number(result.numDeletedRows ?? 0) > 0;

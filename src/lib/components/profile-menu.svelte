@@ -1,13 +1,18 @@
 <script lang="ts">
-    import type { User } from '$lib/models/types/database.types';
-
     import { goto } from '$app/navigation';
     import { navigating } from '$app/stores';
     import { initials } from '$lib/client/util';
     import * as Avatar from '$lib/components/ui/avatar/index';
     import { Button } from '$lib/components/ui/button';
     import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
-    import { faChevronDown, faDoorOpen, faHouse, faUser } from '@fortawesome/free-solid-svg-icons';
+    import { type User, UserRole } from '$lib/models/types/database.types';
+    import {
+        faChevronDown,
+        faDoorOpen,
+        faHouse,
+        faToolbox,
+        faUser
+    } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
 
     export let user: User;
@@ -64,24 +69,39 @@
 
                 <hr />
 
-                <ul class="grid grid-flow-row">
+                <ul class="grid grid-flow-row gap-y-1">
+                    {#if user.userRole.toString() === UserRole.ADMIN}
+                        <div>
+                            <p class="text-sm font-semibold">Admin</p>
+                            <li class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
+                                <a class="flex items-center gap-2" href="/admin">
+                                    <Fa class="text-gray-500 dark:text-gray-200" icon={faToolbox} />
+                                    <span>Admin Tools</span>
+                                </a>
+                            </li>
+                        </div>
+                    {/if}
+
                     <!-- Students -->
-                    <p class="text-sm font-semibold">Students</p>
+                    <div>
+                        <p class="text-sm font-semibold">Students</p>
 
-                    <li class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <a class="flex items-center gap-2" href="/home">
-                            <Fa class="text-gray-500 dark:text-gray-200" icon={faHouse} />
-                            <span>Home</span>
-                        </a>
-                    </li>
+                        <li class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
+                            <a class="flex items-center gap-2" href="/home">
+                                <Fa class="text-gray-500 dark:text-gray-200" icon={faHouse} />
+                                <span>Home</span>
+                            </a>
+                        </li>
 
-                    <!-- Settings -->
-                    <li class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <a class="flex items-center gap-2" href="/profile">
-                            <Fa class="text-gray-500 dark:text-gray-200" icon={faUser} />
-                            <span>My Account</span>
-                        </a>
-                    </li>
+                        <!-- Settings -->
+                        <li class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
+                            <a class="flex items-center gap-2" href="/profile">
+                                <Fa class="text-gray-500 dark:text-gray-200" icon={faUser} />
+                                <span>My Account</span>
+                            </a>
+                        </li>
+                    </div>
+
                     <!-- Sign Out -->
                     <li class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
                         <Button

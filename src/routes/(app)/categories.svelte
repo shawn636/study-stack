@@ -5,7 +5,7 @@
     export let categorySummaries: CategorySummary[];
 </script>
 
-<div class="grid justify-items-center">
+<div class="mt-4 grid justify-items-center">
     <div class="grid max-w-7xl grid-flow-row items-center justify-items-center pb-4">
         <h3 class="text-md font-bold">Top Categories</h3>
         <p class="text-sm text-slate-500">Eu non ad elit irure minim enim Lorem</p>

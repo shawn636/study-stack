@@ -9,7 +9,7 @@ test.describe('all-home-page', () => {
 
     test('successfully loads all images', async ({ page }) => {
         await page.goto('/');
-        const images = await page.$$('img');
+        const images = await page.locator('img').all();
 
         await Promise.all(
             images.map(async (img) => {

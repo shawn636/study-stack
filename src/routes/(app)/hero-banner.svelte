@@ -2,6 +2,9 @@
     import HeroCollage from '$lib/components/hero-collage.svelte';
     import { Button } from '$lib/components/ui/button';
 
+    // import Wave from './(components)/wave.svelte';
+    import Wave from './(components)/wave.svelte';
+
     const cta = 'Learn New Skills Online With Top ';
     const ctaUnderline = 'Educators';
     const subheading = `Build Skills With Courses, Certificates, 
@@ -57,15 +60,30 @@
         <HeroCollage />
     </div>
 </div>
-<svg
-    class="z-negative w-full fill-equipped-blue lg:h-20"
-    height="56"
-    preserveAspectRatio="none"
-    viewBox="0 0 1024 56"
-    width="1024"
-    xmlns="http://www.w3.org/2000/svg"
->
-    <path
-        d="M0 0H1024V29.8281C935.667 -3.12563 672.802 -4.62048 493 29.8281C301 66.6136 112.333 62.7818 0 29.8281V0Z"
+<div class="relative h-[56px] overflow-hidden">
+    <Wave
+        class="bottom-8 -z-10 h-6 fill-[#3B90D8]/50  dark:fill-[#1A5180]/50 sm:h-8 md:bottom-6 md:h-10 lg:h-12 xl:h-14"
+        style="animation-duration: 25s; animation-delay: 4s;"
+        variantNumber={1}
     />
-</svg>
+    <Wave
+        class="bottom-4 -z-20 fill-[#7AB4E4]/50 dark:fill-[#113553]/50 md:bottom-1"
+        style="animation-duration: 15s;"
+        variantNumber={1}
+    />
+    <Wave
+        class="bottom-2 -z-30 fill-[#A4CBED]/50 dark:fill-[#0C283D]/50 md:bottom-0"
+        style="animation-duration: 20s; animation-delay: 6s;"
+        variantNumber={1}
+    />
+    <svg
+        class="z-negative h-10 w-full fill-equipped-blue md:h-14"
+        preserveAspectRatio="none"
+        viewBox="0 0 1024 56"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            d="M0 0H1024V29.8281C935.667 -3.12563 672.802 -4.62048 493 29.8281C301 66.6136 112.333 62.7818 0 29.8281V0Z"
+        />
+    </svg>
+</div>

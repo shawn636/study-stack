@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { cn } from '$lib/utils.js';
     import { Button as ButtonPrimitive } from 'bits-ui';
-
     import { type Events, type Props, buttonVariants } from './index.js';
+    import { cn } from '$lib/utils.js';
 
     type $$Props = Props;
     type $$Events = Events;
@@ -16,7 +15,7 @@
 
 <ButtonPrimitive.Root
     {builders}
-    class={cn(buttonVariants({ className, size, variant }), 'transition-transform active:scale-95')}
+    class={cn(buttonVariants({ variant, size, className }))}
     type="button"
     {...$$restProps}
     on:click

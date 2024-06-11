@@ -1,12 +1,13 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
+    import { apiClientSingleton as client } from '$lib/api';
     import FormError from '$lib/components/form-error.svelte';
     import SubmissionError from '$lib/components/submission-error.svelte';
     import { Button } from '$lib/components/ui/button';
     import { Input } from '$lib/components/ui/input';
+    import { Textarea } from '$lib/components/ui/textarea';
     import { type ContactForm, contactForm } from '$lib/models/forms/contact';
     import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-    import { onMount } from 'svelte';
     import Fa from 'svelte-fa';
     import { createForm } from 'svelte-forms-lib';
 
@@ -17,15 +18,6 @@
     let submissionError: null | string = null;
 
     export let data: PageServerData;
-
-    let messageInput: HTMLTextAreaElement;
-
-    onMount(() => {
-        const { user } = data;
-        if (user) {
-            messageInput.focus();
-        }
-    });
 
     const { errors, form, handleChange, handleSubmit, touched, validateField } = createForm({
         initialValues: {
@@ -42,7 +34,7 @@
             const response = await submitForm(values);
             isSubmitting = false;
 
-            if (response && response.ok) {
+            if (response && response.success) {
                 showSuccess = true;
                 await new Promise<void>((resolve) => setTimeout(resolve, 3000));
                 goto('/');
@@ -55,16 +47,12 @@
 
     const submitForm = async (form?: ContactForm) => {
         if (form) {
-            const formData = new FormData();
-            formData.append('email', form.email);
-            formData.append('message', form.message);
-            if (form.name) {
-                formData.append('name', form.name);
+            try {
+                const response = await client.contactMessages.create(form);
+                return response;
+            } catch (error) {
+                return { success: false };
             }
-            return await fetch('/api/contact', {
-                body: formData,
-                method: 'POST'
-            });
         }
         return null;
     };
@@ -124,8 +112,7 @@
 
         <div class="col-span-2">
             <label aria-hidden class="label hidden" for="message">Message</label>
-            <textarea
-                bind:this={messageInput}
+            <Textarea
                 bind:value={$form.message}
                 class={messageClass}
                 id="message"
@@ -133,13 +120,12 @@
                 on:blur={handleChange}
                 on:change={handleChange}
                 placeholder="Message"
-                tabindex="0"
             />
             <FormError bind:error={$errors.message} />
         </div>
 
         <div class="col-span-2 grid grid-flow-row justify-items-center">
-            <Button class="variant-filled-primary w-40 font-medium text-white" type="submit">
+            <Button class="w-40 font-medium" type="submit">
                 {#if isSubmitting}
                     <Fa class="animate-spin" icon={faSpinner} />
                 {:else}

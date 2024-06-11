@@ -33,6 +33,7 @@
 import type { Category } from '$lib/models/types/database.types';
 import type { TestUtil } from '$lib/models/types/test-util';
 
+import { RecordType } from '$lib/models/types/database.types';
 import { cuid, db } from '$lib/server/database';
 
 /* Constants */
@@ -55,14 +56,15 @@ const module: CourseTestUtil = {
 
     // Additional Methods
     async getCategory(): Promise<Category> {
-        const category: Category = {
+        const category = {
             categoryId: cuid(),
             categoryImgHref: '',
+            categoryRecordType: RecordType.TEST_RECORD,
             categoryTitle: `unit-test-category-${cuid()}`
         };
 
         await db.insertInto('Category').values(category).execute();
-        return category;
+        return category as unknown as Category;
     }
 };
 

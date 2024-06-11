@@ -73,10 +73,19 @@ export const PUT = (async ({ cookies, request }) => {
     }
 
     // Ignoring unused variables in order to remove foreign keys from the user object
-    //
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { authUserId, organizationId, userId, ...userFromRequestWithoutForeignKeys } =
-        userFromRequest;
+    const {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        userAuthUserId,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        userId,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        userOrganizationId,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        userRecordType,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        userRole,
+        ...userFromRequestWithoutForeignKeys
+    } = userFromRequest;
     try {
         await db
             .updateTable('User')
