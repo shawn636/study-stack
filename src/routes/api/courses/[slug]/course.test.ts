@@ -1,26 +1,28 @@
-import type { Course, User } from '$lib/models/types/database.types';
-
 import { db } from '$lib/server/database';
+import { unitTestApiClient as client } from '$lib/server/test-utils/common';
+import CourseTestUtilModule from '$lib/server/test-utils/course';
 /**
  * @vitest-environment jsdom
  */
 describe('/api/courses', () => {
+    beforeAll(async () => {
+        // Ensures that there will be at least one course in the database
+        await CourseTestUtilModule.getCourse();
+    });
     it('should return a specific course', { timeout: 10000 }, async () => {
         const someCourseWithInstructor = await db
             .selectFrom('Course')
             .innerJoin('User', 'Course.courseInstructorId', 'User.userId')
             .selectAll(['Course', 'User'])
+            .where('Course.courseRecordType', '=', 'TEST_RECORD')
             .executeTakeFirstOrThrow();
 
-        const response = await fetch(
-            `http://localhost:3004/api/courses/${someCourseWithInstructor.courseId}`
-        );
-        expect(response.status).toBe(200);
+        const response = await client.courses.getCourse(someCourseWithInstructor.courseId);
 
-        const result: Course & User = await response.json();
+        expect(response.success).toBe(true);
 
-        expect(result.courseId).toBe(someCourseWithInstructor.courseId);
-        expect(result.courseTitle).toBe(someCourseWithInstructor.courseTitle);
-        expect(result.courseInstructorId).toBe(someCourseWithInstructor.courseInstructorId);
+        expect(response.data.course.courseId).toBe(someCourseWithInstructor.courseId);
+        expect(response.data.course.courseTitle).toBe(someCourseWithInstructor.courseTitle);
+        expect(response.data.instructor.userId).toBe(someCourseWithInstructor.courseInstructorId);
     });
 });

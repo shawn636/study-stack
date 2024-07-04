@@ -165,6 +165,7 @@ model User {
   userOrganizationId String?
   userPhoneNumber    String?              @db.VarChar(15)
   userPhotoUrl       String?              @db.Text
+  userPhotoImageId   String?              @db.VarChar(36)
   userRole           UserRole             @default(USER)
   userState          String?
   UserCourseFavorite UserCourseFavorite[]

@@ -2,32 +2,12 @@ import type { AdminSettingsGetResponse } from '$lib/api/types/admin-settings';
 
 import { RecordType } from '$lib/models/types/database.types';
 import { auth } from '$lib/server/auth';
+import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
-import { HandledError, handleErrors } from '$lib/server/util';
+import { handleErrors } from '$lib/server/error-handling';
+import { InvalidRequestError } from '$lib/server/error-handling/handled-errors';
 
 import type { RequestHandler } from './$types';
-
-/**
- * Represents an error that occurs when a user is unauthorized to access a resource.
- */
-class UnauthorizedError extends HandledError {
-    constructor(message: string) {
-        super(message);
-        this.statusCode = 401;
-        this.name = 'UnauthorizedError';
-    }
-}
-
-/**
- * Represents an error that occurs when an invalid request is made.
- */
-class InvalidRequestError extends HandledError {
-    constructor(message: string) {
-        super(message);
-        this.statusCode = 400;
-        this.name = 'InvalidRequestError';
-    }
-}
 
 /**
  * Retrieves the specified settings from the database.
@@ -38,12 +18,10 @@ class InvalidRequestError extends HandledError {
  */
 export const GET = (async ({ cookies, url }) => {
     try {
-        const sessionId = auth.getSession(cookies);
-        const isValid = await auth.validateSession(sessionId ?? '');
-
-        if (!isValid) {
-            throw new UnauthorizedError('Unauthorized');
-        }
+        const userId = undefined;
+        const userRole = 'ADMIN';
+        await auth.validateApiSession(cookies, userId, userRole);
+        await csrf.validateCookies(cookies);
 
         const params = url.searchParams;
         const settingsToRetrieve = params.getAll('settings');

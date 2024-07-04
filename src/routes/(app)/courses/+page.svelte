@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { ApiResponse } from '$lib/api/types/common'; // import type { CourseSearchResult } from '$lib/models/types/api';
-    import type { CourseSearchResult } from '$lib/api/types/courses';
+    import type { CourseSearchGetResponse } from '$lib/api/types/courses';
 
+    import { apiClientSingleton as client } from '$lib/api';
     import SortByDropdown from '$lib/components/controls/sort-by-dropdown.svelte';
     import ViewToggle from '$lib/components/controls/view-toggle.svelte';
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
@@ -21,9 +21,12 @@
     import { mediaQuery } from 'svelte-legos';
     import { toast } from 'svelte-sonner';
 
+    import type { PageServerData } from './$types';
+
     import { courseResults, isLoading } from './stores';
 
     let debounceTimeout: ReturnType<typeof setTimeout>;
+    export let data: PageServerData;
 
     // State
     let selectedView: 'grid' | 'list';
@@ -39,34 +42,36 @@
 
     // Methods
     const getCourses = async () => {
-        isLoading.set(true);
-
-        const params = new URLSearchParams();
-        if (searchQuery) {
-            params.append('query', searchQuery);
-        }
-        params.append('sort_by', sortByOption.value.param);
-        params.append('page', (page - 1).toString());
-        params.append('page_size', pageSize.toString());
-
-        const url = `/api/courses?${params.toString()}`;
-
         try {
-            console.log('Fetching Courses');
-            const response = await fetch(url);
-            if (response.ok) {
-                const result = (await response.json()) as ApiResponse<CourseSearchResult>;
-                console.log(result);
-                console.log('Courses Fetched Successfully');
-                courseResults.set(result.data.courses);
-                count = result.data.totalCourses;
-                console.log('Courses Set');
+            isLoading.set(true);
+
+            let response: CourseSearchGetResponse;
+            if (data.user) {
+                response = await client.courses.getCoursesWithFavorites(
+                    searchQuery,
+                    sortByOption.value,
+                    page - 1,
+                    pageSize,
+                    data.user.userId
+                );
             } else {
-                console.log('Response not okay, but no error thrown');
+                response = await client.courses.getCourses(
+                    searchQuery,
+                    sortByOption.value,
+                    page - 1,
+                    pageSize
+                );
+            }
+
+            console.log(response.data.courses);
+
+            if (response.success) {
+                courseResults.set(response.data.courses);
+                count = response.data.totalCourses;
+            } else {
                 toast.error('An error occurred while fetching courses. Please try again later.');
             }
         } catch (error) {
-            console.log('Error thrown while fetching courses', error);
             toast.error('An error occurred while fetching courses. Please try again later.');
         }
         isLoading.set(false);
@@ -135,7 +140,7 @@
                 </div>
             </div>
         {:else if selectedView === 'list'}
-            <div class="flex flex-col gap-y-4">
+            <div class="flex flex-col gap-y-6">
                 {#each $courseResults as courseResult}
                     <CourseListItem {courseResult} />
                 {/each}

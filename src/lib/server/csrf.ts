@@ -1,6 +1,7 @@
 import type { Cookies } from '@sveltejs/kit';
 
 import { cuid, db } from '$lib/server/database';
+import { ForbiddenError } from '$lib/server/error-handling/handled-errors';
 
 export const COOKIE_NAME = 'x-csrf-token';
 
@@ -99,11 +100,10 @@ const validateAndSetCookie = async (cookies: Cookies): Promise<Cookies> => {
 };
 
 /**
- * Validates the CSRF token stored in cookies.
- *
- * @param {Cookies} cookies - The cookies object.
- * @returns {Promise<void>} A Promise that resolves when the token is valid.
- * @throws {Error} Throws an error if the token is missing or invalid.
+ * Validates the CSRF token from the provided cookies.
+ * @param cookies - The cookies object containing the CSRF token.
+ * @throws {ForbiddenError} If no CSRF token is provided or if the token is invalid.
+ * @returns {Promise<void>} A promise that resolves when the CSRF token is valid.
  */
 const validateCookies = async (cookies: Cookies): Promise<void> => {
     const token = cookies.get(COOKIE_NAME) as string;
@@ -116,7 +116,7 @@ const validateCookies = async (cookies: Cookies): Promise<void> => {
 
     if (!isValid) {
         console.error('csrf token is invalid');
-        throw Error('CSRF_INVALID_TOKEN');
+        throw new ForbiddenError('CSRF_INVALID_TOKEN');
     }
     return;
 };

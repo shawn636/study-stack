@@ -44,14 +44,12 @@ interface CourseTestUtil extends TestUtil {
 /* Module */
 const module: CourseTestUtil = {
     // Required Clenup Method
-    async cleanup() {
+    async cleanup(): Promise<number> {
         const result = await db
             .deleteFrom('Category')
-            .where('Category.categoryTitle', 'like', 'unit-test-category-%')
+            .where('Category.categoryRecordType', '=', 'TEST_RECORD')
             .executeTakeFirstOrThrow();
-        if (result.numDeletedRows > 0) {
-            console.log(`Cleaned up ${result.numDeletedRows} categories`);
-        }
+        return Number(result.numDeletedRows ?? 0);
     },
 
     // Additional Methods

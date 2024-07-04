@@ -4,24 +4,22 @@ import { CONTACT_FORM_TEMPLATE, type ContactFormEmail } from '$lib/models/emails
 import { type ContactForm, contactForm } from '$lib/models/forms/contact';
 import { csrf } from '$lib/server/csrf';
 import { type Recipient, type Sender, sendEmailFromTemplate } from '$lib/server/email';
-import { errorPadding } from '$lib/server/util';
-import { error } from '@sveltejs/kit';
-import { ValidationError } from 'yup';
+import { handleErrors } from '$lib/server/error-handling';
 
 import type { RequestHandler } from './$types';
 
 export const POST = (async ({ cookies, request }) => {
-    await csrf.validateCookies(cookies);
-
-    const formData = await request.formData();
-
-    const form: ContactForm = {
-        email: formData.get('email') as string,
-        message: formData.get('message') as string,
-        name: formData.get('name') as string
-    };
-
     try {
+        await csrf.validateCookies(cookies);
+
+        const formData = await request.formData();
+
+        const form: ContactForm = {
+            email: formData.get('email') as string,
+            message: formData.get('message') as string,
+            name: formData.get('name') as string
+        };
+
         await contactForm.validate(form, { abortEarly: true });
 
         const sender: Sender = { email: 'info@equipped.co', name: 'Equipped Team' };
@@ -56,32 +54,22 @@ export const POST = (async ({ cookies, request }) => {
         if (!response.ok) {
             throw new Error(`Failed to send email: ${JSON.stringify(response)}`);
         }
+
+        const result: ContactMessageCreateResponse = {
+            count: 1,
+            data: null,
+            object: 'ContactMessage',
+            success: true
+        };
+
+        return new Response(JSON.stringify(result), {
+            headers: {
+                'cache-control': 'no-store',
+                'content-type': 'application/json;charset=UTF-8'
+            },
+            status: 200
+        });
     } catch (e: unknown) {
-        console.error(e);
-        await errorPadding();
-        handleError(e);
+        return handleErrors(e);
     }
-
-    const result: ContactMessageCreateResponse = {
-        count: 1,
-        data: null,
-        object: 'ContactMessage',
-        success: true
-    };
-
-    return new Response(JSON.stringify(result), {
-        headers: {
-            'cache-control': 'no-store',
-            'content-type': 'application/json;charset=UTF-8'
-        },
-        status: 200
-    });
 }) satisfies RequestHandler;
-
-const handleError = (e: unknown) => {
-    if (e instanceof ValidationError) {
-        error(400, 'data provided is invalid');
-    } else {
-        error(500, 'An unknown error ocurred, please try again later.');
-    }
-};

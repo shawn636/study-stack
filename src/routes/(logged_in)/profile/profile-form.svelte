@@ -1,52 +1,51 @@
 <script lang="ts">
     import type { User } from '$lib/models/types/database.types';
 
+    import { apiClientSingleton as client } from '$lib/api';
     import { formatPhoneNumber } from '$lib/client/util';
     import { Button } from '$lib/components/ui/button';
     import { Input } from '$lib/components/ui/input';
     import { Label } from '$lib/components/ui/label';
     import { Textarea } from '$lib/components/ui/textarea';
+    import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     import { onMount } from 'svelte';
+    import Fa from 'svelte-fa';
     import { toast } from 'svelte-sonner';
 
     import { phone, submitForm, updatePhoneNumber } from './profile-form';
 
     export let user: User;
     let profilePhotoFile: File;
+    let isUpdating = false;
 
     onMount(() => {
         phone.set(formatPhoneNumber((user?.userAreaCode ?? '') + (user?.userPhoneNumber ?? '')));
     });
 
     const saveChanges = async () => {
+        isUpdating = true;
         const phoneTemp = $phone.replace(/\s/g, '');
         user.userAreaCode = phoneTemp.slice(0, 3) === '' ? null : phoneTemp.slice(0, 3);
         user.userPhoneNumber = phoneTemp.slice(3, 10) === '' ? null : phoneTemp.slice(3, 10);
         user.userCountryCode = user.userAreaCode ? '+1' : null;
 
-        const updatedPhoto = await uploadPhoto();
-        if (!updatedPhoto.ok) {
-            toast.error('Failed to upload photo');
-            return;
+        if (profilePhotoFile) {
+            const result = await client.users.uploadPhoto(user.userId, profilePhotoFile);
+
+            if (!result.success) {
+                toast.error('Failed to upload photo');
+                isUpdating = false;
+                return;
+            }
+            user.userPhotoImageId = result.data.imageId;
+            user.userPhotoUrl = result.data.imageUrl;
         }
 
         const updatedUser = await submitForm(user);
         if (updatedUser) {
             user = updatedUser;
         }
-    };
-
-    const uploadPhoto = async (): Promise<Response> => {
-        const formData = new FormData();
-        formData.append('profilePhoto', profilePhotoFile);
-        formData.append('userId', user.userId);
-
-        const response = await fetch('/api/user/photo', {
-            body: formData,
-            method: 'POST'
-        });
-
-        return response;
+        isUpdating = false;
     };
 
     const onFileChanged = (event: { currentTarget: EventTarget & HTMLInputElement } & Event) => {
@@ -87,6 +86,9 @@
     <div class="grid w-full max-w-sm items-center gap-1.5">
         <Label for="picture">Picture</Label>
         <Input id="picture" on:change={onFileChanged} type="file" />
+        {#if user.userPhotoUrl}
+            <img alt="Profile" class="mt-2 h-24 w-24 rounded-lg" src={user.userPhotoUrl} />
+        {/if}
     </div>
 
     <div class="space-y-2">
@@ -94,5 +96,10 @@
         <Textarea bind:value={user.userBio} id="bio" />
     </div>
 
-    <Button on:click={saveChanges}>Update profile</Button>
+    <Button class="palce-items-center flex gap-x-2" disabled={isUpdating} on:click={saveChanges}>
+        {#if isUpdating}
+            <Fa class="animate-spin" icon={faSpinner} />
+        {/if}
+        <span>Update profile</span>
+    </Button>
 </form>

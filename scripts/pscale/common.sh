@@ -242,7 +242,7 @@ function delete_credential_if_exists() {
 
     output=$(pscale password delete "$PSCALE_DB_NAME" "$branch_name" "$credential_id" --force --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" 2>&1)
     status_code=$?
-    
+
     if [ $status_code -eq 0 ]; then
         echo "$output"
     fi

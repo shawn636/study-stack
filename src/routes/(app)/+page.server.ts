@@ -4,8 +4,9 @@ import { apiClientSingleton as client } from '$lib/api';
 
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ fetch }) => {
+export const load = (async ({ fetch, parent }) => {
     try {
+        await parent();
         const response = await client.categories.getTopCategories(fetch);
         return { categorySummaries: response.data };
     } catch (error) {

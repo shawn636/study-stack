@@ -17,6 +17,7 @@
  */
 
 import { db } from '$lib/server/database';
+import { getRecordDisplaySettings } from '$lib/server/util';
 import { error } from '@sveltejs/kit';
 
 import type { RequestHandler } from './$types';
@@ -28,10 +29,18 @@ export const GET = (async ({ cookies, url }) => {
     const { userCourseFavoriteUserId } = await getValidatedApiData(cookies, url, courseIdRequired);
 
     try {
+        const options = await getRecordDisplaySettings();
+
         const favorites = await db
             .selectFrom('UserCourseFavorite')
             .select('UserCourseFavorite.userCourseFavoriteCourseId')
             .where('UserCourseFavorite.userCourseFavoriteUserId', '=', userCourseFavoriteUserId)
+            .$if(!options['display-test-records'], (qb) =>
+                qb.where('userCourseFavoriteRecordType', '!=', 'TEST_RECORD')
+            )
+            .$if(!options['display-seed-records'], (qb) =>
+                qb.where('userCourseFavoriteRecordType', '!=', 'SEED_RECORD')
+            )
             .execute();
 
         let favoriteIds = favorites.map(

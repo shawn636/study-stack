@@ -1,7 +1,10 @@
 import type { TopCategoriesGetResponse } from '$lib/api/types/categories';
 import type CategorySummary from '$lib/models/types/category-summary';
 
+import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
+import { handleErrors } from '$lib/server/error-handling';
+import { DatabaseError } from '$lib/server/error-handling/handled-errors';
 import { getRecordDisplaySettings } from '$lib/server/util';
 
 import type { RequestHandler } from './$types';
@@ -41,42 +44,52 @@ import type { RequestHandler } from './$types';
  *
  * Response headers include CORS settings and content type.
  */
-export const GET = (async () => {
-    const siteSettings = await getRecordDisplaySettings();
+export const GET = (async ({ cookies }) => {
+    try {
+        await csrf.validateCookies(cookies);
+        const siteSettings = await getRecordDisplaySettings();
 
-    const results = await db
-        .selectFrom('Category')
-        .innerJoin('Course', 'Category.categoryId', 'Course.courseCategoryId')
-        .select([
-            'Category.categoryImgHref',
-            'Category.categoryTitle',
-            ({ fn }) => fn.countAll<number>().as('count')
-        ])
-        .$if(!siteSettings['display-test-records'], (qb) =>
-            qb.where('Category.categoryRecordType', '!=', 'TEST_RECORD')
-        )
-        .$if(!siteSettings['display-seed-records'], (qb) =>
-            qb.where('Category.categoryRecordType', '!=', 'SEED_RECORD')
-        )
-        .groupBy(['Category.categoryImgHref', 'Category.categoryTitle'])
-        .orderBy('count', 'desc')
-        .limit(6)
-        .execute();
-
-    const categorySummaries = results as CategorySummary[];
-    const result: TopCategoriesGetResponse = {
-        count: categorySummaries.length,
-        data: categorySummaries,
-        object: 'CategorySummaryList',
-        success: true
-    };
-
-    const json = JSON.stringify(result);
-
-    return new Response(json, {
-        headers: {
-            'access-control-allow-origin': '*', // CORS
-            'content-type': 'application/json;charset=UTF-8'
+        let results: CategorySummary[] = [];
+        try {
+            results = await db
+                .selectFrom('Category')
+                .innerJoin('Course', 'Category.categoryId', 'Course.courseCategoryId')
+                .select([
+                    'Category.categoryImgHref',
+                    'Category.categoryTitle',
+                    ({ fn }) => fn.countAll<number>().as('count')
+                ])
+                .$if(!siteSettings['display-test-records'], (qb) =>
+                    qb.where('Category.categoryRecordType', '!=', 'TEST_RECORD')
+                )
+                .$if(!siteSettings['display-seed-records'], (qb) =>
+                    qb.where('Category.categoryRecordType', '!=', 'SEED_RECORD')
+                )
+                .groupBy(['Category.categoryImgHref', 'Category.categoryTitle'])
+                .orderBy('count', 'desc')
+                .limit(6)
+                .execute();
+        } catch (e) {
+            throw new DatabaseError(`Unable to retrieve top categories: ${e}`);
         }
-    });
+
+        const categorySummaries = results as CategorySummary[];
+
+        const result: TopCategoriesGetResponse = {
+            count: categorySummaries.length,
+            data: categorySummaries,
+            object: 'CategorySummaryList',
+            success: true
+        };
+
+        const json = JSON.stringify(result);
+
+        return new Response(json, {
+            headers: {
+                'content-type': 'application/json;charset=UTF-8'
+            }
+        });
+    } catch (e) {
+        return handleErrors(e);
+    }
 }) satisfies RequestHandler;

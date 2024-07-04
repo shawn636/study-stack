@@ -3,147 +3,38 @@
  */
 
 import type { ApiResponse } from '$lib/api/types/common';
-// import type { CourseSearchResult } from '$lib/models/types/api';
 import type { CourseSearchResult } from '$lib/api/types/courses';
+import type { Course } from '$lib/models/types/database.types';
+import type { RecordDisplaySettings } from '$lib/models/types/record-display-settings';
 import type { HttpError } from '@sveltejs/kit';
 
 import { CourseSortByOptions } from '$lib/models/types/course-sort-by-options';
-import { RecordType, UserRole } from '$lib/models/types/database.types';
-import { cuid, db } from '$lib/server/database';
+import { cuid } from '$lib/server/database';
+import { InvalidParameterError } from '$lib/server/error-handling/handled-errors';
+import CourseTestUtil from '$lib/server/test-utils/course';
+import { getRecordDisplaySettings } from '$lib/server/util';
 
-import {
-    InvalidParameterError,
-    fetchCourseCount,
-    fetchCourses,
-    getCourses,
-    parseSortByParam
-} from './fetch-courses';
+import { fetchCourseCount, fetchCourses, getCourses, parseSortByParam } from './fetch-courses';
 
-// When declaring objects based on schema that includes Prisma enums,
-// you can't include the type hint of the object if you're inserting
-// those objects directly into the database. Thankfully, if you leave
-// off a property by mistake, typescript will yell at you on the line
-// where you're inserting the object into the database. A QOL workaround
-// is to first declare the objects with the type hints, hit fill properties,
-// and then remove the type hint. This way, you can ensure that you're
-// not missing any properties.
-
-const mockInstructor = {
-    userAreaCode: null,
-    userAuthUserId: null,
-    userBio: null,
-    userCity: null,
-    userCountryCode: null,
-    userEmail: 'instructor1@example.com',
-    userId: cuid(),
-    userName: 'Instructor 1',
-    userOrganizationId: null,
-    userPhoneNumber: null,
-    userPhotoUrl: null,
-    userRecordType: RecordType.TEST_RECORD,
-    userRole: UserRole.USER,
-    userState: null
-};
-
-const mockCategory = {
-    categoryId: cuid(),
-    categoryImgHref: '',
-    categoryRecordType: RecordType.TEST_RECORD,
-    categoryTitle: 'Test Category'
-};
-
-const cuidKeyword = cuid();
-
-// 2 Courses out of the 3 contain the cuidKeyword in the title
-const mockCourses = [
-    {
-        courseCategoryId: mockCategory.categoryId,
-        courseCurrentPrice: 100,
-        courseDescription: 'Test Course - Delete Me',
-        courseDifficulty: 'medium',
-        courseEstimatedTimeHours: 0,
-        courseEstimatedTimeMinutes: 0,
-        courseId: cuid(),
-        courseImgHref: '',
-        courseInstructorId: mockInstructor.userId,
-        courseLessonCount: 0,
-        courseOrganizationId: null,
-        courseOriginalPrice: 100,
-        courseRatingAverage: 5,
-        courseRatingCount: 1,
-        courseRecordType: RecordType.TEST_RECORD,
-        courseTitle: `Test Course 1: ${cuidKeyword}`
-    },
-    {
-        courseCategoryId: mockCategory.categoryId,
-        courseCurrentPrice: 100,
-        courseDescription: 'Test Course - Delete Me',
-        courseDifficulty: 'medium',
-        courseEstimatedTimeHours: 0,
-        courseEstimatedTimeMinutes: 0,
-        courseId: cuid(),
-        courseImgHref: '',
-        courseInstructorId: mockInstructor.userId,
-        courseLessonCount: 0,
-        courseOrganizationId: null,
-        courseOriginalPrice: 100,
-        courseRatingAverage: 5,
-        courseRatingCount: 1,
-        courseRecordType: RecordType.TEST_RECORD,
-        courseTitle: `Test Course 2: ${cuidKeyword}`
-    },
-    {
-        courseCategoryId: mockCategory.categoryId,
-        courseCurrentPrice: 100,
-        courseDescription: 'Test Course - Delete Me',
-        courseDifficulty: 'medium',
-        courseEstimatedTimeHours: 0,
-        courseEstimatedTimeMinutes: 0,
-        courseId: cuid(),
-        courseImgHref: '',
-        courseInstructorId: mockInstructor.userId,
-        courseLessonCount: 0,
-        courseOrganizationId: null,
-        courseOriginalPrice: 100,
-        courseRatingAverage: 5,
-        courseRatingCount: 1,
-        courseRecordType: RecordType.TEST_RECORD,
-        courseTitle: 'Test Course 3'
-    }
-];
-
-const createMockCourses = async (): Promise<void> => {
-    // These must be done sequentially to avoid foreign key constraint errors
-    await db.insertInto('Category').ignore().values(mockCategory).execute();
-    await db.insertInto('User').ignore().values(mockInstructor).executeTakeFirst();
-    await db.insertInto('Course').ignore().values(mockCourses).execute();
-};
-
-const deleteMockCourses = async (): Promise<void> => {
-    await db
-        .deleteFrom('Course')
-        .where('Course.courseDescription', '=', 'Test Course - Delete Me')
-        .execute();
-    await db.deleteFrom('User').where('User.userId', '=', mockInstructor.userId).execute();
-    await db
-        .deleteFrom('Category')
-        .where('Category.categoryId', '=', mockCategory.categoryId)
-        .execute();
-};
+let options: RecordDisplaySettings | null;
+let createdCourses: Course[] = [];
+const premadeCourseCount = 5;
 
 describe('Course Fetching Utility Functions', () => {
     beforeAll(async () => {
-        await createMockCourses();
+        options = await getRecordDisplaySettings();
+        const newCourses = await CourseTestUtil.getCourses(premadeCourseCount);
+        createdCourses = createdCourses.concat(newCourses);
     });
     afterAll(async () => {
-        await deleteMockCourses();
+        await CourseTestUtil.deleteCourses(createdCourses);
     });
+
     describe('parseSortByParam()', () => {
         it('should return the default sort by option when no sortByParam is provided', () => {
             const parsedParam = parseSortByParam(null, false);
             expect(parsedParam).toBe(CourseSortByOptions.HIGHEST_RATING);
         });
-
         it('should return a CourseSortByOption when a valid sortByParam is provided', () => {
             let param = CourseSortByOptions.RELEVANCE.param;
             let parsedParam = parseSortByParam(param, true);
@@ -158,41 +49,67 @@ describe('Course Fetching Utility Functions', () => {
             expect(() => parseSortByParam(invalidParam, true)).toThrow(InvalidParameterError);
         });
     });
+
     describe('fetchCourseCount()', () => {
         it('should return 0 when no matching terms exist in the database', async () => {
+            if (!options) throw new Error('RecordDisplaySettings not initialized');
+
             const randomCuid = cuid();
-            const courseCount = await fetchCourseCount(randomCuid);
+            const courseCount = await fetchCourseCount(randomCuid, options);
             expect(courseCount).toBe(0);
         });
         it('should return the number of matching terms in the database', async () => {
-            const keywordFromTwoEntries = cuidKeyword;
-            const predictedCourseCount = 2;
+            if (!options) throw new Error('RecordDisplaySettings not initialized');
+            const keyword = cuid().toString();
+            const expectedCourseCount = 2;
 
-            const courseCount = await fetchCourseCount(keywordFromTwoEntries);
-            expect(courseCount).toBe(predictedCourseCount);
+            const newCourses = await CourseTestUtil.getCourses(expectedCourseCount, keyword);
+            createdCourses = createdCourses.concat(newCourses);
+
+            const courseCount = await fetchCourseCount(keyword, options);
+            expect(courseCount).toBe(expectedCourseCount);
         });
         it('should return a non-zero courseCount when searchTerm is null', async () => {
-            const courseCount = await fetchCourseCount(null);
-            expect(courseCount).toBeGreaterThan(0);
+            if (!options) throw new Error('RecordDisplaySettings not initialized');
+            const courseCount = await fetchCourseCount(null, options);
+            expect(courseCount).toBeGreaterThanOrEqual(premadeCourseCount);
         });
         it('should accept either an empty string or null as a searchTerm', async () => {
-            const courseCountEmptyString = await fetchCourseCount('');
-            const courseCountNull = await fetchCourseCount(null);
+            if (!options) throw new Error('RecordDisplaySettings not initialized');
+
+            const courseCountEmptyString = await fetchCourseCount('', options);
+            const courseCountNull = await fetchCourseCount(null, options);
             expect(courseCountEmptyString).toBe(courseCountNull);
             expect(courseCountEmptyString).toBeGreaterThan(0);
         });
     });
+
     describe('fetchCourses()', () => {
         it('should return an empty array when no matching terms exist in the database', async () => {
-            const randomCuid = cuid();
-            const results = await fetchCourses(randomCuid, 1, 10, CourseSortByOptions.RELEVANCE);
+            if (!options) throw new Error('RecordDisplaySettings not initialized');
+
+            const randomSearchTerm = cuid().toString();
+            const results = await fetchCourses(
+                randomSearchTerm,
+                1,
+                10,
+                CourseSortByOptions.RELEVANCE,
+                options
+            );
             expect(results).toBeInstanceOf(Array);
             expect(results).toHaveLength(0);
         });
         it('should return a properly sorted array of courses when matching terms exist in the database', async () => {
+            if (!options) throw new Error('RecordDisplaySettings not initialized');
+
+            const keyword = cuid().toString();
+            const expectedCourseCount = 5;
+            const newCourses = await CourseTestUtil.getCourses(expectedCourseCount, keyword);
+            createdCourses = createdCourses.concat(newCourses);
+
             const [courseResultsByLowestPrice, courseResultsByHighestRating] = await Promise.all([
-                fetchCourses(cuidKeyword, 0, 5, CourseSortByOptions.LOWEST_PRICE),
-                fetchCourses(cuidKeyword, 0, 5, CourseSortByOptions.HIGHEST_RATING)
+                fetchCourses(keyword, 0, 5, CourseSortByOptions.LOWEST_PRICE, options),
+                fetchCourses(keyword, 0, 5, CourseSortByOptions.HIGHEST_RATING, options)
             ]);
 
             expect(courseResultsByLowestPrice).toBeInstanceOf(Array);
@@ -216,6 +133,7 @@ describe('Course Fetching Utility Functions', () => {
             }
         });
     });
+
     describe('getCourses()', () => {
         it('should return a successful reponse when a valid request is made', async () => {
             const response = await getCourses(null, 1, 20, CourseSortByOptions.RELEVANCE.param);
@@ -241,7 +159,7 @@ describe('Course Fetching Utility Functions', () => {
 
                 expect(error).toBeTruthy();
                 expect(error.status).toBe(400);
-                expect(error.body.message).toContain('Invalid sort_by parameter');
+                expect(error.body.message).toBe('Invalid sort_by parameter: invalidSortBy');
             }
         });
         it('should have a courseCount less than or equal to the pageSize', async () => {
@@ -255,6 +173,7 @@ describe('Course Fetching Utility Functions', () => {
             );
             const data: unknown = await response?.json();
             const courseSearchResult = data as ApiResponse<CourseSearchResult>;
+
             expect(courseSearchResult?.data.courses.length).toBeLessThanOrEqual(pageSize);
         });
     });

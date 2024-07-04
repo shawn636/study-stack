@@ -2,6 +2,10 @@ import AdminSettingsModule from './endpoints/admin-settings';
 import CategoriesModule from './endpoints/categories';
 import ContactMessagesModule from './endpoints/contact-messages';
 import CoursesModule from './endpoints/courses';
+import CronJobsModule from './endpoints/cron-jobs';
+import NewsletterSubscriptionModule from './endpoints/newsletter-subscriptions';
+import TestRecordsModule from './endpoints/test-records';
+import UsersModule from './endpoints/users';
 
 class ApiClient {
     private baseUrl: string;
@@ -15,6 +19,10 @@ class ApiClient {
     categories = new CategoriesModule(this);
     contactMessages = new ContactMessagesModule(this);
     courses = new CoursesModule(this);
+    cronJobs = new CronJobsModule(this);
+    newsletter = new NewsletterSubscriptionModule(this);
+    testRecords = new TestRecordsModule(this);
+    users = new UsersModule(this);
 
     constructor(fetchMode: 'absolute' | 'relative' = 'relative', baseUrl: string = '') {
         if (fetchMode === 'absolute' && !baseUrl) {

@@ -56,9 +56,12 @@ interface CourseFavoritesTestUtil extends TestUtil {
 /* Module */
 const module: CourseFavoritesTestUtil = {
     // Required Clenup Method
-    async cleanup() {
-        // UserCourse Favorites not cleaned up because deletion will cascade from User and Course cleanup methods
-        return Promise.resolve();
+    async cleanup(): Promise<number> {
+        const result = await db
+            .deleteFrom('UserCourseFavorite')
+            .where('UserCourseFavorite.userCourseFavoriteRecordType', '=', 'TEST_RECORD')
+            .executeTakeFirstOrThrow();
+        return Number(result.numDeletedRows ?? 0);
     },
 
     async getCourseFavorites(count: number): Promise<CourseFavoriteResult> {

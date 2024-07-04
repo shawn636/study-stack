@@ -42,7 +42,8 @@ const handleError = (e: unknown) => {
     if (e.message === 'AUTH_INVALID_CREDENTIALS') error(400, 'Invalid credentials.');
 };
 
-export const load: PageServerLoad = async ({ cookies }) => {
+export const load: PageServerLoad = async ({ cookies, parent }) => {
+    await parent();
     const signedIn = await auth.validateCookies(cookies);
     if (signedIn) redirect(302, '/');
 };

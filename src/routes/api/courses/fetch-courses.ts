@@ -1,4 +1,4 @@
-// import type { CourseSearchResult, CourseWithInstructor } from '$lib/models/types/api';
+import type { RecordDisplaySettings } from '$lib/models/types/record-display-settings'; // import type { CourseSearchResult, CourseWithInstructor } from '$lib/models/types/api';
 
 import type {
     CourseResult,
@@ -12,27 +12,9 @@ import {
     CourseSortByOptions
 } from '$lib/models/types/course-sort-by-options';
 import { db, sql } from '$lib/server/database';
-import { HandledError, handleErrors } from '$lib/server/util';
-
-export class InvalidParameterError extends HandledError {
-    public statusCode: number;
-
-    constructor(message: string) {
-        super(message);
-        this.name = 'InvalidParameterError';
-        this.statusCode = 400;
-    }
-}
-
-class DatabaseFetchError extends HandledError {
-    public statusCode: number;
-
-    constructor(message: string) {
-        super(message);
-        this.name = 'DatabaseFetchError';
-        this.statusCode = 500;
-    }
-}
+import { handleErrors } from '$lib/server/error-handling';
+import { DatabaseError, InvalidParameterError } from '$lib/server/error-handling/handled-errors';
+import { getRecordDisplaySettings } from '$lib/server/util';
 
 export const searchParamsAreValid = (
     urlSearchParams: URLSearchParams,
@@ -77,7 +59,10 @@ export const parseSortByParam = (
 };
 
 // ASYNCHRONOUS HELPER FUNCTIONS
-export const fetchCourseCount = async (searchTerm: String | null): Promise<number> => {
+export const fetchCourseCount = async (
+    searchTerm: String | null,
+    recordDisplaySettings: RecordDisplaySettings
+): Promise<number> => {
     try {
         const courseCountResult = await db
             .selectFrom('Course')
@@ -87,12 +72,18 @@ export const fetchCourseCount = async (searchTerm: String | null): Promise<numbe
                     sql<boolean>`MATCH(courseTitle, courseDescription) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
                 )
             )
+            .$if(!recordDisplaySettings['display-test-records'], (qb) =>
+                qb.where('courseRecordType', '!=', 'TEST_RECORD')
+            )
+            .$if(!recordDisplaySettings['display-seed-records'], (qb) =>
+                qb.where('courseRecordType', '!=', 'SEED_RECORD')
+            )
             .executeTakeFirstOrThrow();
         const courseCount = Number(courseCountResult.courseCount) ?? 0;
 
         return courseCount;
     } catch (e) {
-        throw new DatabaseFetchError('Failed to fetch course count.');
+        throw new DatabaseError('Failed to fetch course count.');
     }
 };
 
@@ -100,32 +91,26 @@ export const fetchCourses = async (
     searchTerm: null | string,
     pageNo: number,
     pageSize: number,
-    sortByValue: CourseSortByOption
+    sortByValue: CourseSortByOption,
+    recordDisplaySettings: RecordDisplaySettings,
+    userId?: string
 ): Promise<CourseResult[]> => {
     try {
         const requestContainsSearchTerm =
             searchTerm !== '' && searchTerm !== null && searchTerm !== undefined;
         const sortByIsRelevance = sortByValue === CourseSortByOptions.RELEVANCE;
-        const courseResultQuery = db
-            .selectFrom('Course')
-            .innerJoin('User', 'Course.courseInstructorId', 'User.userId')
-            .selectAll(['Course', 'User'])
-            .$if(requestContainsSearchTerm, (qb) =>
-                qb
-                    .select(
-                        sql<number>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`.as(
-                            '_relevance'
-                        )
-                    )
-                    .where(
-                        sql<boolean>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
-                    )
-            )
-            .$if(requestContainsSearchTerm || !sortByIsRelevance, (qb) =>
-                qb.orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
-            )
-            .limit(pageSize)
-            .offset(pageNo * pageSize);
+
+        const courseResultQuery = getFetchCoursesQuery(
+            requestContainsSearchTerm,
+            sortByIsRelevance,
+            searchTerm,
+            sortByValue,
+            recordDisplaySettings,
+            pageSize,
+            pageNo,
+            userId !== undefined && userId !== null,
+            userId ?? ''
+        );
 
         const courseResults = await courseResultQuery.execute();
 
@@ -149,15 +134,102 @@ export const fetchCourses = async (
                     course[key] = value;
                 } else if (key.startsWith('user')) {
                     instructor[key] = value;
+                } else if (key === 'isFavorite') {
+                    course[key] = Boolean(Number(value));
                 }
             });
 
-            return { course: course as Course, instructor: instructor as User };
+            return {
+                course: course as { isFavorite?: boolean } & Course,
+                instructor: instructor as User
+            };
         });
 
         return courses;
     } catch (e) {
-        throw new DatabaseFetchError('Failed to fetch courses.');
+        throw new DatabaseError('Failed to fetch courses.');
+    }
+};
+
+// Unforuntately, the logic for this method is very complex, and I was unable to find
+// a way to move the logic that checks whether a userId is null into a .$if statement
+// without causing the query to fail. It may be possible to refactor this method to
+// make it more readable, but I was unable to do so in the time I had available.
+const getFetchCoursesQuery = (
+    requestContainsSearchTerm: boolean,
+    sortByIsRelevance: boolean,
+    searchTerm: null | string,
+    sortByValue: CourseSortByOption,
+    recordDisplaySettings: RecordDisplaySettings,
+    pageSize: number,
+    pageNo: number,
+    includeFavorites: boolean = false,
+    userId: string
+) => {
+    if (includeFavorites) {
+        return db
+            .selectFrom('Course')
+            .innerJoin('User', 'Course.courseInstructorId', 'User.userId')
+            .leftJoin('UserCourseFavorite', (join) =>
+                join
+                    .onRef('Course.courseId', '=', 'UserCourseFavorite.userCourseFavoriteCourseId')
+                    .on('UserCourseFavorite.userCourseFavoriteUserId', '=', userId)
+            )
+            .selectAll(['Course', 'User'])
+            .select(
+                sql<boolean>`IF(UserCourseFavorite.userCourseFavoriteCourseId IS NOT NULL, TRUE, FALSE)`.as(
+                    'isFavorite'
+                )
+            )
+            .$if(requestContainsSearchTerm, (qb) =>
+                qb
+                    .select(
+                        sql<number>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`.as(
+                            '_relevance'
+                        )
+                    )
+                    .where(
+                        sql<boolean>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
+                    )
+            )
+            .$if(requestContainsSearchTerm || !sortByIsRelevance, (qb) =>
+                qb.orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
+            )
+            .$if(!recordDisplaySettings['display-test-records'], (qb) =>
+                qb.where('courseRecordType', '!=', 'TEST_RECORD')
+            )
+            .$if(!recordDisplaySettings['display-seed-records'], (qb) =>
+                qb.where('courseRecordType', '!=', 'SEED_RECORD')
+            )
+            .limit(pageSize)
+            .offset(pageNo * pageSize);
+    } else {
+        return db
+            .selectFrom('Course')
+            .innerJoin('User', 'Course.courseInstructorId', 'User.userId')
+            .selectAll(['Course', 'User'])
+            .$if(requestContainsSearchTerm, (qb) =>
+                qb
+                    .select(
+                        sql<number>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`.as(
+                            '_relevance'
+                        )
+                    )
+                    .where(
+                        sql<boolean>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
+                    )
+            )
+            .$if(requestContainsSearchTerm || !sortByIsRelevance, (qb) =>
+                qb.orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
+            )
+            .$if(!recordDisplaySettings['display-test-records'], (qb) =>
+                qb.where('courseRecordType', '!=', 'TEST_RECORD')
+            )
+            .$if(!recordDisplaySettings['display-seed-records'], (qb) =>
+                qb.where('courseRecordType', '!=', 'SEED_RECORD')
+            )
+            .limit(pageSize)
+            .offset(pageNo * pageSize);
     }
 };
 
@@ -166,18 +238,21 @@ export const getCourses = async (
     searchTerm: null | string,
     pageNo: number,
     pageSize: number,
-    sortByParam: string
+    sortByParam: string,
+    userId?: string
 ) => {
     const requestContainsSearchTerm =
         searchTerm !== null && searchTerm !== undefined && searchTerm !== '';
+
+    const options = await getRecordDisplaySettings();
 
     try {
         const sortByValue = parseSortByParam(sortByParam, requestContainsSearchTerm);
         const validatedSearchTerm = requestContainsSearchTerm ? searchTerm : null;
 
         const [courseCount, courses] = await Promise.all([
-            fetchCourseCount(validatedSearchTerm),
-            fetchCourses(validatedSearchTerm, pageNo, pageSize, sortByValue)
+            fetchCourseCount(validatedSearchTerm, options),
+            fetchCourses(validatedSearchTerm, pageNo, pageSize, sortByValue, options, userId)
         ]);
 
         const data: CourseSearchResult = {
@@ -201,6 +276,6 @@ export const getCourses = async (
             }
         });
     } catch (e) {
-        handleErrors(e);
+        return handleErrors(e);
     }
 };

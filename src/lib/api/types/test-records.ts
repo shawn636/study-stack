@@ -4,5 +4,5 @@
  */
 
 import type { ApiResponse } from './common';
-
-export type TestRecordsDeleteResponse = ApiResponse<null>;
+type DeletionResults = { [key: string]: number };
+export type TestRecordsDeleteResponse = ApiResponse<DeletionResults>;

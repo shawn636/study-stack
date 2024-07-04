@@ -40,32 +40,45 @@ import UserTestUtilModule from '$lib/server/test-utils/user';
 /* Constants */
 
 interface CourseTestUtil extends TestUtil {
-    getCourse(): Promise<Course>;
-    getCourses(count: number): Promise<Course[]>;
+    deleteCourses(courses: Course[]): Promise<number>;
+    getCourse(titleKeyword?: string): Promise<Course>;
+    getCourses(count: number, commonTitleKeyword?: string): Promise<Course[]>;
 }
 
 /* Module */
 const module: CourseTestUtil = {
     // Required Clenup Method
-    async cleanup() {
+    async cleanup(): Promise<number> {
         const result = await db
             .deleteFrom('Course')
-            .where('Course.courseTitle', 'like', 'unit-test-course-%')
+            .where('Course.courseRecordType', '=', RecordType.TEST_RECORD)
             .executeTakeFirstOrThrow();
 
-        if (result.numDeletedRows > 0) {
-            console.log(`Cleaned up ${result.numDeletedRows} courses`);
-        }
+        return Number(result.numDeletedRows ?? 0);
+    },
+
+    async deleteCourses(courses: Course[]): Promise<number> {
+        const courseIds = courses.map((course) => course.courseId);
+        const result = await db
+            .deleteFrom('Course')
+            .where('Course.courseId', 'in', courseIds)
+            .executeTakeFirstOrThrow();
+
+        return Number(result.numDeletedRows ?? 0);
     },
 
     // Additional Methods
-    async getCourse(): Promise<Course> {
+    async getCourse(titleKeyword?: string): Promise<Course> {
         const [category, user] = await Promise.all([
             CategoryTestUtilModule.getCategory(),
             UserTestUtilModule.getUser()
         ]);
 
         const courseId = cuid();
+
+        const title = titleKeyword
+            ? `${titleKeyword} | Unit Test Course | ${courseId}`
+            : `Unit Test Course | ${courseId}`;
 
         const course = {
             courseCategoryId: category.categoryId,
@@ -83,14 +96,14 @@ const module: CourseTestUtil = {
             courseRatingAverage: 0,
             courseRatingCount: 0,
             courseRecordType: RecordType.TEST_RECORD,
-            courseTitle: `unit-test-course-${courseId}`
+            courseTitle: title
         };
         await db.insertInto('Course').values(course).execute();
 
         return course as unknown as Course;
     },
 
-    async getCourses(count: number): Promise<Course[]> {
+    async getCourses(count: number, commonTitleKeyword?: string): Promise<Course[]> {
         const [category, user] = await Promise.all([
             CategoryTestUtilModule.getCategory(),
             UserTestUtilModule.getUser()
@@ -98,6 +111,11 @@ const module: CourseTestUtil = {
 
         const courses = Array.from({ length: count }).map(() => {
             const courseId = cuid();
+
+            const title = commonTitleKeyword
+                ? `${commonTitleKeyword} | Unit Test Course | ${courseId}`
+                : `Unit Test Course | ${courseId}`;
+
             const course = {
                 courseCategoryId: category.categoryId,
                 courseCurrentPrice: 0,
@@ -114,7 +132,7 @@ const module: CourseTestUtil = {
                 courseRatingAverage: 0,
                 courseRatingCount: 0,
                 courseRecordType: RecordType.TEST_RECORD,
-                courseTitle: `unit-test-course-${courseId}`
+                courseTitle: title
             };
             return course;
         });

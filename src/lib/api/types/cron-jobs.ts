@@ -7,4 +7,8 @@
 
 import type { ApiResponse } from './common';
 
-export type CronJobGetResponse = ApiResponse<null>;
+type SessionCleanupResponse = {
+    authSessionsFlushed: number;
+    csrfTokensFlushed: number;
+};
+export type SessionCleanupGetResponse = ApiResponse<SessionCleanupResponse>;

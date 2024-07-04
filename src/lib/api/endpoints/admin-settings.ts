@@ -6,7 +6,7 @@ import type {
     AdminSettingsUpdateResponse
 } from '../types/admin-settings';
 
-import { defaultHeaders, fetchWithTimeout, handleApiResponse } from '../utils';
+import { fetchWithTimeout, handleApiResponse } from '../utils';
 
 /**
  * Class representing the administration settings module.
@@ -47,7 +47,9 @@ class AdminSettingsModule {
         const response = await fetchWithTimeout(
             url,
             {
-                headers: defaultHeaders,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 method: 'GET'
             },
             timeout,
@@ -72,7 +74,9 @@ class AdminSettingsModule {
             url,
             {
                 body: JSON.stringify({ settings: siteSettings }),
-                headers: defaultHeaders,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 method: 'PATCH'
             },
             timeout,

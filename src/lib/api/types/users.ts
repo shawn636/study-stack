@@ -15,10 +15,26 @@
  * Remove a course from the list of favorites for a specific user.
  */
 
+import type { User } from '$lib/models/types/database.types';
+
 import type { ApiResponse } from './common';
 
-export type UserUpdateResponse = ApiResponse<null>;
-export type UserPhotoCreateResponse = ApiResponse<null>;
-export type UserCourseFavoritesGetResponse = ApiResponse<string[]>;
-export type UserCourseFavoritesCreateResponse = ApiResponse<null>;
-export type UserCourseFavoritesDeleteResponse = ApiResponse<null>;
+type ImageUploadResult = {
+    imageId: string;
+    imageUrl: string;
+};
+
+type DeleteFavoriteResult = {
+    deleted: boolean;
+    message: string;
+};
+
+type CreateFavoriteResult = {
+    created: boolean;
+    message: string;
+};
+
+export type UserUpdateResponse = ApiResponse<User>;
+export type UserPhotoCreateResponse = ApiResponse<ImageUploadResult>;
+export type UserCourseFavoritesCreateResponse = ApiResponse<CreateFavoriteResult>;
+export type UserCourseFavoritesDeleteResponse = ApiResponse<DeleteFavoriteResult>;

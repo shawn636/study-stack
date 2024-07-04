@@ -1,5 +1,5 @@
 /**
- * This module handles interactions with the categories API.
+ * This module handles interactions with the ContactMessages API.
  */
 
 import { type ContactForm } from '$lib/models/forms/contact';
@@ -21,8 +21,8 @@ class ContactMessagesModule {
     }
 
     /**
-     * GET /api/contact-messages
-     * Fetches the top categories from the server.
+     * POST /api/contact-messages
+     * Submits a contact message request to the server and returns the response.
      *
      * @param fetchFn {typeof fetch} - The fetch function to use for making the API call, defaults to the global fetch API.
      * @returns {Promise<ContactMessageCreateResponse>} - A promise that resolves to the response of the top categories API call.

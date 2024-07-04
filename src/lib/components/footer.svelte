@@ -1,4 +1,7 @@
 <script lang="ts">
+    import type { NewsletterSubscriptionCreateResponse } from '$lib/api/types/newsletter-subscriptions';
+
+    import { apiClientSingleton as client } from '$lib/api';
     import Logo from '$lib/components/logo.svelte';
     import * as Accordion from '$lib/components/ui/accordion/index';
     import { Button } from '$lib/components/ui/button';
@@ -19,16 +22,18 @@
             toast.error('Please enter a valid email address');
             return;
         }
-        const formData = new FormData();
-        formData.append('email', email);
-        const request = await fetch('/api/subscribe', {
-            body: formData,
-            method: 'POST'
-        });
 
-        if (request.ok) {
-            toast.success('You have successfully subscribed to our newsletter!');
-        } else {
+        let response: NewsletterSubscriptionCreateResponse | null = null;
+        try {
+            response = await client.newsletter.subscribe(email);
+
+            if (response.success) {
+                toast.success('You have successfully subscribed to our newsletter!');
+            } else {
+                throw new Error();
+            }
+        } catch (error) {
+            console.error(error);
             toast.error('Something went wrong. Please try again later');
         }
     };

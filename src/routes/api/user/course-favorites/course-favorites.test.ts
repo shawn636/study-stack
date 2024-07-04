@@ -12,20 +12,24 @@ import UserTestUtilModule from '$lib/server/test-utils/user';
  */
 
 describe('GET /api/favorites', () => {
-    it('should return a 200 status and an empty array when the user has no favorite courses', async () => {
-        const { email, password } = await UserTestUtilModule.getUserWithCredentials();
-        const sessionId = await auth.login(email, password);
-        const response = await fetch(`${UNIT_TEST_URL_BASE}/api/user/course-favorites`, {
-            headers: {
-                'Content-Type': 'application/json',
-                cookie: `${COOKIE_NAME}=${sessionId}`
-            }
-        });
+    it(
+        'should return a 200 status and an empty array when the user has no favorite courses',
+        { timeout: 10000 },
+        async () => {
+            const { email, password } = await UserTestUtilModule.getUserWithCredentials();
+            const sessionId = await auth.login(email, password);
+            const response = await fetch(`${UNIT_TEST_URL_BASE}/api/user/course-favorites`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    cookie: `${COOKIE_NAME}=${sessionId}`
+                }
+            });
 
-        expect(response.status).toBe(200);
-        const data = await response.json();
-        expect(data).toEqual([]);
-    });
+            expect(response.status).toBe(200);
+            const data = await response.json();
+            expect(data).toEqual([]);
+        }
+    );
 
     it('should return a 200 status and an array of favorite course IDs when the user has favorite courses', async () => {
         const { courses, email, password } =

@@ -1,10 +1,12 @@
 import type { User } from '$lib/models/types/database.types';
+import type { UserRole } from '$lib/models/types/database.types';
 import type { Cookies } from '@sveltejs/kit';
 
 import { dev } from '$app/environment';
 import { KeyType } from '$lib/models/types/database.types';
 import { comparePassword, hashPassword } from '$lib/server/crypto';
 import { type Transaction, cuid, db } from '$lib/server/database';
+import { UnauthorizedError } from '$lib/server/error-handling/handled-errors';
 
 export const COOKIE_NAME = 'auth_session';
 
@@ -303,6 +305,43 @@ const validateCookies = async (cookies: Cookies): Promise<boolean> => {
 };
 
 /**
+ * Validates the API session.
+ *
+ * @param cookies - The cookies object containing the session information.
+ * @param requiredRole - Optional setting if specifying a required user role when validating a session.
+ * @throws {UnauthorizedError} - If the session is invalid or the user role is not authorized.
+ * @returns {Promise<void>} - A promise that resolves when the session is validated.
+ */
+const validateApiSession = async (
+    cookies: Cookies,
+    requiredUserId?: string,
+    requiredRole?: UserRole
+): Promise<void> => {
+    const sessionId = getSession(cookies);
+    if (!sessionId) {
+        throw new UnauthorizedError('AUTH_INVALID_SESSION');
+    }
+
+    if (requiredRole || requiredUserId) {
+        const user = await getUser(sessionId);
+
+        if (requiredUserId && user.userId !== requiredUserId) {
+            throw new UnauthorizedError('AUTH_INVALID_USER');
+        }
+
+        if (requiredRole && String(user.userRole) !== requiredRole) {
+            throw new UnauthorizedError('AUTH_INVALID_ROLE');
+        }
+    }
+
+    const isValid = await validateSession(sessionId);
+
+    if (!isValid) {
+        throw new UnauthorizedError('AUTH_INVALID_SESSION');
+    }
+};
+
+/**
  * Sets the session ID as a cookie.
  *
  * @param {string} sessionId - The session ID to set as a cookie.
@@ -412,6 +451,7 @@ export const auth = {
     logoutAll,
     setSessionCookie,
     validateAndSetCookie,
+    validateApiSession,
     validateCookies,
     validateSession
 };

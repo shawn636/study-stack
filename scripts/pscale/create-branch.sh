@@ -94,7 +94,7 @@ function main() {
     debug_log "db url updated in .env"
 
     pnpm prisma db push --accept-data-loss || exit $?
-    debug_log "db schema pushed"    
+    debug_log "db schema pushed"
     pnpm prisma generate || exit $?
     debug_log "prisma client generated"
     pnpm build || exit $?

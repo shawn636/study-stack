@@ -38,24 +38,6 @@
             }
         },
         {
-            "label": "Isolated E2E Dev Server",
-            "type": "shell",
-            "command": "pnpm vercel-e2e-test",
-            "group": "none",
-            "isBackground": true,
-            "presentation": {
-                "echo": true,
-                "reveal": "never",
-                "focus": false,
-                "panel": "new",
-                "showReuseMessage": true,
-                "clear": true
-            },
-            "icon": {
-                "id": "beaker"
-            }
-        },
-        {
             "label": "Run TS File",
             "type": "shell",
             "command": "pnpm tsx ${file}",

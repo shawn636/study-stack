@@ -56,16 +56,14 @@ interface UserWithCredentials {
 /* Module */
 const module: UserTestUtil = {
     // Required Clenup Method
-    async cleanup() {
+    async cleanup(): Promise<number> {
         const authUsersResult = await db
             .selectFrom('AuthUser')
             .select('AuthUser.authUserId')
-            .where('AuthUser.authUserEmail', 'like', `%${UNIT_TEST_EMAIL_DOMAIN}`)
+            .where('authUserRecordType', '=', 'TEST_RECORD')
             .execute();
 
-        let usersDeleted = 0;
-
-        for (const authUser of authUsersResult) {
+        authUsersResult.map(async (authUser) => {
             await db.transaction().execute(async (trx: Transaction<DB>) => {
                 await trx
                     .deleteFrom('User')
@@ -80,10 +78,15 @@ const module: UserTestUtil = {
                     .where('AuthUser.authUserId', '=', authUser.authUserId)
                     .execute();
             });
-            usersDeleted++;
-        }
+        });
 
-        console.log(`Cleaned up ${usersDeleted} users`);
+        // Delete orphaned Users
+        const orphanedUsersResult = await db
+            .deleteFrom('User')
+            .where('userRecordType', '=', 'TEST_RECORD')
+            .executeTakeFirstOrThrow();
+
+        return authUsersResult.length + Number(orphanedUsersResult.numDeletedRows ?? 0);
     },
 
     async getUser(): Promise<User> {

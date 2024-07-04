@@ -22,6 +22,7 @@ updates:
                   - '*'
               exclude-patterns:
                   - 'eslint' # Can't migrate to v9 yet - waiting for updates to our eslint plugins
+      pull-request-limit: 0
     - package-ecosystem: 'github-actions'
       directory: '/'
       schedule:
@@ -33,3 +34,4 @@ updates:
               applies-to: version-updates
               patterns:
                   - '*'
+      pull-request-limit: 0

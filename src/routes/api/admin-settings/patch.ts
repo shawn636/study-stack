@@ -1,35 +1,17 @@
 import type { AdminSettingsUpdateResponse } from '$lib/api/types/admin-settings';
 
 import { auth } from '$lib/server/auth';
+import { csrf } from '$lib/server/csrf';
 import { db, sql } from '$lib/server/database';
-import { HandledError, handleErrors } from '$lib/server/util';
+import { handleErrors } from '$lib/server/error-handling';
+import { InvalidRequestError } from '$lib/server/error-handling/handled-errors';
 
 import type { RequestHandler } from './$types';
 
-class UnauthorizedError extends HandledError {
-    constructor(message: string) {
-        super(message);
-        this.statusCode = 401;
-        this.name = 'UnauthorizedError';
-    }
-}
-
-class InvalidRequestError extends HandledError {
-    constructor(message: string) {
-        super(message);
-        this.statusCode = 400;
-        this.name = 'InvalidRequestError';
-    }
-}
-
 export const PATCH = (async ({ cookies, request }) => {
     try {
-        const sessionId = auth.getSession(cookies);
-        const isValid = await auth.validateSession(sessionId ?? '');
-
-        if (!isValid) {
-            throw new UnauthorizedError('Unauthorized');
-        }
+        await auth.validateApiSession(cookies, 'ADMIN');
+        await csrf.validateCookies(cookies);
 
         const body = await request.json();
 

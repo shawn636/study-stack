@@ -40,7 +40,3 @@ export async function fetchWithTimeout(
         throw error;
     }
 }
-
-export const defaultHeaders = {
-    'Content-Type': 'application/json'
-};
