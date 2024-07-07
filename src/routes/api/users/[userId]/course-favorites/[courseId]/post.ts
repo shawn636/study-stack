@@ -1,7 +1,6 @@
 import type { UserCourseFavoritesCreateResponse } from '$lib/api/types/users';
 
 import { auth } from '$lib/server/auth';
-import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
 import { handleErrors } from '$lib/server/error-handling';
 import { InvalidRequestError } from '$lib/server/error-handling/handled-errors';
@@ -13,7 +12,6 @@ export const POST = (async ({ cookies, params }) => {
         const userCourseFavoriteCourseId = params.courseId;
         const userCourseFavoriteUserId = params.userId;
 
-        await csrf.validateCookies(cookies);
         await auth.validateApiSession(cookies, userCourseFavoriteUserId);
 
         if (!userCourseFavoriteCourseId) {

@@ -1,11 +1,9 @@
 import { auth } from '$lib/server/auth';
-import { csrf } from '$lib/server/csrf';
 import { error } from '@sveltejs/kit';
 
 import type { RequestHandler } from './$types';
 
 export const POST = (async ({ cookies, request }) => {
-    await csrf.validateCookies(cookies);
     const sessionId = auth.getSession(cookies);
 
     if (!sessionId) {

@@ -2,17 +2,14 @@ import {
     type CourseSortByOption,
     CourseSortByOptions
 } from '$lib/models/types/course-sort-by-options';
-import { csrf } from '$lib/server/csrf';
 import { handleErrors } from '$lib/server/error-handling';
 
 import type { RequestHandler } from './$types';
 
 import { getCourses } from './fetch-courses';
 
-export const GET = (async ({ cookies, url }) => {
+export const GET = (async ({ url }) => {
     try {
-        await csrf.validateCookies(cookies);
-
         const defaultSortByValue: CourseSortByOption = CourseSortByOptions.RELEVANCE;
 
         const searchTerm = url.searchParams.get('query');

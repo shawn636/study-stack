@@ -319,6 +319,7 @@ const validateApiSession = async (
 ): Promise<void> => {
     const sessionId = getSession(cookies);
     if (!sessionId) {
+        console.error('No session found');
         throw new UnauthorizedError('AUTH_INVALID_SESSION');
     }
 
@@ -326,10 +327,13 @@ const validateApiSession = async (
         const user = await getUser(sessionId);
 
         if (requiredUserId && user.userId !== requiredUserId) {
+            console.error('Invalid user');
+            console.log(`Required: ${requiredUserId}, Found: ${user.userId}`);
             throw new UnauthorizedError('AUTH_INVALID_USER');
         }
 
         if (requiredRole && String(user.userRole) !== requiredRole) {
+            console.error('Invalid role');
             throw new UnauthorizedError('AUTH_INVALID_ROLE');
         }
     }

@@ -1,15 +1,12 @@
 import type { NewsletterSubscriptionCreateResponse } from '$lib/api/types/newsletter-subscriptions';
 
 import { type SubscriptionForm, subscriptionForm } from '$lib/models/forms/subscribe';
-import { csrf } from '$lib/server/csrf';
 import { handleErrors } from '$lib/server/error-handling';
 
 import type { RequestHandler } from './$types';
 
-export const POST = (async ({ cookies, request }) => {
+export const POST = (async ({ request }) => {
     try {
-        await csrf.validateCookies(cookies);
-
         const data = await request.formData();
         const form: SubscriptionForm = {
             email: data.get('email') as string

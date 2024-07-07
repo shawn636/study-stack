@@ -16,5 +16,6 @@ export interface AdminSetting {
     siteSettingValue: string;
 }
 
-export type AdminSettingsGetResponse = ApiResponse<AdminSetting[]>;
+export type AdminSettingsGetMultipleResponse = ApiResponse<AdminSetting[]>;
+export type AdminSettingsGetResponse = ApiResponse<AdminSetting>;
 export type AdminSettingsUpdateResponse = ApiResponse<null>;

@@ -1,15 +1,13 @@
 import type { TestRecordsDeleteResponse } from '$lib/api/types/test-records';
 
-import { csrf } from '$lib/server/csrf';
 import { handleErrors } from '$lib/server/error-handling';
 import { DatabaseError } from '$lib/server/error-handling/handled-errors';
 import { cleanup } from '$lib/server/test-utils/cleanup';
 
 import type { RequestHandler } from './$types';
 
-export const DELETE = (async ({ cookies }) => {
+export const DELETE = (async () => {
     try {
-        await csrf.validateCookies(cookies);
         let results: { [key: string]: number };
         try {
             results = await cleanup();

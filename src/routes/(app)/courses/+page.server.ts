@@ -5,7 +5,6 @@ import { auth } from '$lib/server/auth';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ cookies, parent }) => {
-    await parent();
     const sessionId = auth.getSession(cookies);
     const isValid = await auth.validateSession(sessionId ?? '');
     let user: User | undefined;
@@ -20,5 +19,6 @@ export const load = (async ({ cookies, parent }) => {
         }
     }
 
+    await parent();
     return { user };
 }) satisfies PageServerLoad;

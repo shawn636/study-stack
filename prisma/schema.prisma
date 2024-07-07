@@ -216,12 +216,6 @@ model AuthUser {
   authUserRecordType RecordType @default(PRODUCTION_RECORD)
 }
 
-model CsrfToken {
-  csrfToken               String     @id @default(cuid()) @db.VarChar(30)
-  csrfTokenExpirationDate DateTime
-  csrfTokenRecordType     RecordType @default(PRODUCTION_RECORD)
-}
-
 enum PermissionType {
   READ
   WRITE

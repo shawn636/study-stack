@@ -56,7 +56,7 @@ const module: CourseTestUtil = {
     async getCategory(): Promise<Category> {
         const category = {
             categoryId: cuid(),
-            categoryImgHref: '',
+            categoryImgHref: 'images/img-placeholder.svg',
             categoryRecordType: RecordType.TEST_RECORD,
             categoryTitle: `unit-test-category-${cuid()}`
         };

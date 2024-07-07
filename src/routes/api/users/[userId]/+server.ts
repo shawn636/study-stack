@@ -2,7 +2,6 @@ import type { UserUpdateResponse } from '$lib/api/types/users';
 import type { User } from '$lib/models/types/database.types';
 
 import { auth } from '$lib/server/auth';
-import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
 import { handleErrors } from '$lib/server/error-handling';
 import { DatabaseError } from '$lib/server/error-handling/handled-errors';
@@ -13,7 +12,6 @@ export const PUT = (async ({ cookies, params, request }) => {
     try {
         const userIdSlug = params.userId;
 
-        await csrf.validateCookies(cookies);
         await auth.validateApiSession(cookies, userIdSlug);
 
         const userFromRequest: User = await request.json();

@@ -3,7 +3,6 @@ import type { UserCourseFavoritesDeleteResponse } from '$lib/api/types/users';
 import type { DeleteResult } from 'kysely';
 
 import { auth } from '$lib/server/auth';
-import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
 import { handleErrors } from '$lib/server/error-handling';
 import { DatabaseError, NotFoundError } from '$lib/server/error-handling/handled-errors';
@@ -15,7 +14,6 @@ export const DELETE = (async ({ cookies, params }) => {
         const userCourseFavoriteCourseId = params.courseId;
         const userCourseFavoriteUserId = params.userId;
 
-        await csrf.validateCookies(cookies);
         await auth.validateApiSession(cookies, userCourseFavoriteUserId);
 
         try {

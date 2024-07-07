@@ -2,16 +2,13 @@ import type { ContactMessageCreateResponse } from '$lib/api/types/contact-messag
 
 import { CONTACT_FORM_TEMPLATE, type ContactFormEmail } from '$lib/models/emails/contact-form';
 import { type ContactForm, contactForm } from '$lib/models/forms/contact';
-import { csrf } from '$lib/server/csrf';
 import { type Recipient, type Sender, sendEmailFromTemplate } from '$lib/server/email';
 import { handleErrors } from '$lib/server/error-handling';
 
 import type { RequestHandler } from './$types';
 
-export const POST = (async ({ cookies, request }) => {
+export const POST = (async ({ request }) => {
     try {
-        await csrf.validateCookies(cookies);
-
         const formData = await request.formData();
 
         const form: ContactForm = {

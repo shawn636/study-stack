@@ -5,7 +5,6 @@ import { auth } from '$lib/server/auth';
 import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ cookies, parent }) => {
-    await parent();
     const sessionId = auth.getSession(cookies);
     let user: User | undefined;
 
@@ -17,5 +16,6 @@ export const load = (async ({ cookies, parent }) => {
             cookies = auth.deleteSessionCookie(cookies);
         }
     }
+    await parent();
     return { user };
 }) satisfies LayoutServerLoad;

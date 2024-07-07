@@ -1,7 +1,6 @@
 import type { User } from '$lib/models/types/database.types';
 
 import { auth } from '$lib/server/auth';
-import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
 import { error } from '@sveltejs/kit';
 
@@ -16,14 +15,13 @@ import type { RequestHandler } from './$types';
  *
  * @method PUT
  *
- * @param {Object} cookies - The cookies object from the request. Used for CSRF validation
- *                           and session identification.
+ * @param {Object} cookies - The cookies object from the request. Used for session identification.
  * @param {Request} request - The PUT request object. Contains the JSON payload with the
  *                            user's updated information.
  *
- * The endpoint first validates the CSRF token from the cookies and retrieves the user's
- * session ID. It then fetches the user ID from the session and compares it with the user
- * ID in the request payload to ensure that the user is authorized to update their own profile.
+ * The endpoint retrieves the user's session ID and then fetches the user ID from the session
+ * and compares it with the user ID in the request payload to ensure that the user is
+ * authorized to update their own profile.
  *
  * If the session is invalid (not logged in) or the user IDs do not match (unauthorized access),
  * the request is terminated with a 401 or 403 error respectively.
@@ -53,7 +51,6 @@ import type { RequestHandler } from './$types';
  * HTTP Status 401/403/500 with error message
  */
 export const PUT = (async ({ cookies, request }) => {
-    await csrf.validateCookies(cookies);
     const sessionId = auth.getSession(cookies);
 
     if (!sessionId) {

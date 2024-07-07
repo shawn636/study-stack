@@ -1,7 +1,6 @@
 import type { TopCategoriesGetResponse } from '$lib/api/types/categories';
 import type CategorySummary from '$lib/models/types/category-summary';
 
-import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
 import { handleErrors } from '$lib/server/error-handling';
 import { DatabaseError } from '$lib/server/error-handling/handled-errors';
@@ -44,9 +43,8 @@ import type { RequestHandler } from './$types';
  *
  * Response headers include CORS settings and content type.
  */
-export const GET = (async ({ cookies }) => {
+export const GET = (async () => {
     try {
-        await csrf.validateCookies(cookies);
         const siteSettings = await getRecordDisplaySettings();
 
         let results: CategorySummary[] = [];

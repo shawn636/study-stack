@@ -2,7 +2,6 @@ import type { UserPhotoCreateResponse } from '$lib/api/types/users';
 
 import { auth } from '$lib/server/auth';
 import { cdn } from '$lib/server/cdn';
-import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
 import { handleErrors } from '$lib/server/error-handling';
 import {
@@ -15,7 +14,6 @@ import {
 import type { RequestHandler } from './$types';
 
 export const POST = (async ({ cookies, params, request }) => {
-    await csrf.validateCookies(cookies);
     await auth.validateApiSession(cookies, params.userId);
     const sessionId = auth.getSession(cookies);
 

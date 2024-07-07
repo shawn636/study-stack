@@ -1,10 +1,19 @@
 export async function handleApiResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
-        const error = await response.json();
-
-        throw new Error(error.message || 'API request failed');
+        throw new Error(
+            'Request failed with status: ' + response.status + ' ' + response.statusText
+        );
     }
-    return response.json();
+
+    try {
+        return response.json() as Promise<T>;
+    } catch (error) {
+        if (error instanceof Error) {
+            throw new Error('Failed to parse response: ' + error.message);
+        } else {
+            throw new Error('Failed to parse response');
+        }
+    }
 }
 
 /**

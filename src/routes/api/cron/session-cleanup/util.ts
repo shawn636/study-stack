@@ -2,24 +2,6 @@ import { db } from '$lib/server/database';
 import { DatabaseError } from '$lib/server/error-handling/handled-errors';
 
 /**
- * Deletes expired CSRF tokens from the database.
- * @returns The number of deleted rows.
- * @throws {DatabaseError} If there is an error deleting the CSRF tokens.
- */
-export const deleteCsrfTokens = async () => {
-    try {
-        const result = await db
-            .deleteFrom('CsrfToken')
-            .where('csrfTokenExpirationDate', '<=', new Date())
-            .executeTakeFirst();
-
-        return Number(result.numDeletedRows);
-    } catch (error) {
-        throw new DatabaseError(`Error deleting CSRF tokens: ${error}`);
-    }
-};
-
-/**
  * Deletes expired authentication sessions from the database.
  * @returns The number of deleted rows.
  * @throws {DatabaseError} If there is an error deleting the auth sessions.

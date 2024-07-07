@@ -9,6 +9,5 @@ import type { ApiResponse } from './common';
 
 type SessionCleanupResponse = {
     authSessionsFlushed: number;
-    csrfTokensFlushed: number;
 };
 export type SessionCleanupGetResponse = ApiResponse<SessionCleanupResponse>;

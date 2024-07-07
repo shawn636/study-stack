@@ -1,7 +1,6 @@
 import type { Cookies } from '@sveltejs/kit';
 
 import { auth } from '$lib/server/auth';
-import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
 import { error } from '@sveltejs/kit';
 
@@ -15,7 +14,6 @@ export const getValidatedApiData = async (
     url: URL,
     courseIdRequired = true
 ): Promise<ValidatedAPIData> => {
-    await csrf.validateCookies(cookies);
     const sessionId = auth.getSession(cookies) ?? '';
     const validSession = auth.validateSession(sessionId);
 

@@ -1,7 +1,6 @@
 import type { CourseGetResponse } from '$lib/api/types/courses';
 import type { Course, User } from '$lib/models/types/database.types';
 
-import { csrf } from '$lib/server/csrf';
 import { db } from '$lib/server/database';
 import { handleErrors } from '$lib/server/error-handling';
 import {
@@ -13,10 +12,8 @@ import { getRecordDisplaySettings } from '$lib/server/util';
 
 import type { RequestHandler } from './$types';
 
-export const GET = (async ({ cookies, params }) => {
+export const GET = (async ({ params }) => {
     try {
-        await csrf.validateCookies(cookies);
-
         const slug = params.slug;
 
         if (!slug) {
