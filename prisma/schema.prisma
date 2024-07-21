@@ -113,6 +113,7 @@ model CourseProgress {
   courseProgressRecordType       RecordType @default(PRODUCTION_RECORD)
 
   @@id([courseProgressUserId, courseProgressCourseId])
+  @@unique([courseProgressUserId, courseProgressCourseId])
   @@index([courseProgressCourseId])
   @@index([courseProgressUserId])
 }
