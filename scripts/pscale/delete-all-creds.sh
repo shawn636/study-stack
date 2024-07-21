@@ -10,7 +10,7 @@ function get_credential_ids() {
 
     if [ -z "$branch_name" ]; then
         echo "Error: missing argument branch_name. Please use the format: check_branch_creation_possible <branch_name>"
-        exit 1
+        exit 0
     fi
 
     credential_ids=$(pscale password list "$PSCALE_DB_NAME" "$branch_name" --format=json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" | jq -r '.[] | .id')

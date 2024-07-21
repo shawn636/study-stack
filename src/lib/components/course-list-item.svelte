@@ -1,17 +1,31 @@
 <script lang="ts">
     import type { CourseResult } from '$lib/api/types/courses';
+    import type { ToggleUserCourseFavoriteEvent } from '$lib/models/types/toggle-user-course-favorite-event';
 
     import CourseRating from '$lib/components/course-rating.svelte';
     import { Button } from '$lib/components/ui/button';
     import { Separator } from '$lib/components/ui/separator';
     import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
     import { faHeart } from '@fortawesome/free-solid-svg-icons';
+    import { createEventDispatcher } from 'svelte';
     import Fa from 'svelte-fa';
 
-    // export let courseWithInstructor: Course & User;
     export let courseResult: CourseResult;
 
-    let toggled = false;
+    const dispatch = createEventDispatcher<ToggleUserCourseFavoriteEvent>();
+    $: toggled = courseResult.course.isFavorite ?? false;
+
+    const toggle = () => {
+        toggled = !toggled;
+
+        const payload = {
+            courseId: courseResult.course.courseId,
+            current: toggled,
+            previous: !toggled
+        };
+
+        dispatch('toggleUserCourseFavorite', payload);
+    };
 </script>
 
 <div class="grid grid-flow-row grid-cols-[minmax(150px,_1fr)_3fr] items-center gap-x-2">
@@ -67,7 +81,7 @@
                     class="col-span-full col-start-1 row-start-2 flex items-center justify-end gap-x-2 pl-2 sm:col-span-1 sm:row-span-full md:col-span-full md:row-span-1 md:row-start-2"
                     data-testid="list-item-button-block"
                 >
-                    <button on:click={() => (toggled = !toggled)}>
+                    <button on:click={toggle}>
                         <Fa
                             class="text-red-500"
                             icon={toggled ? faHeart : faHeartOutline}

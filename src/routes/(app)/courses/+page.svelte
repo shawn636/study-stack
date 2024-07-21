@@ -1,6 +1,8 @@
 <script lang="ts">
     import type { CourseSearchGetResponse } from '$lib/api/types/courses';
+    import type { ToggleUserCourseFavoritePayload } from '$lib/models/types/toggle-user-course-favorite-event';
 
+    import { goto } from '$app/navigation';
     import { apiClientSingleton as client } from '$lib/api';
     import SortByDropdown from '$lib/components/controls/sort-by-dropdown.svelte';
     import ViewToggle from '$lib/components/controls/view-toggle.svelte';
@@ -63,8 +65,6 @@
                 );
             }
 
-            console.log(response.data.courses);
-
             if (response.success) {
                 courseResults.set(response.data.courses);
                 count = response.data.totalCourses;
@@ -83,6 +83,50 @@
         debounceTimeout = setTimeout(() => {
             getCourses();
         }, 300); // Adjust the delay (in milliseconds) as needed
+    };
+
+    const handleToggleUserCourseFavorite = async (
+        event: CustomEvent<ToggleUserCourseFavoritePayload>
+    ) => {
+        if (!data.user) {
+            goto('/auth/login');
+            return;
+        }
+
+        const payload: ToggleUserCourseFavoritePayload = event.detail;
+
+        try {
+            if (payload.current) {
+                courseResults.addFavorite(payload.courseId);
+                const result = await client.users.favoriteCourse(
+                    data.user?.userId ?? '',
+                    payload.courseId
+                );
+
+                if (!result.success) {
+                    throw new Error(result.message);
+                }
+            } else {
+                courseResults.removeFavorite(payload.courseId);
+                const result = await client.users.unfavoriteCourse(
+                    data.user?.userId ?? '',
+                    payload.courseId
+                );
+
+                if (!result.success) {
+                    throw new Error(result.message);
+                }
+            }
+        } catch (error) {
+            toast.error(
+                'An error occurred while updating course favorite. Please try again later.'
+            );
+            if (payload.previous) {
+                courseResults.addFavorite(payload.courseId);
+            } else {
+                courseResults.removeFavorite(payload.courseId);
+            }
+        }
     };
 
     const isDesktop = mediaQuery('(min-width: 768px)');
@@ -142,15 +186,21 @@
         {:else if selectedView === 'list'}
             <div class="flex flex-col gap-y-6">
                 {#each $courseResults as courseResult}
-                    <CourseListItem {courseResult} />
+                    <CourseListItem
+                        {courseResult}
+                        on:toggleUserCourseFavorite={(e) => handleToggleUserCourseFavorite(e)}
+                    />
                 {/each}
             </div>
         {:else}
             <div
-                class="grid justify-center gap-y-4 sm:grid-cols-[repeat(2,auto)] sm:justify-between lg:grid-cols-[repeat(3,auto)]"
+                class="grid justify-center gap-x-8 gap-y-8 sm:grid-cols-[repeat(2,auto)] sm:justify-between lg:grid-cols-[repeat(3,auto)]"
             >
                 {#each $courseResults as courseResult}
-                    <CourseGridItem {courseResult} />
+                    <CourseGridItem
+                        {courseResult}
+                        on:toggleUserCourseFavorite={(e) => handleToggleUserCourseFavorite(e)}
+                    />
                 {/each}
             </div>
         {/if}

@@ -34,7 +34,7 @@ const config: PlaywrightTestConfig = defineConfig({
     testDir: 'e2e',
     testMatch: /(.+\.)?(test|spec)\.[jt]s/,
     webServer: {
-        command: 'pnpm exec vite dev --port 3005 --mode test',
+        command: 'scripts/shared/run.sh pnpm exec vite dev --port 3005 --mode test',
         port: 3005
     }
 });

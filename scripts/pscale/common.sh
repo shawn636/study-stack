@@ -1,9 +1,18 @@
 #!/bin/bash
 if [ -f .env ]; then
-    set +o allexport
-    # shellcheck disable=SC1091
-    source .env
-    set -o allexport
+    # Read the .env file, filter out OnePassword Secret References, and source the result
+    while IFS= read -r line || [ -n "$line" ]; do
+        # Skip lines that contain 'op://'
+        is_1p_reference=$([[ "$line" == *"op://"* ]] && echo true || echo false)
+        is_comment=$([[ "$line" == "#"* ]] && echo true || echo false)
+        line_is_variable_assignment=$([[ "$line" == *=* ]] && echo true || echo false)
+
+        if [ "$is_1p_reference" == false ] &&  [ "$is_comment" == false  ] && [ "$line_is_variable_assignment" == true ]; then
+            var_name=$(echo "$line" | cut -d '=' -f 1 | xargs) # Trim spaces
+            var_value=$(echo "$line" | cut -d '=' -f 2- | xargs) # Trim spaces
+            export "$var_name=$var_value"
+        fi
+    done < .env
 fi
 
 # shellcheck disable=SC1091
@@ -272,7 +281,7 @@ function get_dev_branches() {
 
     if [ -z "$dev_branches" ]; then
         echo "No dev branches found. Exiting..."
-        exit 1
+        exit 0
     fi
 
     echo "$dev_branches"

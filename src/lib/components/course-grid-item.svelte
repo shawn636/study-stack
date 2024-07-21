@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { CourseResult } from '$lib/api/types/courses';
+    import type { ToggleUserCourseFavoriteEvent } from '$lib/models/types/toggle-user-course-favorite-event';
 
     import { initials } from '$lib/client/util';
     import CourseRating from '$lib/components/course-rating.svelte';
@@ -9,15 +10,26 @@
     import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
     import { faClock, faFileLines } from '@fortawesome/free-regular-svg-icons';
     import { faHeart } from '@fortawesome/free-solid-svg-icons';
+    import { createEventDispatcher } from 'svelte';
     import Fa from 'svelte-fa';
 
-    // export let courseWithInstructor: Course & User;
     export let courseResult: CourseResult;
 
-    let toggled = false;
+    // let toggled = false;
+    $: toggled = courseResult.course.isFavorite ?? false;
 
-    const handleToggle = () => {
+    const dispatch = createEventDispatcher<ToggleUserCourseFavoriteEvent>();
+
+    const toggle = () => {
         toggled = !toggled;
+
+        const payload = {
+            courseId: courseResult.course.courseId,
+            current: toggled,
+            previous: !toggled
+        };
+
+        dispatch('toggleUserCourseFavorite', payload);
     };
 
     const width = 'w-64';
@@ -43,8 +55,8 @@
         ratingCount={courseResult.course.courseRatingCount}
     />
 
-    <Button class="m-0 p-0" href={`/courses/${courseResult.course.courseId}`} variant="link">
-        <h3 class="px-2 text-start text-lg font-medium">
+    <Button class="m-0 w-full p-0" href={`/courses/${courseResult.course.courseId}`} variant="link">
+        <h3 class="w-full px-2 text-start text-lg font-medium">
             {courseResult.course.courseTitle.length > 40
                 ? courseResult.course.courseTitle.substring(0, 40) + '...'
                 : courseResult.course.courseTitle}
@@ -80,7 +92,7 @@
 
     <div class="grid grid-rows-2 items-center">
         <div class="grid grid-cols-[auto_1fr_auto] items-center justify-items-end gap-x-2">
-            <button aria-label="Toggle Favorite" on:click={handleToggle}>
+            <button aria-label="Toggle Favorite" on:click={toggle}>
                 <Fa class="text-pink-500" icon={toggled ? faHeart : faHeartOutline} size="lg" />
             </button>
             {#if Number(courseResult.course.courseCurrentPrice) < Number(courseResult.course.courseOriginalPrice)}

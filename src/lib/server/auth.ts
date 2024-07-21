@@ -127,11 +127,14 @@ const createUser = async (email: string, password: string, name: string): Promis
     const authKeyId = cuid();
 
     await db.transaction().execute(async (trx: Transaction) => {
+        const inTestMode = import.meta.env.MODE === 'test';
+
         const createAuthUserResult = await trx
             .insertInto('AuthUser')
             .values({
                 authUserEmail: email,
-                authUserId: authUserId
+                authUserId: authUserId,
+                authUserRecordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD'
             })
             .executeTakeFirst();
 
@@ -146,6 +149,7 @@ const createUser = async (email: string, password: string, name: string): Promis
                 userEmail: email,
                 userId: userId,
                 userName: name,
+                userRecordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD',
                 userRole: 'USER'
             })
             .executeTakeFirst();
@@ -159,6 +163,7 @@ const createUser = async (email: string, password: string, name: string): Promis
             .values({
                 authKeyAuthUserId: authUserId,
                 authKeyId: authKeyId,
+                authKeyRecordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD',
                 authKeyType: KeyType.CREDENTIAL_HASH,
                 authKeyValue: keyValue
             })
