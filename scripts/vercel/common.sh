@@ -59,6 +59,7 @@ function deploy() {
             --env PEPPER="$PEPPER" \
             --env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
+            --env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
             --build-env DATABASE_URL="$DATABASE_URL" \
             --build-env PEPPER="$PEPPER" \
             --build-env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
@@ -72,6 +73,7 @@ function deploy() {
             --env PEPPER="$PEPPER" \
             --env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
+            --env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
             --build-env DATABASE_URL="$DATABASE_URL" \
             --build-env PEPPER="$PEPPER" \
             --build-env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
