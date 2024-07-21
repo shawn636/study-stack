@@ -12,32 +12,42 @@
     const cuid = init();
 
     let course: Course = {
-        categoryId: cuid(),
-        currentPrice: 29.99,
-        description: 'Learn the basics of TypeScript programming language.',
-        difficulty: 'Beginner',
-        estimatedTimeHours: 2,
-        estimatedTimeMinutes: 30,
-        id: cuid(),
-        imgHref: '/images/course-image.webp',
-        instructorId: cuid(),
-        lessonCount: 11,
-        organizationId: null,
-        originalPrice: 49.99,
-        ratingAverage: 4.5,
-        ratingCount: 50,
-        title: 'Introduction to TypeScript'
+        courseCategoryId: cuid(),
+        courseCurrentPrice: 29.99,
+        courseDescription: 'Learn the basics of TypeScript programming language.',
+        courseDifficulty: 'Beginner',
+        courseEstimatedTimeHours: 2,
+        courseEstimatedTimeMinutes: 30,
+        courseId: cuid(),
+        courseImgHref: '/images/course-image.webp',
+        courseInstructorId: cuid(),
+        courseLessonCount: 11,
+        courseOrganizationId: null,
+        courseOriginalPrice: 49.99,
+        courseRatingAverage: 4.5,
+        courseRatingCount: 50,
+        courseRecordType: {
+            __insert__: undefined,
+            __select__: 'PRODUCTION_RECORD',
+            __update__: 'PRODUCTION_RECORD'
+        },
+        courseTitle: 'Introduction to TypeScript'
     };
 
     let courseProgress: CourseProgress = {
-        courseId: course.id,
-        lessonsCompleted: 6,
-        userId: data.user.id
+        courseProgressCourseId: course.courseId,
+        courseProgressLessonsCompleted: 6,
+        courseProgressRecordType: {
+            __insert__: undefined,
+            __select__: 'PRODUCTION_RECORD',
+            __update__: 'PRODUCTION_RECORD'
+        },
+        courseProgressUserId: data.user.userId
     };
 </script>
 
 <div class="grid-flow-rows grid gap-2">
-    <h2 class="h2">Welcome back, {data.user.name.split(' ', 1)}!</h2>
+    <h2 class="h2">Welcome back, {data.user.userName.split(' ', 1)}!</h2>
     <div class="grid grid-flow-row gap-1">
         <h3>Courses I'm Enrolled In</h3>
 

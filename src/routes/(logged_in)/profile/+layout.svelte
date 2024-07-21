@@ -1,27 +1,31 @@
 <script lang="ts">
+    import SidebarNav from '$lib/components/collapsible-sidebar/sidebar-nav.svelte';
     import { Separator } from '$lib/components/ui/separator';
-
-    import SidebarNav from './(components)/sidebar-nav.svelte';
 
     const sidebarNavItems = [
         {
             href: '/profile',
+            icon: undefined,
             title: 'Profile'
         },
         {
             href: '/profile/account',
+            icon: undefined,
             title: 'Account'
         },
         {
             href: '/profile/appearance',
+            icon: undefined,
             title: 'Appearance'
         },
         {
             href: '/profile/notifications',
+            icon: undefined,
             title: 'Notifications'
         },
         {
             href: '/profile/display',
+            icon: undefined,
             title: 'Display'
         }
     ];

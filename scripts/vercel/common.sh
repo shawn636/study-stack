@@ -5,6 +5,7 @@ source scripts/shared/github.sh
 
 REQUIRED_ENV_VARS=(
     "VERCEL_TOKEN"
+    "CLOUDFLARE_IMAGES_API_KEY"
     "DATABASE_URL" # Must already have been set to properly build and deploy
     "PEPPER"
     "PUBLIC_AMPLITUDE_API_KEY"
@@ -14,10 +15,19 @@ REQUIRED_ENV_VARS=(
 export VERCEL_SCOPE="equipped-team"
 
 if [ -f .env ]; then
-    set +o allexport
-    # shellcheck disable=SC1091
-    source .env
-    set -o allexport
+    # Read the .env file, filter out OnePassword Secret References, and source the result
+    while IFS= read -r line || [ -n "$line" ]; do
+        # Skip lines that contain 'op://'
+        is_1p_reference=$([[ "$line" == *"op://"* ]] && echo true || echo false)
+        is_comment=$([[ "$line" == "#"* ]] && echo true || echo false)
+        line_is_variable_assignment=$([[ "$line" == *=* ]] && echo true || echo false)
+
+        if [ "$is_1p_reference" == false ] &&  [ "$is_comment" == false  ] && [ "$line_is_variable_assignment" == true ]; then
+            var_name=$(echo "$line" | cut -d '=' -f 1 | xargs) # Trim spaces
+            var_value=$(echo "$line" | cut -d '=' -f 2- | xargs) # Trim spaces
+            export "$var_name=$var_value"
+        fi
+    done < .env
 fi
 
 function check_for_required_env_vars() {
@@ -59,10 +69,12 @@ function deploy() {
             --env PEPPER="$PEPPER" \
             --env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
+            --env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
             --build-env DATABASE_URL="$DATABASE_URL" \
             --build-env PEPPER="$PEPPER" \
             --build-env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --build-env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
+            --build-env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
             --scope "equipped-team" \
             --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     else
@@ -72,10 +84,12 @@ function deploy() {
             --env PEPPER="$PEPPER" \
             --env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
+            --env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
             --build-env DATABASE_URL="$DATABASE_URL" \
             --build-env PEPPER="$PEPPER" \
             --build-env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --build-env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
+            --build-env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
             --scope "equipped-team" \
             --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     fi

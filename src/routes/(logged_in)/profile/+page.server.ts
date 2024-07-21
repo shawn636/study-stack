@@ -6,7 +6,6 @@ import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ cookies, parent }) => {
-    await parent();
     const sessionId = auth.getSession(cookies);
     const isValid = await auth.validateSession(sessionId ?? '');
     let user: User | undefined;
@@ -17,5 +16,6 @@ export const load = (async ({ cookies, parent }) => {
         cookies = auth.deleteSessionCookie(cookies);
         redirect(302, '/auth/login');
     }
+    await parent();
     return { user };
 }) satisfies PageServerLoad;

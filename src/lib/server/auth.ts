@@ -1,10 +1,12 @@
 import type { User } from '$lib/models/types/database.types';
+import type { UserRole } from '$lib/models/types/database.types';
 import type { Cookies } from '@sveltejs/kit';
 
 import { dev } from '$app/environment';
 import { KeyType } from '$lib/models/types/database.types';
 import { comparePassword, hashPassword } from '$lib/server/crypto';
 import { type Transaction, cuid, db } from '$lib/server/database';
+import { UnauthorizedError } from '$lib/server/error-handling/handled-errors';
 
 export const COOKIE_NAME = 'auth_session';
 
@@ -34,7 +36,7 @@ const getAllSessions = async (authUserId: string): Promise<string[]> => {
     const sessionResults = await db
         .selectFrom('AuthSession')
         .select('AuthSession.authSessionId')
-        .where('AuthSession.authUserId', '=', authUserId)
+        .where('AuthSession.authSessionAuthUserId', '=', authUserId)
         .execute();
 
     const sessionIds: string[] = sessionResults.map((session) => session.authSessionId);
@@ -58,7 +60,7 @@ const getUser = async (sessionId: string): Promise<User> => {
 
     const userResult = await db
         .selectFrom('User')
-        .innerJoin('AuthSession', 'User.authUserId', 'AuthSession.authUserId')
+        .innerJoin('AuthSession', 'User.userAuthUserId', 'AuthSession.authSessionAuthUserId')
         .selectAll('User')
         .where('AuthSession.authSessionId', '=', sessionId)
         .executeTakeFirst();
@@ -89,7 +91,7 @@ const getUserId = async (sessionId: string): Promise<string> => {
 
     const userResult = await db
         .selectFrom('User')
-        .innerJoin('AuthSession', 'User.authUserId', 'AuthSession.authUserId')
+        .innerJoin('AuthSession', 'User.userAuthUserId', 'AuthSession.authSessionAuthUserId')
         .select('User.userId')
         .where('AuthSession.authSessionId', '=', sessionId)
         .executeTakeFirst();
@@ -125,11 +127,14 @@ const createUser = async (email: string, password: string, name: string): Promis
     const authKeyId = cuid();
 
     await db.transaction().execute(async (trx: Transaction) => {
+        const inTestMode = import.meta.env.MODE === 'test';
+
         const createAuthUserResult = await trx
             .insertInto('AuthUser')
             .values({
                 authUserEmail: email,
-                authUserId: authUserId
+                authUserId: authUserId,
+                authUserRecordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD'
             })
             .executeTakeFirst();
 
@@ -140,11 +145,12 @@ const createUser = async (email: string, password: string, name: string): Promis
         const createUserResult = await trx
             .insertInto('User')
             .values({
-                authUserId: authUserId,
+                userAuthUserId: authUserId,
                 userEmail: email,
                 userId: userId,
                 userName: name,
-                userRole: 'user'
+                userRecordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD',
+                userRole: 'USER'
             })
             .executeTakeFirst();
 
@@ -155,10 +161,11 @@ const createUser = async (email: string, password: string, name: string): Promis
         const createAuthKeyResult = await trx
             .insertInto('AuthKey')
             .values({
+                authKeyAuthUserId: authUserId,
                 authKeyId: authKeyId,
+                authKeyRecordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD',
                 authKeyType: KeyType.CREDENTIAL_HASH,
-                authKeyValue: keyValue,
-                authUserId: authUserId
+                authKeyValue: keyValue
             })
             .executeTakeFirst();
 
@@ -181,7 +188,7 @@ const createUser = async (email: string, password: string, name: string): Promis
 const login = async (email: string, password: string): Promise<string> => {
     const loginResult = await db
         .selectFrom('AuthUser')
-        .innerJoin('AuthKey', 'AuthKey.authUserId', 'AuthUser.authUserId')
+        .innerJoin('AuthKey', 'AuthKey.authKeyAuthUserId', 'AuthUser.authUserId')
         .where('AuthUser.authUserEmail', '=', email)
         .where('authKeyType', '=', KeyType.CREDENTIAL_HASH)
         .selectAll('AuthUser')
@@ -189,7 +196,6 @@ const login = async (email: string, password: string): Promise<string> => {
         .executeTakeFirst();
 
     if (loginResult === undefined || loginResult?.authUserId === undefined) {
-        console.error('AuthUser Not Found');
         throw Error('AUTH_INVALID_CREDENTIALS');
     }
 
@@ -201,7 +207,6 @@ const login = async (email: string, password: string): Promise<string> => {
     const isValid = await comparePassword(password, loginResult.authKeyValue);
 
     if (!isValid) {
-        console.error('Invalid Password');
         throw Error('AUTH_INVALID_CREDENTIALS');
     }
 
@@ -213,9 +218,9 @@ const login = async (email: string, password: string): Promise<string> => {
     const createSessionResult = await db
         .insertInto('AuthSession')
         .values({
+            authSessionAuthUserId: loginResult.authUserId,
             authSessionExpirationDate: expirationDate,
-            authSessionId: sessionId,
-            authUserId: loginResult.authUserId
+            authSessionId: sessionId
         })
         .executeTakeFirstOrThrow();
 
@@ -248,7 +253,10 @@ const logout = async (sessionId: string): Promise<void> => {
  * @throws {Error} Throws an error if the user or sessions are not found, or deletion fails.
  */
 const logoutAll = async (authUserId: string): Promise<void> => {
-    await db.deleteFrom('AuthSession').where('AuthSession.authUserId', '=', authUserId).execute();
+    await db
+        .deleteFrom('AuthSession')
+        .where('AuthSession.authSessionAuthUserId', '=', authUserId)
+        .execute();
 
     return;
 };
@@ -299,6 +307,47 @@ const validateCookies = async (cookies: Cookies): Promise<boolean> => {
         return false;
     }
     return await validateSession(sessionId);
+};
+
+/**
+ * Validates the API session.
+ *
+ * @param cookies - The cookies object containing the session information.
+ * @param requiredRole - Optional setting if specifying a required user role when validating a session.
+ * @throws {UnauthorizedError} - If the session is invalid or the user role is not authorized.
+ * @returns {Promise<void>} - A promise that resolves when the session is validated.
+ */
+const validateApiSession = async (
+    cookies: Cookies,
+    requiredUserId?: string,
+    requiredRole?: UserRole
+): Promise<void> => {
+    const sessionId = getSession(cookies);
+    if (!sessionId) {
+        console.error('No session found');
+        throw new UnauthorizedError('AUTH_INVALID_SESSION');
+    }
+
+    if (requiredRole || requiredUserId) {
+        const user = await getUser(sessionId);
+
+        if (requiredUserId && user.userId !== requiredUserId) {
+            console.error('Invalid user');
+            console.log(`Required: ${requiredUserId}, Found: ${user.userId}`);
+            throw new UnauthorizedError('AUTH_INVALID_USER');
+        }
+
+        if (requiredRole && String(user.userRole) !== requiredRole) {
+            console.error('Invalid role');
+            throw new UnauthorizedError('AUTH_INVALID_ROLE');
+        }
+    }
+
+    const isValid = await validateSession(sessionId);
+
+    if (!isValid) {
+        throw new UnauthorizedError('AUTH_INVALID_SESSION');
+    }
 };
 
 /**
@@ -375,11 +424,14 @@ const deleteUserIfExists = async (email: string): Promise<void> => {
             .executeTakeFirstOrThrow();
 
         await db.transaction().execute(async (trx: Transaction) => {
-            await trx.deleteFrom('User').where('User.authUserId', '=', authUserId).execute();
-            await trx.deleteFrom('AuthKey').where('AuthKey.authUserId', '=', authUserId).execute();
+            await trx.deleteFrom('User').where('User.userAuthUserId', '=', authUserId).execute();
+            await trx
+                .deleteFrom('AuthKey')
+                .where('AuthKey.authKeyAuthUserId', '=', authUserId)
+                .execute();
             await trx
                 .deleteFrom('AuthSession')
-                .where('AuthSession.authUserId', '=', authUserId)
+                .where('AuthSession.authSessionAuthUserId', '=', authUserId)
                 .execute();
             await trx
                 .deleteFrom('AuthUser')
@@ -408,6 +460,7 @@ export const auth = {
     logoutAll,
     setSessionCookie,
     validateAndSetCookie,
+    validateApiSession,
     validateCookies,
     validateSession
 };

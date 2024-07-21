@@ -8,7 +8,9 @@ const config = {
             runtime: 'edge',
             split: true
         }),
-        csrf: false // CSRF protection is disabled since we use custom csrf implementation
+        csrf: {
+            checkOrigin: true
+        }
     },
 
     preprocess: [vitePreprocess()]

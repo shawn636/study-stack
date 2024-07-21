@@ -1,6 +1,9 @@
 <script lang="ts">
-    import type { CourseSearchResult, CourseWithInstructor } from '$lib/models/types/api';
+    import type { CourseSearchGetResponse } from '$lib/api/types/courses';
+    import type { ToggleUserCourseFavoritePayload } from '$lib/models/types/toggle-user-course-favorite-event';
 
+    import { goto } from '$app/navigation';
+    import { apiClientSingleton as client } from '$lib/api';
     import SortByDropdown from '$lib/components/controls/sort-by-dropdown.svelte';
     import ViewToggle from '$lib/components/controls/view-toggle.svelte';
     import CourseGridItem from '$lib/components/course-grid-item.svelte';
@@ -20,11 +23,14 @@
     import { mediaQuery } from 'svelte-legos';
     import { toast } from 'svelte-sonner';
 
-    const result: CourseSearchResult = { courseCount: 0, courses: [] };
+    import type { PageServerData } from './$types';
+
+    import { courseResults, isLoading } from './stores';
+
+    let debounceTimeout: ReturnType<typeof setTimeout>;
+    export let data: PageServerData;
 
     // State
-    let isLoading = true;
-    let courses: CourseWithInstructor[] = result.courses;
     let selectedView: 'grid' | 'list';
     let sortByOption = {
         label: CourseSortByOptions.RELEVANCE.label,
@@ -38,26 +44,89 @@
 
     // Methods
     const getCourses = async () => {
-        isLoading = true;
-        let url = '/api/search/courses';
-        if (searchQuery) {
-            url += `/${searchQuery}`;
-        }
-        url += `?sort_by=${sortByOption.value.param}&page=${page - 1}&page_size=${pageSize}`;
         try {
-            const response = await fetch(url);
-            if (response.ok) {
-                const result = (await response.json()) as CourseSearchResult;
-                courses = result.courses;
-                count = result.courseCount;
+            isLoading.set(true);
+
+            let response: CourseSearchGetResponse;
+            if (data.user) {
+                response = await client.courses.getCoursesWithFavorites(
+                    searchQuery,
+                    sortByOption.value,
+                    page - 1,
+                    pageSize,
+                    data.user.userId
+                );
+            } else {
+                response = await client.courses.getCourses(
+                    searchQuery,
+                    sortByOption.value,
+                    page - 1,
+                    pageSize
+                );
+            }
+
+            if (response.success) {
+                courseResults.set(response.data.courses);
+                count = response.data.totalCourses;
             } else {
                 toast.error('An error occurred while fetching courses. Please try again later.');
             }
         } catch (error) {
             toast.error('An error occurred while fetching courses. Please try again later.');
         }
-        isLoading = false;
+        isLoading.set(false);
         window.scrollTo({ behavior: 'smooth', top: 0 });
+    };
+
+    const debounceGetCourses = () => {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            getCourses();
+        }, 300); // Adjust the delay (in milliseconds) as needed
+    };
+
+    const handleToggleUserCourseFavorite = async (
+        event: CustomEvent<ToggleUserCourseFavoritePayload>
+    ) => {
+        if (!data.user) {
+            goto('/auth/login');
+            return;
+        }
+
+        const payload: ToggleUserCourseFavoritePayload = event.detail;
+
+        try {
+            if (payload.current) {
+                courseResults.addFavorite(payload.courseId);
+                const result = await client.users.favoriteCourse(
+                    data.user?.userId ?? '',
+                    payload.courseId
+                );
+
+                if (!result.success) {
+                    throw new Error(result.message);
+                }
+            } else {
+                courseResults.removeFavorite(payload.courseId);
+                const result = await client.users.unfavoriteCourse(
+                    data.user?.userId ?? '',
+                    payload.courseId
+                );
+
+                if (!result.success) {
+                    throw new Error(result.message);
+                }
+            }
+        } catch (error) {
+            toast.error(
+                'An error occurred while updating course favorite. Please try again later.'
+            );
+            if (payload.previous) {
+                courseResults.addFavorite(payload.courseId);
+            } else {
+                courseResults.removeFavorite(payload.courseId);
+            }
+        }
     };
 
     const isDesktop = mediaQuery('(min-width: 768px)');
@@ -78,7 +147,7 @@
                 <Input
                     bind:value={searchQuery}
                     class="w-full"
-                    on:input={() => getCourses()}
+                    on:input={() => debounceGetCourses()}
                     placeholder="Search..."
                     type="email"
                 />
@@ -97,7 +166,7 @@
             />
             <ViewToggle bind:value={selectedView} />
         </div>
-        {#if isLoading}
+        {#if $isLoading}
             <div
                 class="grid justify-center gap-y-4 sm:grid-cols-[repeat(2,auto)] sm:justify-between lg:grid-cols-[repeat(3,auto)]"
             >
@@ -107,7 +176,7 @@
                     </div>
                 {/each}
             </div>
-        {:else if courses.length === 0}
+        {:else if $courseResults.length === 0}
             <div class="content-visibility-auto mb-6 mt-8 grid items-center justify-items-center">
                 <div class="flex-flow-col card flex items-center gap-x-2 p-4">
                     <Fa class="text-xl" icon={faBinoculars} />
@@ -115,17 +184,23 @@
                 </div>
             </div>
         {:else if selectedView === 'list'}
-            <div class="flex flex-col gap-y-4">
-                {#each courses as courseWithInstructor}
-                    <CourseListItem {courseWithInstructor} />
+            <div class="flex flex-col gap-y-6">
+                {#each $courseResults as courseResult}
+                    <CourseListItem
+                        {courseResult}
+                        on:toggleUserCourseFavorite={(e) => handleToggleUserCourseFavorite(e)}
+                    />
                 {/each}
             </div>
         {:else}
             <div
-                class="grid justify-center gap-y-4 sm:grid-cols-[repeat(2,auto)] sm:justify-between lg:grid-cols-[repeat(3,auto)]"
+                class="grid justify-center gap-x-8 gap-y-8 sm:grid-cols-[repeat(2,auto)] sm:justify-between lg:grid-cols-[repeat(3,auto)]"
             >
-                {#each courses as courseWithInstructor}
-                    <CourseGridItem {courseWithInstructor} />
+                {#each $courseResults as courseResult}
+                    <CourseGridItem
+                        {courseResult}
+                        on:toggleUserCourseFavorite={(e) => handleToggleUserCourseFavorite(e)}
+                    />
                 {/each}
             </div>
         {/if}

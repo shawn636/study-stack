@@ -33,14 +33,10 @@ const config: PlaywrightTestConfig = defineConfig({
     retries: 3,
     testDir: 'e2e',
     testMatch: /(.+\.)?(test|spec)\.[jt]s/,
-    // use: {
-    //     baseURL: 'http://localhost:3005'
-    // },
     webServer: {
-        command: 'pnpm preview-e2e-test',
+        command: 'scripts/shared/run.sh pnpm exec vite dev --port 3005 --mode test',
         port: 3005
     }
-    // workers: 1
 });
 
 export default config;

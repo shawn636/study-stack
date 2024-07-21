@@ -1,5 +1,6 @@
 import type { User } from '$lib/models/types/database.types';
 
+import { apiClientSingleton as client } from '$lib/api';
 import { formatPhoneNumber } from '$lib/client/util';
 import { writable } from 'svelte/store';
 import { toast } from 'svelte-sonner';
@@ -16,17 +17,11 @@ export const updatePhoneNumber = (
 };
 
 export const submitForm = async (user: User): Promise<User | null> => {
-    const response = await fetch('/api/user', {
-        body: JSON.stringify({ user }),
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'PUT'
-    });
+    const response = await client.users.update(user.userId, user);
 
-    if (response.ok) {
+    if (response.success) {
         toast.success('Profile updated successfully');
-        return user;
+        return response.data;
     } else {
         toast.error('Something went wrong. Please try again.');
         return null;

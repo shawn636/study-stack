@@ -2,7 +2,6 @@ import type { Actions } from '@sveltejs/kit';
 
 import { type RegistrationForm, registrationForm } from '$lib/models/forms/registration';
 import { auth } from '$lib/server/auth';
-import { csrf } from '$lib/server/csrf';
 import { errorPadding } from '$lib/server/util';
 import { redirect } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
@@ -12,7 +11,6 @@ import type { PageServerLoad } from './$types';
 
 export const actions: Actions = {
     default: async ({ cookies, request }) => {
-        await csrf.validateCookies(cookies);
         const form = await request.formData();
 
         const values: RegistrationForm = {
@@ -46,7 +44,8 @@ const handleError = (e: unknown) => {
     error(500, 'An unknown error occurred. Please try again.');
 };
 
-export const load: PageServerLoad = async ({ cookies }) => {
+export const load: PageServerLoad = async ({ cookies, parent }) => {
     const signedIn = await auth.validateCookies(cookies);
+    await parent();
     if (signedIn) redirect(302, '/');
 };

@@ -65,8 +65,10 @@
                 }
             });
         };
-        observer = new IntersectionObserver(handleIntersect, options);
-        observer.observe(componentRef);
+        if (componentRef) {
+            observer = new IntersectionObserver(handleIntersect, options);
+            observer.observe(componentRef);
+        }
     });
 
     afterUpdate(() => {

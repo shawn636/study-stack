@@ -1,6 +1,8 @@
 <script lang="ts">
-    import ViewToggle from '$lib/components/controls/animated-view-toggle.svelte';
-    let buttonValue: 'grid' | 'list';
+    import * as AlertDialog from '$lib/components/ui/alert-dialog';
+    import { Switch } from '$lib/components/ui/switch';
+
+    let checked = false;
 </script>
 
 <div class="grid grid-flow-row p-5">
@@ -8,7 +10,29 @@
 
     <div class="border border-dashed border-pink-500 p-4">
         <!-- ENTER CODE BELOW -->
-        <ViewToggle bind:value={buttonValue} />
+
+        <AlertDialog.Root>
+            <AlertDialog.Trigger>
+                <Switch bind:checked on:click={(e) => e.preventDefault()} />
+            </AlertDialog.Trigger>
+            <AlertDialog.Content>
+                <AlertDialog.Header>
+                    <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+                    <AlertDialog.Description>
+                        This action cannot be undone. This will permanently delete your account and
+                        remove your data from our servers.
+                    </AlertDialog.Description>
+                </AlertDialog.Header>
+                <AlertDialog.Footer>
+                    <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+                    <AlertDialog.Action
+                        on:click={() => {
+                            checked = !checked;
+                        }}>Continue</AlertDialog.Action
+                    >
+                </AlertDialog.Footer>
+            </AlertDialog.Content>
+        </AlertDialog.Root>
 
         <!-- ENTER CODE ABOVE -->
     </div>

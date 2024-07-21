@@ -25,29 +25,30 @@ export async function seedCourse(client: PrismaClient) {
 
         const category = faker.helpers.arrayElement(categories);
         const instructor = faker.helpers.arrayElement(users);
-        const hasOrg = instructor.organizationId !== null;
+        const hasOrg = instructor.userOrganizationId !== null;
         const organization = hasOrg
-            ? organizations.find((org) => org.organizationId === instructor.organizationId)
+            ? organizations.find((org) => org.organizationId === instructor.userOrganizationId)
             : null;
 
         const course: Course = {
-            categoryId: category.categoryId,
+            courseCategoryId: category.categoryId,
             courseCurrentPrice: new Prisma.Decimal(discountedPrice),
             courseDescription: faker.commerce.productDescription(),
             courseDifficulty: faker.helpers.arrayElement(difficulties),
+            courseEstimatedTimeHours: faker.number.int({ max: 100, min: 0 }),
+            courseEstimatedTimeMinutes: faker.number.int({ max: 59, min: 0 }),
             courseId: cuid(),
             courseImgHref: 'images/course-image.webp',
+            courseInstructorId: instructor.userId,
+            courseLessonCount: 0,
+            courseOrganizationId: organization?.organizationId ?? null,
             courseOriginalPrice: isDiscounted
                 ? new Prisma.Decimal(price)
                 : new Prisma.Decimal(discountedPrice),
             courseRatingAverage: faker.number.float({ max: 5, min: 0 }),
             courseRatingCount: faker.number.int({ max: 1000, min: 0 }),
-            courseTitle: faker.commerce.productName(),
-            estimatedTimeHours: faker.number.int({ max: 100, min: 0 }),
-            estimatedTimeMinutes: faker.number.int({ max: 59, min: 0 }),
-            instructorId: instructor.userId,
-            lessonCount: 0,
-            organizationId: organization?.organizationId ?? null
+            courseRecordType: 'SEED_RECORD',
+            courseTitle: faker.commerce.productName()
         };
 
         courses.push(course);

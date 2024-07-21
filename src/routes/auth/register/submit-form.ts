@@ -45,8 +45,6 @@ export const createForm = () => {
             result.validateField('password1');
             result.validateField('password2');
 
-            // isSubmitting = true;
-
             submissionState.set('submitting');
             submissionError.set(null);
             const res = await submitForm(values);

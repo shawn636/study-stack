@@ -2,7 +2,6 @@ import type { Actions } from '@sveltejs/kit';
 
 import { type LoginForm, loginForm } from '$lib/models/forms/login';
 import { auth } from '$lib/server/auth';
-import { csrf } from '$lib/server/csrf';
 import { errorPadding } from '$lib/server/util';
 import { redirect } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
@@ -12,8 +11,6 @@ import type { PageServerLoad } from './$types';
 
 export const actions: Actions = {
     default: async ({ cookies, request }) => {
-        await csrf.validateCookies(cookies);
-
         const form = await request.formData();
         const values: LoginForm = {
             email: form.get('email') as string,
@@ -42,7 +39,8 @@ const handleError = (e: unknown) => {
     if (e.message === 'AUTH_INVALID_CREDENTIALS') error(400, 'Invalid credentials.');
 };
 
-export const load: PageServerLoad = async ({ cookies }) => {
+export const load: PageServerLoad = async ({ cookies, parent }) => {
     const signedIn = await auth.validateCookies(cookies);
+    await parent();
     if (signedIn) redirect(302, '/');
 };

@@ -59,15 +59,15 @@ describe('auth', () => {
                 await db.transaction().execute(async (trx: Transaction) => {
                     await trx
                         .deleteFrom('User')
-                        .where('User.authUserId', '=', authUser.authUserId)
+                        .where('User.userAuthUserId', '=', authUser.authUserId)
                         .execute();
                     await trx
                         .deleteFrom('AuthKey')
-                        .where('AuthKey.authUserId', '=', authUser.authUserId)
+                        .where('AuthKey.authKeyAuthUserId', '=', authUser.authUserId)
                         .execute();
                     await trx
                         .deleteFrom('AuthSession')
-                        .where('AuthSession.authUserId', '=', authUser.authUserId)
+                        .where('AuthSession.authSessionAuthUserId', '=', authUser.authUserId)
                         .execute();
                     await trx
                         .deleteFrom('AuthUser')
@@ -94,8 +94,8 @@ describe('auth', () => {
 
         const results = await db
             .selectFrom('AuthUser')
-            .innerJoin('AuthKey', 'AuthUser.authUserId', 'AuthKey.authUserId')
-            .innerJoin('User', 'AuthUser.authUserId', 'User.authUserId')
+            .innerJoin('AuthKey', 'AuthUser.authUserId', 'AuthKey.authKeyAuthUserId')
+            .innerJoin('User', 'AuthUser.authUserId', 'User.userAuthUserId')
             .select(['AuthUser.authUserId', 'User.userId', 'AuthKey.authKeyId'])
             .where('AuthUser.authUserEmail', '=', accounts[actIdx].email)
             .where('AuthKey.authKeyType', '=', KeyType.CREDENTIAL_HASH)

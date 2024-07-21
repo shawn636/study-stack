@@ -15,6 +15,10 @@ const config: Config = {
             }
         },
         extend: {
+            animation: {
+                'infinite-scroll': 'infinite-scroll linear 25s infinite'
+            },
+
             borderRadius: {
                 lg: 'var(--radius)',
                 md: 'calc(var(--radius) - 2px)',
@@ -60,6 +64,12 @@ const config: Config = {
             },
             fontFamily: {
                 sans: [...fontFamily.sans]
+            },
+            keyframes: {
+                'infinite-scroll': {
+                    from: { transform: 'translateX(0)' },
+                    to: { transform: 'translateX(-100%)' }
+                }
             },
             screens: {
                 xs: '380px'

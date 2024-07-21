@@ -5,10 +5,21 @@
 import type { Course, User } from '$lib/models/types/database.types';
 
 /* ENDPOINT: /api/search/courses */
-// type Instructor = { instructorId: string } & Omit<User, 'userId'>;
 export type CourseWithInstructor = Course & User;
 
 export type CourseSearchResult = {
     courseCount: number;
     courses: CourseWithInstructor[];
+};
+
+/* ENDPOINT: DELETE /api/user/course-favorites */
+export type DeleteFavoriteResponse = {
+    deleted: boolean;
+    message: string;
+};
+
+/* ENDPOINT: DELETE /api/user/course-favorites */
+export type CreateFavoriteResponse = {
+    created: boolean;
+    message: string;
 };

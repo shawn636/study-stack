@@ -12,7 +12,8 @@ export async function seedOrganization(client: PrismaClient) {
         const organization: Organization = {
             organizationDescription: faker.company.catchPhrase(),
             organizationId: cuid(),
-            organizationName: faker.company.name()
+            organizationName: faker.company.name(),
+            organizationRecordType: 'SEED_RECORD'
         };
 
         organizations.push(organization);
