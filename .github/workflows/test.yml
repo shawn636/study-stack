@@ -19,7 +19,7 @@ jobs:
 
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action@v1
+              uses: 1password/load-secrets-action@v2
               with:
                   export-env: true
               env:
@@ -36,7 +36,7 @@ jobs:
                   CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
-            - uses: pnpm/action-setup@v3
+            - uses: pnpm/action-setup@v4
               with:
                   version: 8
             - uses: actions/setup-node@v4
@@ -55,7 +55,7 @@ jobs:
             pull-requests: write
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action@v1
+              uses: 1password/load-secrets-action@v2
               with:
                   export-env: true
               env:
@@ -72,7 +72,7 @@ jobs:
                   CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
-            - uses: pnpm/action-setup@v3
+            - uses: pnpm/action-setup@v4
               with:
                   version: 8
             - uses: actions/setup-node@v4
@@ -96,7 +96,7 @@ jobs:
             pull-requests: write
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action@v1
+              uses: 1password/load-secrets-action@v2
               with:
                   export-env: true
               env:
@@ -113,7 +113,7 @@ jobs:
                   CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
-            - uses: pnpm/action-setup@v3
+            - uses: pnpm/action-setup@v4
               with:
                   version: 8
             - uses: actions/setup-node@v4
@@ -140,7 +140,7 @@ jobs:
             pull-requests: write
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action@v1
+              uses: 1password/load-secrets-action@v2
               with:
                   export-env: true
               env:
@@ -157,7 +157,7 @@ jobs:
                   CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
-            - uses: pnpm/action-setup@v3
+            - uses: pnpm/action-setup@v4
               with:
                   version: 8
             - uses: actions/setup-node@v4
