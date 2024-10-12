@@ -16,7 +16,8 @@ const config: Config = {
         },
         extend: {
             animation: {
-                'infinite-scroll': 'infinite-scroll linear 25s infinite'
+                'infinite-scroll': 'infinite-scroll linear 25s infinite',
+                'rotate-glow': 'rotate-glow 3s linear infinite'
             },
 
             borderRadius: {
@@ -69,6 +70,11 @@ const config: Config = {
                 'infinite-scroll': {
                     from: { transform: 'translateX(0)' },
                     to: { transform: 'translateX(-100%)' }
+                },
+                'rotate-glow': {
+                    '0%': { boxShadow: '0 0 15px 3px rgba(59, 130, 246, 0.5)' },
+                    '50%': { boxShadow: '0 0 20px 5px rgba(139, 92, 246, 0.8)' },
+                    '100%': { boxShadow: '0 0 15px 3px rgba(59, 130, 246, 0.5)' }
                 }
             },
             screens: {

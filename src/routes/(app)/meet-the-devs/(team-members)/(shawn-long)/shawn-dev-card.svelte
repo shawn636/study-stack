@@ -19,9 +19,15 @@
 </script>
 
 <div
-    class="h-full w-full rounded-xl bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 p-4 text-white shadow-md"
+    class="group relative h-full w-full rounded-xl border-white bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 p-4 text-white shadow-md transition-transform duration-300 ease-out hover:scale-105 hover:border-2"
 >
-    <div class="flex h-full w-full flex-col items-center justify-center">
+    <!-- Glowing border effect on hover -->
+    <div
+        class="absolute inset-0 rounded-xl border-4 border-transparent transition-all duration-300 ease-out group-hover:animate-rotate-glow"
+    ></div>
+
+    <!-- Main content (with z-index to appear above the glow) -->
+    <div class="relative z-10 flex h-full w-full flex-col items-center justify-center">
         <Avatar class="mx-auto aspect-square w-3/4" />
         <h2 class="mt-2 text-center text-2xl font-bold">Shawn Long</h2>
         <p class="text-center">Co-Founder & Engineer</p>
