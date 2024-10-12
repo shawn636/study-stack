@@ -7,8 +7,8 @@ if [ -f .env ]; then
         is_comment=$([[ "$line" == "#"* ]] && echo true || echo false)
         line_is_variable_assignment=$([[ "$line" == *=* ]] && echo true || echo false)
 
-        if [ "$is_1p_reference" == false ] &&  [ "$is_comment" == false  ] && [ "$line_is_variable_assignment" == true ]; then
-            var_name=$(echo "$line" | cut -d '=' -f 1 | xargs) # Trim spaces
+        if [ "$is_1p_reference" == false ] && [ "$is_comment" == false ] && [ "$line_is_variable_assignment" == true ]; then
+            var_name=$(echo "$line" | cut -d '=' -f 1 | xargs)   # Trim spaces
             var_value=$(echo "$line" | cut -d '=' -f 2- | xargs) # Trim spaces
             export "$var_name=$var_value"
         fi
