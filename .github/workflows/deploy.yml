@@ -35,7 +35,7 @@ jobs:
                   PSCALE_DB_NAME: op://Equipped/PlanetScale Service Token/database name
                   PSCALE_ORG_NAME: op://Equipped/PlanetScale Service Token/organization name
                   GH_TOKEN: op://Equipped/Github Access Token/password
-                  CLOUDFLARE_IMAGES_API_KEY: op://Equipped/CloudFlare Images API Key/credentialc
+                  CLOUDFLARE_IMAGES_API_KEY: op://Equipped/CloudFlare Images API Key/credential
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v3
