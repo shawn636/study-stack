@@ -10,32 +10,33 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
 
+env:
+    USE_OPCLI: true
+
 jobs:
     prepare:
         runs-on: ubuntu-latest
         permissions:
             contents: read
             pull-requests: write
-        env:
-            USE_OPCLI: true
 
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action@v1
+              uses: 1password/load-secrets-action/configure@v2
               with:
-                  export-env: true
+                  service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+            - uses: 1password/load-secrets-action@v2
               env:
-                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-                  PUBLIC_AMPLITUDE_API_KEY: 'op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential'
-                  PEPPER: 'op://Equipped/Equipped Auth Pepper/credential'
-                  MAILERSEND_API_KEY: 'op://Equipped/MailerSend Api Key/credential'
-                  VERCEL_TOKEN: 'op://Equipped/Vercel Token/token'
-                  PLANETSCALE_SERVICE_TOKEN_ID: 'op://Equipped/PlanetScale Service Token/username'
-                  PLANETSCALE_SERVICE_TOKEN: 'op://Equipped/PlanetScale Service Token/credential'
-                  PSCALE_DB_NAME: 'op://Equipped/PlanetScale Service Token/database name'
-                  PSCALE_ORG_NAME: 'op://Equipped/PlanetScale Service Token/organization name'
-                  GH_TOKEN: 'op://Equipped/Github Access Token/password'
-                  CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
+                  PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
+                  PEPPER: op://Equipped/Equipped Auth Pepper/credential
+                  MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
+                  VERCEL_TOKEN: op://Equipped/Vercel Token/token
+                  PLANETSCALE_SERVICE_TOKEN_ID: op://Equipped/PlanetScale Service Token/username
+                  PLANETSCALE_SERVICE_TOKEN: op://Equipped/PlanetScale Service Token/credential
+                  PSCALE_DB_NAME: op://Equipped/PlanetScale Service Token/database name
+                  PSCALE_ORG_NAME: op://Equipped/PlanetScale Service Token/organization name
+                  GH_TOKEN: op://Equipped/Github Access Token/password
+                  CLOUDFLARE_IMAGES_API_KEY: op://Equipped/CloudFlare Images API Key/credential
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v3
@@ -55,25 +56,23 @@ jobs:
         permissions:
             contents: read
             pull-requests: write
-        env:
-            USE_OPCLI: true
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action@v1
+              uses: 1password/load-secrets-action/configure@v2
               with:
-                  export-env: true
+                  service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+            - uses: 1password/load-secrets-action@v2
               env:
-                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-                  PUBLIC_AMPLITUDE_API_KEY: 'op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential'
-                  PEPPER: 'op://Equipped/Equipped Auth Pepper/credential'
-                  MAILERSEND_API_KEY: 'op://Equipped/MailerSend Api Key/credential'
-                  VERCEL_TOKEN: 'op://Equipped/Vercel Token/token'
-                  PLANETSCALE_SERVICE_TOKEN_ID: 'op://Equipped/PlanetScale Service Token/username'
-                  PLANETSCALE_SERVICE_TOKEN: 'op://Equipped/PlanetScale Service Token/credential'
-                  PSCALE_DB_NAME: 'op://Equipped/PlanetScale Service Token/database name'
-                  PSCALE_ORG_NAME: 'op://Equipped/PlanetScale Service Token/organization name'
-                  GH_TOKEN: 'op://Equipped/Github Access Token/password'
-                  CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
+                  PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
+                  PEPPER: op://Equipped/Equipped Auth Pepper/credential
+                  MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
+                  VERCEL_TOKEN: op://Equipped/Vercel Token/token
+                  PLANETSCALE_SERVICE_TOKEN_ID: op://Equipped/PlanetScale Service Token/username
+                  PLANETSCALE_SERVICE_TOKEN: op://Equipped/PlanetScale Service Token/credential
+                  PSCALE_DB_NAME: op://Equipped/PlanetScale Service Token/database name
+                  PSCALE_ORG_NAME: op://Equipped/PlanetScale Service Token/organization name
+                  GH_TOKEN: op://Equipped/Github Access Token/password
+                  CLOUDFLARE_IMAGES_API_KEY: op://Equipped/CloudFlare Images API Key/credential
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v3
@@ -98,25 +97,23 @@ jobs:
         permissions:
             contents: read
             pull-requests: write
-        env:
-            USE_OPCLI: true
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action@v1
+              uses: 1password/load-secrets-action/configure@v2
               with:
-                  export-env: true
+                  service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+            - uses: 1password/load-secrets-action@v2
               env:
-                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-                  PUBLIC_AMPLITUDE_API_KEY: 'op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential'
-                  PEPPER: 'op://Equipped/Equipped Auth Pepper/credential'
-                  MAILERSEND_API_KEY: 'op://Equipped/MailerSend Api Key/credential'
-                  VERCEL_TOKEN: 'op://Equipped/Vercel Token/token'
-                  PLANETSCALE_SERVICE_TOKEN_ID: 'op://Equipped/PlanetScale Service Token/username'
-                  PLANETSCALE_SERVICE_TOKEN: 'op://Equipped/PlanetScale Service Token/credential'
-                  PSCALE_DB_NAME: 'op://Equipped/PlanetScale Service Token/database name'
-                  PSCALE_ORG_NAME: 'op://Equipped/PlanetScale Service Token/organization name'
-                  GH_TOKEN: 'op://Equipped/Github Access Token/password'
-                  CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
+                  PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
+                  PEPPER: op://Equipped/Equipped Auth Pepper/credential
+                  MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
+                  VERCEL_TOKEN: op://Equipped/Vercel Token/token
+                  PLANETSCALE_SERVICE_TOKEN_ID: op://Equipped/PlanetScale Service Token/username
+                  PLANETSCALE_SERVICE_TOKEN: op://Equipped/PlanetScale Service Token/credential
+                  PSCALE_DB_NAME: op://Equipped/PlanetScale Service Token/database name
+                  PSCALE_ORG_NAME: op://Equipped/PlanetScale Service Token/organization name
+                  GH_TOKEN: op://Equipped/Github Access Token/password
+                  CLOUDFLARE_IMAGES_API_KEY: op://Equipped/CloudFlare Images API Key/credential
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v3
@@ -144,25 +141,23 @@ jobs:
         permissions:
             contents: read
             pull-requests: write
-        env:
-            USE_OPCLI: true
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action@v1
+              uses: 1password/load-secrets-action/configure@v2
               with:
-                  export-env: true
+                  service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+            - uses: 1password/load-secrets-action@v2
               env:
-                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-                  PUBLIC_AMPLITUDE_API_KEY: 'op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential'
-                  PEPPER: 'op://Equipped/Equipped Auth Pepper/credential'
-                  MAILERSEND_API_KEY: 'op://Equipped/MailerSend Api Key/credential'
-                  VERCEL_TOKEN: 'op://Equipped/Vercel Token/token'
-                  PLANETSCALE_SERVICE_TOKEN_ID: 'op://Equipped/PlanetScale Service Token/username'
-                  PLANETSCALE_SERVICE_TOKEN: 'op://Equipped/PlanetScale Service Token/credential'
-                  PSCALE_DB_NAME: 'op://Equipped/PlanetScale Service Token/database name'
-                  PSCALE_ORG_NAME: 'op://Equipped/PlanetScale Service Token/organization name'
-                  GH_TOKEN: 'op://Equipped/Github Access Token/password'
-                  CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
+                  PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
+                  PEPPER: op://Equipped/Equipped Auth Pepper/credential
+                  MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
+                  VERCEL_TOKEN: op://Equipped/Vercel Token/token
+                  PLANETSCALE_SERVICE_TOKEN_ID: op://Equipped/PlanetScale Service Token/username
+                  PLANETSCALE_SERVICE_TOKEN: op://Equipped/PlanetScale Service Token/credential
+                  PSCALE_DB_NAME: op://Equipped/PlanetScale Service Token/database name
+                  PSCALE_ORG_NAME: op://Equipped/PlanetScale Service Token/organization name
+                  GH_TOKEN: op://Equipped/Github Access Token/password
+                  CLOUDFLARE_IMAGES_API_KEY: op://Equipped/CloudFlare Images API Key/credential
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v3
