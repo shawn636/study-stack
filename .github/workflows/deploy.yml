@@ -10,6 +10,9 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
 
+env:
+    USE_OPCLI: true
+
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -34,7 +37,6 @@ jobs:
                   PSCALE_ORG_NAME: 'op://Equipped/PlanetScale Service Token/organization name'
                   GH_TOKEN: 'op://Equipped/Github Access Token/password'
                   CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
-                  USE_OPCLI: 'true'
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v3
