@@ -34,6 +34,7 @@ jobs:
                   PSCALE_ORG_NAME: 'op://Equipped/PlanetScale Service Token/organization name'
                   GH_TOKEN: 'op://Equipped/Github Access Token/password'
                   CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
+                  USE_OPCLI: 'true'
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v3
@@ -70,6 +71,7 @@ jobs:
                   PSCALE_ORG_NAME: 'op://Equipped/PlanetScale Service Token/organization name'
                   GH_TOKEN: 'op://Equipped/Github Access Token/password'
                   CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
+                  USE_OPCLI: 'true'
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v3
@@ -111,6 +113,7 @@ jobs:
                   PSCALE_ORG_NAME: 'op://Equipped/PlanetScale Service Token/organization name'
                   GH_TOKEN: 'op://Equipped/Github Access Token/password'
                   CLOUDFLARE_IMAGES_API_KEY: 'op://Equipped/CloudFlare Images API Key/credential'
+                  USE_OPCLI: 'true'
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v3
