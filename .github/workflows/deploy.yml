@@ -12,6 +12,7 @@ concurrency:
 
 env:
     USE_OPCLI: true
+    DEBUG_MODE: ${{ vars.DEBUG_MODE}}
 
 jobs:
     deploy:
