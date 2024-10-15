@@ -10,9 +10,6 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
 
-env:
-    USE_OPCLI: true
-
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -20,6 +17,8 @@ jobs:
         permissions:
             contents: read
             pull-requests: write
+        env:
+            USE_OPCLI: true
         steps:
             - name: Load secrets
               uses: 1password/load-secrets-action@v1
