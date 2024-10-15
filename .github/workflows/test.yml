@@ -58,11 +58,9 @@ jobs:
             pull-requests: write
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action/configure@v2
-              with:
-                  service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-            - uses: 1password/load-secrets-action@v2
+              uses: 1password/load-secrets-action@v2
               env:
+                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
                   PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
                   PEPPER: op://Equipped/Equipped Auth Pepper/credential
                   MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
@@ -99,11 +97,9 @@ jobs:
             pull-requests: write
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action/configure@v2
-              with:
-                  service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-            - uses: 1password/load-secrets-action@v2
+              uses: 1password/load-secrets-action@v2
               env:
+                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
                   PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
                   PEPPER: op://Equipped/Equipped Auth Pepper/credential
                   MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
@@ -143,11 +139,9 @@ jobs:
             pull-requests: write
         steps:
             - name: Load secrets
-              uses: 1password/load-secrets-action/configure@v2
-              with:
-                  service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-            - uses: 1password/load-secrets-action@v2
+              uses: 1password/load-secrets-action@v2
               env:
+                  OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
                   PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
                   PEPPER: op://Equipped/Equipped Auth Pepper/credential
                   MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
