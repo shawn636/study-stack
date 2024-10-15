@@ -6,7 +6,7 @@ source scripts/pscale/common.sh
 # --- FUNCTIONS ---
 
 function check_branch_creation_possible() {
-    new_branch_name=$1
+    local new_branch_name="$1"
     local status_code=""
 
     if [ -z "$new_branch_name" ]; then
@@ -14,38 +14,28 @@ function check_branch_creation_possible() {
         exit 1
     fi
 
-    cur_branches_json=$(pscale branch list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID")
+    # Retrieve the list of branches in JSON format
+    cur_branches_json=$(pscale branch list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" \
+        --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID")
 
     status_code=$?
-
     if [ "$status_code" -ne 0 ]; then
         echo "Error: Unable to retrieve branch list. Exiting..."
         exit 1
     fi
 
-    dev_branch_cnt=$(echo "$cur_branches_json" | jq -r '[.[] | select(.production == false)] | length')
+    # Check if the branch already exists
+    branch_exists=$(echo "$cur_branches_json" | jq -r --arg BRANCH_NAME "$new_branch_name" \
+        '.[] | select(.name == $BRANCH_NAME) | .name')
 
-    
     status_code=$?
     if [ "$status_code" -ne 0 ]; then
         echo "Error: Unable to parse branch list. Exiting..."
         exit 1
     fi
 
-    debug_log "Existing count for branch name $new_branch_name: $dev_branch_cnt"
-
-    dev_branch_name=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name' | head -n 1)
-    status_code=$?
-    if [ "$status_code" -ne 0 ]; then
-        echo "Error: Unable to parse branch list. Exiting..."
-        exit 1
-    fi
-
-    debug_log "Dev branch Name: $dev_branch_name"
-
-    # if branch_cnt eq 1 and branch_name eq current branch name, exit 0 because nothing to do
-    if [ "$dev_branch_cnt" -eq 1 ] && [ "$dev_branch_name" == "$(branch_name_from_git)" ]; then
-        echo " Database Branch $(branch_name_from_git) already exists. Nothing to do. Exiting..."
+    if [ -n "$branch_exists" ]; then
+        echo "Database branch '$new_branch_name' already exists. Nothing to do. Exiting..."
         exit 0
     fi
 }
