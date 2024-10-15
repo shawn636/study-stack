@@ -25,11 +25,14 @@ function check_branch_creation_possible() {
 
     dev_branch_cnt=$(echo "$cur_branches_json" | jq -r '[.[] | select(.production == false)] | length')
 
+    
     status_code=$?
     if [ "$status_code" -ne 0 ]; then
         echo "Error: Unable to parse branch list. Exiting..."
         exit 1
     fi
+
+    debug_log "Existing count for branch name $new_branch_name: $dev_branch_cnt"
 
     dev_branch_name=$(echo "$cur_branches_json" | jq -r '.[] | select(.production == false) | .name' | head -n 1)
     status_code=$?
@@ -37,6 +40,8 @@ function check_branch_creation_possible() {
         echo "Error: Unable to parse branch list. Exiting..."
         exit 1
     fi
+
+    debug_log "Dev branch Name: $dev_branch_name"
 
     # if branch_cnt eq 1 and branch_name eq current branch name, exit 0 because nothing to do
     if [ "$dev_branch_cnt" -eq 1 ] && [ "$dev_branch_name" == "$(branch_name_from_git)" ]; then
