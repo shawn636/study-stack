@@ -5,6 +5,9 @@ import { fontFamily } from 'tailwindcss/defaultTheme';
 const config: Config = {
     content: ['./src/**/*.{html,js,svelte,ts}'],
     darkMode: ['class'],
+    future: {
+        hoverOnlyWhenSupported: true
+    },
     safelist: ['dark'],
     theme: {
         container: {
@@ -16,6 +19,7 @@ const config: Config = {
         },
         extend: {
             animation: {
+                glow: 'glow 3s linear infinite',
                 'infinite-scroll': 'infinite-scroll linear 25s infinite'
             },
 
@@ -66,6 +70,11 @@ const config: Config = {
                 sans: [...fontFamily.sans]
             },
             keyframes: {
+                glow: {
+                    '0%': { boxShadow: '0 0 15px 3px rgba(168, 85, 247, 0.5)' },
+                    '50%': { boxShadow: '0 0 20px 5px rgba(59, 130, 246, 0.8)' },
+                    '100%': { boxShadow: '0 0 15px 3px rgba(168, 85, 247, 0.5)' }
+                },
                 'infinite-scroll': {
                     from: { transform: 'translateX(0)' },
                     to: { transform: 'translateX(-100%)' }

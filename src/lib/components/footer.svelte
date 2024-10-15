@@ -257,6 +257,7 @@
                 <li><a href="/">Careers</a></li>
                 <li><a href="/">Press</a></li>
                 <li><a href="/">Leadership</a></li>
+                <li><a href="/meet-the-devs">Meet the Devs</a></li>
             </ul>
         </div>
         <!-- SUPPORT -->

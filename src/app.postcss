@@ -47,3 +47,41 @@
         --ring: 240 4.9% 83.9%;
     }
 }
+/*
+@layer utilities {
+    .preserve-3d {
+        transform-style: preserve-3d !important;
+    }
+
+    .backface-hidden {
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+
+    .perspective-1k {
+        perspective: 1000px;
+    }
+
+    .rotate-y-180 {
+        transform: rotateY(180deg);
+    }
+}
+*/
+
+@layer utilities {
+    .transform-style-preserve-3d {
+        transform-style: preserve-3d;
+    }
+    .perspective-1000 {
+        perspective: 1000px;
+    }
+    .backface-hidden {
+        backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+        transform: rotateY(180deg);
+    }
+    .transition-transform-800 {
+        transition: transform 0.8s;
+    }
+}
