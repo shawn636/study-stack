@@ -4,7 +4,7 @@
 </script>
 
 <main
-    class="mx-10 my-5 grid max-w-5xl grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:mx-auto"
+    class="mx-10 mb-10 mt-5 grid max-w-5xl grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:mx-auto"
 >
     <div class="col-span-full grid gap-y-5">
         <h1 class="text-3xl font-bold">Meet the Devs</h1>
