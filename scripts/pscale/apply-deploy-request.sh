@@ -68,7 +68,7 @@ function apply_dep_reqs_for_branches() {
 
         dr_number=$(pscale deploy-request list "$PSCALE_DB_NAME" --format json --org "$PSCALE_ORG_NAME" \
             --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID" \
-            | jq -r "[.[] | select(.branch == \"$branch\" and .state == \"open\")] | .[0].number")
+            | jq -er "[.[] | select(.branch == \"$branch\" and .state == \"open\")] | .[0].number")
         local status_code=$?
 
         if [ "$status_code" -ne 0 ] || [ -z "$dr_number" ]; then
