@@ -57,8 +57,7 @@ function get_common_branches() {
 }
 
 function apply_dep_reqs_for_branches() {
-    # local branches=$1
-    local branches=("shawn-update-dr-deployment-scripts")
+    local branches=$1
 
     while IFS= read -r branch; do
         if [ -z "$branch" ]; then
@@ -92,13 +91,13 @@ function apply_dep_reqs_for_branches() {
 
         if [ "$diff_count" -eq 0 ]; then
             echo "No schema changes in deploy request #$dr_number for branch $branch. Closing deploy request."
-            # pscale deploy-request close "$PSCALE_DB_NAME" "$dr_number" --org "$PSCALE_ORG_NAME" \
-            #     --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
-            # status_code=$?
-            # if [ "$status_code" -ne 0 ]; then
-            #     echo "Error: failed to close deploy request #$dr_number for branch: $branch"
-            #     exit 1
-            # fi
+            pscale deploy-request close "$PSCALE_DB_NAME" "$dr_number" --org "$PSCALE_ORG_NAME" \
+                --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+            status_code=$?
+            if [ "$status_code" -ne 0 ]; then
+                echo "Error: failed to close deploy request #$dr_number for branch: $branch"
+                exit 1
+            fi
             continue
         fi
 
@@ -148,17 +147,16 @@ function apply_dep_reqs_for_branches() {
         fi
 
         # Deploy the deploy request
-        echo "Pretending to deploy deploy request #$dr_number for branch: $branch"
-        # pscale deploy-request deploy "$PSCALE_DB_NAME" "$dr_number" --org "$PSCALE_ORG_NAME" \
-        #     --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
-        # status_code=$?
-        # if [ "$status_code" -ne 0 ]; then
-        #     echo "Error: failed to deploy deploy request #$dr_number for branch: $branch"
-        #     exit 1
-        # fi
+        pscale deploy-request deploy "$PSCALE_DB_NAME" "$dr_number" --org "$PSCALE_ORG_NAME" \
+            --service-token "$PLANETSCALE_SERVICE_TOKEN" --service-token-id "$PLANETSCALE_SERVICE_TOKEN_ID"
+        status_code=$?
+        if [ "$status_code" -ne 0 ]; then
+            echo "Error: failed to deploy deploy request #$dr_number for branch: $branch"
+            exit 1
+        fi
 
-        # wait_for_deploy_request_merged "$dr_number" || exit $?
-        # delete_branch "$branch" || exit $?
+        wait_for_deploy_request_merged "$dr_number" || exit $?
+        delete_branch "$branch" || exit $?
     done <<< "$branches"
 }
 
