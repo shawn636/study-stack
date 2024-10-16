@@ -58,6 +58,7 @@ function get_common_branches() {
 
 function apply_dep_reqs_for_branches() {
     local branches=$1
+    local has_breaking_changes=0  # Flag to track if any DR has breaking changes
 
     while IFS= read -r branch; do
         if [ -z "$branch" ]; then
@@ -126,7 +127,8 @@ function apply_dep_reqs_for_branches() {
                 echo "Lint Errors:"
                 echo "$dr_info" | jq '.deployment.lint_errors'
             fi
-            exit 1
+            has_breaking_changes=1  # Set the flag
+            continue
         fi
 
         # Approve the deploy request
@@ -158,6 +160,14 @@ function apply_dep_reqs_for_branches() {
         wait_for_deploy_request_merged "$dr_number" || exit $?
         delete_branch "$branch" || exit $?
     done <<< "$branches"
+
+    # After processing all branches, check if any had breaking changes
+    if [ "$has_breaking_changes" -eq 1 ]; then
+        echo ""
+        echo "Processed deploy requests, but encountered at least one deploy request with breaking schema changes."
+        echo "Please review the warnings above and address them manually."
+        exit 1
+    fi
 }
 
 # --- MAIN ---
