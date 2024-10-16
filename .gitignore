@@ -36,3 +36,7 @@ e2e/artifacts
 *.nnb
 /notebooks
 *.tmp.ts
+
+
+# DR Artifacts
+migration-message.txt
