@@ -1,6 +1,6 @@
+import { createForm as createSvelteForm } from 'svelte-forms-lib';
 import { goto } from '$app/navigation';
 import { registrationForm } from '$lib/models/forms/registration';
-import { createForm as createSvelteForm } from 'svelte-forms-lib';
 import { toast } from 'svelte-sonner';
 
 import { submissionError, submissionState } from './submission-stores';

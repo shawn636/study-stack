@@ -2,13 +2,13 @@ import type { User } from '$lib/models/types/database.types';
 
 import { apiClientSingleton as client } from '$lib/api';
 import { formatPhoneNumber } from '$lib/client/util';
-import { writable } from 'svelte/store';
 import { toast } from 'svelte-sonner';
+import { writable } from 'svelte/store';
 
 export const phone = writable<string>('');
 
 export const updatePhoneNumber = (
-    event: { currentTarget: EventTarget & HTMLInputElement } & Event
+    event: Event & { currentTarget: EventTarget & HTMLInputElement }
 ) => {
     const inputNumber = event.currentTarget.value;
     const phoneNo = formatPhoneNumber(inputNumber);

@@ -6,7 +6,6 @@ import { Prisma } from '@prisma/client';
 import { cuid } from './utils';
 
 export async function seedCourse(client: PrismaClient) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [categories, users, organizations] = await Promise.all([
         client.category.findMany(),
         client.user.findMany(),

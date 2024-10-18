@@ -1,10 +1,11 @@
 <script lang="ts">
     import { faCircleCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-    import { cubicInOut } from 'svelte/easing';
-    import { slide } from 'svelte/transition';
-    import Fa from 'svelte-fa';
 
-    export let submissionError: null | string = null;
+    import { cubicInOut } from 'svelte/easing';
+    import Fa from 'svelte-fa';
+    import { slide } from 'svelte/transition';
+
+    export let submissionError: string | null = null;
     export let showSuccess = false;
     export let successMessage: string;
 </script>

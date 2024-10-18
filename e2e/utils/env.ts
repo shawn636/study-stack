@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import dotenv from 'dotenv';
 
 dotenv.config();

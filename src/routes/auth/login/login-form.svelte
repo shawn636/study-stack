@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { Button } from '$lib/components/ui/button';
-    import { Input } from '$lib/components/ui/input';
     import { faCircleExclamation, faSpinner } from '@fortawesome/free-solid-svg-icons';
-    import { cubicInOut } from 'svelte/easing';
-    import { slide } from 'svelte/transition';
-    import Fa from 'svelte-fa';
 
+    import { Button } from '$lib/components/ui/button';
+    import { cubicInOut } from 'svelte/easing';
+    import Fa from 'svelte-fa';
+    import { Input } from '$lib/components/ui/input';
+    import { slide } from 'svelte/transition';
     import { submissionState } from './submission-stores';
 
     export let form;

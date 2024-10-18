@@ -1,14 +1,13 @@
-import type { SiteSetting } from '$lib/models/types/database.types';
-
-import type { ApiClient } from '../api-client';
 import type {
     AdminSettingsGetMultipleResponse,
     AdminSettingsGetResponse,
     AdminSettingsUpdateResponse
     // AdminSettingsUpdateResponse
 } from '../types/admin-settings';
-
 import { fetchWithTimeout, handleApiResponse } from '../utils';
+
+import type { ApiClient } from '../api-client';
+import type { SiteSetting } from '$lib/models/types/database.types';
 
 /**
  * Class representing the administration settings module.

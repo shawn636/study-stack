@@ -1,15 +1,17 @@
 <script lang="ts">
     import type { User } from '$lib/models/types/database.types';
 
-    import { page } from '$app/stores';
-    import { navigating } from '$app/stores';
-    import Logo from '$lib/components/logo.svelte';
-    import ProfileMenu from '$lib/components/profile-menu.svelte';
-    import { Button } from '$lib/components/ui/button';
     import * as Sheet from '$lib/components/ui/sheet/index';
-    import { getHeaderLinks } from '$lib/stores/links';
-    import { faBars } from '@fortawesome/free-solid-svg-icons';
+
+    import { Button } from '$lib/components/ui/button';
     import Fa from 'svelte-fa';
+    import { faBars } from '@fortawesome/free-solid-svg-icons';
+    import { getHeaderLinks } from '$lib/stores/links';
+    import Logo from '$lib/components/logo.svelte';
+    import { navigating } from '$app/stores';
+    import { page } from '$app/stores';
+    import ProfileMenu from '$lib/components/profile-menu.svelte';
+
     export let user: User | undefined;
 
     $: headerLinks = getHeaderLinks(user === undefined ? false : true);

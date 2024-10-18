@@ -37,6 +37,5 @@ e2e/artifacts
 /notebooks
 *.tmp.ts
 
-
 # DR Artifacts
 migration-message.txt

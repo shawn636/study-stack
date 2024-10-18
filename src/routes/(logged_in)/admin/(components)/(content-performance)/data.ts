@@ -3,7 +3,7 @@ export type ContentPerformance = {
     likes: number;
     views: number;
 };
-export type ContentPerformanceRecord = { date: string } & ContentPerformance;
+export type ContentPerformanceRecord = ContentPerformance & { date: string };
 
 export const data: ContentPerformanceRecord[] = [
     { comments: 48, date: '2024-01-01', likes: 55, views: 100 },

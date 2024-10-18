@@ -1,9 +1,9 @@
+import { submissionError, submissionState } from './submission-stores';
+
+import { createForm as createSvelteForm } from 'svelte-forms-lib';
 import { goto } from '$app/navigation';
 import { loginForm } from '$lib/models/forms/login';
-import { createForm as createSvelteForm } from 'svelte-forms-lib';
 import { toast } from 'svelte-sonner';
-
-import { submissionError, submissionState } from './submission-stores';
 
 const submitForm = async (
     values: {

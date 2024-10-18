@@ -7,8 +7,8 @@
 
     import type { AnimationItem } from 'lottie-web';
 
-    import { Button } from '$lib/components/ui/button';
     import animationData from '$lib/lottie/grid-list-toggle.json';
+    import { Button } from '$lib/components/ui/button';
     import lottie from 'lottie-web';
     import { onMount } from 'svelte';
 

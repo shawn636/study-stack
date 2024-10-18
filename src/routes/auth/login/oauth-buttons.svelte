@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { Button } from '$lib/components/ui/button';
     import { faApple, faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
+
+    import { Button } from '$lib/components/ui/button';
     import Fa from 'svelte-fa';
 </script>
 

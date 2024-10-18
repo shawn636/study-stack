@@ -1,10 +1,6 @@
 <script lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
 
-    import { cn } from '$lib/utils.js';
-    import { VisAxis, VisBulletLegend, VisGroupedBar, VisXYContainer } from '@unovis/svelte';
-    import { onMount } from 'svelte';
-
     import {
         getChartHeight,
         getChartWidth,
@@ -14,7 +10,11 @@
         xScale,
         y
     } from './chart-settings';
+    import { VisAxis, VisBulletLegend, VisGroupedBar, VisXYContainer } from '@unovis/svelte';
+
+    import { cn } from '$lib/utils.js';
     import { data } from './data';
+    import { onMount } from 'svelte';
 
     type $$Props = HTMLAttributes<HTMLDivElement>;
 

@@ -1,10 +1,10 @@
-import type { TopCategoriesGetResponse } from '$lib/api/types/categories';
 import type CategorySummary from '$lib/models/types/category-summary';
+import type { TopCategoriesGetResponse } from '$lib/api/types/categories';
 
-import { db } from '$lib/server/database';
-import { handleErrors } from '$lib/server/error-handling';
 import { DatabaseError } from '$lib/server/error-handling/handled-errors';
+import { db } from '$lib/server/database';
 import { getRecordDisplaySettings } from '$lib/server/util';
+import { handleErrors } from '$lib/server/error-handling';
 
 import type { RequestHandler } from './$types';
 

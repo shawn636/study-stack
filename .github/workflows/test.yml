@@ -17,6 +17,7 @@ env:
 jobs:
     prepare:
         runs-on: ubuntu-latest
+        if: ${{ github.actor != 'dependabot[bot]' || github.event_name == 'workflow_dispatch' }}
         permissions:
             contents: read
             pull-requests: write
@@ -52,6 +53,7 @@ jobs:
     unit-tests:
         needs: prepare
         runs-on: ubuntu-latest
+        if: ${{ github.actor != 'dependabot[bot]' || github.event_name == 'workflow_dispatch' }}
         permissions:
             contents: read
             pull-requests: write
@@ -91,6 +93,7 @@ jobs:
     e2e-tests:
         needs: prepare
         runs-on: ubuntu-latest
+        if: ${{ github.actor != 'dependabot[bot]' || github.event_name == 'workflow_dispatch' }}
         permissions:
             contents: read
             pull-requests: write
@@ -132,7 +135,7 @@ jobs:
     deploy-preview:
         needs: [unit-tests, e2e-tests]
         runs-on: ubuntu-latest
-        if: ${{ github.event_name == 'pull_request' && !startsWith(github.head_ref, 'dependabot/') }}
+        if: ${{ github.actor != 'dependabot[bot]' || github.event_name == 'workflow_dispatch' }}
         permissions:
             contents: read
             pull-requests: write

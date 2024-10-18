@@ -1,21 +1,21 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
-    import { apiClientSingleton as client } from '$lib/api';
-    import FormError from '$lib/components/form-error.svelte';
-    import SubmissionError from '$lib/components/submission-error.svelte';
-    import { Button } from '$lib/components/ui/button';
-    import { Input } from '$lib/components/ui/input';
-    import { Textarea } from '$lib/components/ui/textarea';
     import { type ContactForm, contactForm } from '$lib/models/forms/contact';
-    import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-    import Fa from 'svelte-fa';
-    import { createForm } from 'svelte-forms-lib';
 
+    import { Button } from '$lib/components/ui/button';
+    import { apiClientSingleton as client } from '$lib/api';
+    import { createForm } from 'svelte-forms-lib';
+    import Fa from 'svelte-fa';
+    import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+    import FormError from '$lib/components/form-error.svelte';
+    import { goto } from '$app/navigation';
+    import { Input } from '$lib/components/ui/input';
     import type { PageServerData } from './$types';
+    import SubmissionError from '$lib/components/submission-error.svelte';
+    import { Textarea } from '$lib/components/ui/textarea';
 
     let showSuccess = false;
     let isSubmitting = false;
-    let submissionError: null | string = null;
+    let submissionError: string | null = null;
 
     export let data: PageServerData;
 

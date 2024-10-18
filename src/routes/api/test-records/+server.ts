@@ -1,8 +1,8 @@
 import type { TestRecordsDeleteResponse } from '$lib/api/types/test-records';
 
-import { handleErrors } from '$lib/server/error-handling';
-import { DatabaseError } from '$lib/server/error-handling/handled-errors';
 import { cleanup } from '$lib/server/test-utils/cleanup';
+import { DatabaseError } from '$lib/server/error-handling/handled-errors';
+import { handleErrors } from '$lib/server/error-handling';
 
 import type { RequestHandler } from './$types';
 

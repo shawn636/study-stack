@@ -33,8 +33,9 @@
 import type { TestUtil } from '$lib/models/types/test-util';
 
 import { type Course, RecordType, type User } from '$lib/models/types/database.types';
-import { db } from '$lib/server/database';
+
 import CourseTestUtilModule from '$lib/server/test-utils/course';
+import { db } from '$lib/server/database';
 import UserTestUtilModule from '$lib/server/test-utils/user';
 
 /* Constants */

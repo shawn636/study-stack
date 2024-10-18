@@ -1,6 +1,6 @@
-import { db } from '$lib/server/database';
 import { unitTestApiClient as client } from '$lib/server/test-utils/common';
 import CourseTestUtilModule from '$lib/server/test-utils/course';
+import { db } from '$lib/server/database';
 /**
  * @vitest-environment jsdom
  */

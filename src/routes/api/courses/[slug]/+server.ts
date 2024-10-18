@@ -1,14 +1,15 @@
-import type { CourseGetResponse } from '$lib/api/types/courses';
 import type { Course, User } from '$lib/models/types/database.types';
+import type { CourseGetResponse } from '$lib/api/types/courses';
 
-import { db } from '$lib/server/database';
-import { handleErrors } from '$lib/server/error-handling';
 import {
     DatabaseError,
     InvalidParameterError,
     NotFoundError
 } from '$lib/server/error-handling/handled-errors';
+
+import { db } from '$lib/server/database';
 import { getRecordDisplaySettings } from '$lib/server/util';
+import { handleErrors } from '$lib/server/error-handling';
 
 import type { RequestHandler } from './$types';
 

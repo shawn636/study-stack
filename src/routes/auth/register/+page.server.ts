@@ -1,13 +1,12 @@
 import type { Actions } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 import { type RegistrationForm, registrationForm } from '$lib/models/forms/registration';
 import { auth } from '$lib/server/auth';
+import { error } from '@sveltejs/kit';
 import { errorPadding } from '$lib/server/util';
 import { redirect } from '@sveltejs/kit';
-import { error } from '@sveltejs/kit';
 import { ValidationError } from 'yup';
-
-import type { PageServerLoad } from './$types';
 
 export const actions: Actions = {
     default: async ({ cookies, request }) => {

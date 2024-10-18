@@ -1,15 +1,16 @@
 <script lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
 
-    import { apiClientSingleton as client } from '$lib/api';
-    import { Button } from '$lib/components/ui/button';
     import * as Card from '$lib/components/ui/card';
+
+    import { Button } from '$lib/components/ui/button';
+    import { apiClientSingleton as client } from '$lib/api';
     import { cn } from '$lib/utils';
     import { toast } from 'svelte-sonner';
 
-    type $$Props = {
+    type $$Props = HTMLAttributes<HTMLDivElement> & {
         class?: string;
-    } & HTMLAttributes<HTMLDivElement>;
+    };
 
     let className: $$Props['class'] = undefined;
     export { className as class };

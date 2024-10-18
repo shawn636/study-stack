@@ -1,11 +1,6 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
-    import { navigating } from '$app/stores';
-    import { initials } from '$lib/client/util';
-    import * as Avatar from '$lib/components/ui/avatar/index';
-    import { Button } from '$lib/components/ui/button';
-    import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
-    import { type User, UserRole } from '$lib/models/types/database.types';
+    import type { User } from '$lib/models/types/database.types';
+
     import {
         faChevronDown,
         faDoorOpen,
@@ -13,7 +8,16 @@
         faToolbox,
         faUser
     } from '@fortawesome/free-solid-svg-icons';
+
+    import * as Avatar from '$lib/components/ui/avatar/index';
+    import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
+
+    import { Button } from '$lib/components/ui/button';
     import Fa from 'svelte-fa';
+    import { goto } from '$app/navigation';
+    import { initials } from '$lib/client/util';
+    import { navigating } from '$app/stores';
+    import { UserRole } from '$lib/models/types/database.types';
 
     export let user: User;
 

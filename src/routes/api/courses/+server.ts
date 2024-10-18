@@ -1,7 +1,4 @@
-import {
-    type CourseSortByOption,
-    CourseSortByOptions
-} from '$lib/models/types/course-sort-by-options';
+import { type CourseSortByOption, RELEVANCE } from '$lib/models/types/course-sort-by-options';
 import { handleErrors } from '$lib/server/error-handling';
 
 import type { RequestHandler } from './$types';
@@ -10,7 +7,7 @@ import { getCourses } from './fetch-courses';
 
 export const GET = (async ({ url }) => {
     try {
-        const defaultSortByValue: CourseSortByOption = CourseSortByOptions.RELEVANCE;
+        const defaultSortByValue: CourseSortByOption = RELEVANCE;
 
         const searchTerm = url.searchParams.get('query');
         const pageNo = Number(url.searchParams.get('page') ?? '1');

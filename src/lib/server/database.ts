@@ -1,8 +1,9 @@
 import type { DB } from '$lib/models/types/database.types';
 
+import { Kysely, sql as KyselySql, Transaction as KyselyTransaction } from 'kysely';
+
 import { DATABASE_URL } from '$env/static/private';
 import { init } from '@paralleldrive/cuid2';
-import { Kysely, sql as KyselySql, Transaction as KyselyTransaction } from 'kysely';
 import { PlanetScaleDialect } from 'kysely-planetscale';
 
 export const cuid = init({

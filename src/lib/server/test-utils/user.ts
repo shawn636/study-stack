@@ -34,9 +34,9 @@ import type { DB, User } from '$lib/models/types/database.types';
 import type { TestUtil } from '$lib/models/types/test-util';
 import type { Transaction } from 'kysely';
 
-import { auth } from '$lib/server/auth';
 import { cuid, db } from '$lib/server/database';
 
+import { auth } from '$lib/server/auth';
 import { UNIT_TEST_EMAIL_DOMAIN } from './common';
 
 /* Constants */

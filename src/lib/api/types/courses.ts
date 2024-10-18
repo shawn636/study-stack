@@ -14,7 +14,7 @@ import type { Course, User } from '$lib/models/types/database.types';
 import type { ApiResponse } from './common';
 
 export type CourseResult = {
-    course: { isFavorite?: boolean } & Course;
+    course: Course & { isFavorite?: boolean };
     instructor: User;
 };
 

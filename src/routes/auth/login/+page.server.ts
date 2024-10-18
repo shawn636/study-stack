@@ -2,9 +2,9 @@ import type { Actions } from '@sveltejs/kit';
 
 import { type LoginForm, loginForm } from '$lib/models/forms/login';
 import { auth } from '$lib/server/auth';
+import { error } from '@sveltejs/kit';
 import { errorPadding } from '$lib/server/util';
 import { redirect } from '@sveltejs/kit';
-import { error } from '@sveltejs/kit';
 import { ValidationError } from 'yup';
 
 import type { PageServerLoad } from './$types';

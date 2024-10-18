@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 
+import { deleteAll } from './seeds/delete';
 import { seedCategory } from './seeds/category';
 import { seedCourse } from './seeds/course';
 import { seedCourseContent } from './seeds/course-content';
-import { deleteAll } from './seeds/delete';
 import { seedLesson } from './seeds/lesson';
 import { seedOrganization } from './seeds/organization';
 import { seedSiteSettings } from './seeds/site-setting';

@@ -1,15 +1,17 @@
 <script lang="ts">
-    import * as Accordion from '$lib/components/ui/accordion/index';
+    import type { FaqProps } from './faq-models';
+
     import {
         faBookBible,
         faChalkboardTeacher,
         faChurch,
         faUpRightFromSquare
     } from '@fortawesome/free-solid-svg-icons';
-    import sanitizeHtml from 'sanitize-html';
-    import Fa from 'svelte-fa';
 
-    import type { FaqProps } from './faq-models';
+    import * as Accordion from '$lib/components/ui/accordion/index';
+
+    import Fa from 'svelte-fa';
+    import sanitizeHtml from 'sanitize-html';
 
     const aboutUsLink =
         'https://imagedelivery.net/06fAhz9XSvNypOfNBz1x-Q/85137f90-0f2d-492f-ee79-0425c18e3e00/public';

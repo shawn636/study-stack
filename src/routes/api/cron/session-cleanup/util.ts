@@ -1,5 +1,5 @@
-import { db } from '$lib/server/database';
 import { DatabaseError } from '$lib/server/error-handling/handled-errors';
+import { db } from '$lib/server/database';
 
 /**
  * Deletes expired authentication sessions from the database.

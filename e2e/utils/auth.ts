@@ -1,11 +1,11 @@
-import { init } from '@paralleldrive/cuid2';
+import { DB, KeyType } from '../../src/lib/models/types/database.types';
 import { Kysely, Transaction } from 'kysely';
+import { RecordType, UserRole } from '../../src/lib/models/types/database.types';
+import { init } from '@paralleldrive/cuid2';
 import { PlanetScaleDialect } from 'kysely-planetscale';
 
-import { RecordType, UserRole } from '../../src/lib/models/types/database.types';
-import { DB, KeyType } from '../../src/lib/models/types/database.types';
-import { hashPassword } from './crypto';
 import { DATABASE_URL } from './env';
+import { hashPassword } from './crypto';
 
 const cuid = init({
     length: 30

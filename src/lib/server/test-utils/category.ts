@@ -33,8 +33,9 @@
 import type { Category } from '$lib/models/types/database.types';
 import type { TestUtil } from '$lib/models/types/test-util';
 
-import { RecordType } from '$lib/models/types/database.types';
 import { cuid, db } from '$lib/server/database';
+
+import { RecordType } from '$lib/models/types/database.types';
 
 /* Constants */
 interface CourseTestUtil extends TestUtil {

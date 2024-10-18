@@ -2,7 +2,7 @@
     import type { HTMLAttributes } from 'svelte/elements';
 
     import { cn } from '$lib/utils.js';
-    type $$Props = { variantNumber: 1 | 2 | 3 } & HTMLAttributes<HTMLDivElement>;
+    type $$Props = HTMLAttributes<HTMLDivElement> & { variantNumber: 1 | 2 | 3 };
 
     let className: $$Props['class'] = undefined;
     let styleProps: $$Props['style'] = undefined;

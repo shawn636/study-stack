@@ -1,17 +1,19 @@
 <script lang="ts">
+    import * as Avatar from '$lib/components/ui/avatar/index';
+
     import type { CourseResult } from '$lib/api/types/courses';
     import type { ToggleUserCourseFavoriteEvent } from '$lib/models/types/toggle-user-course-favorite-event';
 
-    import { initials } from '$lib/client/util';
-    import CourseRating from '$lib/components/course-rating.svelte';
-    import Image from '$lib/components/image.svelte';
-    import * as Avatar from '$lib/components/ui/avatar/index';
-    import { Button } from '$lib/components/ui/button';
-    import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
     import { faClock, faFileLines } from '@fortawesome/free-regular-svg-icons';
-    import { faHeart } from '@fortawesome/free-solid-svg-icons';
+
+    import { Button } from '$lib/components/ui/button';
+    import CourseRating from '$lib/components/course-rating.svelte';
     import { createEventDispatcher } from 'svelte';
     import Fa from 'svelte-fa';
+    import { faHeart } from '@fortawesome/free-solid-svg-icons';
+    import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
+    import Image from '$lib/components/image.svelte';
+    import { initials } from '$lib/client/util';
 
     export let courseResult: CourseResult;
 

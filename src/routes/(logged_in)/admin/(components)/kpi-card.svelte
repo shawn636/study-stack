@@ -11,13 +11,23 @@
     export let percentChange: number = 0;
     import { cn } from '$lib/utils.js';
 
-    $: arrowIcon = percentChange > 0 ? faArrowUp : percentChange < 0 ? faArrowDown : null;
+    $: arrowIcon = getArrowIcon(percentChange);
 
     const arrowTextColor = percentChange > 0 ? 'text-emerald-500' : 'text-yellow-500';
     const arrowBgColor =
         percentChange > 0
             ? 'bg-emerald-100 dark:bg-emerald-800'
             : 'bg-yellow-100 dark:bg-yellow-800';
+
+    const getArrowIcon = (percentChange: number) => {
+        if (percentChange > 0) {
+            return faArrowUp;
+        } else if (percentChange < 0) {
+            return faArrowDown;
+        }
+        return null;
+    };
+
     // $: arrowContainerClass = `rounded-full ${percentChange > 0 ? 'bg-emerald-100' : 'bg-rose-100'} p-3 ${text-emerald-500}`;
 </script>
 

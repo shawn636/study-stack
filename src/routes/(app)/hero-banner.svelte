@@ -1,8 +1,6 @@
 <script lang="ts">
-    import HeroCollage from '$lib/components/hero-collage.svelte';
     import { Button } from '$lib/components/ui/button';
-
-    // import Wave from './(components)/wave.svelte';
+    import HeroCollage from '$lib/components/hero-collage.svelte';
     import Wave from './(components)/wave.svelte';
 
     const cta = 'Learn New Skills Online With Top ';

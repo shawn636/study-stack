@@ -2,19 +2,22 @@
     import type { CourseSortByOption } from '$lib/models/types/course-sort-by-options';
 
     import * as Select from '$lib/components/ui/select/index';
-    import { CourseSortByOptions } from '$lib/models/types/course-sort-by-options';
+    import {
+        HIGHEST_RATING,
+        LOWEST_PRICE,
+        RELEVANCE
+    } from '$lib/models/types/course-sort-by-options';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
 
     export let value: { label: string; value: CourseSortByOption };
 
-    const options = Object.values(CourseSortByOptions).map((v) => {
-        return {
-            label: v.label,
-            value: v
-        };
-    });
+    const options = [
+        { label: RELEVANCE.label, value: RELEVANCE },
+        { label: LOWEST_PRICE.label, value: LOWEST_PRICE },
+        { label: HIGHEST_RATING.label, value: HIGHEST_RATING }
+    ];
 </script>
 
 <div class="min-w-36">
