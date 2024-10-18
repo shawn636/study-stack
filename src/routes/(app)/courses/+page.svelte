@@ -1,29 +1,30 @@
 <script lang="ts">
     import type { CourseSearchGetResponse } from '$lib/api/types/courses';
+    import type { PageServerData } from './$types';
     import type { ToggleUserCourseFavoritePayload } from '$lib/models/types/toggle-user-course-favorite-event';
 
-    import { goto } from '$app/navigation';
-    import { apiClientSingleton as client } from '$lib/api';
-    import SortByDropdown from '$lib/components/controls/sort-by-dropdown.svelte';
-    import ViewToggle from '$lib/components/controls/view-toggle.svelte';
-    import CourseGridItem from '$lib/components/course-grid-item.svelte';
-    import CourseListItem from '$lib/components/course-list-item.svelte';
-    import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
-    import { Input } from '$lib/components/ui/input/index';
-    import * as Pagination from '$lib/components/ui/pagination/index';
-    import { CourseSortByOptions } from '$lib/models/types/course-sort-by-options';
     import {
         faBinoculars,
         faChevronLeft,
         faChevronRight,
         faSearch
     } from '@fortawesome/free-solid-svg-icons';
-    import { onMount } from 'svelte';
-    import Fa from 'svelte-fa';
-    import { mediaQuery } from 'svelte-legos';
-    import { toast } from 'svelte-sonner';
 
-    import type { PageServerData } from './$types';
+    import * as Pagination from '$lib/components/ui/pagination/index';
+
+    import { apiClientSingleton as client } from '$lib/api';
+    import CourseGridItem from '$lib/components/course-grid-item.svelte';
+    import CourseListItem from '$lib/components/course-list-item.svelte';
+    import Fa from 'svelte-fa';
+    import { goto } from '$app/navigation';
+    import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
+    import { Input } from '$lib/components/ui/input/index';
+    import { mediaQuery } from 'svelte-legos';
+    import { onMount } from 'svelte';
+    import { RELEVANCE } from '$lib/models/types/course-sort-by-options';
+    import SortByDropdown from '$lib/components/controls/sort-by-dropdown.svelte';
+    import { toast } from 'svelte-sonner';
+    import ViewToggle from '$lib/components/controls/view-toggle.svelte';
 
     import { courseResults, isLoading } from './stores';
 
@@ -33,8 +34,8 @@
     // State
     let selectedView: 'grid' | 'list';
     let sortByOption = {
-        label: CourseSortByOptions.RELEVANCE.label,
-        value: CourseSortByOptions.RELEVANCE
+        label: RELEVANCE.label,
+        value: RELEVANCE
     };
     let searchQuery: string;
 

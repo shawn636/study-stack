@@ -1,15 +1,16 @@
 <script lang="ts">
+    import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
+
     import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
-    import { page } from '$app/stores';
     import { Button } from '$lib/components/ui/button';
-    import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
     import { cn } from '$lib/utils';
-    import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
+    import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+    import { page } from '$app/stores';
     export let items: { href: string; icon: IconDefinition | undefined; title: string }[];
 
-    let className: null | string | undefined = undefined;
+    let className: string | null | undefined = undefined;
     $: activeItem = items.find((item) => item.href === $page.url.pathname);
     export { className as class };
 </script>

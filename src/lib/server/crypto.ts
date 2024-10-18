@@ -1,5 +1,5 @@
-import { PEPPER } from '$env/static/private';
 import bcrypt from 'bcryptjs';
+import { PEPPER } from '$env/static/private';
 
 /**
  * Hashes a password using bcrypt and a secret pepper value.

@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Course, CourseProgress } from '$lib/models/types/database.types';
 
-    import Image from '$lib/components/image.svelte';
     import { Button } from '$lib/components/ui/button';
+    import Image from '$lib/components/image.svelte';
 
     export let course: Course;
     export let courseProgress: CourseProgress;

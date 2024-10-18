@@ -58,7 +58,7 @@ function get_common_branches() {
 
 function apply_dep_reqs_for_branches() {
     local branches=$1
-    local has_breaking_changes=0  # Flag to track if any DR has breaking changes
+    local has_breaking_changes=0 # Flag to track if any DR has breaking changes
 
     while IFS= read -r branch; do
         if [ -z "$branch" ]; then
@@ -127,7 +127,7 @@ function apply_dep_reqs_for_branches() {
                 echo "Lint Errors:"
                 echo "$dr_info" | jq '.deployment.lint_errors'
             fi
-            has_breaking_changes=1  # Set the flag
+            has_breaking_changes=1 # Set the flag
             continue
         fi
 

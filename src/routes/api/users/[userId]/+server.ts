@@ -1,10 +1,10 @@
-import type { UserUpdateResponse } from '$lib/api/types/users';
 import type { User } from '$lib/models/types/database.types';
+import type { UserUpdateResponse } from '$lib/api/types/users';
 
 import { auth } from '$lib/server/auth';
+import { DatabaseError } from '$lib/server/error-handling/handled-errors';
 import { db } from '$lib/server/database';
 import { handleErrors } from '$lib/server/error-handling';
-import { DatabaseError } from '$lib/server/error-handling/handled-errors';
 
 import type { RequestHandler } from './$types';
 

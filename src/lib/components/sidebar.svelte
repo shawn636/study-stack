@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { User } from '$lib/models/types/database.types';
 
-    import Logo from '$lib/components/logo.svelte';
     import { getHeaderLinks } from '$lib/stores/links';
+    import Logo from '$lib/components/logo.svelte';
 
     // $: classesActive = (href: string) =>
     //     href === $page.url.pathname ? '!bg-equipped-blue !text-white rounded' : '';

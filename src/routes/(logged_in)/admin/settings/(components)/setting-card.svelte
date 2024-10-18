@@ -3,13 +3,14 @@
 
     import * as AlertDialog from '$lib/components/ui/alert-dialog';
     import * as Card from '$lib/components/ui/card';
-    import { Switch } from '$lib/components/ui/switch';
+
     import { cn } from '$lib/utils';
     import { createEventDispatcher } from 'svelte';
+    import { Switch } from '$lib/components/ui/switch';
 
     const dispatch = createEventDispatcher();
 
-    type $$Props = {
+    type $$Props = HTMLAttributes<HTMLDivElement> & {
         alertDescription: string;
         alertTitle: string;
         class?: string;
@@ -17,7 +18,7 @@
         tag: string;
         title: string;
         value?: boolean;
-    } & HTMLAttributes<HTMLDivElement>;
+    };
 
     let className: $$Props['class'] = undefined;
     export { className as class };

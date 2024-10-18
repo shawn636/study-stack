@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Button } from '$lib/components/ui/button';
-    import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
+    import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
     interface VoidFunction {
         (): void;
@@ -9,7 +9,7 @@
 
     let showEditPhotoOverlay = false;
     export let initials = 'AB';
-    export let photoUrl: null | string = null;
+    export let photoUrl: string | null = null;
     export let editFunction: VoidFunction | null = null;
     export let width = 'w-16';
     export let height = 'h-16';

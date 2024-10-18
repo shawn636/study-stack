@@ -1,10 +1,10 @@
 import type { AdminSettingsUpdateResponse } from '$lib/api/types/admin-settings';
 
 import { auth } from '$lib/server/auth';
+import { DatabaseError } from '$lib/server/error-handling/handled-errors';
 import { db } from '$lib/server/database';
 import { handleErrors } from '$lib/server/error-handling';
 import { InvalidRequestError } from '$lib/server/error-handling/handled-errors';
-import { DatabaseError } from '$lib/server/error-handling/handled-errors';
 
 import type { RequestHandler } from './$types';
 

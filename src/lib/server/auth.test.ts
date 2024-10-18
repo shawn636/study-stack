@@ -3,9 +3,9 @@
  */
 import type { Transaction } from '$lib/server/database';
 
-import { KeyType } from '$lib/models/types/database.types';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/database';
+import { KeyType } from '$lib/models/types/database.types';
 
 const accounts = [
     {
@@ -108,7 +108,7 @@ describe('auth', () => {
 
         expect(result.authUserId).toBeTruthy();
         expect(result.userId).toBeTruthy();
-        expect(result.authKeyId).toBeTruthy;
+        expect(result.authKeyId).toBeTruthy();
     });
 
     it('should fail to create a user from createUser() if they already have an account', async () => {
@@ -118,7 +118,7 @@ describe('auth', () => {
             accounts[actIdx].hashedPassword,
             accounts[actIdx].name
         );
-        expect(() =>
+        await expect(() =>
             auth.createUser(
                 accounts[actIdx].email,
                 accounts[actIdx].hashedPassword,
@@ -159,9 +159,9 @@ describe('auth', () => {
 
     it('should fail to login a user from login() if they do not have an account', async () => {
         const actIdx = 3;
-        expect(() => auth.login(accounts[actIdx].email, accounts[actIdx].password)).rejects.toThrow(
-            'AUTH_INVALID_CREDENTIALS'
-        );
+        await expect(() =>
+            auth.login(accounts[actIdx].email, accounts[actIdx].password)
+        ).rejects.toThrow('AUTH_INVALID_CREDENTIALS');
     });
 
     it('should be able to remove one or multiple sessions and validate existing sessions', async () => {

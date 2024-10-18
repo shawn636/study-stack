@@ -1,7 +1,7 @@
 import type { CourseContent, Prisma, PrismaClient } from '@prisma/client';
 
-import { faker } from '@faker-js/faker';
 import { ContentType } from '@prisma/client';
+import { faker } from '@faker-js/faker';
 
 import { cuid } from './utils';
 

@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
 
-    import { cn } from '$lib/utils.js';
     import {
         VisAxis,
         VisBulletLegend,
@@ -10,6 +9,8 @@
         VisTooltip,
         VisXYContainer
     } from '@unovis/svelte';
+
+    import { cn } from '$lib/utils.js';
     import { onMount } from 'svelte';
 
     import {

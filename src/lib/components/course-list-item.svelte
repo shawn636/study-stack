@@ -2,13 +2,13 @@
     import type { CourseResult } from '$lib/api/types/courses';
     import type { ToggleUserCourseFavoriteEvent } from '$lib/models/types/toggle-user-course-favorite-event';
 
-    import CourseRating from '$lib/components/course-rating.svelte';
     import { Button } from '$lib/components/ui/button';
-    import { Separator } from '$lib/components/ui/separator';
-    import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
-    import { faHeart } from '@fortawesome/free-solid-svg-icons';
+    import CourseRating from '$lib/components/course-rating.svelte';
     import { createEventDispatcher } from 'svelte';
     import Fa from 'svelte-fa';
+    import { faHeart } from '@fortawesome/free-solid-svg-icons';
+    import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
+    import { Separator } from '$lib/components/ui/separator';
 
     export let courseResult: CourseResult;
 

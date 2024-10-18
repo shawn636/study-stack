@@ -3,18 +3,18 @@
  */
 
 import type { ApiResponse } from '$lib/api/types/common';
-import type { CourseSearchResult } from '$lib/api/types/courses';
 import type { Course } from '$lib/models/types/database.types';
-import type { RecordDisplaySettings } from '$lib/models/types/record-display-settings';
+import type { CourseSearchResult } from '$lib/api/types/courses';
 import type { HttpError } from '@sveltejs/kit';
-
-import { CourseSortByOptions } from '$lib/models/types/course-sort-by-options';
-import { cuid } from '$lib/server/database';
-import { InvalidParameterError } from '$lib/server/error-handling/handled-errors';
-import CourseTestUtil from '$lib/server/test-utils/course';
-import { getRecordDisplaySettings } from '$lib/server/util';
+import type { RecordDisplaySettings } from '$lib/models/types/record-display-settings';
 
 import { fetchCourseCount, fetchCourses, getCourses, parseSortByParam } from './fetch-courses';
+
+import { HIGHEST_RATING, LOWEST_PRICE, RELEVANCE } from '$lib/models/types/course-sort-by-options';
+import CourseTestUtil from '$lib/server/test-utils/course';
+import { cuid } from '$lib/server/database';
+import { getRecordDisplaySettings } from '$lib/server/util';
+import { InvalidParameterError } from '$lib/server/error-handling/handled-errors';
 
 let options: RecordDisplaySettings | null;
 let createdCourses: Course[] = [];
@@ -33,16 +33,16 @@ describe('Course Fetching Utility Functions', () => {
     describe('parseSortByParam()', () => {
         it('should return the default sort by option when no sortByParam is provided', () => {
             const parsedParam = parseSortByParam(null, false);
-            expect(parsedParam).toBe(CourseSortByOptions.HIGHEST_RATING);
+            expect(parsedParam).toBe(HIGHEST_RATING);
         });
         it('should return a CourseSortByOption when a valid sortByParam is provided', () => {
-            let param = CourseSortByOptions.RELEVANCE.param;
+            let param = RELEVANCE.param;
             let parsedParam = parseSortByParam(param, true);
-            expect(parsedParam).toBe(CourseSortByOptions.RELEVANCE);
+            expect(parsedParam).toBe(RELEVANCE);
 
-            param = CourseSortByOptions.LOWEST_PRICE.param;
+            param = LOWEST_PRICE.param;
             parsedParam = parseSortByParam(param, true);
-            expect(parsedParam).toBe(CourseSortByOptions.LOWEST_PRICE);
+            expect(parsedParam).toBe(LOWEST_PRICE);
         });
         it('should throw an InvalidParameterError when an invalid sortByParam is provided', () => {
             const invalidParam = 'invalidParam';
@@ -89,13 +89,7 @@ describe('Course Fetching Utility Functions', () => {
             if (!options) throw new Error('RecordDisplaySettings not initialized');
 
             const randomSearchTerm = cuid().toString();
-            const results = await fetchCourses(
-                randomSearchTerm,
-                1,
-                10,
-                CourseSortByOptions.RELEVANCE,
-                options
-            );
+            const results = await fetchCourses(randomSearchTerm, 1, 10, RELEVANCE, options);
             expect(results).toBeInstanceOf(Array);
             expect(results).toHaveLength(0);
         });
@@ -108,8 +102,8 @@ describe('Course Fetching Utility Functions', () => {
             createdCourses = createdCourses.concat(newCourses);
 
             const [courseResultsByLowestPrice, courseResultsByHighestRating] = await Promise.all([
-                fetchCourses(keyword, 0, 5, CourseSortByOptions.LOWEST_PRICE, options),
-                fetchCourses(keyword, 0, 5, CourseSortByOptions.HIGHEST_RATING, options)
+                fetchCourses(keyword, 0, 5, LOWEST_PRICE, options),
+                fetchCourses(keyword, 0, 5, HIGHEST_RATING, options)
             ]);
 
             expect(courseResultsByLowestPrice).toBeInstanceOf(Array);
@@ -136,7 +130,7 @@ describe('Course Fetching Utility Functions', () => {
 
     describe('getCourses()', () => {
         it('should return a successful reponse when a valid request is made', async () => {
-            const response = await getCourses(null, 1, 20, CourseSortByOptions.RELEVANCE.param);
+            const response = await getCourses(null, 1, 20, RELEVANCE.param);
             expect(response).toBeTruthy();
             expect(response?.ok).toBe(true);
 
@@ -165,12 +159,7 @@ describe('Course Fetching Utility Functions', () => {
         it('should have a courseCount less than or equal to the pageSize', async () => {
             const pageNo = 1;
             const pageSize = 20;
-            const response = await getCourses(
-                null,
-                pageNo,
-                pageSize,
-                CourseSortByOptions.RELEVANCE.param
-            );
+            const response = await getCourses(null, pageNo, pageSize, RELEVANCE.param);
             const data: unknown = await response?.json();
             const courseSearchResult = data as ApiResponse<CourseSearchResult>;
 

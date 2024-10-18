@@ -3,11 +3,11 @@ export type AcquisitionChannels = {
     paid: number;
 };
 
-export type AcquisitionRecord = {
+export type AcquisitionRecord = AcquisitionChannels & {
     date: string;
     organic: number;
     paid: number;
-} & AcquisitionChannels;
+};
 
 export const data: AcquisitionRecord[] = [
     { date: '2024-01-01', organic: 48, paid: 55 },

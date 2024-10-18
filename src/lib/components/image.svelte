@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { Skeleton } from '$lib/components/ui/skeleton';
-    import { faImage } from '@fortawesome/free-solid-svg-icons';
     import { afterUpdate, onDestroy, onMount } from 'svelte';
+
     import Fa from 'svelte-fa';
+    import { faImage } from '@fortawesome/free-solid-svg-icons';
+    import { Skeleton } from '$lib/components/ui/skeleton';
 
     export let src: string;
     export let alt: string;

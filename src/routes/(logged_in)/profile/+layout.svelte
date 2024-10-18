@@ -1,6 +1,6 @@
 <script lang="ts">
-    import SidebarNav from '$lib/components/collapsible-sidebar/sidebar-nav.svelte';
     import { Separator } from '$lib/components/ui/separator';
+    import SidebarNav from '$lib/components/collapsible-sidebar/sidebar-nav.svelte';
 
     const sidebarNavItems = [
         {

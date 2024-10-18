@@ -1,14 +1,14 @@
 <script lang="ts">
     import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
-    import { page } from '$app/stores';
     import { Button } from '$lib/components/ui/button';
     import { cn } from '$lib/utils';
-    import { cubicInOut } from 'svelte/easing';
     import { crossfade } from 'svelte/transition';
+    import { cubicInOut } from 'svelte/easing';
     import Fa from 'svelte-fa';
+    import { page } from '$app/stores';
 
-    let className: null | string | undefined = undefined;
+    let className: string | null | undefined = undefined;
     export let items: { href: string; icon: IconDefinition | undefined; title: string }[];
     export { className as class };
 

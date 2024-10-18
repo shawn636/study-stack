@@ -1,7 +1,8 @@
 <script lang="ts">
-    import SidebarNav from '$lib/components/collapsible-sidebar/sidebar-nav.svelte';
-    import { Separator } from '$lib/components/ui/separator';
     import { faBox, faChartLine, faGear, faHome, faUsers } from '@fortawesome/free-solid-svg-icons';
+
+    import { Separator } from '$lib/components/ui/separator';
+    import SidebarNav from '$lib/components/collapsible-sidebar/sidebar-nav.svelte';
 
     const sidebarNavItems = [
         {

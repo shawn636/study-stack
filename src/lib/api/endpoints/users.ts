@@ -1,13 +1,12 @@
-import type { User } from '$lib/models/types/database.types';
-
-import type { ApiClient } from '../api-client';
+import { fetchWithTimeout, handleApiResponse } from '../utils';
 import type {
     UserCourseFavoritesCreateResponse,
     UserPhotoCreateResponse,
     UserUpdateResponse
 } from '../types/users';
 
-import { fetchWithTimeout, handleApiResponse } from '../utils';
+import type { ApiClient } from '../api-client';
+import type { User } from '$lib/models/types/database.types';
 
 class UsersModule {
     private client: ApiClient;

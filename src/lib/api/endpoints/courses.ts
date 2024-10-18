@@ -1,6 +1,3 @@
-import type { CourseSortByOption } from '$lib/models/types/course-sort-by-options';
-
-import type { ApiClient } from '../api-client';
 import type {
     CourseGetResponse,
     CourseInstructorGetResponse,
@@ -8,6 +5,9 @@ import type {
 } from '../types/courses';
 
 import { fetchWithTimeout, handleApiResponse } from '../utils';
+
+import type { ApiClient } from '../api-client';
+import type { CourseSortByOption } from '$lib/models/types/course-sort-by-options';
 
 /**
  * Class representing the administration settings module.
@@ -72,7 +72,7 @@ class CoursesModule {
 
     // GET /api/courses
     async getCourses(
-        query: null | string,
+        query: string | null,
         sortByOption: CourseSortByOption,
         page: number,
         pageSize: number,
@@ -105,7 +105,7 @@ class CoursesModule {
     }
 
     async getCoursesWithFavorites(
-        query: null | string,
+        query: string | null,
         sortByOption: CourseSortByOption,
         page: number,
         pageSize: number,

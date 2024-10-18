@@ -1,18 +1,18 @@
 <script lang="ts">
     import type { User } from '$lib/models/types/database.types';
 
-    import { apiClientSingleton as client } from '$lib/api';
-    import { formatPhoneNumber } from '$lib/client/util';
+    import { phone, submitForm, updatePhoneNumber } from './profile-form';
+
     import { Button } from '$lib/components/ui/button';
+    import { apiClientSingleton as client } from '$lib/api';
+    import Fa from 'svelte-fa';
+    import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+    import { formatPhoneNumber } from '$lib/client/util';
     import { Input } from '$lib/components/ui/input';
     import { Label } from '$lib/components/ui/label';
-    import { Textarea } from '$lib/components/ui/textarea';
-    import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     import { onMount } from 'svelte';
-    import Fa from 'svelte-fa';
+    import { Textarea } from '$lib/components/ui/textarea';
     import { toast } from 'svelte-sonner';
-
-    import { phone, submitForm, updatePhoneNumber } from './profile-form';
 
     export let user: User;
     let profilePhotoFile: File;
@@ -48,7 +48,7 @@
         isUpdating = false;
     };
 
-    const onFileChanged = (event: { currentTarget: EventTarget & HTMLInputElement } & Event) => {
+    const onFileChanged = (event: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
         if (event.currentTarget && event.currentTarget.files) {
             profilePhotoFile = event.currentTarget.files[0];
         }

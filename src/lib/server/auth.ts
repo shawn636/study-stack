@@ -1,11 +1,12 @@
+import type { Cookies } from '@sveltejs/kit';
 import type { User } from '$lib/models/types/database.types';
 import type { UserRole } from '$lib/models/types/database.types';
-import type { Cookies } from '@sveltejs/kit';
+
+import { comparePassword, hashPassword } from '$lib/server/crypto';
+import { cuid, db, type Transaction } from '$lib/server/database';
 
 import { dev } from '$app/environment';
 import { KeyType } from '$lib/models/types/database.types';
-import { comparePassword, hashPassword } from '$lib/server/crypto';
-import { type Transaction, cuid, db } from '$lib/server/database';
 import { UnauthorizedError } from '$lib/server/error-handling/handled-errors';
 
 export const COOKIE_NAME = 'auth_session';

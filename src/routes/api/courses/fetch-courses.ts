@@ -1,20 +1,22 @@
 import type { RecordDisplaySettings } from '$lib/models/types/record-display-settings'; // import type { CourseSearchResult, CourseWithInstructor } from '$lib/models/types/api';
 
+import type { Course, User } from '$lib/models/types/database.types';
 import type {
     CourseResult,
     CourseSearchGetResponse,
     CourseSearchResult
 } from '$lib/api/types/courses';
-import type { Course, User } from '$lib/models/types/database.types';
 
 import {
     type CourseSortByOption,
-    CourseSortByOptions
+    HIGHEST_RATING,
+    LOWEST_PRICE,
+    RELEVANCE
 } from '$lib/models/types/course-sort-by-options';
-import { db, sql } from '$lib/server/database';
-import { handleErrors } from '$lib/server/error-handling';
 import { DatabaseError, InvalidParameterError } from '$lib/server/error-handling/handled-errors';
+import { db, sql } from '$lib/server/database';
 import { getRecordDisplaySettings } from '$lib/server/util';
+import { handleErrors } from '$lib/server/error-handling';
 
 export const searchParamsAreValid = (
     urlSearchParams: URLSearchParams,
@@ -37,19 +39,29 @@ export const searchParamsAreValid = (
 
 // SYNCHRONOUS HELPER FUNCTIONS
 export const parseSortByParam = (
-    sortByParam: null | string,
+    sortByParam: string | null,
     requestContainsSearchTerm: boolean
 ): CourseSortByOption => {
     if (!sortByParam) {
-        const defaultSortBy = requestContainsSearchTerm
-            ? CourseSortByOptions.RELEVANCE
-            : CourseSortByOptions.HIGHEST_RATING;
+        const defaultSortBy = requestContainsSearchTerm ? RELEVANCE : HIGHEST_RATING;
         return defaultSortBy;
     }
 
-    const parsedSortBy: CourseSortByOption | undefined = Object.values(CourseSortByOptions).find(
-        (value: CourseSortByOption) => value.param === sortByParam
-    );
+    let parsedSortBy: CourseSortByOption | undefined = undefined;
+
+    switch (sortByParam) {
+        case HIGHEST_RATING.param:
+            parsedSortBy = HIGHEST_RATING;
+            break;
+        case LOWEST_PRICE.param:
+            parsedSortBy = LOWEST_PRICE;
+            break;
+        case RELEVANCE.param:
+            parsedSortBy = RELEVANCE;
+            break;
+        default:
+            throw new InvalidParameterError(`Invalid sort_by parameter: ${sortByParam}`);
+    }
 
     if (!parsedSortBy) {
         throw new InvalidParameterError(`Invalid sort_by parameter: ${sortByParam}`);
@@ -60,7 +72,7 @@ export const parseSortByParam = (
 
 // ASYNCHRONOUS HELPER FUNCTIONS
 export const fetchCourseCount = async (
-    searchTerm: String | null,
+    searchTerm: string | null,
     recordDisplaySettings: RecordDisplaySettings
 ): Promise<number> => {
     try {
@@ -79,7 +91,7 @@ export const fetchCourseCount = async (
                 qb.where('courseRecordType', '!=', 'SEED_RECORD')
             )
             .executeTakeFirstOrThrow();
-        const courseCount = Number(courseCountResult.courseCount) ?? 0;
+        const courseCount = Number(courseCountResult.courseCount);
 
         return courseCount;
     } catch (e) {
@@ -88,7 +100,7 @@ export const fetchCourseCount = async (
 };
 
 export const fetchCourses = async (
-    searchTerm: null | string,
+    searchTerm: string | null,
     pageNo: number,
     pageSize: number,
     sortByValue: CourseSortByOption,
@@ -98,7 +110,7 @@ export const fetchCourses = async (
     try {
         const requestContainsSearchTerm =
             searchTerm !== '' && searchTerm !== null && searchTerm !== undefined;
-        const sortByIsRelevance = sortByValue === CourseSortByOptions.RELEVANCE;
+        const sortByIsRelevance = sortByValue === RELEVANCE;
 
         const courseResultQuery = getFetchCoursesQuery(
             requestContainsSearchTerm,
@@ -140,7 +152,7 @@ export const fetchCourses = async (
             });
 
             return {
-                course: course as { isFavorite?: boolean } & Course,
+                course: course as Course & { isFavorite?: boolean },
                 instructor: instructor as User
             };
         });
@@ -158,7 +170,7 @@ export const fetchCourses = async (
 const getFetchCoursesQuery = (
     requestContainsSearchTerm: boolean,
     sortByIsRelevance: boolean,
-    searchTerm: null | string,
+    searchTerm: string | null,
     sortByValue: CourseSortByOption,
     recordDisplaySettings: RecordDisplaySettings,
     pageSize: number,
@@ -235,7 +247,7 @@ const getFetchCoursesQuery = (
 
 // PRIMARY HELPER FUNCTION
 export const getCourses = async (
-    searchTerm: null | string,
+    searchTerm: string | null,
     pageNo: number,
     pageSize: number,
     sortByParam: string,

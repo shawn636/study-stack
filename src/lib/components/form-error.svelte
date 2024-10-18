@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
     import { cubicInOut } from 'svelte/easing';
-    import { slide } from 'svelte/transition';
     import Fa from 'svelte-fa';
+    import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+    import { slide } from 'svelte/transition';
 
     export let error: string;
 </script>

@@ -1,10 +1,10 @@
 <script lang="ts">
     import AuthFooter from '../auth-footer.svelte';
     import AuthHeader from '../auth-header.svelte';
+    import { createForm } from './submit-form';
     import Divider from '../divider.svelte';
     import OauthButtons from './oauth-buttons.svelte';
     import SignUpForm from './sign-up-form.svelte';
-    import { createForm } from './submit-form';
 
     // Controls
     let showPassword1 = false;

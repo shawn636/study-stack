@@ -1,15 +1,16 @@
 import type { AdminSettingsGetResponse } from '$lib/api/types/admin-settings';
 import type { SiteSetting } from '$lib/models/types/database.types';
 
-import { RecordType } from '$lib/models/types/database.types';
-import { auth } from '$lib/server/auth';
-import { db } from '$lib/server/database';
-import { handleErrors } from '$lib/server/error-handling';
 import {
     DatabaseError,
     InvalidRequestError,
     NotFoundError
 } from '$lib/server/error-handling/handled-errors';
+
+import { auth } from '$lib/server/auth';
+import { db } from '$lib/server/database';
+import { handleErrors } from '$lib/server/error-handling';
+import { RecordType } from '$lib/models/types/database.types';
 
 import type { RequestHandler } from './$types';
 

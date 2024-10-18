@@ -2,7 +2,7 @@ import type { ContactMessageCreateResponse } from '$lib/api/types/contact-messag
 
 import { CONTACT_FORM_TEMPLATE, type ContactFormEmail } from '$lib/models/emails/contact-form';
 import { type ContactForm, contactForm } from '$lib/models/forms/contact';
-import { type Recipient, type Sender, sendEmailFromTemplate } from '$lib/server/email';
+import { type Recipient, sendEmailFromTemplate, type Sender } from '$lib/server/email';
 import { handleErrors } from '$lib/server/error-handling';
 
 import type { RequestHandler } from './$types';

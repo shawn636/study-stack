@@ -1,18 +1,20 @@
 <script lang="ts">
     import type { NewsletterSubscriptionCreateResponse } from '$lib/api/types/newsletter-subscriptions';
 
-    import { apiClientSingleton as client } from '$lib/api';
-    import Logo from '$lib/components/logo.svelte';
     import * as Accordion from '$lib/components/ui/accordion/index';
-    import { Button } from '$lib/components/ui/button';
-    import { Input } from '$lib/components/ui/input';
+
     import {
         faFacebookF,
         faInstagram,
         faLinkedinIn,
         faTwitter
     } from '@fortawesome/free-brands-svg-icons';
+
+    import { Button } from '$lib/components/ui/button';
+    import { apiClientSingleton as client } from '$lib/api';
     import Fa from 'svelte-fa';
+    import { Input } from '$lib/components/ui/input';
+    import Logo from '$lib/components/logo.svelte';
     import { toast } from 'svelte-sonner';
 
     let email: string = '';

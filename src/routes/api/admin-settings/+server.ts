@@ -1,12 +1,11 @@
 import type { AdminSettingsGetMultipleResponse } from '$lib/api/types/admin-settings';
+import type { RequestHandler } from './$types';
 
-import { RecordType } from '$lib/models/types/database.types';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/database';
 import { handleErrors } from '$lib/server/error-handling';
 import { InvalidRequestError } from '$lib/server/error-handling/handled-errors';
-
-import type { RequestHandler } from './$types';
+import { RecordType } from '$lib/models/types/database.types';
 
 /**
  * Retrieves the specified settings from the database.

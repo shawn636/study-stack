@@ -1,11 +1,12 @@
 // import type { DeleteFavoriteResponse } from '$lib/models/types/api';
-import type { UserCourseFavoritesDeleteResponse } from '$lib/api/types/users';
 import type { DeleteResult } from 'kysely';
+import type { UserCourseFavoritesDeleteResponse } from '$lib/api/types/users';
+
+import { DatabaseError, NotFoundError } from '$lib/server/error-handling/handled-errors';
 
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/database';
 import { handleErrors } from '$lib/server/error-handling';
-import { DatabaseError, NotFoundError } from '$lib/server/error-handling/handled-errors';
 
 import type { RequestHandler } from './$types';
 

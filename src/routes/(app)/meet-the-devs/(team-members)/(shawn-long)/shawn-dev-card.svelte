@@ -1,8 +1,8 @@
 <script lang="ts">
     import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-    import Fa from 'svelte-fa';
 
     import Avatar from './avatar.svelte';
+    import Fa from 'svelte-fa';
 
     const socials = [
         {
@@ -64,7 +64,7 @@
                             <a
                                 class="hover:text-white/80"
                                 href={url}
-                                rel="noopener"
+                                rel="noopener noreferrer"
                                 target="_blank"
                             >
                                 <Fa {icon} size="2x" />

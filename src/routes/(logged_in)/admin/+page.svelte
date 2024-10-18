@@ -2,9 +2,9 @@
     import { faBox, faChartLine, faUsers } from '@fortawesome/free-solid-svg-icons';
 
     import ContentPerformanceChart from './(components)/(content-performance)/content-performance-chart.svelte';
-    import UserAcquisitionChart from './(components)/(user-acquisition)/user-acquisition-chart.svelte';
     import KpiCard from './(components)/kpi-card.svelte';
     import TopContentTable from './(components)/top-content-table.svelte';
+    import UserAcquisitionChart from './(components)/(user-acquisition)/user-acquisition-chart.svelte';
 </script>
 
 <div class="grid w-full gap-5 sm:grid-cols-2 lg:grid-cols-3" id="admin-home-container">

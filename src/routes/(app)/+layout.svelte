@@ -1,12 +1,11 @@
 <script lang="ts">
-    import type { User } from '$lib/models/types/database.types';
     import type { AfterNavigate } from '@sveltejs/kit';
+    import type { LayoutData } from './$types';
+    import type { User } from '$lib/models/types/database.types';
 
     import { afterNavigate } from '$app/navigation';
     import Footer from '$lib/components/footer.svelte';
     import Header from '$lib/components/header.svelte';
-
-    import type { LayoutData } from './$types';
 
     export let data: LayoutData;
     $: user = data.user as User;

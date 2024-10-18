@@ -1,9 +1,6 @@
+import type { RequestHandler } from './$types';
 import type { UserPhotoCreateResponse } from '$lib/api/types/users';
 
-import { auth } from '$lib/server/auth';
-import { cdn } from '$lib/server/cdn';
-import { db } from '$lib/server/database';
-import { handleErrors } from '$lib/server/error-handling';
 import {
     DatabaseError,
     ForbiddenError,
@@ -11,7 +8,10 @@ import {
     UnauthorizedError
 } from '$lib/server/error-handling/handled-errors';
 
-import type { RequestHandler } from './$types';
+import { auth } from '$lib/server/auth';
+import { cdn } from '$lib/server/cdn';
+import { db } from '$lib/server/database';
+import { handleErrors } from '$lib/server/error-handling';
 
 export const POST = (async ({ cookies, params, request }) => {
     await auth.validateApiSession(cookies, params.userId);
@@ -36,7 +36,7 @@ export const POST = (async ({ cookies, params, request }) => {
             throw new ForbiddenError('You are not authorized to update this user.');
         }
 
-        let currentProfileImageId: null | string = null;
+        let currentProfileImageId: string | null = null;
         try {
             const result = await db
                 .selectFrom('User')

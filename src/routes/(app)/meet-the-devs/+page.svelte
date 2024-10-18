@@ -1,6 +1,6 @@
 <script lang="ts">
-    import TeamMemberCard from './(components)/team-member-card.svelte';
     import ShawnDevCard from './(team-members)/(shawn-long)/shawn-dev-card.svelte';
+    import TeamMemberCard from './(components)/team-member-card.svelte';
 </script>
 
 <main
