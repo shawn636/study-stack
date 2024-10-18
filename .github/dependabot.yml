@@ -1,37 +1,40 @@
 version: 2
 updates:
-    - package-ecosystem: 'npm' # See documentation for possible values
-      directory: '/' # Location of package manifests
-      schedule:
-          interval: 'weekly'
-      reviewers:
-          - 'shawnlong636'
-      groups:
-          dev-packages-non-major:
-              applies-to: version-updates
-              update-types:
-                  - 'minor'
-                  - 'patch'
-              patterns:
-                  - '*'
-          dev-packages-major:
-              applies-to: version-updates
-              update-types:
-                  - 'major'
-              patterns:
-                  - '*'
-              exclude-patterns:
-                  - 'eslint' # Can't migrate to v9 yet - waiting for updates to our eslint plugins
-      pull-request-limit: 0
-    - package-ecosystem: 'github-actions'
-      directory: '/'
-      schedule:
-          interval: 'weekly'
-      reviewers:
-          - 'shawnlong636'
-      groups:
-          github-actions-all:
-              applies-to: version-updates
-              patterns:
-                  - '*'
-      pull-request-limit: 0
+  # Non-major dev package updates
+  - package-ecosystem: "npm"
+    directory: "/" # Location of package.json
+    schedule:
+      interval: "weekly" # Adjust to your preferred update frequency
+    allow:
+      - dependency-type: "development"
+    ignore:
+      - update-types: ["version-update:semver-major"]
+    labels:
+      - "dev-packages-non-major"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    target-branch: "dev"
+    open-pull-requests-limit: 1
+    rebase-strategy: "auto"
+    versioning-strategy: "increase"
+
+  # Major dev package updates
+  - package-ecosystem: "npm"
+    directory: "/" # Location of package.json
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "development"
+    labels:
+      - "dev-packages-major"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    target-branch: "dev"
+    open-pull-requests-limit: 1
+    versioning-strategy: "widen"
+    allow:
+      - dependency-type: "development"
+    rebase-strategy: "auto"
+    versioning-strategy: "increase"
