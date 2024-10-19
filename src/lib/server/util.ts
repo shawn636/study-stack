@@ -47,7 +47,7 @@ export const getRecordDisplaySettings = async () => {
         }
     });
 
-    // This is safe because the siteSettingKey is unique, and the query only returns
+    // This is safe because the site setting key is unique, and the query only returns
     // a maximum of two results. So if there are exactly two results, we can safely
     // cast the settings object to the expected type, since we know it contains the
     // correct keys.

@@ -21,9 +21,9 @@ export const GET = (async ({ cookies, params }) => {
 
         await auth.validateApiSession(cookies, userId, userRole);
 
-        const siteSettingKey = params.slug;
+        const key = params.slug;
 
-        if (!siteSettingKey) {
+        if (!key) {
             throw new InvalidRequestError('Invalid request. Please provide setting to retrieve.');
         }
 
@@ -33,7 +33,7 @@ export const GET = (async ({ cookies, params }) => {
             const settingResult = await db
                 .selectFrom('SiteSetting')
                 .selectAll()
-                .where('key', '=', siteSettingKey)
+                .where('key', '=', key)
                 .where('recordType', '=', RecordType.PRODUCTION_RECORD)
                 .executeTakeFirst();
             setting = settingResult as unknown as SiteSetting;
