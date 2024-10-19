@@ -86,10 +86,10 @@ export const fetchCourseCount = async (
                 )
             )
             .$if(!recordDisplaySettings['display-test-records'], (qb) =>
-                qb.where('recordType', '!=', 'TEST_RECORD')
+                qb.where('Course.recordType', '!=', 'TEST_RECORD')
             )
             .$if(!recordDisplaySettings['display-seed-records'], (qb) =>
-                qb.where('recordType', '!=', 'SEED_RECORD')
+                qb.where('Course.recordType', '!=', 'SEED_RECORD')
             )
             .executeTakeFirstOrThrow();
         const courseCount = Number(courseCountResult.courseCount);
@@ -212,10 +212,10 @@ const getCoursesForFetchCoursesQuery = (
                 qb.orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
             )
             .$if(!recordDisplaySettings['display-test-records'], (qb) =>
-                qb.where('recordType', '!=', 'TEST_RECORD')
+                qb.where('Course.recordType', '!=', 'TEST_RECORD')
             )
             .$if(!recordDisplaySettings['display-seed-records'], (qb) =>
-                qb.where('recordType', '!=', 'SEED_RECORD')
+                qb.where('Course.recordType', '!=', 'SEED_RECORD')
             )
             .limit(pageSize)
             .offset(pageNo * pageSize);
@@ -239,10 +239,10 @@ const getCoursesForFetchCoursesQuery = (
                 qb.orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
             )
             .$if(!recordDisplaySettings['display-test-records'], (qb) =>
-                qb.where('recordType', '!=', 'TEST_RECORD')
+                qb.where('Course.recordType', '!=', 'TEST_RECORD')
             )
             .$if(!recordDisplaySettings['display-seed-records'], (qb) =>
-                qb.where('recordType', '!=', 'SEED_RECORD')
+                qb.where('Course.recordType', '!=', 'SEED_RECORD')
             )
             .limit(pageSize)
             .offset(pageNo * pageSize);

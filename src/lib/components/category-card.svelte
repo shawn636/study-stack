@@ -5,9 +5,9 @@
 
     const maxTitleLength = 25;
     $: categoryTitleShort =
-        categorySummary.categoryTitle.length > maxTitleLength
-            ? `${categorySummary.categoryTitle.slice(0, maxTitleLength)}...`
-            : categorySummary.categoryTitle;
+        categorySummary.title.length > maxTitleLength
+            ? `${categorySummary.title.slice(0, maxTitleLength)}...`
+            : categorySummary.title;
 </script>
 
 <a
@@ -15,11 +15,7 @@
     href="/categories"
 >
     <div class="m-0 grid items-center justify-items-center rounded-full bg-white p-0 shadow-sm">
-        <img
-            alt={categoryTitleShort}
-            class="m-0 h-20 w-20 p-4"
-            src={categorySummary.categoryImgHref}
-        />
+        <img alt={categoryTitleShort} class="m-0 h-20 w-20 p-4" src={categorySummary.imgHref} />
     </div>
     <div class="grid grid-flow-row p-0">
         <h4 class="font-bold">{categoryTitleShort}</h4>
