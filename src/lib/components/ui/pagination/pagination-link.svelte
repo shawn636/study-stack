@@ -1,13 +1,14 @@
 <script lang="ts">
-    import { type Props, buttonVariants } from '$lib/components/ui/button/index.js';
+    import { buttonVariants, type Props } from '$lib/components/ui/button/index.js';
     import { cn } from '$lib/utils.js';
     import { Pagination as PaginationPrimitive } from 'bits-ui';
 
-    type $$Props = {
-        isActive: boolean;
-    } & PaginationPrimitive.PageProps &
-        Props;
+    type $$Props = PaginationPrimitive.PageProps &
+        Props & {
+            isActive: boolean;
+        };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = PaginationPrimitive.PageEvents;
 
     let className: $$Props['class'] = undefined;

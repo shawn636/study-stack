@@ -14,9 +14,9 @@
     const updateSiteSetting = async (settingName: string, newValue: boolean) => {
         try {
             const siteSetting = {
-                siteSettingKey: settingName,
-                siteSettingRecordType: 'PRODUCTION_RECORD',
-                siteSettingValue: newValue.toString()
+                key: settingName,
+                recordType: 'PRODUCTION_RECORD',
+                value: newValue.toString()
             } as unknown as SiteSetting;
             await client.adminSettings.update(siteSetting);
             toast.success('Site settings updated successfully');

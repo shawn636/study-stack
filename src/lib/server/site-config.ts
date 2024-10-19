@@ -7,12 +7,12 @@ export const setDefaultSettings = async () => {
         .ignore()
         .values([
             {
-                siteSettingKey: 'display-test-records',
-                siteSettingValue: false.toString()
+                key: 'display-test-records',
+                value: false.toString()
             },
             {
-                siteSettingKey: 'display-seed-records',
-                siteSettingValue: true.toString()
+                key: 'display-seed-records',
+                value: true.toString()
             }
         ])
         .execute();

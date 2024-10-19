@@ -44,10 +44,10 @@
         >
             <Avatar.Root class="m-0 h-6 w-6 p-0">
                 <Avatar.Fallback class="bg-gray-200 text-black "
-                    >{initials(user.userName)}</Avatar.Fallback
+                    >{initials(user.name)}</Avatar.Fallback
                 >
             </Avatar.Root>
-            <span class="hidden text-black xs:block">{user.userName}</span>
+            <span class="hidden text-black xs:block">{user.name}</span>
             <Fa class="text-black" icon={faChevronDown} size="sm" />
         </Button>
     </DropdownMenu.Trigger>
@@ -59,22 +59,22 @@
                     <div class="col-start-1 row-start-1 row-end-3">
                         <Avatar.Root>
                             <Avatar.Fallback class="h-8 w-8 text-sm"
-                                >{initials(user.userName)}</Avatar.Fallback
+                                >{initials(user.name)}</Avatar.Fallback
                             >
                         </Avatar.Root>
                     </div>
                     <span class="row-start-1 text-sm font-semibold" data-testid="profile-popup-name"
-                        >{user.userName}</span
+                        >{user.name}</span
                     >
                     <span class="row-start-2 text-xs" data-testid="profile-popup-email"
-                        >{user.userEmail}</span
+                        >{user.email}</span
                     >
                 </div>
 
                 <hr />
 
                 <ul class="grid grid-flow-row gap-y-1">
-                    {#if user.userRole.toString() === UserRole.ADMIN}
+                    {#if user.role.toString() === UserRole.ADMIN}
                         <div>
                             <p class="text-sm font-semibold">Admin</p>
                             <li class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">

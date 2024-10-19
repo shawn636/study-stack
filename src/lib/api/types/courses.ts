@@ -10,12 +10,13 @@
  */
 
 import type { Course, User } from '$lib/models/types/database.types';
+import type { Selectable } from 'kysely';
 
 import type { ApiResponse } from './common';
 
 export type CourseResult = {
-    course: Course & { isFavorite?: boolean };
-    instructor: User;
+    course: Selectable<Course> & { isFavorite?: boolean };
+    instructor: Selectable<User>;
 };
 
 export type CourseSearchResult = {

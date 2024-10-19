@@ -2,7 +2,6 @@ import type {
     AdminSettingsGetMultipleResponse,
     AdminSettingsGetResponse,
     AdminSettingsUpdateResponse
-    // AdminSettingsUpdateResponse
 } from '../types/admin-settings';
 import { fetchWithTimeout, handleApiResponse } from '../utils';
 
@@ -99,7 +98,7 @@ class AdminSettingsModule {
         fetchFn: typeof fetch = fetch,
         timeout: number = 5000
     ): Promise<AdminSettingsUpdateResponse> {
-        const encodedKey = encodeURIComponent(siteSetting.siteSettingKey);
+        const encodedKey = encodeURIComponent(siteSetting.key);
 
         const url = this.client.getFullUrl(`/api/admin-settings/${encodedKey}`);
         const response = await fetchWithTimeout(

@@ -51,17 +51,17 @@ const module: CourseTestUtil = {
     async cleanup(): Promise<number> {
         const result = await db
             .deleteFrom('Course')
-            .where('Course.courseRecordType', '=', RecordType.TEST_RECORD)
+            .where('Course.recordType', '=', RecordType.TEST_RECORD)
             .executeTakeFirstOrThrow();
 
         return Number(result.numDeletedRows ?? 0);
     },
 
     async deleteCourses(courses: Course[]): Promise<number> {
-        const courseIds = courses.map((course) => course.courseId);
+        const courseIds = courses.map((course) => course.id);
         const result = await db
             .deleteFrom('Course')
-            .where('Course.courseId', 'in', courseIds)
+            .where('Course.id', 'in', courseIds)
             .executeTakeFirstOrThrow();
 
         return Number(result.numDeletedRows ?? 0);
@@ -81,22 +81,22 @@ const module: CourseTestUtil = {
             : `Unit Test Course | ${courseId}`;
 
         const course = {
-            courseCategoryId: category.categoryId,
-            courseCurrentPrice: 0,
-            courseDescription: '',
-            courseDifficulty: '',
-            courseEstimatedTimeHours: 0,
-            courseEstimatedTimeMinutes: 0,
-            courseId: courseId,
-            courseImgHref: '',
-            courseInstructorId: user.userId,
-            courseLessonCount: 0,
-            courseOrganizationId: null,
-            courseOriginalPrice: 0,
-            courseRatingAverage: 0,
-            courseRatingCount: 0,
-            courseRecordType: RecordType.TEST_RECORD,
-            courseTitle: title
+            categoryId: category.id,
+            currentPrice: 0,
+            description: '',
+            difficulty: '',
+            estimatedTimeHours: 0,
+            estimatedTimeMinutes: 0,
+            id: courseId,
+            imgHref: '',
+            instructorId: user.id,
+            lessonCount: 0,
+            organizationId: null,
+            originalPrice: 0,
+            ratingAverage: 0,
+            ratingCount: 0,
+            recordType: RecordType.TEST_RECORD,
+            title: title
         };
         await db.insertInto('Course').values(course).execute();
 
@@ -117,22 +117,22 @@ const module: CourseTestUtil = {
                 : `Unit Test Course | ${courseId}`;
 
             const course = {
-                courseCategoryId: category.categoryId,
-                courseCurrentPrice: 0,
-                courseDescription: '',
-                courseDifficulty: '',
-                courseEstimatedTimeHours: 0,
-                courseEstimatedTimeMinutes: 0,
-                courseId: courseId,
-                courseImgHref: '',
-                courseInstructorId: user.userId,
-                courseLessonCount: 0,
-                courseOrganizationId: null,
-                courseOriginalPrice: 0,
-                courseRatingAverage: 0,
-                courseRatingCount: 0,
-                courseRecordType: RecordType.TEST_RECORD,
-                courseTitle: title
+                categoryId: category.id,
+                currentPrice: 0,
+                description: '',
+                difficulty: '',
+                estimatedTimeHours: 0,
+                estimatedTimeMinutes: 0,
+                id: courseId,
+                imgHref: '',
+                instructorId: user.id,
+                lessonCount: 0,
+                organizationId: null,
+                originalPrice: 0,
+                ratingAverage: 0,
+                ratingCount: 0,
+                recordType: RecordType.TEST_RECORD,
+                title: title
             };
             return course;
         });

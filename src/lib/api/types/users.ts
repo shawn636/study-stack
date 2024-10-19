@@ -36,5 +36,5 @@ type CreateFavoriteResult = {
 
 export type UserUpdateResponse = ApiResponse<User>;
 export type UserPhotoCreateResponse = ApiResponse<ImageUploadResult>;
-export type UserCourseFavoritesCreateResponse = ApiResponse<CreateFavoriteResult>;
-export type UserCourseFavoritesDeleteResponse = ApiResponse<DeleteFavoriteResult>;
+export type CourseFavoritesCreateResponse = ApiResponse<CreateFavoriteResult>;
+export type CourseFavoritesDeleteResponse = ApiResponse<DeleteFavoriteResult>;

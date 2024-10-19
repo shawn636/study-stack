@@ -1,12 +1,13 @@
 <script lang="ts">
     import { cn } from '$lib/utils.js';
-    import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
     import { DropdownMenu as DropdownMenuPrimitive } from 'bits-ui';
     import Fa from 'svelte-fa';
+    import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-    type $$Props = {
+    type $$Props = DropdownMenuPrimitive.SubTriggerProps & {
         inset?: boolean;
-    } & DropdownMenuPrimitive.SubTriggerProps;
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = DropdownMenuPrimitive.SubTriggerEvents;
 
     let className: $$Props['class'] = undefined;

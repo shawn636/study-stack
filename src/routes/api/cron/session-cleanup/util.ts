@@ -10,7 +10,7 @@ export const deleteAuthSessions = async () => {
     try {
         const result = await db
             .deleteFrom('AuthSession')
-            .where('authSessionExpirationDate', '<=', new Date())
+            .where('expirationDate', '<=', new Date())
             .executeTakeFirst();
 
         return Number(result.numDeletedRows);

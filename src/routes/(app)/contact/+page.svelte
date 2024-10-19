@@ -21,9 +21,9 @@
 
     const { errors, form, handleChange, handleSubmit, touched, validateField } = createForm({
         initialValues: {
-            email: data.user?.userEmail ?? '',
+            email: data.user?.email ?? '',
             message: '',
-            name: data.user?.userName ?? ''
+            name: data.user?.name ?? ''
         },
         onSubmit: async (values) => {
             validateField('email');

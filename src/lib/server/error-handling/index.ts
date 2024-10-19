@@ -54,7 +54,10 @@ import { HandledError } from './handled-errors';
 export const handleErrors = async (e: unknown) => {
     await errorPadding();
 
-    console.error(e);
+    // Check if in testing environment
+    if (process.env.NODE_ENV !== 'test') {
+        console.error(e);
+    }
 
     if (e instanceof SyntaxError) {
         return error(400, 'Invalid JSON');

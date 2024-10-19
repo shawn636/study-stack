@@ -6,9 +6,13 @@ import Label from './select-label.svelte';
 import Separator from './select-separator.svelte';
 import Trigger from './select-trigger.svelte';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const Root = SelectPrimitive.Root;
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const Group = SelectPrimitive.Group;
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const Input = SelectPrimitive.Input;
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const Value = SelectPrimitive.Value;
 
 export {

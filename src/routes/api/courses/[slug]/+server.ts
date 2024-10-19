@@ -1,11 +1,8 @@
 import type { Course, User } from '$lib/models/types/database.types';
 import type { CourseGetResponse } from '$lib/api/types/courses';
+import type { Selectable } from 'kysely';
 
-import {
-    DatabaseError,
-    InvalidParameterError,
-    NotFoundError
-} from '$lib/server/error-handling/handled-errors';
+import { DatabaseError, InvalidParameterError } from '$lib/server/error-handling/handled-errors';
 
 import { db } from '$lib/server/database';
 import { getRecordDisplaySettings } from '$lib/server/util';
@@ -20,60 +17,48 @@ export const GET = (async ({ params }) => {
         if (!slug) {
             throw new InvalidParameterError('Invalid slug');
         }
-        let courseResult: (Course & User) | null = null;
+        let courseResult: Selectable<Course> | null = null;
+        let userResult: Selectable<User> | null = null;
 
         const options = await getRecordDisplaySettings();
 
         try {
-            const result = await db
+            courseResult = await db
                 .selectFrom('Course')
-                .innerJoin('User', 'Course.courseInstructorId', 'User.userId')
-                .selectAll(['Course', 'User'])
+                .innerJoin('User', 'Course.instructorId', 'User.id')
+                .selectAll('Course')
+                .select(['Course.id as courseId', 'User.id as instructorId'])
                 .$if(!options['display-test-records'], (qb) =>
-                    qb.where('courseRecordType', '!=', 'TEST_RECORD')
+                    qb.where('recordType', '!=', 'TEST_RECORD')
                 )
                 .$if(!options['display-seed-records'], (qb) =>
-                    qb.where('courseRecordType', '!=', 'SEED_RECORD')
+                    qb.where('recordType', '!=', 'SEED_RECORD')
                 )
-                .where('Course.courseId', '=', slug)
+                .where('Course.id', '=', slug)
                 .executeTakeFirstOrThrow();
 
-            courseResult = result as unknown as Course & User;
+            userResult = await db
+                .selectFrom('Course')
+                .innerJoin('User', 'Course.instructorId', 'User.id')
+                .selectAll('User')
+                .select(['Course.id as courseId', 'User.id as instructorId'])
+                .$if(!options['display-test-records'], (qb) =>
+                    qb.where('recordType', '!=', 'TEST_RECORD')
+                )
+                .$if(!options['display-seed-records'], (qb) =>
+                    qb.where('recordType', '!=', 'SEED_RECORD')
+                )
+                .where('Course.id', '=', slug)
+                .executeTakeFirstOrThrow();
         } catch (e) {
             throw new DatabaseError(`Error fetching course: ${e}`);
         }
 
-        if (!courseResult) {
-            throw new NotFoundError(`Course not found: ${slug}`);
-        }
-
-        // We are using `any` here to dynamically assign values to `course` and `instructor`.
-        // TypeScript does not allow dynamic keys without an index signature, and adding
-        // such a signature would undermine type safety across the codebase.
-        // Since in the kysely query we are using selectAll(['Course', 'User']), we know that
-        // the result will contain all fields of `Course` and `User`. We are also using the
-        // `CourseResult` type to ensure that the keys are correct. Therefore, we can safely
-        // cast the result to `Course` and `User` types. This is a trade-off between type safety
-        // and code readability/dynamism. We are opting for the latter in this case.
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const course: any = {};
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const instructor: any = {};
-
-        Object.entries(courseResult).forEach(([key, value]) => {
-            if (key.startsWith('course')) {
-                course[key] = value;
-            } else if (key.startsWith('user')) {
-                instructor[key] = value;
-            }
-        });
-
         const finalResult: CourseGetResponse = {
             count: 1,
             data: {
-                course: course as Course,
-                instructor: instructor as User
+                course: courseResult,
+                instructor: userResult
             },
             object: 'Course',
             success: true

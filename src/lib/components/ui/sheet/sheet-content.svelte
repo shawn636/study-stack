@@ -1,22 +1,21 @@
 <script lang="ts">
     import { cn } from '$lib/utils.js';
-    // import X from "lucide-svelte/icons/x";
-    import { faX } from '@fortawesome/free-solid-svg-icons';
-    import { Dialog as SheetPrimitive } from 'bits-ui';
-    import { fly } from 'svelte/transition';
     import Fa from 'svelte-fa';
+    import { faX } from '@fortawesome/free-solid-svg-icons';
+    import { fly } from 'svelte/transition';
+    import { Dialog as SheetPrimitive } from 'bits-ui';
 
     import {
         SheetOverlay,
         SheetPortal,
-        type Side,
         sheetTransitions,
-        sheetVariants
+        sheetVariants,
+        type Side
     } from './index.js';
 
-    type $$Props = {
+    type $$Props = SheetPrimitive.ContentProps & {
         side?: Side;
-    } & SheetPrimitive.ContentProps;
+    };
 
     let className: $$Props['class'] = undefined;
     export let side: $$Props['side'] = 'right';

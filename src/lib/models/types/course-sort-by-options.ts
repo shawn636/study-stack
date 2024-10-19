@@ -8,14 +8,14 @@ export type CourseSortByOption = {
 };
 
 export const HIGHEST_RATING: CourseSortByOption = {
-    dbField: 'courseRatingAverage',
+    dbField: 'ratingAverage',
     dbOrderDirection: 'desc',
     label: 'Highest Rating',
     param: 'highest_rating'
 };
 
 export const LOWEST_PRICE: CourseSortByOption = {
-    dbField: 'courseCurrentPrice',
+    dbField: 'currentPrice',
     dbOrderDirection: 'asc',
     label: 'Lowest Price',
     param: 'lowest_price'

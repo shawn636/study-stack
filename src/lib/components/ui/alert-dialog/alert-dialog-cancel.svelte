@@ -7,6 +7,7 @@
     type $$Props = AlertDialogPrimitive.CancelProps & {
         variant?: VariantProps<typeof buttonVariants>['variant'];
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = AlertDialogPrimitive.CancelEvents;
 
     let className: $$Props['class'] = undefined;

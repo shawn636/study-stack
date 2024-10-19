@@ -51,27 +51,27 @@ describe('auth', () => {
         const promises = accounts.map(async (account) => {
             const authUser = await db
                 .selectFrom('AuthUser')
-                .select('AuthUser.authUserId')
-                .where('AuthUser.authUserEmail', '=', account.email)
+                .select('AuthUser.id')
+                .where('AuthUser.email', '=', account.email)
                 .executeTakeFirst();
 
             if (authUser) {
                 await db.transaction().execute(async (trx: Transaction) => {
                     await trx
                         .deleteFrom('User')
-                        .where('User.userAuthUserId', '=', authUser.authUserId)
+                        .where('User.authUserId', '=', authUser.id)
                         .execute();
                     await trx
                         .deleteFrom('AuthKey')
-                        .where('AuthKey.authKeyAuthUserId', '=', authUser.authUserId)
+                        .where('AuthKey.authUserId', '=', authUser.id)
                         .execute();
                     await trx
                         .deleteFrom('AuthSession')
-                        .where('AuthSession.authSessionAuthUserId', '=', authUser.authUserId)
+                        .where('AuthSession.authUserId', '=', authUser.id)
                         .execute();
                     await trx
                         .deleteFrom('AuthUser')
-                        .where('AuthUser.authUserId', '=', authUser.authUserId)
+                        .where('AuthUser.id', '=', authUser.id)
                         .execute();
                 });
             }
@@ -94,11 +94,11 @@ describe('auth', () => {
 
         const results = await db
             .selectFrom('AuthUser')
-            .innerJoin('AuthKey', 'AuthUser.authUserId', 'AuthKey.authKeyAuthUserId')
-            .innerJoin('User', 'AuthUser.authUserId', 'User.userAuthUserId')
-            .select(['AuthUser.authUserId', 'User.userId', 'AuthKey.authKeyId'])
-            .where('AuthUser.authUserEmail', '=', accounts[actIdx].email)
-            .where('AuthKey.authKeyType', '=', KeyType.CREDENTIAL_HASH)
+            .innerJoin('AuthKey', 'AuthUser.id', 'AuthKey.authUserId')
+            .innerJoin('User', 'AuthUser.id', 'User.authUserId')
+            .select(['AuthUser.id as authUserId', 'User.id as userId', 'AuthKey.id as authKeyId'])
+            .where('AuthUser.email', '=', accounts[actIdx].email)
+            .where('AuthKey.type', '=', KeyType.CREDENTIAL_HASH)
             .execute();
 
         expect(results).toBeTruthy();

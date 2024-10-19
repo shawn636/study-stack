@@ -6,6 +6,7 @@ import type {
     CourseSearchGetResponse,
     CourseSearchResult
 } from '$lib/api/types/courses';
+import { type Selectable } from 'kysely';
 
 import {
     type CourseSortByOption,
@@ -78,17 +79,17 @@ export const fetchCourseCount = async (
     try {
         const courseCountResult = await db
             .selectFrom('Course')
-            .select(({ fn }) => [fn.count<number>('courseId').as('courseCount')])
+            .select(({ fn }) => [fn.count<number>('id').as('courseCount')])
             .$if(searchTerm !== '' && searchTerm !== null && searchTerm !== undefined, (qb) =>
                 qb.where(
-                    sql<boolean>`MATCH(courseTitle, courseDescription) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
+                    sql<boolean>`MATCH(title, description) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
                 )
             )
             .$if(!recordDisplaySettings['display-test-records'], (qb) =>
-                qb.where('courseRecordType', '!=', 'TEST_RECORD')
+                qb.where('Course.recordType', '!=', 'TEST_RECORD')
             )
             .$if(!recordDisplaySettings['display-seed-records'], (qb) =>
-                qb.where('courseRecordType', '!=', 'SEED_RECORD')
+                qb.where('Course.recordType', '!=', 'SEED_RECORD')
             )
             .executeTakeFirstOrThrow();
         const courseCount = Number(courseCountResult.courseCount);
@@ -112,7 +113,7 @@ export const fetchCourses = async (
             searchTerm !== '' && searchTerm !== null && searchTerm !== undefined;
         const sortByIsRelevance = sortByValue === RELEVANCE;
 
-        const courseResultQuery = getFetchCoursesQuery(
+        const courseResultQuery = getCoursesForFetchCoursesQuery(
             requestContainsSearchTerm,
             sortByIsRelevance,
             searchTerm,
@@ -124,40 +125,45 @@ export const fetchCourses = async (
             userId ?? ''
         );
 
-        const courseResults = await courseResultQuery.execute();
+        const courses: (Selectable<Course> & { _relevance?: number; isFavorite?: boolean })[] =
+            await courseResultQuery.execute();
 
-        const courses: CourseResult[] = courseResults.map((dbResultRow) => {
-            // We are using `any` here to dynamically assign values to `course` and `instructor`.
-            // TypeScript does not allow dynamic keys without an index signature, and adding
-            // such a signature would undermine type safety across the codebase.
-            // Since in the kysely query we are using selectAll(['Course', 'User']), we know that
-            // the result will contain all fields of `Course` and `User`. We are also using the
-            // `CourseResult` type to ensure that the keys are correct. Therefore, we can safely
-            // cast the result to `Course` and `User` types. This is a trade-off between type safety
-            // and code readability/dynamism. We are opting for the latter in this case.
+        const instructorIds = courses.map((course) => course.instructorId);
+        const instructors = await getAssociatedUsers(instructorIds);
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const course: any = {};
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const instructor: any = {};
+        const courseResults: CourseResult[] = courses.map((course) => {
+            const {
+                _relevance: _courseRelevance,
+                isFavorite: _courseIsFavorite,
+                ...courseData
+            } = course;
 
-            Object.entries(dbResultRow).forEach(([key, value]) => {
-                if (key.startsWith('course')) {
-                    course[key] = value;
-                } else if (key.startsWith('user')) {
-                    instructor[key] = value;
-                } else if (key === 'isFavorite') {
-                    course[key] = Boolean(Number(value));
-                }
-            });
+            const instructor:
+                | (Selectable<User> & { _relevance?: number; isFavorite?: boolean })
+                | undefined = instructors.find(
+                (instructor) => instructor.id === course.instructorId
+            );
+
+            if (!instructor) {
+                throw new DatabaseError('Failed to fetch course instructor.');
+            }
+
+            const {
+                _relevance: _instructorRelevance,
+                isFavorite: _instructorIsFavorite,
+                ...instructorData
+            } = instructor;
 
             return {
-                course: course as Course & { isFavorite?: boolean },
-                instructor: instructor as User
+                course: {
+                    ...courseData,
+                    isFavorite: _courseIsFavorite
+                },
+                instructor: instructorData
             };
         });
 
-        return courses;
+        return courseResults;
     } catch (e) {
         throw new DatabaseError('Failed to fetch courses.');
     }
@@ -167,7 +173,7 @@ export const fetchCourses = async (
 // a way to move the logic that checks whether a userId is null into a .$if statement
 // without causing the query to fail. It may be possible to refactor this method to
 // make it more readable, but I was unable to do so in the time I had available.
-const getFetchCoursesQuery = (
+const getCoursesForFetchCoursesQuery = (
     requestContainsSearchTerm: boolean,
     sortByIsRelevance: boolean,
     searchTerm: string | null,
@@ -181,68 +187,73 @@ const getFetchCoursesQuery = (
     if (includeFavorites) {
         return db
             .selectFrom('Course')
-            .innerJoin('User', 'Course.courseInstructorId', 'User.userId')
-            .leftJoin('UserCourseFavorite', (join) =>
+            .innerJoin('User', 'Course.instructorId', 'User.id')
+            .leftJoin('CourseFavorite', (join) =>
                 join
-                    .onRef('Course.courseId', '=', 'UserCourseFavorite.userCourseFavoriteCourseId')
-                    .on('UserCourseFavorite.userCourseFavoriteUserId', '=', userId)
+                    .onRef('Course.id', '=', 'CourseFavorite.courseId')
+                    .on('CourseFavorite.userId', '=', userId)
             )
-            .selectAll(['Course', 'User'])
+            .selectAll('Course')
             .select(
-                sql<boolean>`IF(UserCourseFavorite.userCourseFavoriteCourseId IS NOT NULL, TRUE, FALSE)`.as(
-                    'isFavorite'
-                )
+                sql<boolean>`IF(CourseFavorite.courseId IS NOT NULL, TRUE, FALSE)`.as('isFavorite')
             )
             .$if(requestContainsSearchTerm, (qb) =>
                 qb
                     .select(
-                        sql<number>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`.as(
+                        sql<number>`MATCH(title) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`.as(
                             '_relevance'
                         )
                     )
                     .where(
-                        sql<boolean>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
+                        sql<boolean>`MATCH(title) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
                     )
             )
             .$if(requestContainsSearchTerm || !sortByIsRelevance, (qb) =>
                 qb.orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
             )
             .$if(!recordDisplaySettings['display-test-records'], (qb) =>
-                qb.where('courseRecordType', '!=', 'TEST_RECORD')
+                qb.where('Course.recordType', '!=', 'TEST_RECORD')
             )
             .$if(!recordDisplaySettings['display-seed-records'], (qb) =>
-                qb.where('courseRecordType', '!=', 'SEED_RECORD')
+                qb.where('Course.recordType', '!=', 'SEED_RECORD')
             )
             .limit(pageSize)
             .offset(pageNo * pageSize);
     } else {
         return db
             .selectFrom('Course')
-            .innerJoin('User', 'Course.courseInstructorId', 'User.userId')
-            .selectAll(['Course', 'User'])
+            .innerJoin('User', 'Course.instructorId', 'User.id')
+            .selectAll('Course')
             .$if(requestContainsSearchTerm, (qb) =>
                 qb
                     .select(
-                        sql<number>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`.as(
+                        sql<number>`MATCH(title) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`.as(
                             '_relevance'
                         )
                     )
                     .where(
-                        sql<boolean>`MATCH(courseTitle) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
+                        sql<boolean>`MATCH(title) AGAINST (${searchTerm} IN NATURAL LANGUAGE MODE)`
                     )
             )
             .$if(requestContainsSearchTerm || !sortByIsRelevance, (qb) =>
                 qb.orderBy(sortByValue.dbField, sortByValue.dbOrderDirection)
             )
             .$if(!recordDisplaySettings['display-test-records'], (qb) =>
-                qb.where('courseRecordType', '!=', 'TEST_RECORD')
+                qb.where('Course.recordType', '!=', 'TEST_RECORD')
             )
             .$if(!recordDisplaySettings['display-seed-records'], (qb) =>
-                qb.where('courseRecordType', '!=', 'SEED_RECORD')
+                qb.where('Course.recordType', '!=', 'SEED_RECORD')
             )
             .limit(pageSize)
             .offset(pageNo * pageSize);
     }
+};
+
+const getAssociatedUsers = (userIds: string[]) => {
+    if (userIds.length === 0) {
+        return [] as Selectable<User>[];
+    }
+    return db.selectFrom('User').selectAll('User').where('User.id', 'in', userIds).execute();
 };
 
 // PRIMARY HELPER FUNCTION

@@ -12,9 +12,9 @@ export const load = (async ({ fetch }) => {
     const settingData = result.data;
 
     for (const setting of settingData) {
-        if (setting.siteSettingKey in settings) {
-            const key = setting.siteSettingKey as keyof typeof settings;
-            settings[key] = setting.siteSettingValue === 'true';
+        if (setting.key in settings) {
+            const key = setting.key as keyof typeof settings;
+            settings[key] = setting.value === 'true';
         }
     }
 

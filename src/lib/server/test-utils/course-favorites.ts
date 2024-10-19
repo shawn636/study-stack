@@ -59,8 +59,8 @@ const module: CourseFavoritesTestUtil = {
     // Required Clenup Method
     async cleanup(): Promise<number> {
         const result = await db
-            .deleteFrom('UserCourseFavorite')
-            .where('UserCourseFavorite.userCourseFavoriteRecordType', '=', 'TEST_RECORD')
+            .deleteFrom('CourseFavorite')
+            .where('CourseFavorite.recordType', '=', 'TEST_RECORD')
             .executeTakeFirstOrThrow();
         return Number(result.numDeletedRows ?? 0);
     },
@@ -78,15 +78,15 @@ const module: CourseFavoritesTestUtil = {
         const { email, password, user } = await UserTestUtilModule.getUserWithCredentials();
         const courses = await CourseTestUtilModule.getCourses(count);
 
-        const userCourseFavorites = courses.map((course) => {
+        const courseFavorites = courses.map((course) => {
             return {
-                userCourseFavoriteCourseId: course.courseId,
-                userCourseFavoriteRecordType: RecordType.TEST_RECORD,
-                userCourseFavoriteUserId: user.userId
+                courseId: course.id,
+                recordType: RecordType.TEST_RECORD,
+                userId: user.id
             };
         });
 
-        await db.insertInto('UserCourseFavorite').values(userCourseFavorites).execute();
+        await db.insertInto('CourseFavorite').values(courseFavorites).execute();
 
         return { courses, email, password, user };
     }

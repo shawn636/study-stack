@@ -28,18 +28,18 @@ export const GET = (async ({ params }) => {
         try {
             const dbResult = await db
                 .selectFrom('User')
-                .innerJoin('Course', 'Course.courseInstructorId', 'User.userId')
+                .innerJoin('Course', 'Course.instructorId', 'User.id')
                 .selectAll('User')
-                .where('Course.courseId', '=', courseId)
+                .where('Course.id', '=', courseId)
                 .$if(!options['display-test-records'], (qb) =>
                     qb
-                        .where('Course.courseRecordType', '!=', 'TEST_RECORD')
-                        .where('User.userRecordType', '!=', 'TEST_RECORD')
+                        .where('Course.recordType', '!=', 'TEST_RECORD')
+                        .where('User.recordType', '!=', 'TEST_RECORD')
                 )
                 .$if(!options['display-seed-records'], (qb) =>
                     qb
-                        .where('Course.courseRecordType', '!=', 'SEED_RECORD')
-                        .where('User.userRecordType', '!=', 'SEED_RECORD')
+                        .where('Course.recordType', '!=', 'SEED_RECORD')
+                        .where('User.recordType', '!=', 'SEED_RECORD')
                 )
                 .executeTakeFirstOrThrow();
             result = dbResult as unknown as User;

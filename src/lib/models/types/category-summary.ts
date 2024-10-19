@@ -1,5 +1,5 @@
 export default interface CategorySummary {
-    categoryImgHref: string;
-    categoryTitle: string;
+    imgHref: string;
+    title: string;
     count: number;
 }

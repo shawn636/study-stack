@@ -1,9 +1,9 @@
-export type ToggleUserCourseFavoritePayload = {
+export type ToggleCourseFavoritePayload = {
     courseId: string;
     current: boolean;
     previous: boolean;
 };
 
-export type ToggleUserCourseFavoriteEvent = {
-    toggleUserCourseFavorite: ToggleUserCourseFavoritePayload;
+export type ToggleCourseFavoriteEvent = {
+    toggleCourseFavorite: ToggleCourseFavoritePayload;
 };

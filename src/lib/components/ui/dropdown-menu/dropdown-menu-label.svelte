@@ -2,9 +2,9 @@
     import { cn } from '$lib/utils.js';
     import { DropdownMenu as DropdownMenuPrimitive } from 'bits-ui';
 
-    type $$Props = {
+    type $$Props = DropdownMenuPrimitive.LabelProps & {
         inset?: boolean;
-    } & DropdownMenuPrimitive.LabelProps;
+    };
 
     let className: $$Props['class'] = undefined;
     export let inset: $$Props['inset'] = undefined;

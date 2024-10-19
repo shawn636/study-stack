@@ -1,10 +1,11 @@
 <script lang="ts">
     import { cn } from '$lib/utils.js';
+    import Fa from 'svelte-fa';
     import { faCheck } from '@fortawesome/free-solid-svg-icons';
     import { Select as SelectPrimitive } from 'bits-ui';
-    import Fa from 'svelte-fa';
 
     type $$Props = SelectPrimitive.ItemProps;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = SelectPrimitive.ItemEvents;
 
     let className: $$Props['class'] = undefined;

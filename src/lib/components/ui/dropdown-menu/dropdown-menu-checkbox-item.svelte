@@ -1,10 +1,11 @@
 <script lang="ts">
     import { cn } from '$lib/utils.js';
-    import { faCheck } from '@fortawesome/free-solid-svg-icons';
     import { DropdownMenu as DropdownMenuPrimitive } from 'bits-ui';
     import Fa from 'svelte-fa';
+    import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
     type $$Props = DropdownMenuPrimitive.CheckboxItemProps;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = DropdownMenuPrimitive.CheckboxItemEvents;
 
     let className: $$Props['class'] = undefined;

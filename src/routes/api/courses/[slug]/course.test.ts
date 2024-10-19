@@ -12,17 +12,18 @@ describe('/api/courses', () => {
     it('should return a specific course', { timeout: 10000 }, async () => {
         const someCourseWithInstructor = await db
             .selectFrom('Course')
-            .innerJoin('User', 'Course.courseInstructorId', 'User.userId')
+            .innerJoin('User', 'Course.instructorId', 'User.id')
             .selectAll(['Course', 'User'])
-            .where('Course.courseRecordType', '=', 'TEST_RECORD')
+            .select(['Course.id as courseId', 'User.id as instructorId'])
+            .where('Course.recordType', '=', 'TEST_RECORD')
             .executeTakeFirstOrThrow();
 
         const response = await client.courses.getCourse(someCourseWithInstructor.courseId);
 
         expect(response.success).toBe(true);
 
-        expect(response.data.course.courseId).toBe(someCourseWithInstructor.courseId);
-        expect(response.data.course.courseTitle).toBe(someCourseWithInstructor.courseTitle);
-        expect(response.data.instructor.userId).toBe(someCourseWithInstructor.courseInstructorId);
+        expect(response.data.course.id).toBe(someCourseWithInstructor.courseId);
+        expect(response.data.course.title).toBe(someCourseWithInstructor.title);
+        expect(response.data.instructor.id).toBe(someCourseWithInstructor.instructorId);
     });
 });

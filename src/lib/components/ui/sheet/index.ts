@@ -1,5 +1,4 @@
-import { Dialog as SheetPrimitive } from 'bits-ui';
-import { type VariantProps, tv } from 'tailwind-variants';
+import { tv, type VariantProps } from 'tailwind-variants';
 
 import Content from './sheet-content.svelte';
 import Description from './sheet-description.svelte';
@@ -7,10 +6,14 @@ import Footer from './sheet-footer.svelte';
 import Header from './sheet-header.svelte';
 import Overlay from './sheet-overlay.svelte';
 import Portal from './sheet-portal.svelte';
+import { Dialog as SheetPrimitive } from 'bits-ui';
 import Title from './sheet-title.svelte';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const Root = SheetPrimitive.Root;
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const Close = SheetPrimitive.Close;
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const Trigger = SheetPrimitive.Trigger;
 
 export {

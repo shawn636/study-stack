@@ -51,19 +51,19 @@ export const GET = (async () => {
         try {
             results = await db
                 .selectFrom('Category')
-                .innerJoin('Course', 'Category.categoryId', 'Course.courseCategoryId')
+                .innerJoin('Course', 'Category.id', 'Course.categoryId')
                 .select([
-                    'Category.categoryImgHref',
-                    'Category.categoryTitle',
+                    'Category.imgHref',
+                    'Category.title',
                     ({ fn }) => fn.countAll<number>().as('count')
                 ])
                 .$if(!siteSettings['display-test-records'], (qb) =>
-                    qb.where('Category.categoryRecordType', '!=', 'TEST_RECORD')
+                    qb.where('Category.recordType', '!=', 'TEST_RECORD')
                 )
                 .$if(!siteSettings['display-seed-records'], (qb) =>
-                    qb.where('Category.categoryRecordType', '!=', 'SEED_RECORD')
+                    qb.where('Category.recordType', '!=', 'SEED_RECORD')
                 )
-                .groupBy(['Category.categoryImgHref', 'Category.categoryTitle'])
+                .groupBy(['Category.imgHref', 'Category.title'])
                 .orderBy('count', 'desc')
                 .limit(6)
                 .execute();

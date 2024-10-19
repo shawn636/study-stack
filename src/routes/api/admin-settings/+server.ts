@@ -34,12 +34,12 @@ export const GET = (async ({ cookies, url }) => {
 
         const settingsFromDB = await db
             .selectFrom('SiteSetting')
-            .select(['SiteSetting.siteSettingKey', 'SiteSetting.siteSettingValue'])
-            .where('siteSettingKey', 'in', settingsToRetrieve)
-            .where('siteSettingRecordType', '=', RecordType.PRODUCTION_RECORD)
+            .select(['SiteSetting.key', 'SiteSetting.value'])
+            .where('key', 'in', settingsToRetrieve)
+            .where('recordType', '=', RecordType.PRODUCTION_RECORD)
             .execute();
 
-        const settingKeys = settingsFromDB.map((setting) => setting.siteSettingKey);
+        const settingKeys = settingsFromDB.map((setting) => setting.key);
 
         if (settingsToRetrieve.length !== settingKeys.length) {
             const missingSettings = settingsToRetrieve.filter(

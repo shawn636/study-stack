@@ -17,7 +17,7 @@ export const updatePhoneNumber = (
 };
 
 export const submitForm = async (user: User): Promise<User | null> => {
-    const response = await client.users.update(user.userId, user);
+    const response = await client.users.update(user.id, user);
 
     if (response.success) {
         toast.success('Profile updated successfully');

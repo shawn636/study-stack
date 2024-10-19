@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { Tabs as TabsPrimitive } from 'bits-ui';
     import { cn } from '$lib/utils.js';
+    import { Tabs as TabsPrimitive } from 'bits-ui';
 
     type $$Props = TabsPrimitive.TriggerProps;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = TabsPrimitive.TriggerEvents;
 
     let className: $$Props['class'] = undefined;

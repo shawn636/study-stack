@@ -1,9 +1,9 @@
-import { fetchWithTimeout, handleApiResponse } from '../utils';
 import type {
-    UserCourseFavoritesCreateResponse,
+    CourseFavoritesCreateResponse,
     UserPhotoCreateResponse,
     UserUpdateResponse
 } from '../types/users';
+import { fetchWithTimeout, handleApiResponse } from '../utils';
 
 import type { ApiClient } from '../api-client';
 import type { User } from '$lib/models/types/database.types';
@@ -15,10 +15,7 @@ class UsersModule {
         this.client = client;
     }
 
-    async favoriteCourse(
-        userId: string,
-        courseId: string
-    ): Promise<UserCourseFavoritesCreateResponse> {
+    async favoriteCourse(userId: string, courseId: string): Promise<CourseFavoritesCreateResponse> {
         const url = this.client.getFullUrl(`/api/users/${userId}/course-favorites/${courseId}`);
 
         const response = await fetch(url, {
@@ -28,13 +25,13 @@ class UsersModule {
             method: 'POST'
         });
 
-        return handleApiResponse<UserCourseFavoritesCreateResponse>(response);
+        return handleApiResponse<CourseFavoritesCreateResponse>(response);
     }
 
     async unfavoriteCourse(
         userId: string,
         courseId: string
-    ): Promise<UserCourseFavoritesCreateResponse> {
+    ): Promise<CourseFavoritesCreateResponse> {
         const url = this.client.getFullUrl(`/api/users/${userId}/course-favorites/${courseId}`);
 
         const response = await fetch(url, {
@@ -44,7 +41,7 @@ class UsersModule {
             method: 'DELETE'
         });
 
-        return handleApiResponse<UserCourseFavoritesCreateResponse>(response);
+        return handleApiResponse<CourseFavoritesCreateResponse>(response);
     }
 
     async update(

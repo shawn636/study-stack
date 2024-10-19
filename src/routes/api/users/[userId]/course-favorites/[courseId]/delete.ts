@@ -1,6 +1,5 @@
-// import type { DeleteFavoriteResponse } from '$lib/models/types/api';
+import type { CourseFavoritesDeleteResponse } from '$lib/api/types/users';
 import type { DeleteResult } from 'kysely';
-import type { UserCourseFavoritesDeleteResponse } from '$lib/api/types/users';
 
 import { DatabaseError, NotFoundError } from '$lib/server/error-handling/handled-errors';
 
@@ -12,19 +11,19 @@ import type { RequestHandler } from './$types';
 
 export const DELETE = (async ({ cookies, params }) => {
     try {
-        const userCourseFavoriteCourseId = params.courseId;
-        const userCourseFavoriteUserId = params.userId;
+        const courseId = params.courseId;
+        const userId = params.userId;
 
-        await auth.validateApiSession(cookies, userCourseFavoriteUserId);
+        await auth.validateApiSession(cookies, userId);
 
         try {
             const course = await db
                 .selectFrom('Course')
-                .select('Course.courseId')
-                .where('Course.courseId', '=', userCourseFavoriteCourseId)
+                .select('Course.id')
+                .where('Course.id', '=', courseId)
                 .executeTakeFirstOrThrow();
 
-            if (!course || !course.courseId) {
+            if (!course || !course.id) {
                 throw new NotFoundError('Course not found');
             }
         } catch (e) {
@@ -34,13 +33,9 @@ export const DELETE = (async ({ cookies, params }) => {
         let result: DeleteResult;
         try {
             result = await db
-                .deleteFrom('UserCourseFavorite')
-                .where(
-                    'UserCourseFavorite.userCourseFavoriteCourseId',
-                    '=',
-                    userCourseFavoriteCourseId
-                )
-                .where('UserCourseFavorite.userCourseFavoriteUserId', '=', userCourseFavoriteUserId)
+                .deleteFrom('CourseFavorite')
+                .where('CourseFavorite.courseId', '=', courseId)
+                .where('CourseFavorite.userId', '=', userId)
                 .executeTakeFirstOrThrow();
         } catch (e) {
             throw new DatabaseError(`Error fetching favorites: ${e}`);
@@ -48,13 +43,13 @@ export const DELETE = (async ({ cookies, params }) => {
 
         const deleted = Number(result?.numDeletedRows ?? 0) > 0;
 
-        const responsePayload: UserCourseFavoritesDeleteResponse = {
+        const responsePayload: CourseFavoritesDeleteResponse = {
             count: 1,
             data: {
                 deleted: deleted,
                 message: deleted ? 'Course removed from favorites' : 'Course not in favorites'
             },
-            object: 'UserCourseFavorites',
+            object: 'CourseFavorites',
             success: true
         };
 

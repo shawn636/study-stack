@@ -2,9 +2,8 @@
     import type { HTMLAttributes } from 'svelte/elements';
 
     import { cn } from '$lib/utils.js';
-    import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
-    // import Ellipsis from 'lucide-svelte/icons/ellipsis';
     import Fa from 'svelte-fa';
+    import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 
     type $$Props = HTMLAttributes<HTMLSpanElement>;
 

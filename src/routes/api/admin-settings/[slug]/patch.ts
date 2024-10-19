@@ -13,27 +13,23 @@ export const PATCH = (async ({ cookies, params, request }) => {
         await auth.validateApiSession(cookies, undefined, 'ADMIN');
 
         const body = await request.json();
-        const siteSettingKey = params.slug;
+        const key = params.slug;
 
-        if (!body || !('setting' in body) || !siteSettingKey) {
+        if (!body || !('setting' in body) || !key) {
             throw new InvalidRequestError('Invalid request. Please provide settings to update.');
         }
 
-        if (
-            !body.setting.siteSettingKey ||
-            !body.setting.siteSettingValue ||
-            !body.setting.siteSettingRecordType
-        ) {
+        if (!body.setting.key || !body.setting.value || !body.setting.recordType) {
             throw new InvalidRequestError(
-                'Invalid request. Setting must have values for siteSettingKey, siteSettingValue, and siteSettingRecordType.'
+                'Invalid request. Setting must have values for key, value, and recordType.'
             );
         }
         let matchingSettingCount = 0;
         try {
             const dbResult = await db
                 .selectFrom('SiteSetting')
-                .select(({ fn }) => [fn.count<number>('siteSettingKey').as('settingCount')])
-                .where('SiteSetting.siteSettingKey', '=', siteSettingKey)
+                .select(({ fn }) => [fn.count<number>('key').as('settingCount')])
+                .where('SiteSetting.key', '=', key)
                 .executeTakeFirstOrThrow();
             matchingSettingCount = dbResult.settingCount;
         } catch (e) {
@@ -52,7 +48,7 @@ export const PATCH = (async ({ cookies, params, request }) => {
                 const result = await db
                     .updateTable('SiteSetting')
                     .set(body.setting)
-                    .where('siteSettingKey', '=', siteSettingKey)
+                    .where('key', '=', key)
                     .executeTakeFirstOrThrow();
                 updatedOrInsertedCount += Number(result.numUpdatedRows ?? 0);
             }
