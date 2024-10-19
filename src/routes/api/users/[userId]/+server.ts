@@ -18,15 +18,15 @@ export const PUT = (async ({ cookies, params, request }) => {
 
         const {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            userAuthUserId,
+            authUserId,
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            userId,
+            id,
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            userOrganizationId,
+            organizationId,
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            userRecordType,
+            recordType,
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            userRole,
+            role,
             ...userFromRequestWithoutForeignKeys
         } = userFromRequest;
 
@@ -36,7 +36,7 @@ export const PUT = (async ({ cookies, params, request }) => {
                 .set({
                     ...userFromRequestWithoutForeignKeys
                 })
-                .where('userId', '=', userIdSlug)
+                .where('id', '=', userIdSlug)
                 .execute();
         } catch (e) {
             throw new DatabaseError(`Unable to update due to server error: ${e}`);

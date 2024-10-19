@@ -1,11 +1,12 @@
 <script lang="ts">
-    import { Pagination as PaginationPrimitive } from 'bits-ui';
-    import Fa from 'svelte-fa';
-    import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
     import { Button } from '$lib/components/ui/button/index.js';
     import { cn } from '$lib/utils.js';
+    import Fa from 'svelte-fa';
+    import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+    import { Pagination as PaginationPrimitive } from 'bits-ui';
 
     type $$Props = PaginationPrimitive.PrevButtonProps;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = PaginationPrimitive.PrevButtonEvents;
 
     let className: $$Props['class'] = undefined;

@@ -1,10 +1,11 @@
 <script lang="ts">
     import { cn } from '$lib/utils.js';
-    import { faCircle } from '@fortawesome/free-regular-svg-icons';
     import { DropdownMenu as DropdownMenuPrimitive } from 'bits-ui';
     import Fa from 'svelte-fa';
+    import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
     type $$Props = DropdownMenuPrimitive.RadioItemProps;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = DropdownMenuPrimitive.RadioItemEvents;
 
     let className: $$Props['class'] = undefined;

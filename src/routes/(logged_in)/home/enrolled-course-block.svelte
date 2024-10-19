@@ -8,14 +8,14 @@
     export let courseProgress: CourseProgress;
 
     $: percentComplete = Math.min(
-        (courseProgress.courseProgressLessonsCompleted / course.courseLessonCount) * 100,
+        (courseProgress.lessonsCompleted / course.lessonCount) * 100,
         100
     );
 </script>
 
 <div class="grid gap-y-1 p-4" data-testid="course-progress-block">
-    <Image alt="Course 1" class="rounded-lg" height="151" src={course.courseImgHref} width="252" />
-    <p class="text-lg font-bold">{course.courseTitle}</p>
+    <Image alt="Course 1" class="rounded-lg" height="151" src={course.imgHref} width="252" />
+    <p class="text-lg font-bold">{course.title}</p>
     <div class="grid grid-cols-[1fr_auto] items-center gap-x-2">
         <div class="bg-surface-300 dark:bg-surface-700 relative h-2 w-full rounded-full">
             <div

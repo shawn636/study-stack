@@ -1,6 +1,5 @@
 <script lang="ts">
     import { AlertDialog as AlertDialogPrimitive } from 'bits-ui';
-    // import { buttonVariants } from '$lib/components/ui/button/index.js';
     import { buttonVariants } from '$lib/components/ui/button/index.js';
     import { cn } from '$lib/utils.js';
     import { type VariantProps } from 'tailwind-variants';
@@ -8,6 +7,7 @@
     type $$Props = AlertDialogPrimitive.ActionProps & {
         variant?: VariantProps<typeof buttonVariants>['variant'];
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = AlertDialogPrimitive.ActionEvents;
 
     let className: $$Props['class'] = undefined;

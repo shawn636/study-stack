@@ -1,9 +1,10 @@
 <script lang="ts">
     import { cn, flyAndScale } from '$lib/utils.js';
-    import { Select as SelectPrimitive } from 'bits-ui';
     import { scale } from 'svelte/transition';
+    import { Select as SelectPrimitive } from 'bits-ui';
 
     type $$Props = SelectPrimitive.ContentProps;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = SelectPrimitive.ContentEvents;
 
     export let sideOffset: $$Props['sideOffset'] = 4;

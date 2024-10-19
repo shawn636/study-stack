@@ -20,8 +20,8 @@ export const COOKIE_NAME = 'auth_session';
 const emailExists = async (email: string): Promise<boolean> => {
     const { authUserCount } = await db
         .selectFrom('AuthUser')
-        .where('AuthUser.authUserEmail', '=', email)
-        .select(({ fn }) => [fn.count<number>('AuthUser.authUserId').as('authUserCount')])
+        .where('AuthUser.email', '=', email)
+        .select(({ fn }) => [fn.count<number>('AuthUser.id').as('authUserCount')])
         .executeTakeFirstOrThrow();
 
     return authUserCount > 0;
@@ -36,11 +36,11 @@ const emailExists = async (email: string): Promise<boolean> => {
 const getAllSessions = async (authUserId: string): Promise<string[]> => {
     const sessionResults = await db
         .selectFrom('AuthSession')
-        .select('AuthSession.authSessionId')
-        .where('AuthSession.authSessionAuthUserId', '=', authUserId)
+        .select('AuthSession.id')
+        .where('AuthSession.authUserId', '=', authUserId)
         .execute();
 
-    const sessionIds: string[] = sessionResults.map((session) => session.authSessionId);
+    const sessionIds: string[] = sessionResults.map((session) => session.id);
 
     return sessionIds;
 };
@@ -61,9 +61,9 @@ const getUser = async (sessionId: string): Promise<User> => {
 
     const userResult = await db
         .selectFrom('User')
-        .innerJoin('AuthSession', 'User.userAuthUserId', 'AuthSession.authSessionAuthUserId')
+        .innerJoin('AuthSession', 'User.authUserId', 'AuthSession.authUserId')
         .selectAll('User')
-        .where('AuthSession.authSessionId', '=', sessionId)
+        .where('AuthSession.id', '=', sessionId)
         .executeTakeFirst();
 
     const user = userResult as User | undefined;
@@ -92,17 +92,17 @@ const getUserId = async (sessionId: string): Promise<string> => {
 
     const userResult = await db
         .selectFrom('User')
-        .innerJoin('AuthSession', 'User.userAuthUserId', 'AuthSession.authSessionAuthUserId')
-        .select('User.userId')
-        .where('AuthSession.authSessionId', '=', sessionId)
+        .innerJoin('AuthSession', 'User.authUserId', 'AuthSession.authUserId')
+        .select('User.id')
+        .where('AuthSession.id', '=', sessionId)
         .executeTakeFirst();
 
-    if (!userResult || !userResult.userId) {
+    if (!userResult || !userResult.id) {
         console.error('Unable to find user');
         throw Error('DB_SELECT_FAILED');
     }
 
-    return userResult.userId;
+    return userResult.id;
 };
 
 /**
@@ -133,9 +133,9 @@ const createUser = async (email: string, password: string, name: string): Promis
         const createAuthUserResult = await trx
             .insertInto('AuthUser')
             .values({
-                authUserEmail: email,
-                authUserId: authUserId,
-                authUserRecordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD'
+                email: email,
+                id: authUserId,
+                recordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD'
             })
             .executeTakeFirst();
 
@@ -146,12 +146,12 @@ const createUser = async (email: string, password: string, name: string): Promis
         const createUserResult = await trx
             .insertInto('User')
             .values({
-                userAuthUserId: authUserId,
-                userEmail: email,
-                userId: userId,
-                userName: name,
-                userRecordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD',
-                userRole: 'USER'
+                authUserId: authUserId,
+                email: email,
+                id: userId,
+                name: name,
+                recordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD',
+                role: 'USER'
             })
             .executeTakeFirst();
 
@@ -162,11 +162,11 @@ const createUser = async (email: string, password: string, name: string): Promis
         const createAuthKeyResult = await trx
             .insertInto('AuthKey')
             .values({
-                authKeyAuthUserId: authUserId,
-                authKeyId: authKeyId,
-                authKeyRecordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD',
-                authKeyType: KeyType.CREDENTIAL_HASH,
-                authKeyValue: keyValue
+                authUserId: authUserId,
+                id: authKeyId,
+                recordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD',
+                type: KeyType.CREDENTIAL_HASH,
+                value: keyValue
             })
             .executeTakeFirst();
 
@@ -189,11 +189,15 @@ const createUser = async (email: string, password: string, name: string): Promis
 const login = async (email: string, password: string): Promise<string> => {
     const loginResult = await db
         .selectFrom('AuthUser')
-        .innerJoin('AuthKey', 'AuthKey.authKeyAuthUserId', 'AuthUser.authUserId')
-        .where('AuthUser.authUserEmail', '=', email)
-        .where('authKeyType', '=', KeyType.CREDENTIAL_HASH)
+        .innerJoin('AuthKey', 'AuthKey.authUserId', 'AuthUser.id')
+        .where('AuthUser.email', '=', email)
+        .where('type', '=', KeyType.CREDENTIAL_HASH)
         .selectAll('AuthUser')
-        .select(['AuthKey.authKeyValue'])
+        .select([
+            'AuthUser.id as authUserId',
+            'AuthKey.id as authKeyId',
+            'AuthKey.value as authKeyValue'
+        ])
         .executeTakeFirst();
 
     if (loginResult === undefined || loginResult?.authUserId === undefined) {
@@ -219,9 +223,9 @@ const login = async (email: string, password: string): Promise<string> => {
     const createSessionResult = await db
         .insertInto('AuthSession')
         .values({
-            authSessionAuthUserId: loginResult.authUserId,
-            authSessionExpirationDate: expirationDate,
-            authSessionId: sessionId
+            authUserId: loginResult.authUserId,
+            expirationDate: expirationDate,
+            id: sessionId
         })
         .executeTakeFirstOrThrow();
 
@@ -241,7 +245,7 @@ const login = async (email: string, password: string): Promise<string> => {
  * @throws {Error} Throws an error if the session is invalid or deletion fails.
  */
 const logout = async (sessionId: string): Promise<void> => {
-    await db.deleteFrom('AuthSession').where('authSessionId', '=', sessionId).execute();
+    await db.deleteFrom('AuthSession').where('id', '=', sessionId).execute();
 
     return;
 };
@@ -254,10 +258,7 @@ const logout = async (sessionId: string): Promise<void> => {
  * @throws {Error} Throws an error if the user or sessions are not found, or deletion fails.
  */
 const logoutAll = async (authUserId: string): Promise<void> => {
-    await db
-        .deleteFrom('AuthSession')
-        .where('AuthSession.authSessionAuthUserId', '=', authUserId)
-        .execute();
+    await db.deleteFrom('AuthSession').where('AuthSession.authUserId', '=', authUserId).execute();
 
     return;
 };
@@ -273,13 +274,13 @@ const validateSession = async (sessionId: string): Promise<boolean> => {
         const session = await db
             .selectFrom('AuthSession')
             .selectAll()
-            .where('AuthSession.authSessionId', '=', sessionId)
+            .where('AuthSession.id', '=', sessionId)
             .executeTakeFirst();
 
-        if (session === undefined || session.authSessionExpirationDate === undefined) {
+        if (session === undefined || session.expirationDate === undefined) {
             return false;
         } else {
-            return session.authSessionExpirationDate > new Date();
+            return session.expirationDate > new Date();
         }
     } catch {
         return false;
@@ -332,13 +333,13 @@ const validateApiSession = async (
     if (requiredRole || requiredUserId) {
         const user = await getUser(sessionId);
 
-        if (requiredUserId && user.userId !== requiredUserId) {
+        if (requiredUserId && user.id !== requiredUserId) {
             console.error('Invalid user');
-            console.log(`Required: ${requiredUserId}, Found: ${user.userId}`);
+            console.log(`Required: ${requiredUserId}, Found: ${user.id}`);
             throw new UnauthorizedError('AUTH_INVALID_USER');
         }
 
-        if (requiredRole && String(user.userRole) !== requiredRole) {
+        if (requiredRole && String(user.role) !== requiredRole) {
             console.error('Invalid role');
             throw new UnauthorizedError('AUTH_INVALID_ROLE');
         }
@@ -420,24 +421,18 @@ const deleteUserIfExists = async (email: string): Promise<void> => {
     try {
         const { authUserId } = await db
             .selectFrom('AuthUser')
-            .select('AuthUser.authUserId')
-            .where('AuthUser.authUserEmail', '=', email)
+            .select('AuthUser.id as authUserId')
+            .where('AuthUser.email', '=', email)
             .executeTakeFirstOrThrow();
 
         await db.transaction().execute(async (trx: Transaction) => {
-            await trx.deleteFrom('User').where('User.userAuthUserId', '=', authUserId).execute();
-            await trx
-                .deleteFrom('AuthKey')
-                .where('AuthKey.authKeyAuthUserId', '=', authUserId)
-                .execute();
+            await trx.deleteFrom('User').where('User.authUserId', '=', authUserId).execute();
+            await trx.deleteFrom('AuthKey').where('AuthKey.authUserId', '=', authUserId).execute();
             await trx
                 .deleteFrom('AuthSession')
-                .where('AuthSession.authSessionAuthUserId', '=', authUserId)
+                .where('AuthSession.authUserId', '=', authUserId)
                 .execute();
-            await trx
-                .deleteFrom('AuthUser')
-                .where('AuthUser.authUserId', '=', authUserId)
-                .execute();
+            await trx.deleteFrom('AuthUser').where('AuthUser.id', '=', authUserId).execute();
         });
     } catch {
         return;

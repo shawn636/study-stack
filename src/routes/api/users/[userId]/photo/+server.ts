@@ -40,10 +40,10 @@ export const POST = (async ({ cookies, params, request }) => {
         try {
             const result = await db
                 .selectFrom('User')
-                .select('userPhotoImageId')
-                .where('userId', '=', userId)
+                .select('photoImageId')
+                .where('id', '=', userId)
                 .executeTakeFirstOrThrow();
-            currentProfileImageId = result.userPhotoImageId;
+            currentProfileImageId = result.photoImageId;
         } catch (e) {
             throw new DatabaseError(`Unable to retrieve current photo image id for user: ${e}`);
         }
@@ -82,10 +82,10 @@ export const POST = (async ({ cookies, params, request }) => {
             const result = await db
                 .updateTable('User')
                 .set({
-                    userPhotoImageId: cloudflareImageId ?? 'NULL',
-                    userPhotoUrl: newPhotoUrl
+                    photoImageId: cloudflareImageId ?? 'NULL',
+                    photoUrl: newPhotoUrl
                 })
-                .where('userId', '=', userIdFromRequest)
+                .where('id', '=', userIdFromRequest)
                 .executeTakeFirstOrThrow();
 
             if (Number(result.numUpdatedRows) !== Number(1)) {

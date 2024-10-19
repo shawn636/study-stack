@@ -1,8 +1,8 @@
 import type { TestUtil } from '$lib/models/types/test-util';
 
 import CategoryTestUtilModule from './category';
+import CourseFavoritesTestUtilModule from './course-favorites';
 import CourseTestUtilModule from './course';
-import UserCourseFavoritesTestUtilModule from './course-favorites';
 import UserTestUtilModule from './user';
 
 type ModuleRecord = {
@@ -14,7 +14,7 @@ type ModuleRecord = {
 // When adding a new test-utils module, import it and add it to this list
 // NOTE: ORDER MATTERS! Modules must be cleaned up in the correct order to avoid foreign key constraints
 const moduleRecords: ModuleRecord[] = [
-    { module: UserCourseFavoritesTestUtilModule, table: 'UserCourseFavorites' },
+    { module: CourseFavoritesTestUtilModule, table: 'CourseFavorites' },
     { module: UserTestUtilModule, table: 'User' },
     { module: CourseTestUtilModule, table: 'Course' },
     { module: CategoryTestUtilModule, table: 'Category' }

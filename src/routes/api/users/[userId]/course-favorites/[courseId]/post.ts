@@ -1,4 +1,4 @@
-import type { UserCourseFavoritesCreateResponse } from '$lib/api/types/users';
+import type { CourseFavoritesCreateResponse } from '$lib/api/types/users';
 
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/database';
@@ -9,34 +9,34 @@ import type { RequestHandler } from './$types';
 
 export const POST = (async ({ cookies, params }) => {
     try {
-        const userCourseFavoriteCourseId = params.courseId;
-        const userCourseFavoriteUserId = params.userId;
+        const courseId = params.courseId;
+        const userId = params.userId;
 
-        await auth.validateApiSession(cookies, userCourseFavoriteUserId);
+        await auth.validateApiSession(cookies, userId);
 
-        if (!userCourseFavoriteCourseId) {
+        if (!courseId) {
             throw new InvalidRequestError('Invalid course ID');
         }
 
-        if (!userCourseFavoriteUserId) {
+        if (!userId) {
             throw new InvalidRequestError('Invalid user ID');
         }
 
         const result = await db
-            .insertInto('UserCourseFavorite')
-            .values({ userCourseFavoriteCourseId, userCourseFavoriteUserId })
+            .insertInto('CourseFavorite')
+            .values({ courseId, userId })
             .ignore()
             .executeTakeFirstOrThrow();
 
         const created = Number(result.numInsertedOrUpdatedRows ?? 0) > 0;
 
-        const responsePayload: UserCourseFavoritesCreateResponse = {
+        const responsePayload: CourseFavoritesCreateResponse = {
             count: 1,
             data: {
                 created: created,
                 message: created ? 'Course added to favorites' : 'Course already in favorites'
             },
-            object: 'UserCourseFavorites',
+            object: 'CourseFavorites',
             success: true
         };
 

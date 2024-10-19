@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { Switch as SwitchPrimitive } from 'bits-ui';
     import { cn } from '$lib/utils.js';
+    import { Switch as SwitchPrimitive } from 'bits-ui';
 
     type $$Props = SwitchPrimitive.Props;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = SwitchPrimitive.Events;
 
     let className: $$Props['class'] = undefined;

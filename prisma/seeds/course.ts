@@ -24,30 +24,30 @@ export async function seedCourse(client: PrismaClient) {
 
         const category = faker.helpers.arrayElement(categories);
         const instructor = faker.helpers.arrayElement(users);
-        const hasOrg = instructor.userOrganizationId !== null;
+        const hasOrg = instructor.organizationId !== null;
         const organization = hasOrg
-            ? organizations.find((org) => org.organizationId === instructor.userOrganizationId)
+            ? organizations.find((org) => org.id === instructor.organizationId)
             : null;
 
         const course: Course = {
-            courseCategoryId: category.categoryId,
-            courseCurrentPrice: new Prisma.Decimal(discountedPrice),
-            courseDescription: faker.commerce.productDescription(),
-            courseDifficulty: faker.helpers.arrayElement(difficulties),
-            courseEstimatedTimeHours: faker.number.int({ max: 100, min: 0 }),
-            courseEstimatedTimeMinutes: faker.number.int({ max: 59, min: 0 }),
-            courseId: cuid(),
-            courseImgHref: 'images/course-image.webp',
-            courseInstructorId: instructor.userId,
-            courseLessonCount: 0,
-            courseOrganizationId: organization?.organizationId ?? null,
-            courseOriginalPrice: isDiscounted
+            categoryId: category.id,
+            currentPrice: new Prisma.Decimal(discountedPrice),
+            description: faker.commerce.productDescription(),
+            difficulty: faker.helpers.arrayElement(difficulties),
+            estimatedTimeHours: faker.number.int({ max: 100, min: 0 }),
+            estimatedTimeMinutes: faker.number.int({ max: 59, min: 0 }),
+            id: cuid(),
+            imgHref: 'images/course-image.webp',
+            instructorId: instructor.id,
+            lessonCount: 0,
+            organizationId: organization?.id ?? null,
+            originalPrice: isDiscounted
                 ? new Prisma.Decimal(price)
                 : new Prisma.Decimal(discountedPrice),
-            courseRatingAverage: faker.number.float({ max: 5, min: 0 }),
-            courseRatingCount: faker.number.int({ max: 1000, min: 0 }),
-            courseRecordType: 'SEED_RECORD',
-            courseTitle: faker.commerce.productName()
+            ratingAverage: faker.number.float({ max: 5, min: 0 }),
+            ratingCount: faker.number.int({ max: 1000, min: 0 }),
+            recordType: 'SEED_RECORD',
+            title: faker.commerce.productName()
         };
 
         courses.push(course);

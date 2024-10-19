@@ -48,7 +48,7 @@ const module: CourseTestUtil = {
     async cleanup(): Promise<number> {
         const result = await db
             .deleteFrom('Category')
-            .where('Category.categoryRecordType', '=', 'TEST_RECORD')
+            .where('Category.recordType', '=', 'TEST_RECORD')
             .executeTakeFirstOrThrow();
         return Number(result.numDeletedRows ?? 0);
     },
@@ -56,10 +56,10 @@ const module: CourseTestUtil = {
     // Additional Methods
     async getCategory(): Promise<Category> {
         const category = {
-            categoryId: cuid(),
-            categoryImgHref: 'images/img-placeholder.svg',
-            categoryRecordType: RecordType.TEST_RECORD,
-            categoryTitle: `unit-test-category-${cuid()}`
+            id: cuid(),
+            imgHref: 'images/img-placeholder.svg',
+            recordType: RecordType.TEST_RECORD,
+            title: `unit-test-category-${cuid()}`
         };
 
         await db.insertInto('Category').values(category).execute();

@@ -13,16 +13,16 @@ export async function seedLesson(client: PrismaClient) {
     for (const course of courses) {
         const numLessons = faker.number.int({ max: 10, min: 0 });
         courseUpdates.push({
-            courseId: course.courseId,
-            courseLessonCount: numLessons
+            id: course.id,
+            lessonCount: numLessons
         });
 
         for (let i = 0; i < numLessons; i++) {
             const lesson: Lesson = {
-                lessonCourseId: course.courseId,
-                lessonId: cuid(),
-                lessonRecordType: 'SEED_RECORD',
-                lessonTitle: faker.lorem.sentence()
+                courseId: course.id,
+                id: cuid(),
+                recordType: 'SEED_RECORD',
+                title: faker.lorem.sentence()
             };
             lessons.push(lesson);
         }
@@ -33,8 +33,8 @@ export async function seedLesson(client: PrismaClient) {
     await Promise.all(
         courseUpdates.map(async (course) => {
             await client.course.update({
-                data: { courseLessonCount: course.courseLessonCount },
-                where: { courseId: course.courseId }
+                data: { lessonCount: course.lessonCount },
+                where: { id: course.id }
             });
         })
     );

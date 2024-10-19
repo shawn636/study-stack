@@ -32,8 +32,8 @@ export const PATCH = (async ({ cookies, params, request }) => {
         try {
             const dbResult = await db
                 .selectFrom('SiteSetting')
-                .select(({ fn }) => [fn.count<number>('siteSettingKey').as('settingCount')])
-                .where('SiteSetting.siteSettingKey', '=', siteSettingKey)
+                .select(({ fn }) => [fn.count<number>('key').as('settingCount')])
+                .where('SiteSetting.key', '=', siteSettingKey)
                 .executeTakeFirstOrThrow();
             matchingSettingCount = dbResult.settingCount;
         } catch (e) {
@@ -52,7 +52,7 @@ export const PATCH = (async ({ cookies, params, request }) => {
                 const result = await db
                     .updateTable('SiteSetting')
                     .set(body.setting)
-                    .where('siteSettingKey', '=', siteSettingKey)
+                    .where('key', '=', siteSettingKey)
                     .executeTakeFirstOrThrow();
                 updatedOrInsertedCount += Number(result.numUpdatedRows ?? 0);
             }

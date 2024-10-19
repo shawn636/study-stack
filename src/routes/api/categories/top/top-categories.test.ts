@@ -34,13 +34,13 @@ describe('top-categories', () => {
         expect(response.count).toBe(6);
 
         for (const categorySummary of categorySummaries) {
-            expect(categorySummary.categoryTitle).toBeTruthy();
-            expect(typeof categorySummary.categoryTitle).toBe('string');
+            expect(categorySummary.title).toBeTruthy();
+            expect(typeof categorySummary.title).toBe('string');
 
             expect(categorySummary.count).toBeTruthy();
             expect(Number(categorySummary.count)).toBeGreaterThanOrEqual(1);
 
-            expect(typeof categorySummary.categoryImgHref).toBe('string');
+            expect(typeof categorySummary.imgHref).toBe('string');
         }
     });
 });

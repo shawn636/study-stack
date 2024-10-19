@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cn } from '$lib/utils.js';
-    import { Dialog as SheetPrimitive } from 'bits-ui';
     import { fade } from 'svelte/transition';
+    import { Dialog as SheetPrimitive } from 'bits-ui';
 
     type $$Props = SheetPrimitive.OverlayProps;
 

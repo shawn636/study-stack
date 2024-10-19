@@ -4,19 +4,19 @@ export async function seedSiteSettings(client: PrismaClient) {
     await Promise.all([
         client.siteSetting.upsert({
             create: {
-                siteSettingKey: 'display-test-records',
-                siteSettingValue: false.toString()
+                key: 'display-test-records',
+                value: false.toString()
             },
             update: {},
-            where: { siteSettingKey: 'display-test-records' }
+            where: { key: 'display-test-records' }
         }),
         client.siteSetting.upsert({
             create: {
-                siteSettingKey: 'display-seed-records',
-                siteSettingValue: true.toString()
+                key: 'display-seed-records',
+                value: true.toString()
             },
             update: {},
-            where: { siteSettingKey: 'display-seed-records' }
+            where: { key: 'display-seed-records' }
         })
     ]);
 }

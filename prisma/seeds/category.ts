@@ -4,49 +4,49 @@ export async function seedCategory(client: PrismaClient) {
     await client.category.createMany({
         data: [
             {
-                categoryImgHref: 'images/book-open.svg',
-                categoryRecordType: 'SEED_RECORD',
-                categoryTitle: 'Bible Study & Theology'
+                imgHref: 'images/book-open.svg',
+                recordType: 'SEED_RECORD',
+                title: 'Bible Study & Theology'
             },
             {
-                categoryImgHref: 'images/biblical-languages.svg',
-                categoryRecordType: 'SEED_RECORD',
-                categoryTitle: 'Biblical Languages'
+                imgHref: 'images/biblical-languages.svg',
+                recordType: 'SEED_RECORD',
+                title: 'Biblical Languages'
             },
             {
-                categoryImgHref: 'images/shield-check.svg',
-                categoryRecordType: 'SEED_RECORD',
-                categoryTitle: 'Apologetics'
+                imgHref: 'images/shield-check.svg',
+                recordType: 'SEED_RECORD',
+                title: 'Apologetics'
             },
             {
-                categoryImgHref: 'images/user-group.svg',
-                categoryRecordType: 'SEED_RECORD',
-                categoryTitle: 'Leadership & Ministry'
+                imgHref: 'images/user-group.svg',
+                recordType: 'SEED_RECORD',
+                title: 'Leadership & Ministry'
             },
             {
-                categoryImgHref: 'images/scale.svg',
-                categoryRecordType: 'SEED_RECORD',
-                categoryTitle: 'Worldview & Philosophy'
+                imgHref: 'images/scale.svg',
+                recordType: 'SEED_RECORD',
+                title: 'Worldview & Philosophy'
             },
             {
-                categoryImgHref: 'images/heart.svg',
-                categoryRecordType: 'SEED_RECORD',
-                categoryTitle: 'Christian Counseling & Psychology'
+                imgHref: 'images/heart.svg',
+                recordType: 'SEED_RECORD',
+                title: 'Christian Counseling & Psychology'
             },
             {
-                categoryImgHref: 'images/globe-africa.svg',
-                categoryRecordType: 'SEED_RECORD',
-                categoryTitle: 'Evangelism'
+                imgHref: 'images/globe-africa.svg',
+                recordType: 'SEED_RECORD',
+                title: 'Evangelism'
             },
             {
-                categoryImgHref: 'images/musical-note.svg',
-                categoryRecordType: 'SEED_RECORD',
-                categoryTitle: 'Worship & Music'
+                imgHref: 'images/musical-note.svg',
+                recordType: 'SEED_RECORD',
+                title: 'Worship & Music'
             },
             {
-                categoryImgHref: 'images/gift.svg',
-                categoryRecordType: 'SEED_RECORD',
-                categoryTitle: 'Ministry & Service'
+                imgHref: 'images/gift.svg',
+                recordType: 'SEED_RECORD',
+                title: 'Ministry & Service'
             }
         ]
     });

@@ -34,12 +34,12 @@ export async function seedCourseContent(client: PrismaClient) {
 
         for (let i = 0; i < numContent; i++) {
             const content: CourseContent = {
-                courseContentAuthorId: faker.helpers.arrayElement(authors).userId,
-                courseContentId: cuid(),
-                courseContentJson: generateJson(),
-                courseContentLessonId: lesson.lessonId,
-                courseContentRecordType: 'SEED_RECORD',
-                courseContentType: faker.helpers.arrayElement(Object.values(ContentType))
+                authorId: faker.helpers.arrayElement(authors).id,
+                id: cuid(),
+                json: generateJson(),
+                lessonId: lesson.id,
+                recordType: 'SEED_RECORD',
+                contentType: faker.helpers.arrayElement(Object.values(ContentType))
             };
             contents.push(content);
         }

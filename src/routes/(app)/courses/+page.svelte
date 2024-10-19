@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { CourseSearchGetResponse } from '$lib/api/types/courses';
     import type { PageServerData } from './$types';
-    import type { ToggleUserCourseFavoritePayload } from '$lib/models/types/toggle-user-course-favorite-event';
+    import type { ToggleCourseFavoritePayload } from '$lib/models/types/toggle-user-course-favorite-event';
 
     import {
         faBinoculars,
@@ -55,7 +55,7 @@
                     sortByOption.value,
                     page - 1,
                     pageSize,
-                    data.user.userId
+                    data.user.id
                 );
             } else {
                 response = await client.courses.getCourses(
@@ -86,21 +86,19 @@
         }, 300); // Adjust the delay (in milliseconds) as needed
     };
 
-    const handleToggleUserCourseFavorite = async (
-        event: CustomEvent<ToggleUserCourseFavoritePayload>
-    ) => {
+    const handleToggleCourseFavorite = async (event: CustomEvent<ToggleCourseFavoritePayload>) => {
         if (!data.user) {
             goto('/auth/login');
             return;
         }
 
-        const payload: ToggleUserCourseFavoritePayload = event.detail;
+        const payload: ToggleCourseFavoritePayload = event.detail;
 
         try {
             if (payload.current) {
                 courseResults.addFavorite(payload.courseId);
                 const result = await client.users.favoriteCourse(
-                    data.user?.userId ?? '',
+                    data.user?.id ?? '',
                     payload.courseId
                 );
 
@@ -110,7 +108,7 @@
             } else {
                 courseResults.removeFavorite(payload.courseId);
                 const result = await client.users.unfavoriteCourse(
-                    data.user?.userId ?? '',
+                    data.user?.id ?? '',
                     payload.courseId
                 );
 
@@ -189,7 +187,7 @@
                 {#each $courseResults as courseResult}
                     <CourseListItem
                         {courseResult}
-                        on:toggleUserCourseFavorite={(e) => handleToggleUserCourseFavorite(e)}
+                        on:toggleCourseFavorite={(e) => handleToggleCourseFavorite(e)}
                     />
                 {/each}
             </div>
@@ -200,7 +198,7 @@
                 {#each $courseResults as courseResult}
                     <CourseGridItem
                         {courseResult}
-                        on:toggleUserCourseFavorite={(e) => handleToggleUserCourseFavorite(e)}
+                        on:toggleCourseFavorite={(e) => handleToggleCourseFavorite(e)}
                     />
                 {/each}
             </div>

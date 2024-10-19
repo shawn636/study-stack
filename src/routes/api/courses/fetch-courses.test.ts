@@ -113,10 +113,10 @@ describe('Course Fetching Utility Functions', () => {
             expect(courseResultsByLowestPrice.length).toBeGreaterThan(0);
 
             const coursePrices = courseResultsByLowestPrice.map((result) =>
-                Number(result.course.courseCurrentPrice)
+                Number(result.course.currentPrice)
             );
             const courseRatings = courseResultsByHighestRating.map(
-                (result) => result.course.courseRatingAverage
+                (result) => result.course.ratingAverage
             );
 
             const courseCount = coursePrices.length;
@@ -146,6 +146,7 @@ describe('Course Fetching Utility Functions', () => {
         });
         it('should return a 400 error when an invalid request is made', async () => {
             const invalidSortBy = 'invalidSortBy';
+
             try {
                 await getCourses(null, 1, 20, invalidSortBy);
             } catch (e) {

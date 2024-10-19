@@ -3,7 +3,6 @@ import type { CourseResult } from '$lib/api/types/courses';
 
 import { writable } from 'svelte/store';
 
-// export const courseResults = writable<CourseResult[]>([]);
 function createCourseResults() {
     const { set, subscribe, update } = writable<CourseResult[]>([]);
 
@@ -13,7 +12,7 @@ function createCourseResults() {
                 return courseResults.map((result: CourseResult) => {
                     const modifiedResult = result;
 
-                    const matchingCourse = result.course.courseId === courseId;
+                    const matchingCourse = result.course.id === courseId;
                     const resultContainsFavorite =
                         result.course.isFavorite !== undefined && result.course.isFavorite !== null;
 
@@ -29,7 +28,7 @@ function createCourseResults() {
                 return courseResults.map((result: CourseResult) => {
                     const modifiedResult = result;
 
-                    const matchingCourse = result.course.courseId === courseId;
+                    const matchingCourse = result.course.id === courseId;
                     const resultContainsFavorite =
                         result.course.isFavorite !== undefined && result.course.isFavorite !== null;
 

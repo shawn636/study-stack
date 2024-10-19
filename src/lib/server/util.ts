@@ -27,13 +27,10 @@ export const errorPadding = async (minPaddingMs: number = 100, maxPaddingMs: num
 export const getRecordDisplaySettings = async () => {
     const results = await db
         .selectFrom('SiteSetting')
-        .select(['siteSettingKey', 'siteSettingValue'])
-        .where('SiteSetting.siteSettingRecordType', '=', 'PRODUCTION_RECORD')
+        .select(['key', 'value'])
+        .where('SiteSetting.recordType', '=', 'PRODUCTION_RECORD')
         .where((eb) =>
-            eb.or([
-                eb('siteSettingKey', '=', 'display-test-records'),
-                eb('siteSettingKey', '=', 'display-seed-records')
-            ])
+            eb.or([eb('key', '=', 'display-test-records'), eb('key', '=', 'display-seed-records')])
         )
         .execute();
 
@@ -45,8 +42,8 @@ export const getRecordDisplaySettings = async () => {
 
     const settings: Record<string, boolean> = {};
     results.forEach((result) => {
-        if (expectedKeys.includes(result.siteSettingKey)) {
-            settings[result.siteSettingKey] = result.siteSettingValue === 'true';
+        if (expectedKeys.includes(result.key)) {
+            settings[result.key] = result.value === 'true';
         }
     });
 

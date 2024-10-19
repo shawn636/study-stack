@@ -33,8 +33,8 @@ export const GET = (async ({ cookies, params }) => {
             const settingResult = await db
                 .selectFrom('SiteSetting')
                 .selectAll()
-                .where('siteSettingKey', '=', siteSettingKey)
-                .where('siteSettingRecordType', '=', RecordType.PRODUCTION_RECORD)
+                .where('key', '=', siteSettingKey)
+                .where('recordType', '=', RecordType.PRODUCTION_RECORD)
                 .executeTakeFirst();
             setting = settingResult as unknown as SiteSetting;
         } catch (e) {

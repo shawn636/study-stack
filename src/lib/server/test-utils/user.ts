@@ -59,31 +59,25 @@ const module: UserTestUtil = {
     async cleanup(): Promise<number> {
         const authUsersResult = await db
             .selectFrom('AuthUser')
-            .select('AuthUser.authUserId')
-            .where('authUserRecordType', '=', 'TEST_RECORD')
+            .select('AuthUser.id')
+            .where('recordType', '=', 'TEST_RECORD')
             .execute();
 
         authUsersResult.map(async (authUser) => {
             await db.transaction().execute(async (trx: Transaction<DB>) => {
-                await trx
-                    .deleteFrom('User')
-                    .where('User.userAuthUserId', '=', authUser.authUserId)
-                    .execute();
+                await trx.deleteFrom('User').where('User.authUserId', '=', authUser.id).execute();
                 await trx
                     .deleteFrom('AuthKey')
-                    .where('AuthKey.authKeyAuthUserId', '=', authUser.authUserId)
+                    .where('AuthKey.authUserId', '=', authUser.id)
                     .execute();
-                await trx
-                    .deleteFrom('AuthUser')
-                    .where('AuthUser.authUserId', '=', authUser.authUserId)
-                    .execute();
+                await trx.deleteFrom('AuthUser').where('AuthUser.id', '=', authUser.id).execute();
             });
         });
 
         // Delete orphaned Users
         const orphanedUsersResult = await db
             .deleteFrom('User')
-            .where('userRecordType', '=', 'TEST_RECORD')
+            .where('recordType', '=', 'TEST_RECORD')
             .executeTakeFirstOrThrow();
 
         return authUsersResult.length + Number(orphanedUsersResult.numDeletedRows ?? 0);

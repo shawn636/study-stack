@@ -4,9 +4,6 @@
     import { getHeaderLinks } from '$lib/stores/links';
     import Logo from '$lib/components/logo.svelte';
 
-    // $: classesActive = (href: string) =>
-    //     href === $page.url.pathname ? '!bg-equipped-blue !text-white rounded' : '';
-
     export let user: User | null | undefined = null;
     $: headerLinks = getHeaderLinks(user === null ? false : true);
 </script>

@@ -1,11 +1,12 @@
 <script lang="ts">
-    // import ChevronDown from "lucide-svelte/icons/chevron-down";
-    import { cn } from '$lib/utils.js';
-    import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
     import { Accordion as AccordionPrimitive } from 'bits-ui';
+    import { cn } from '$lib/utils.js';
     import Fa from 'svelte-fa';
+    import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
     type $$Props = AccordionPrimitive.TriggerProps;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type $$Events = AccordionPrimitive.TriggerEvents;
 
     let className: $$Props['class'] = undefined;
@@ -24,6 +25,5 @@
     >
         <slot />
         <Fa class="h-4 w-4 transition-transform duration-200" icon={faChevronDown} />
-        <!-- <ChevronDown class="h-4 w-4 transition-transform duration-200" /> -->
     </AccordionPrimitive.Trigger>
 </AccordionPrimitive.Header>

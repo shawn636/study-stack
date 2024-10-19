@@ -12,8 +12,8 @@
 import type { ApiResponse } from './common';
 
 export interface AdminSetting {
-    siteSettingKey: string;
-    siteSettingValue: string;
+    key: string;
+    value: string;
 }
 
 export type AdminSettingsGetMultipleResponse = ApiResponse<AdminSetting[]>;

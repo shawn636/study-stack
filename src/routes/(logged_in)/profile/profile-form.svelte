@@ -19,26 +19,26 @@
     let isUpdating = false;
 
     onMount(() => {
-        phone.set(formatPhoneNumber((user?.userAreaCode ?? '') + (user?.userPhoneNumber ?? '')));
+        phone.set(formatPhoneNumber((user?.areaCode ?? '') + (user?.phoneNumber ?? '')));
     });
 
     const saveChanges = async () => {
         isUpdating = true;
         const phoneTemp = $phone.replace(/\s/g, '');
-        user.userAreaCode = phoneTemp.slice(0, 3) === '' ? null : phoneTemp.slice(0, 3);
-        user.userPhoneNumber = phoneTemp.slice(3, 10) === '' ? null : phoneTemp.slice(3, 10);
-        user.userCountryCode = user.userAreaCode ? '+1' : null;
+        user.areaCode = phoneTemp.slice(0, 3) === '' ? null : phoneTemp.slice(0, 3);
+        user.phoneNumber = phoneTemp.slice(3, 10) === '' ? null : phoneTemp.slice(3, 10);
+        user.countryCode = user.areaCode ? '+1' : null;
 
         if (profilePhotoFile) {
-            const result = await client.users.uploadPhoto(user.userId, profilePhotoFile);
+            const result = await client.users.uploadPhoto(user.id, profilePhotoFile);
 
             if (!result.success) {
                 toast.error('Failed to upload photo');
                 isUpdating = false;
                 return;
             }
-            user.userPhotoImageId = result.data.imageId;
-            user.userPhotoUrl = result.data.imageUrl;
+            user.photoImageId = result.data.imageId;
+            user.photoUrl = result.data.imageUrl;
         }
 
         const updatedUser = await submitForm(user);
@@ -58,7 +58,7 @@
 <form class="space-y-8">
     <div class="space-y-2">
         <Label for="name">Name</Label>
-        <Input bind:value={user.userName} id="name" placeholder="Name" type="text" />
+        <Input bind:value={user.name} id="name" placeholder="Name" type="text" />
     </div>
 
     <div class="space-y-2">
@@ -75,25 +75,25 @@
 
     <div class="space-y-2">
         <Label for="city">City</Label>
-        <Input bind:value={user.userCity} id="city" placeholder="City" type="text" />
+        <Input bind:value={user.city} id="city" placeholder="City" type="text" />
     </div>
 
     <div class="space-y-2">
         <Label for="state">State</Label>
-        <Input bind:value={user.userState} id="state" placeholder="State" type="text" />
+        <Input bind:value={user.state} id="state" placeholder="State" type="text" />
     </div>
 
     <div class="grid w-full max-w-sm items-center gap-1.5">
         <Label for="picture">Picture</Label>
         <Input id="picture" on:change={onFileChanged} type="file" />
-        {#if user.userPhotoUrl}
-            <img alt="Profile" class="mt-2 h-24 w-24 rounded-lg" src={user.userPhotoUrl} />
+        {#if user.photoUrl}
+            <img alt="Profile" class="mt-2 h-24 w-24 rounded-lg" src={user.photoUrl} />
         {/if}
     </div>
 
     <div class="space-y-2">
         <Label for="bio">Bio</Label>
-        <Textarea bind:value={user.userBio} id="bio" />
+        <Textarea bind:value={user.bio} id="bio" />
     </div>
 
     <Button class="palce-items-center flex gap-x-2" disabled={isUpdating} on:click={saveChanges}>
