@@ -31,6 +31,9 @@ const config: PlaywrightTestConfig = defineConfig({
     webServer: {
         command: 'scripts/shared/run.sh pnpm exec vite dev --port 3005 --host 0.0.0.0 --mode test',
         port: 3005
+    },
+    use: {
+        headless: true
     }
 });
 

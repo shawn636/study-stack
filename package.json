@@ -32,7 +32,8 @@
         "lint": "prettier --plugin-search-dir . --check . && eslint .",
         "lintfix": "prettier --plugin-search-dir . --write . && eslint .",
         "format": "prettier --plugin-search-dir . --write .",
-        "prepare": "husky"
+        "prepare": "husky",
+        "start:unit": "vite dev --port 3004 --host 0.0.0.0 --mode test"
     },
     "lint-staged": {
         "*.{js,ts,svelte}": "eslint",
