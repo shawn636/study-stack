@@ -28,32 +28,18 @@
                 "eamodio.gitlens",
                 "heybourn.headwind",
                 "ms-playwright.playwright",
-                "mike-co.import-sorter"
+                "mike-co.import-sorter",
+                "Stripe.vscode-stripe",
+                "ms-vscode.copilot-mermaid-diagram"
             ]
         }
     },
-    "appPort": [
-        3000,
-        3004,
-        3005,
-        4173,
-        5173,
-        5555
-    ],
-    "forwardPorts": [
-        3000,
-        3004,
-        3005,
-        4173,
-        5173,
-        5555
-    ],
+    "appPort": [3000, 3004, 3005, 4173, 5173, 5555],
+    "forwardPorts": [3000, 3004, 3005, 4173, 5173, 5555],
     "postCreateCommand": "yes | pnpm install",
     "workspaceMount": "source=${localWorkspaceFolder},target=/equipped,type=bind,consistency=cached",
     "workspaceFolder": "/equipped",
-    "mounts": [
-        "source=${localEnv:HOME}/.ssh,target=/root/.ssh:ro,type=bind"
-    ],
+    "mounts": ["source=${localEnv:HOME}/.ssh,target=/root/.ssh:ro,type=bind"],
     "remoteEnv": {},
     "remoteUser": "root"
 }

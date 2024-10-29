@@ -46,13 +46,8 @@ RUN corepack enable pnpm \
     && corepack install -g pnpm@latest
 
 # Install Playwright Dependencies
-RUN mkdir -p playwright-setup \
-    && cd ./playwright-setup \
-    && pnpm init \
-    && pnpm install playwright \
-    && pnpm exec playwright install --with-deps \
-    && cd .. \
-    && rm -rf ./playwright-setup
+RUN npm install -g playwright vercel \
+    && npx playwright install --with-deps
 
 WORKDIR /equipped
 
