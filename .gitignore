@@ -7,6 +7,7 @@
 
 # Build Files and Dependencies
 node_modules
+.pnpm-store
 /build
 /.svelte-kit
 .vercel
@@ -39,3 +40,9 @@ e2e/artifacts
 
 # DR Artifacts
 migration-message.txt
+
+# Devcontainer
+.devcontianer/user-settings/*
+!.devcontainer/user-settings/.gitkeep
+.devcontainer/user-settings/.ssh/*
+!.devcontainer/user-settings/.ssh/.gitkeep
