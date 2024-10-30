@@ -13,7 +13,12 @@ if [[ "$USE_OPCLI" == "true" ]]; then
     if [[ -n "$CI" ]]; then
         op run -- "$@"
     else
-        op run --env-file="./.env" -- "$@"
+        # shellcheck disable=SC2143
+        if [[ ! -f "./.env" || $(grep -q 'op://' .env) ]]; then
+            echo "Please generate the .env file using: op inject -i .env.op -o .env"
+            exit 1
+        fi
+        exec "$@"
     fi
 else
     echo "Running command without onepassword cli"

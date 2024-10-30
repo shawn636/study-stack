@@ -8,19 +8,14 @@ const config: PlaywrightTestConfig = defineConfig({
     projects: [
         {
             grep: /(desktop|all)/,
-            name: 'Google Chrome',
-            use: { ...devices['Desktop Chrome'], channel: 'chrome' }
-        },
-        {
-            grep: /(desktop|all)/,
-            name: 'Microsoft Edge',
-            use: { channel: 'msedge' }
+            name: 'chromium',
+            use: { ...devices['Desktop Chrome'] }
         },
         { grep: /(desktop|all)/, name: 'firefox', use: { ...devices['Desktop Firefox'] } },
         { grep: /(desktop|all)/, name: 'webkit', use: { ...devices['Desktop Safari'] } },
         {
             grep: /(mobile|all)/,
-            name: 'Mobile Chrome',
+            name: 'mobile chromium',
             use: { ...devices['Pixel 5'] }
         },
         {
@@ -34,8 +29,11 @@ const config: PlaywrightTestConfig = defineConfig({
     testDir: 'e2e',
     testMatch: /(.+\.)?(test|spec)\.[jt]s/,
     webServer: {
-        command: 'scripts/shared/run.sh pnpm exec vite dev --port 3005 --mode test',
+        command: 'scripts/shared/run.sh pnpm exec vite dev --port 3005 --host 0.0.0.0 --mode test',
         port: 3005
+    },
+    use: {
+        headless: true
     }
 });
 
