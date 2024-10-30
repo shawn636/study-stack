@@ -29,7 +29,8 @@ RUN curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
     mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22 && \
     curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
     gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg && \
-    apt update && apt install 1password-cli
+    apt update && apt install 1password-cli && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install Planetscale CLI
 RUN version=$(curl -s https://api.github.com/repos/planetscale/cli/releases/latest | jq -r .tag_name) && \
