@@ -42,7 +42,7 @@ e2e/artifacts
 migration-message.txt
 
 # Devcontainer
-.devcontianer/user-settings/*
+.devcontainer/user-settings/*
 !.devcontainer/user-settings/.gitkeep
 .devcontainer/user-settings/.ssh/*
 !.devcontainer/user-settings/.ssh/.gitkeep
