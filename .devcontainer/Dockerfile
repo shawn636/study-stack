@@ -1,6 +1,9 @@
 # Set Node.js as the base image (use desired Node version)
 FROM node:lts
 
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 RUN mkdir -p /equipped && chown node:node /equipped
 RUN mkdir -p /setup && chown node:node /setup
 
@@ -46,9 +49,8 @@ RUN corepack enable pnpm \
     && corepack use pnpm@latest \
     && corepack install -g pnpm@latest
 
-# Install Playwright Dependencies
-RUN npm install -g playwright vercel \
-    && npx playwright install --with-deps
+RUN pnpm install -g vercel playwright
+RUN pnpm exec playwright install --with-deps
 
 WORKDIR /equipped
 

@@ -39,7 +39,7 @@
     "postCreateCommand": "yes | pnpm install",
     "workspaceMount": "source=${localWorkspaceFolder},target=/equipped,type=bind,consistency=cached",
     "workspaceFolder": "/equipped",
-    "mounts": ["source=${localEnv:HOME}/.ssh,target=/root/.ssh:ro,type=bind"],
+    "mounts": [],
     "remoteEnv": {},
     "remoteUser": "root"
 }
