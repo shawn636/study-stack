@@ -48,7 +48,7 @@
                     <div
                         class="grid grid-cols-[auto_1fr] items-center justify-items-center gap-x-2 whitespace-nowrap"
                     >
-                        <div class="h-4 w-4 rounded bg-white" />
+                        <div class="h-4 w-4 rounded bg-white"></div>
                         <div>{tag}</div>
                     </div>
                 {/each}

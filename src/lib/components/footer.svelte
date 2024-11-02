@@ -17,7 +17,7 @@
     import Logo from '$lib/components/logo.svelte';
     import { toast } from 'svelte-sonner';
 
-    let email: string = '';
+    let email: string = $state('');
 
     const subscribe = async () => {
         if (!email) {

@@ -7,8 +7,13 @@
     import Footer from '$lib/components/footer.svelte';
     import Header from '$lib/components/header.svelte';
 
-    export let data: LayoutData;
-    $: user = data.user as User;
+    interface Props {
+        data: LayoutData;
+        children?: import('svelte').Snippet;
+    }
+
+    let { data, children }: Props = $props();
+    let user = $derived(data.user as User);
 
     afterNavigate((params: AfterNavigate) => {
         const isNewPage = params.from?.url.pathname !== params.to?.url.pathname;
@@ -22,7 +27,7 @@
 
 <div data-testid="app-shell">
     <Header {user} />
-    <slot />
+    {@render children?.()}
     <div class="bg-surface-100 dark:bg-surface-700"></div>
     <Footer />
 </div>

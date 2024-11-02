@@ -17,7 +17,7 @@
         }
     ];
 
-    let isFlipped = false;
+    let isFlipped = $state(false);
 
     function toggleFlip() {
         isFlipped = !isFlipped;
@@ -43,7 +43,7 @@
 
 <div
     class="card-container perspective-1000 h-full w-full"
-    on:click={toggleFlip}
+    onclick={toggleFlip}
     role="presentation"
 >
     <div

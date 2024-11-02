@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import type { CourseResult } from '$lib/api/types/courses';
     import type { ToggleCourseFavoriteEvent } from '$lib/models/types/toggle-user-course-favorite-event';
 
@@ -10,10 +12,17 @@
     import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
     import { Separator } from '$lib/components/ui/separator';
 
-    export let courseResult: CourseResult;
+    interface Props {
+        courseResult: CourseResult;
+    }
+
+    let { courseResult }: Props = $props();
 
     const dispatch = createEventDispatcher<ToggleCourseFavoriteEvent>();
-    $: toggled = courseResult.course.isFavorite ?? false;
+    let toggled;
+    run(() => {
+        toggled = courseResult.course.isFavorite ?? false;
+    });
 
     const toggle = () => {
         toggled = !toggled;
@@ -77,7 +86,7 @@
                     class="col-span-full col-start-1 row-start-2 flex items-center justify-end gap-x-2 pl-2 sm:col-span-1 sm:row-span-full md:col-span-full md:row-span-1 md:row-start-2"
                     data-testid="list-item-button-block"
                 >
-                    <button on:click={toggle}>
+                    <button onclick={toggle}>
                         <Fa
                             class="text-red-500"
                             icon={toggled ? faHeart : faHeartOutline}

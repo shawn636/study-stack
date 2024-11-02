@@ -13,11 +13,15 @@
     import SubmissionError from '$lib/components/submission-error.svelte';
     import { Textarea } from '$lib/components/ui/textarea';
 
-    let showSuccess = false;
-    let isSubmitting = false;
-    let submissionError: string | null = null;
+    let showSuccess = $state(false);
+    let isSubmitting = $state(false);
+    let submissionError: string | null = $state(null);
 
-    export let data: PageServerData;
+    interface Props {
+        data: PageServerData;
+    }
+
+    let { data }: Props = $props();
 
     const { errors, form, handleChange, handleSubmit, touched, validateField } = createForm({
         initialValues: {
@@ -57,18 +61,18 @@
         return null;
     };
 
-    $: emailClass = `input ${$errors.email ? 'border-error-500' : ''} 
+    let emailClass = $derived(`input ${$errors.email ? 'border-error-500' : ''} 
         ${!$errors.email && $touched.email ? 'border-success-700' : ''}
-    `;
+    `);
 
-    $: nameClass = `input ${$errors.name ? 'border-error-500' : ''} 
+    let nameClass = $derived(`input ${$errors.name ? 'border-error-500' : ''} 
         ${!$errors.name && $touched.name ? 'border-success-700' : ''}
-    `;
+    `);
 
-    $: messageClass = `input min-h-16
+    let messageClass = $derived(`input min-h-16
         ${$errors.message ? 'border-error-500' : ''} 
         ${!$errors.message && $touched.message ? 'border-success-700' : ''}
-    `;
+    `);
 </script>
 
 <div class="card mx-auto my-20 max-w-2xl p-8">
@@ -78,7 +82,7 @@
     <form
         class="mt-10 grid grid-flow-row grid-cols-2 gap-8"
         id="contact-form"
-        on:submit={handleSubmit}
+        onsubmit={handleSubmit}
     >
         <div>
             <label aria-hidden class="label hidden" for="name">Name</label>

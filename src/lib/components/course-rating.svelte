@@ -5,11 +5,15 @@
     import Fa from 'svelte-fa';
     import { faStar as faStarOutline } from '@fortawesome/free-regular-svg-icons';
 
-    export let rating: number;
-    export let ratingCount: number;
-    let className: string = '';
-    export { className as class };
-    $: ratingAvgRounded = Math.round(rating * 2) / 2;
+    interface Props {
+        rating: number;
+        ratingCount: number;
+        class?: string;
+    }
+
+    let { rating, ratingCount, class: className = '' }: Props = $props();
+    
+    let ratingAvgRounded = $derived(Math.round(rating * 2) / 2);
 
     const getStarIcon = (starIdx: number) => {
         const lessThanRatingAvg = starIdx <= ratingAvgRounded;

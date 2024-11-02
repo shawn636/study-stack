@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import * as Avatar from '$lib/components/ui/avatar/index';
 
     import type { CourseResult } from '$lib/api/types/courses';
@@ -15,10 +17,17 @@
     import Image from '$lib/components/image.svelte';
     import { initials } from '$lib/client/util';
 
-    export let courseResult: CourseResult;
+    interface Props {
+        courseResult: CourseResult;
+    }
+
+    let { courseResult }: Props = $props();
 
     // let toggled = false;
-    $: toggled = courseResult.course.isFavorite ?? false;
+    let toggled;
+    run(() => {
+        toggled = courseResult.course.isFavorite ?? false;
+    });
 
     const dispatch = createEventDispatcher<ToggleCourseFavoriteEvent>();
 
@@ -37,7 +46,7 @@
     const width = 'w-64';
     const height = 'h-40';
 
-    $: containerBaseClass = `grid grid-flow-row rounded-md p-1 gap-y-2 ${width} content-visibility-auto`;
+    let containerBaseClass = $derived(`grid grid-flow-row rounded-md p-1 gap-y-2 ${width} content-visibility-auto`);
 </script>
 
 <div class={containerBaseClass}>
@@ -94,7 +103,7 @@
 
     <div class="grid grid-rows-2 items-center">
         <div class="grid grid-cols-[auto_1fr_auto] items-center justify-items-end gap-x-2">
-            <button aria-label="Toggle Favorite" on:click={toggle}>
+            <button aria-label="Toggle Favorite" onclick={toggle}>
                 <Fa class="text-pink-500" icon={toggled ? faHeart : faHeartOutline} size="lg" />
             </button>
             {#if Number(courseResult.course.currentPrice) < Number(courseResult.course.originalPrice)}

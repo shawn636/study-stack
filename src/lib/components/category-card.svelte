@@ -1,13 +1,17 @@
 <script lang="ts">
     import type CategorySummary from '$lib/models/types/category-summary';
 
-    export let categorySummary: CategorySummary;
+    interface Props {
+        categorySummary: CategorySummary;
+    }
+
+    let { categorySummary }: Props = $props();
 
     const maxTitleLength = 25;
-    $: categoryTitleShort =
-        categorySummary.title.length > maxTitleLength
+    let categoryTitleShort =
+        $derived(categorySummary.title.length > maxTitleLength
             ? `${categorySummary.title.slice(0, maxTitleLength)}...`
-            : categorySummary.title;
+            : categorySummary.title);
 </script>
 
 <a

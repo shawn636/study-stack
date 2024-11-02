@@ -20,14 +20,26 @@
         value?: boolean;
     };
 
-    let className: $$Props['class'] = undefined;
-    export { className as class };
-    export let value: boolean = false;
-    export let title: string;
-    export let description: string;
-    export let tag: string;
-    export let alertTitle: string;
-    export let alertDescription: string;
+    
+    interface Props {
+        class?: $$Props['class'];
+        value?: boolean;
+        title: string;
+        description: string;
+        tag: string;
+        alertTitle: string;
+        alertDescription: string;
+    }
+
+    let {
+        class: className = undefined,
+        value = $bindable(false),
+        title,
+        description,
+        tag,
+        alertTitle,
+        alertDescription
+    }: Props = $props();
 
     const toggle = () => {
         value = !value;

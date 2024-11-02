@@ -2,7 +2,7 @@
     import * as AlertDialog from '$lib/components/ui/alert-dialog';
     import { Switch } from '$lib/components/ui/switch';
 
-    let checked = false;
+    let checked = $state(false);
 </script>
 
 <div class="grid grid-flow-row p-5">

@@ -11,7 +11,11 @@
 
     const dispatch = createEventDispatcher();
 
-    export let value: { label: string; value: CourseSortByOption };
+    interface Props {
+        value: { label: string; value: CourseSortByOption };
+    }
+
+    let { value = $bindable() }: Props = $props();
 
     const options = [
         { label: RELEVANCE.label, value: RELEVANCE },

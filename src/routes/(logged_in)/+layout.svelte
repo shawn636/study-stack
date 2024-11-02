@@ -5,13 +5,18 @@
 
     import type { LayoutData } from './$types';
 
-    export let data: LayoutData;
-    $: user = data.user as User;
+    interface Props {
+        data: LayoutData;
+        children?: import('svelte').Snippet;
+    }
+
+    let { data, children }: Props = $props();
+    let user = $derived(data.user as User);
 </script>
 
 <div data-testid="app-shell">
     <Header {user} />
     <div class="h-full p-4">
-        <slot />
+        {@render children?.()}
     </div>
 </div>

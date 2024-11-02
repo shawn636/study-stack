@@ -8,9 +8,13 @@
     import Fa from 'svelte-fa';
     import { page } from '$app/stores';
 
-    let className: string | null | undefined = undefined;
-    export let items: { href: string; icon: IconDefinition | undefined; title: string }[];
-    export { className as class };
+    interface Props {
+        class?: string | null | undefined;
+        items: { href: string; icon: IconDefinition | undefined; title: string }[];
+    }
+
+    let { class: className = undefined, items }: Props = $props();
+    
 
     const [send, receive] = crossfade({
         duration: 250,
@@ -36,7 +40,7 @@
                     class="absolute inset-0 rounded-md bg-muted"
                     in:send={{ key: 'active-sidebar-tab' }}
                     out:receive={{ key: 'active-sidebar-tab' }}
-                />
+                ></div>
             {/if}
             <div class="relative flex flex-row items-center gap-2">
                 {#if item.icon}

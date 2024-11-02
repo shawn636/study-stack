@@ -12,8 +12,12 @@
         class?: string;
     };
 
-    let className: $$Props['class'] = undefined;
-    export { className as class };
+    interface Props {
+        class?: $$Props['class'];
+    }
+
+    let { class: className = undefined }: Props = $props();
+    
 
     const deleteSessions = async () => {
         try {

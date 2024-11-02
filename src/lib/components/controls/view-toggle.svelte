@@ -3,7 +3,11 @@
     import { faGrip, faList } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
 
-    export let value: 'grid' | 'list' = 'list';
+    interface Props {
+        value?: 'grid' | 'list';
+    }
+
+    let { value = $bindable('list') }: Props = $props();
 </script>
 
 <Tabs.Root bind:value>

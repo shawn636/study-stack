@@ -40,10 +40,14 @@
         start: number;
     }
 
-    export let value: 'grid' | 'list' = 'grid';
+    interface Props {
+        value?: 'grid' | 'list';
+    }
 
-    let animationContainer: HTMLElement;
-    let animation: AnimationItem | null = null;
+    let { value = $bindable('grid') }: Props = $props();
+
+    let animationContainer: HTMLElement = $state();
+    let animation: AnimationItem | null = $state(null);
 
     const animations: Record<ViewOption, Animation> = {
         grid: { end: 57, playDirection: 1, playSpeed: 1, start: 16 },
@@ -83,7 +87,7 @@
         <div
             bind:this={animationContainer}
             style={`position: absolute; top: 0; left: 0; width: 100%; height: 100%; visibility: ${animation ? 'visible' : 'hidden'};`}
-        />
+        ></div>
 
         <img
             alt={value === 'grid' ? 'grid icon' : 'list icon'}

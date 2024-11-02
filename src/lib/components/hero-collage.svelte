@@ -15,7 +15,7 @@
 
         <div
             class="z-0 col-start-1 row-start-1 h-9 w-9 justify-self-center rounded-full bg-blue-100"
-        />
+></div>
         <div class="col-start-2 row-start-1 my-0 grid grid-flow-row py-0 text-left text-sm">
             <div class="text-sm font-medium text-blue-500">3000+</div>
             <div class="whitespace-nowrap text-sm font-normal text-slate-400">Free Courses</div>

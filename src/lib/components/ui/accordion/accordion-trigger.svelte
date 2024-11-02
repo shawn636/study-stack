@@ -1,29 +1,30 @@
 <script lang="ts">
-    import { Accordion as AccordionPrimitive } from 'bits-ui';
-    import { cn } from '$lib/utils.js';
+    import { Accordion as AccordionPrimitive, type WithoutChild } from 'bits-ui';
     import Fa from 'svelte-fa';
     import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+    import { cn } from '$lib/utils.js';
 
-    type $$Props = AccordionPrimitive.TriggerProps;
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    type $$Events = AccordionPrimitive.TriggerEvents;
-
-    let className: $$Props['class'] = undefined;
-    export let level: AccordionPrimitive.HeaderProps['level'] = 3;
-    export { className as class };
+    let {
+        ref = $bindable(null),
+        class: className,
+        level = 3,
+        children,
+        ...restProps
+    }: WithoutChild<AccordionPrimitive.TriggerProps> & {
+        level?: AccordionPrimitive.HeaderProps['level'];
+    } = $props();
 </script>
 
-<AccordionPrimitive.Header class="flex" {level}>
+<AccordionPrimitive.Header {level} class="flex">
     <AccordionPrimitive.Trigger
+        bind:ref
         class={cn(
             'flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180',
             className
         )}
-        {...$$restProps}
-        on:click
+        {...restProps}
     >
-        <slot />
-        <Fa class="h-4 w-4 transition-transform duration-200" icon={faChevronDown} />
+        {@render children?.()}
+        <Fa class="size-4 shrink-0 transition-transform duration-200" icon={faChevronDown} />
     </AccordionPrimitive.Trigger>
 </AccordionPrimitive.Header>

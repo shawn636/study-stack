@@ -7,8 +7,8 @@
     import SignUpForm from './sign-up-form.svelte';
 
     // Controls
-    let showPassword1 = false;
-    let showPassword2 = false;
+    let showPassword1 = $state(false);
+    let showPassword2 = $state(false);
     const { errors, form, handleChange, handleSubmit } = createForm();
 </script>
 

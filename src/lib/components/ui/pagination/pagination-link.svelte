@@ -1,35 +1,36 @@
 <script lang="ts">
-    import { buttonVariants, type Props } from '$lib/components/ui/button/index.js';
-    import { cn } from '$lib/utils.js';
-    import { Pagination as PaginationPrimitive } from 'bits-ui';
+	import { Pagination as PaginationPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
+	import { type Props, buttonVariants } from "$lib/components/ui/button/index.js";
 
-    type $$Props = PaginationPrimitive.PageProps &
-        Props & {
-            isActive: boolean;
-        };
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    type $$Events = PaginationPrimitive.PageEvents;
-
-    let className: $$Props['class'] = undefined;
-    export let page: $$Props['page'];
-    export let size: $$Props['size'] = 'icon';
-    export let isActive: $$Props['isActive'] = false;
-
-    export { className as class };
+	let {
+		ref = $bindable(null),
+		class: className,
+		size = "icon",
+		isActive = false,
+		page,
+		children,
+		...restProps
+	}: PaginationPrimitive.PageProps &
+		Props & {
+			isActive: boolean;
+		} = $props();
 </script>
 
+{#snippet Fallback()}
+	{page.value}
+{/snippet}
+
 <PaginationPrimitive.Page
-    bind:page
-    class={cn(
-        buttonVariants({
-            size,
-            variant: isActive ? 'outline' : 'ghost'
-        }),
-        className
-    )}
-    {...$$restProps}
-    on:click
->
-    <slot>{page.value}</slot>
-</PaginationPrimitive.Page>
+	bind:ref
+	{page}
+	class={cn(
+		buttonVariants({
+			variant: isActive ? "outline" : "ghost",
+			size,
+		}),
+		className
+	)}
+	children={children || Fallback}
+	{...restProps}
+/>

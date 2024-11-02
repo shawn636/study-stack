@@ -14,19 +14,30 @@
     import { submissionState } from './submission-stores';
     import { Toggle } from '$lib/components/ui/toggle';
 
-    export let errors;
-    export let form;
-    export let handleChange;
-    export let handleSubmit;
-    export let showPassword1: boolean;
-    export let showPassword2: boolean;
+    interface Props {
+        errors: any;
+        form: any;
+        handleChange: any;
+        handleSubmit: any;
+        showPassword1: boolean;
+        showPassword2: boolean;
+    }
+
+    let {
+        errors,
+        form,
+        handleChange,
+        handleSubmit,
+        showPassword1 = $bindable(),
+        showPassword2 = $bindable()
+    }: Props = $props();
 </script>
 
 <form
     class="text-md grid grid-flow-row gap-y-4"
     data-testid="sign-up-form"
     id="register-form"
-    on:submit={handleSubmit}
+    onsubmit={handleSubmit}
 >
     <div>
         <Input

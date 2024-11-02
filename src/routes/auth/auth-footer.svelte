@@ -1,7 +1,11 @@
 <script lang="ts">
-    export let href: string;
-    export let tagline: string;
-    export let linkText: string;
+    interface Props {
+        href: string;
+        tagline: string;
+        linkText: string;
+    }
+
+    let { href, tagline, linkText }: Props = $props();
 </script>
 
 <p class="py-2 text-center text-sm text-primary/70">

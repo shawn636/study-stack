@@ -8,18 +8,20 @@
     import { slide } from 'svelte/transition';
     import { submissionState } from './submission-stores';
 
-    export let form;
-    export let errors;
-    export let touched;
-    export let handleChange;
-    export let handleSubmit;
+    let {
+        form,
+        errors,
+        touched,
+        handleChange,
+        handleSubmit
+    } = $props();
 </script>
 
 <form
     class="text-md grid w-full grid-flow-row gap-y-4"
     data-testid="sign-in-form"
     id="register-form"
-    on:submit={handleSubmit}
+    onsubmit={handleSubmit}
 >
     <div>
         <Input

@@ -7,11 +7,15 @@
 
     import EnrolledCourseBlock from './enrolled-course-block.svelte';
 
-    export let data: PageServerData;
+    interface Props {
+        data: PageServerData;
+    }
+
+    let { data }: Props = $props();
 
     const cuid = init();
 
-    let course: Course = {
+    let course: Course = $state({
         categoryId: cuid(),
         currentPrice: 29.99,
         description: 'Learn the basics of TypeScript programming language.',
@@ -32,9 +36,9 @@
             __update__: 'PRODUCTION_RECORD'
         },
         title: 'Introduction to TypeScript'
-    };
+    });
 
-    let courseProgress: CourseProgress = {
+    let courseProgress: CourseProgress = $state({
         courseId: course.id,
         lessonsCompleted: 6,
         recordType: {
@@ -43,7 +47,7 @@
             __update__: 'PRODUCTION_RECORD'
         },
         userId: data.user.id
-    };
+    });
 </script>
 
 <div class="grid-flow-rows grid gap-2">

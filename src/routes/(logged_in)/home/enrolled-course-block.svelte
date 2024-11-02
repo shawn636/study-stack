@@ -4,13 +4,17 @@
     import { Button } from '$lib/components/ui/button';
     import Image from '$lib/components/image.svelte';
 
-    export let course: Course;
-    export let courseProgress: CourseProgress;
+    interface Props {
+        course: Course;
+        courseProgress: CourseProgress;
+    }
 
-    $: percentComplete = Math.min(
+    let { course, courseProgress }: Props = $props();
+
+    let percentComplete = $derived(Math.min(
         (courseProgress.lessonsCompleted / course.lessonCount) * 100,
         100
-    );
+    ));
 </script>
 
 <div class="grid gap-y-1 p-4" data-testid="course-progress-block">
@@ -21,7 +25,7 @@
             <div
                 class="bg-primary-500 absolute inset-0 rounded-full"
                 style={`width: ${percentComplete}%`}
-            />
+></div>
         </div>
         <p class="text-primary-500 dark:text-primary-400">
             {Math.round(percentComplete)} %

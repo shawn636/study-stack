@@ -14,9 +14,13 @@
     import { Textarea } from '$lib/components/ui/textarea';
     import { toast } from 'svelte-sonner';
 
-    export let user: User;
+    interface Props {
+        user: User;
+    }
+
+    let { user = $bindable() }: Props = $props();
     let profilePhotoFile: File;
-    let isUpdating = false;
+    let isUpdating = $state(false);
 
     onMount(() => {
         phone.set(formatPhoneNumber((user?.areaCode ?? '') + (user?.phoneNumber ?? '')));

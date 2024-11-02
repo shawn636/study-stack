@@ -18,18 +18,22 @@
 
     type $$Props = HTMLAttributes<HTMLDivElement>;
 
-    let className: $$Props['class'] = undefined;
-    export { className as class };
+    interface Props {
+        class?: $$Props['class'];
+    }
 
-    let rootElement: HTMLDivElement;
-    let headerElement: HTMLDivElement;
+    let { class: className = undefined }: Props = $props();
+    
 
-    let availableChartHeight = 0;
-    let availableChartWidth = 0;
+    let rootElement: HTMLDivElement = $state();
+    let headerElement: HTMLDivElement = $state();
+
+    let availableChartHeight = $state(0);
+    let availableChartWidth = $state(0);
     const legendElementName = 'vis-bullet-legend';
     const minChartHeight = 0;
     const minChartWidth = 0;
-    let isLoading = true;
+    let isLoading = $state(true);
 
     onMount(() => {
         availableChartHeight = getChartHeight(rootElement, headerElement, legendElementName);

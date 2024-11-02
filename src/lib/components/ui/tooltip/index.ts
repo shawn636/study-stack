@@ -1,17 +1,18 @@
-import Content from './tooltip-content.svelte';
-import { Tooltip as TooltipPrimitive } from 'bits-ui';
+import { Tooltip as TooltipPrimitive } from "bits-ui";
+import Content from "./tooltip-content.svelte";
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const Root = TooltipPrimitive.Root;
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const Trigger = TooltipPrimitive.Trigger;
+const Provider = TooltipPrimitive.Provider;
 
 export {
-    Root,
-    Trigger,
-    Content,
-    //
-    Root as Tooltip,
-    Content as TooltipContent,
-    Trigger as TooltipTrigger
+	Root,
+	Trigger,
+	Content,
+	Provider,
+	//
+	Root as Tooltip,
+	Content as TooltipContent,
+	Trigger as TooltipTrigger,
+	Provider as TooltipProvider,
 };

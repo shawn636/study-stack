@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import type { User } from '$lib/models/types/database.types';
 
     import * as Sheet from '$lib/components/ui/sheet/index';
@@ -12,12 +14,18 @@
     import { page } from '$app/stores';
     import ProfileMenu from '$lib/components/profile-menu.svelte';
 
-    export let user: User | undefined;
+    interface Props {
+        user: User | undefined;
+    }
 
-    $: headerLinks = getHeaderLinks(user === undefined ? false : true);
+    let { user }: Props = $props();
 
-    let sidebarOpen = false;
-    $: if ($navigating) sidebarOpen = false;
+    let headerLinks = $derived(getHeaderLinks(user === undefined ? false : true));
+
+    let sidebarOpen = $state(false);
+    run(() => {
+        if ($navigating) sidebarOpen = false;
+    });
 </script>
 
 <div
@@ -26,16 +34,18 @@
 >
     <div class="flex-flow-col flex items-center justify-self-start">
         <Sheet.Root bind:open={sidebarOpen}>
-            <Sheet.Trigger asChild let:builder>
-                <Button
-                    builders={[builder]}
-                    class="mx-0 flex border-none bg-transparent px-0 outline-none hover:bg-transparent focus:border-none focus:outline-none md:hidden"
-                    size="icon"
-                    variant="outline"
-                >
-                    <Fa class="text-white" icon={faBars} size="lg" />
-                </Button>
-            </Sheet.Trigger>
+            <Sheet.Trigger asChild >
+                {#snippet children({ builder })}
+                                <Button
+                        builders={[builder]}
+                        class="mx-0 flex border-none bg-transparent px-0 outline-none hover:bg-transparent focus:border-none focus:outline-none md:hidden"
+                        size="icon"
+                        variant="outline"
+                    >
+                        <Fa class="text-white" icon={faBars} size="lg" />
+                    </Button>
+                                            {/snippet}
+                        </Sheet.Trigger>
             <Sheet.Content side="left">
                 <div class="flex h-full w-full flex-col gap-y-2">
                     <a class="flex" href="/"><Logo colorClass="text-primary" /></a>

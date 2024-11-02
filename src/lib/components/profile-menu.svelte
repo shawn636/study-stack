@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import type { User } from '$lib/models/types/database.types';
 
     import {
@@ -19,10 +21,16 @@
     import { navigating } from '$app/stores';
     import { UserRole } from '$lib/models/types/database.types';
 
-    export let user: User;
+    interface Props {
+        user: User;
+    }
 
-    let isOpen = false;
-    $: if ($navigating) isOpen = false;
+    let { user }: Props = $props();
+
+    let isOpen = $state(false);
+    run(() => {
+        if ($navigating) isOpen = false;
+    });
 
     const signOut = async () => {
         const res = await fetch('/auth/logout', {
@@ -35,22 +43,24 @@
 </script>
 
 <DropdownMenu.Root bind:open={isOpen}>
-    <DropdownMenu.Trigger asChild let:builder>
-        <Button
-            aria-label="Profile"
-            builders={[builder]}
-            class="grid grid-flow-col gap-x-2 bg-white hover:bg-gray-100"
-            data-testid="profile-button"
-        >
-            <Avatar.Root class="m-0 h-6 w-6 p-0">
-                <Avatar.Fallback class="bg-gray-200 text-black "
-                    >{initials(user.name)}</Avatar.Fallback
-                >
-            </Avatar.Root>
-            <span class="hidden text-black xs:block">{user.name}</span>
-            <Fa class="text-black" icon={faChevronDown} size="sm" />
-        </Button>
-    </DropdownMenu.Trigger>
+    <DropdownMenu.Trigger asChild >
+        {#snippet children({ builder })}
+                <Button
+                aria-label="Profile"
+                builders={[builder]}
+                class="grid grid-flow-col gap-x-2 bg-white hover:bg-gray-100"
+                data-testid="profile-button"
+            >
+                <Avatar.Root class="m-0 h-6 w-6 p-0">
+                    <Avatar.Fallback class="bg-gray-200 text-black "
+                        >{initials(user.name)}</Avatar.Fallback
+                    >
+                </Avatar.Root>
+                <span class="hidden text-black xs:block">{user.name}</span>
+                <Fa class="text-black" icon={faChevronDown} size="sm" />
+            </Button>
+                    {/snippet}
+        </DropdownMenu.Trigger>
     <DropdownMenu.Content>
         <div class="grid w-64 grid-flow-row rounded-xl p-4 shadow-xl">
             <nav class="grid grid-flow-row grid-cols-[1fr] gap-y-2 p-0">

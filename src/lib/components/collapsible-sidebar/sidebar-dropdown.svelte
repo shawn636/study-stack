@@ -8,11 +8,15 @@
     import Fa from 'svelte-fa';
     import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
     import { page } from '$app/stores';
-    export let items: { href: string; icon: IconDefinition | undefined; title: string }[];
 
-    let className: string | null | undefined = undefined;
-    $: activeItem = items.find((item) => item.href === $page.url.pathname);
-    export { className as class };
+    interface Props {
+        items: { href: string; icon: IconDefinition | undefined; title: string }[];
+        class?: string | null | undefined;
+    }
+
+    let { items, class: className = undefined }: Props = $props();
+    let activeItem = $derived(items.find((item) => item.href === $page.url.pathname));
+    
 </script>
 
 <DropdownMenu.Root>

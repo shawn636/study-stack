@@ -29,15 +29,19 @@
     import { courseResults, isLoading } from './stores';
 
     let debounceTimeout: ReturnType<typeof setTimeout>;
-    export let data: PageServerData;
+    interface Props {
+        data: PageServerData;
+    }
+
+    let { data }: Props = $props();
 
     // State
-    let selectedView: 'grid' | 'list';
-    let sortByOption = {
+    let selectedView: 'grid' | 'list' = $state();
+    let sortByOption = $state({
         label: RELEVANCE.label,
         value: RELEVANCE
-    };
-    let searchQuery: string;
+    });
+    let searchQuery: string = $state();
 
     onMount(async () => {
         await getCourses();
@@ -130,10 +134,10 @@
 
     const isDesktop = mediaQuery('(min-width: 768px)');
 
-    let count = 20;
-    let page = 1;
-    $: pageSize = isDesktop ? 12 : 6;
-    $: siblingCount = $isDesktop ? 1 : 0;
+    let count = $state(20);
+    let page = $state(1);
+    let pageSize = $derived(isDesktop ? 12 : 6);
+    let siblingCount = $derived($isDesktop ? 1 : 0);
 </script>
 
 <div class="grid justify-items-center gap-y-4 p-5">
@@ -207,8 +211,8 @@
         <Pagination.Root
             bind:page
             {count}
-            let:currentPage
-            let:pages
+            
+            
             onPageChange={(newPage) => {
                 page = newPage;
                 getCourses();
@@ -216,33 +220,35 @@
             perPage={pageSize}
             {siblingCount}
         >
-            <Pagination.Content>
-                <Pagination.Item>
-                    <Pagination.PrevButton>
-                        <Fa class="h-4 w-4" icon={faChevronLeft} />
-                        <span class="hidden sm:block">Previous</span>
-                    </Pagination.PrevButton>
-                </Pagination.Item>
-                {#each pages as page (page.key)}
-                    {#if page.type === 'ellipsis'}
-                        <Pagination.Item>
-                            <Pagination.Ellipsis />
-                        </Pagination.Item>
-                    {:else}
-                        <Pagination.Item>
-                            <Pagination.Link isActive={currentPage === page.value} {page}>
-                                {page.value}
-                            </Pagination.Link>
-                        </Pagination.Item>
-                    {/if}
-                {/each}
-                <Pagination.Item>
-                    <Pagination.NextButton>
-                        <span class="hidden sm:block">Next</span>
-                        <Fa class="h-4 w-4" icon={faChevronRight} />
-                    </Pagination.NextButton>
-                </Pagination.Item>
-            </Pagination.Content>
-        </Pagination.Root>
+            {#snippet children({ currentPage, pages })}
+                        <Pagination.Content>
+                    <Pagination.Item>
+                        <Pagination.PrevButton>
+                            <Fa class="h-4 w-4" icon={faChevronLeft} />
+                            <span class="hidden sm:block">Previous</span>
+                        </Pagination.PrevButton>
+                    </Pagination.Item>
+                    {#each pages as page (page.key)}
+                        {#if page.type === 'ellipsis'}
+                            <Pagination.Item>
+                                <Pagination.Ellipsis />
+                            </Pagination.Item>
+                        {:else}
+                            <Pagination.Item>
+                                <Pagination.Link isActive={currentPage === page.value} {page}>
+                                    {page.value}
+                                </Pagination.Link>
+                            </Pagination.Item>
+                        {/if}
+                    {/each}
+                    <Pagination.Item>
+                        <Pagination.NextButton>
+                            <span class="hidden sm:block">Next</span>
+                            <Fa class="h-4 w-4" icon={faChevronRight} />
+                        </Pagination.NextButton>
+                    </Pagination.Item>
+                </Pagination.Content>
+                                {/snippet}
+                </Pagination.Root>
     </div>
 </div>

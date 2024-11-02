@@ -3,7 +3,11 @@
 
     import ProfileForm from './profile-form.svelte';
 
-    export let data: PageServerData;
+    interface Props {
+        data: PageServerData;
+    }
+
+    let { data }: Props = $props();
 </script>
 
 <ProfileForm user={data.user} />
