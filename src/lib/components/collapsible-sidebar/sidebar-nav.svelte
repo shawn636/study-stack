@@ -7,7 +7,7 @@
         items: { href: string; icon: IconDefinition | undefined; title: string }[];
     }
 
-    let { items }: Props = $props();
+    const { items }: Props = $props();
 </script>
 
 <SidebarList class="hidden sm:flex" {items} />

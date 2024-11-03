@@ -1,7 +1,7 @@
 <script lang="ts">
     import AuthFooter from '../auth-footer.svelte';
     import AuthHeader from '../auth-header.svelte';
-    import { createForm } from './submit-form';
+    import { createForm } from './submit-form.svelte';
     import Divider from '../divider.svelte';
     import LoginForm from './login-form.svelte';
     import OauthButtons from './oauth-buttons.svelte';

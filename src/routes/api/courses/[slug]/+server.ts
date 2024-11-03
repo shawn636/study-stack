@@ -29,10 +29,10 @@ export const GET = (async ({ params }) => {
                 .selectAll('Course')
                 .select(['Course.id as courseId', 'User.id as instructorId'])
                 .$if(!options['display-test-records'], (qb) =>
-                    qb.where('recordType', '!=', 'TEST_RECORD')
+                    qb.where('Course.recordType', '!=', 'TEST_RECORD')
                 )
                 .$if(!options['display-seed-records'], (qb) =>
-                    qb.where('recordType', '!=', 'SEED_RECORD')
+                    qb.where('Course.recordType', '!=', 'SEED_RECORD')
                 )
                 .where('Course.id', '=', slug)
                 .executeTakeFirstOrThrow();
@@ -43,10 +43,10 @@ export const GET = (async ({ params }) => {
                 .selectAll('User')
                 .select(['Course.id as courseId', 'User.id as instructorId'])
                 .$if(!options['display-test-records'], (qb) =>
-                    qb.where('recordType', '!=', 'TEST_RECORD')
+                    qb.where('Course.recordType', '!=', 'TEST_RECORD')
                 )
                 .$if(!options['display-seed-records'], (qb) =>
-                    qb.where('recordType', '!=', 'SEED_RECORD')
+                    qb.where('Course.recordType', '!=', 'SEED_RECORD')
                 )
                 .where('Course.id', '=', slug)
                 .executeTakeFirstOrThrow();

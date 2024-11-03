@@ -12,8 +12,8 @@
         children?: import('svelte').Snippet;
     }
 
-    let { data, children }: Props = $props();
-    let user = $derived(data.user as User);
+    const { data, children }: Props = $props();
+    const user = $derived(data.user as User);
 
     afterNavigate((params: AfterNavigate) => {
         const isNewPage = params.from?.url.pathname !== params.to?.url.pathname;

@@ -5,7 +5,7 @@
         data: PageData;
     }
 
-    let { data }: Props = $props();
+    const { data }: Props = $props();
 </script>
 
 <div class="grid justify-items-center gap-y-4 p-5">

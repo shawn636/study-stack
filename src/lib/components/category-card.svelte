@@ -5,13 +5,14 @@
         categorySummary: CategorySummary;
     }
 
-    let { categorySummary }: Props = $props();
+    const { categorySummary }: Props = $props();
 
     const maxTitleLength = 25;
-    let categoryTitleShort =
-        $derived(categorySummary.title.length > maxTitleLength
+    const categoryTitleShort = $derived(
+        categorySummary.title.length > maxTitleLength
             ? `${categorySummary.title.slice(0, maxTitleLength)}...`
-            : categorySummary.title);
+            : categorySummary.title
+    );
 </script>
 
 <a

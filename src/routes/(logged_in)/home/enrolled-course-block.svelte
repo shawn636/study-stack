@@ -9,12 +9,11 @@
         courseProgress: CourseProgress;
     }
 
-    let { course, courseProgress }: Props = $props();
+    const { course = $bindable(), courseProgress = $bindable() }: Props = $props();
 
-    let percentComplete = $derived(Math.min(
-        (courseProgress.lessonsCompleted / course.lessonCount) * 100,
-        100
-    ));
+    const percentComplete = $derived(
+        Math.min((courseProgress.lessonsCompleted / course.lessonCount) * 100, 100)
+    );
 </script>
 
 <div class="grid gap-y-1 p-4" data-testid="course-progress-block">
@@ -25,7 +24,7 @@
             <div
                 class="bg-primary-500 absolute inset-0 rounded-full"
                 style={`width: ${percentComplete}%`}
-></div>
+            ></div>
         </div>
         <p class="text-primary-500 dark:text-primary-400">
             {Math.round(percentComplete)} %

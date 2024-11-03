@@ -8,7 +8,7 @@
         error: string;
     }
 
-    let { error }: Props = $props();
+    const { error = $bindable() }: Props = $props();
 </script>
 
 {#if error}

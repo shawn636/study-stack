@@ -3,7 +3,10 @@ import { goto } from '$app/navigation';
 import { registrationForm } from '$lib/models/forms/registration';
 import { toast } from 'svelte-sonner';
 
-import { submissionError, submissionState } from './submission-stores';
+type SubmissionState = 'error' | 'idle' | 'submitting';
+
+export const submissionState = $state<{ value: SubmissionState }>({ value: 'idle' });
+export const submissionError = $state<{ value: string | null }>({ value: null });
 
 const submitForm = async (
     values: {
@@ -45,36 +48,35 @@ export const createForm = () => {
             result.validateField('password1');
             result.validateField('password2');
 
-            submissionState.set('submitting');
-            submissionError.set(null);
+            submissionState.value = 'submitting';
+            submissionError.value = null;
             const res = await submitForm(values);
 
             if (res) {
                 const data = await res.json();
 
                 if (res?.status === 200) {
-                    submissionState.set('idle');
+                    submissionState.value = 'idle';
                     toast.success('Account created successfully');
                     goto('/');
                 } else {
-                    submissionState.set('error');
+                    submissionState.value = 'error';
                     if (data.error.message.includes('already in use')) {
-                        submissionError.set('This email is already in use.');
+                        submissionError.value = 'This email is already in use.';
                         toast.error('This email is already in use.');
                     } else if (data.error.message.includes('data provided is invalid')) {
-                        submissionError.set(
-                            'It looks like the data you provided is invalid. Please try again.'
-                        );
+                        submissionError.value =
+                            'It looks like the data you provided is invalid. Please try again.';
                         toast.error(
                             'It looks like the data you provided is invalid. Please try again.'
                         );
                     } else {
-                        submissionError.set('An unknown error occurred. Please try again.');
+                        submissionError.value = 'An unknown error occurred. Please try again.';
                         toast.error('An unknown error occurred. Please try again.');
                     }
                 }
             } else {
-                submissionError.set('An error occurred. Please try again.');
+                submissionError.value = 'An error occurred. Please try again.';
                 toast.error('An error occurred. Please try again.');
             }
         },

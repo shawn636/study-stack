@@ -1,4 +1,6 @@
 <script lang="ts">
+    import type { Writable } from 'svelte/store';
+
     import {
         faCircleExclamation,
         faEye,
@@ -11,22 +13,25 @@
     import Fa from 'svelte-fa';
     import { Input } from '$lib/components/ui/input';
     import { slide } from 'svelte/transition';
-    import { submissionState } from './submission-stores';
+    import { submissionState } from './submit-form.svelte';
     import { Toggle } from '$lib/components/ui/toggle';
 
     interface Props {
-        errors: any;
-        form: any;
-        handleChange: any;
-        handleSubmit: any;
+        errors: Writable<Record<'email' | 'name' | 'password1' | 'password2', string>>;
+        form: Writable<{ email: string; name: string; password1: string; password2: string }>;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleChange: (event: Event) => any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleSubmit: (event: Event) => any;
         showPassword1: boolean;
         showPassword2: boolean;
     }
 
     let {
-        errors,
-        form,
-        handleChange,
+        // eslint-disable-next-line prefer-const
+        errors, // eslint-disable-next-line prefer-const
+        form, // eslint-disable-next-line prefer-const
+        handleChange, // eslint-disable-next-line prefer-const
         handleSubmit,
         showPassword1 = $bindable(),
         showPassword2 = $bindable()
@@ -44,8 +49,8 @@
             bind:value={$form.name}
             data-testid="name-input"
             name="name"
-            on:blur={handleChange}
-            on:change={handleChange}
+            onblur={handleChange}
+            onchange={handleChange}
             placeholder="Name"
             type="text"
         />
@@ -73,8 +78,8 @@
             bind:value={$form.email}
             data-testid="email-input"
             name="email"
-            on:blur={handleChange}
-            on:change={handleChange}
+            onblur={handleChange}
+            onchange={handleChange}
             placeholder="Email"
             type="email"
         />
@@ -103,8 +108,8 @@
                 bind:value={$form.password1}
                 data-testid="password1-input"
                 name="password1"
-                on:blur={handleChange}
-                on:change={handleChange}
+                onblur={handleChange}
+                onchange={handleChange}
                 placeholder="Enter a password"
                 required
                 type={showPassword1 ? 'text' : 'password'}
@@ -137,8 +142,8 @@
                 bind:value={$form.password2}
                 data-testid="password2-input"
                 name="password2"
-                on:blur={handleChange}
-                on:change={handleChange}
+                onblur={handleChange}
+                onchange={handleChange}
                 placeholder="Enter a password"
                 required
                 type={showPassword2 ? 'text' : 'password'}
@@ -174,7 +179,7 @@
         type="submit"
         variant="default"
     >
-        {#if $submissionState === 'submitting'}
+        {#if submissionState.value === 'submitting'}
             <Fa class="animate-spin" icon={faSpinner} size="lg" />
         {:else}
             Submit

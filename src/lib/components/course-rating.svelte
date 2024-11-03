@@ -11,9 +11,9 @@
         class?: string;
     }
 
-    let { rating, ratingCount, class: className = '' }: Props = $props();
-    
-    let ratingAvgRounded = $derived(Math.round(rating * 2) / 2);
+    const { rating, ratingCount, class: className = '' }: Props = $props();
+
+    const ratingAvgRounded = $derived(Math.round(rating * 2) / 2);
 
     const getStarIcon = (starIdx: number) => {
         const lessThanRatingAvg = starIdx <= ratingAvgRounded;

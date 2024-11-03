@@ -13,13 +13,7 @@
         percentChange?: number;
     }
 
-    let {
-        value,
-        title,
-        icon,
-        percentChange = 0
-    }: Props = $props();
-
+    const { value, title, icon, percentChange = 0 }: Props = $props();
 
     const arrowTextColor = percentChange > 0 ? 'text-emerald-500' : 'text-yellow-500';
     const arrowBgColor =
@@ -37,7 +31,7 @@
     };
 
     // $: arrowContainerClass = `rounded-full ${percentChange > 0 ? 'bg-emerald-100' : 'bg-rose-100'} p-3 ${text-emerald-500}`;
-    let arrowIcon = $derived(getArrowIcon(percentChange));
+    const arrowIcon = $derived(getArrowIcon(percentChange));
 </script>
 
 <Card.Root>

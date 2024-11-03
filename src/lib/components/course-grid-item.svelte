@@ -1,52 +1,54 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import * as Avatar from '$lib/components/ui/avatar/index';
 
     import type { CourseResult } from '$lib/api/types/courses';
-    import type { ToggleCourseFavoriteEvent } from '$lib/models/types/toggle-user-course-favorite-event';
+    import type { ToggleCourseFavoritePayload } from '$lib/models/types/toggle-user-course-favorite-event';
 
     import { faClock, faFileLines } from '@fortawesome/free-regular-svg-icons';
 
     import { Button } from '$lib/components/ui/button';
     import CourseRating from '$lib/components/course-rating.svelte';
-    import { createEventDispatcher } from 'svelte';
     import Fa from 'svelte-fa';
     import { faHeart } from '@fortawesome/free-solid-svg-icons';
     import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
     import Image from '$lib/components/image.svelte';
     import { initials } from '$lib/client/util';
+    import { onMount } from 'svelte';
 
     interface Props {
         courseResult: CourseResult;
+        toggleFavorite: (payload: ToggleCourseFavoritePayload) => void;
     }
 
-    let { courseResult }: Props = $props();
+    const { courseResult, toggleFavorite }: Props = $props();
 
     // let toggled = false;
-    let toggled;
-    run(() => {
+    let toggled = $state(false);
+
+    onMount(() => {
         toggled = courseResult.course.isFavorite ?? false;
     });
 
-    const dispatch = createEventDispatcher<ToggleCourseFavoriteEvent>();
+    // const dispatch = createEventDispatcher<ToggleCourseFavoriteEvent>();
 
     const toggle = () => {
         toggled = !toggled;
 
-        const payload = {
+        const payload: ToggleCourseFavoritePayload = {
             courseId: courseResult.course.id,
             current: toggled,
             previous: !toggled
         };
 
-        dispatch('toggleCourseFavorite', payload);
+        toggleFavorite(payload);
     };
 
     const width = 'w-64';
     const height = 'h-40';
 
-    let containerBaseClass = $derived(`grid grid-flow-row rounded-md p-1 gap-y-2 ${width} content-visibility-auto`);
+    const containerBaseClass = $derived(
+        `grid grid-flow-row rounded-md p-1 gap-y-2 ${width} content-visibility-auto`
+    );
 </script>
 
 <div class={containerBaseClass}>

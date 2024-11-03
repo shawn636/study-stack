@@ -11,9 +11,11 @@
         data: PageServerData;
     }
 
-    let { data }: Props = $props();
+    const { data }: Props = $props();
 
     const cuid = init();
+
+    const courseId = cuid();
 
     let course: Course = $state({
         categoryId: cuid(),
@@ -22,7 +24,7 @@
         difficulty: 'Beginner',
         estimatedTimeHours: 2,
         estimatedTimeMinutes: 30,
-        id: cuid(),
+        id: courseId,
         imgHref: '/images/course-image.webp',
         instructorId: cuid(),
         lessonCount: 11,
@@ -39,7 +41,7 @@
     });
 
     let courseProgress: CourseProgress = $state({
-        courseId: course.id,
+        courseId: courseId,
         lessonsCompleted: 6,
         recordType: {
             __insert__: undefined,

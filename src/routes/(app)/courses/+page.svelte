@@ -9,6 +9,11 @@
         faChevronRight,
         faSearch
     } from '@fortawesome/free-solid-svg-icons';
+    import {
+        HIGHEST_RATING,
+        LOWEST_PRICE,
+        RELEVANCE
+    } from '$lib/models/types/course-sort-by-options';
 
     import * as Pagination from '$lib/components/ui/pagination/index';
 
@@ -19,9 +24,7 @@
     import { goto } from '$app/navigation';
     import GridPlaceholder from '$lib/components/placeholders/course-grid-item.svelte';
     import { Input } from '$lib/components/ui/input/index';
-    import { mediaQuery } from 'svelte-legos';
     import { onMount } from 'svelte';
-    import { RELEVANCE } from '$lib/models/types/course-sort-by-options';
     import SortByDropdown from '$lib/components/controls/sort-by-dropdown.svelte';
     import { toast } from 'svelte-sonner';
     import ViewToggle from '$lib/components/controls/view-toggle.svelte';
@@ -33,21 +36,26 @@
         data: PageServerData;
     }
 
-    let { data }: Props = $props();
+    const { data }: Props = $props();
 
     // State
-    let selectedView: 'grid' | 'list' = $state();
-    let sortByOption = $state({
-        label: RELEVANCE.label,
-        value: RELEVANCE
-    });
-    let searchQuery: string = $state();
+    let selectedView: 'grid' | 'list' = $state('grid');
+
+    let sortByOption = $state(RELEVANCE.param);
+    let searchQuery: string = $state('');
 
     onMount(async () => {
         await getCourses();
     });
 
     // Methods
+    const getOption = (value: string) => {
+        const options = [HIGHEST_RATING, LOWEST_PRICE, RELEVANCE];
+        const option = options.find((o) => o.param === value);
+
+        return option ?? RELEVANCE;
+    };
+
     const getCourses = async () => {
         try {
             isLoading.set(true);
@@ -56,7 +64,7 @@
             if (data.user) {
                 response = await client.courses.getCoursesWithFavorites(
                     searchQuery,
-                    sortByOption.value,
+                    getOption(sortByOption),
                     page - 1,
                     pageSize,
                     data.user.id
@@ -64,7 +72,7 @@
             } else {
                 response = await client.courses.getCourses(
                     searchQuery,
-                    sortByOption.value,
+                    getOption(sortByOption),
                     page - 1,
                     pageSize
                 );
@@ -90,13 +98,11 @@
         }, 300); // Adjust the delay (in milliseconds) as needed
     };
 
-    const handleToggleCourseFavorite = async (event: CustomEvent<ToggleCourseFavoritePayload>) => {
+    const handleToggleCourseFavorite = async (payload: ToggleCourseFavoritePayload) => {
         if (!data.user) {
             goto('/auth/login');
             return;
         }
-
-        const payload: ToggleCourseFavoritePayload = event.detail;
 
         try {
             if (payload.current) {
@@ -132,13 +138,18 @@
         }
     };
 
-    const isDesktop = mediaQuery('(min-width: 768px)');
+    // let innerWidth = $state(0);
+    // const isDesktop = $derived(innerWidth >= 768);
+    const isDesktop = $state(false);
+    // const isDesktop = mediaQuery('(min-width: 768px)');
 
     let count = $state(20);
     let page = $state(1);
-    let pageSize = $derived(isDesktop ? 12 : 6);
-    let siblingCount = $derived($isDesktop ? 1 : 0);
+    const pageSize = $derived(isDesktop ? 12 : 6);
+    const siblingCount = $derived(isDesktop ? 1 : 0);
 </script>
+
+<!-- <svelte:window bind:innerWidth /> -->
 
 <div class="grid justify-items-center gap-y-4 p-5">
     <div class="grid max-w-5xl gap-y-4">
@@ -150,7 +161,7 @@
                 <Input
                     bind:value={searchQuery}
                     class="w-full"
-                    on:input={() => debounceGetCourses()}
+                    oninput={() => debounceGetCourses()}
                     placeholder="Search..."
                     type="email"
                 />
@@ -161,8 +172,8 @@
             </div>
             <SortByDropdown
                 bind:value={sortByOption}
-                on:valuechange={(event) => {
-                    sortByOption = event.detail;
+                handleValueChange={(value) => {
+                    sortByOption = value;
                     page = 1;
                     getCourses();
                 }}
@@ -191,7 +202,7 @@
                 {#each $courseResults as courseResult}
                     <CourseListItem
                         {courseResult}
-                        on:toggleCourseFavorite={(e) => handleToggleCourseFavorite(e)}
+                        toggleFavorite={(e) => handleToggleCourseFavorite(e)}
                     />
                 {/each}
             </div>
@@ -202,7 +213,7 @@
                 {#each $courseResults as courseResult}
                     <CourseGridItem
                         {courseResult}
-                        on:toggleCourseFavorite={(e) => handleToggleCourseFavorite(e)}
+                        toggleFavorite={(e) => handleToggleCourseFavorite(e)}
                     />
                 {/each}
             </div>
@@ -211,8 +222,6 @@
         <Pagination.Root
             bind:page
             {count}
-            
-            
             onPageChange={(newPage) => {
                 page = newPage;
                 getCourses();
@@ -221,7 +230,7 @@
             {siblingCount}
         >
             {#snippet children({ currentPage, pages })}
-                        <Pagination.Content>
+                <Pagination.Content>
                     <Pagination.Item>
                         <Pagination.PrevButton>
                             <Fa class="h-4 w-4" icon={faChevronLeft} />
@@ -248,7 +257,7 @@
                         </Pagination.NextButton>
                     </Pagination.Item>
                 </Pagination.Content>
-                                {/snippet}
-                </Pagination.Root>
+            {/snippet}
+        </Pagination.Root>
     </div>
 </div>

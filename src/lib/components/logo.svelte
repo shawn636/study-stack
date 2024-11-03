@@ -4,9 +4,9 @@
         layout?: 'horizontal' | 'vertical';
     }
 
-    let { colorClass = 'text-white', layout = 'horizontal' }: Props = $props();
+    const { colorClass = 'text-white', layout = 'horizontal' }: Props = $props();
 
-    let baseClass = $derived(`text-lg font-medium ${colorClass}`);
+    const baseClass = $derived(`text-lg font-medium ${colorClass}`);
 </script>
 
 <div

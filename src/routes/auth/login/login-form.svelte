@@ -1,4 +1,6 @@
 <script lang="ts">
+    import type { Writable } from 'svelte/store';
+
     import { faCircleExclamation, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
     import { Button } from '$lib/components/ui/button';
@@ -6,15 +8,19 @@
     import Fa from 'svelte-fa';
     import { Input } from '$lib/components/ui/input';
     import { slide } from 'svelte/transition';
-    import { submissionState } from './submission-stores';
+    import { submissionState } from './submit-form.svelte';
 
-    let {
-        form,
-        errors,
-        touched,
-        handleChange,
-        handleSubmit
-    } = $props();
+    interface Props {
+        form: Writable<{ email: string; password: string }>;
+        errors: Writable<Record<'email' | 'password', string>>;
+        touched: Writable<Record<'email' | 'password', boolean>>;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleChange: (event: Event) => any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        handleSubmit: (event: Event) => any;
+    }
+
+    const { form, errors, touched, handleChange, handleSubmit }: Props = $props();
 </script>
 
 <form
@@ -30,8 +36,8 @@
                 {$errors.email ? 'border-error-500' : ''}
                 {!$errors.email && $touched.email ? 'border-success-700' : ''}"
             name="email"
-            on:blur={handleChange}
-            on:change={handleChange}
+            onblur={handleChange}
+            onchange={handleChange}
             placeholder="Email"
             type="email"
         />
@@ -60,8 +66,8 @@
                 {$errors.password ? 'border-error-500' : ''}
                 {!$errors.password && $touched.password ? 'border-success-700' : ''}"
             name="password"
-            on:blur={handleChange}
-            on:change={handleChange}
+            onblur={handleChange}
+            onchange={handleChange}
             placeholder="Password"
             type="password"
         />
@@ -75,11 +81,11 @@
     <Button
         aria-label="continue"
         class="font-medium"
-        disabled={$submissionState === 'submitting'}
+        disabled={submissionState.value === 'submitting'}
         type="submit"
         variant="default"
     >
-        {#if $submissionState === 'submitting'}
+        {#if submissionState.value === 'submitting'}
             <Fa class="animate-spin" icon={faSpinner} size="lg" />
         {:else}
             Submit

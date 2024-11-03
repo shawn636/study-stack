@@ -1,8 +1,5 @@
 <script lang="ts">
-    import * as AlertDialog from '$lib/components/ui/alert-dialog';
-    import { Switch } from '$lib/components/ui/switch';
-
-    let checked = $state(false);
+    import * as Sheet from '$lib/components/ui/sheet';
 </script>
 
 <div class="grid grid-flow-row p-5">
@@ -10,29 +7,18 @@
 
     <div class="border border-dashed border-pink-500 p-4">
         <!-- ENTER CODE BELOW -->
-
-        <AlertDialog.Root>
-            <AlertDialog.Trigger>
-                <Switch bind:checked on:click={(e) => e.preventDefault()} />
-            </AlertDialog.Trigger>
-            <AlertDialog.Content>
-                <AlertDialog.Header>
-                    <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-                    <AlertDialog.Description>
+        <Sheet.Root>
+            <Sheet.Trigger>Open</Sheet.Trigger>
+            <Sheet.Content>
+                <Sheet.Header>
+                    <Sheet.Title>Are you sure absolutely sure?</Sheet.Title>
+                    <Sheet.Description>
                         This action cannot be undone. This will permanently delete your account and
                         remove your data from our servers.
-                    </AlertDialog.Description>
-                </AlertDialog.Header>
-                <AlertDialog.Footer>
-                    <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-                    <AlertDialog.Action
-                        on:click={() => {
-                            checked = !checked;
-                        }}>Continue</AlertDialog.Action
-                    >
-                </AlertDialog.Footer>
-            </AlertDialog.Content>
-        </AlertDialog.Root>
+                    </Sheet.Description>
+                </Sheet.Header>
+            </Sheet.Content>
+        </Sheet.Root>
 
         <!-- ENTER CODE ABOVE -->
     </div>

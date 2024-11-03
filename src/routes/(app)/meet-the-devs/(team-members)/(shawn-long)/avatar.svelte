@@ -1,15 +1,13 @@
 <script lang="ts">
-    import { Avatar as AvatarPrimitive } from 'bits-ui';
     import { cn } from '$lib/utils.js';
 
-    type $$Props = AvatarPrimitive.Props;
+    // type $$Props = AvatarPrimitive.Props;
 
     interface Props {
-        class?: $$Props['class'];
+        class?: string | null | undefined;
     }
 
-    let { class: className = undefined }: Props = $props();
-    
+    const { class: className = undefined }: Props = $props();
 </script>
 
 <svg

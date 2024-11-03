@@ -11,7 +11,7 @@
         successMessage: string;
     }
 
-    let { submissionError = null, showSuccess = false, successMessage }: Props = $props();
+    const { submissionError = null, showSuccess = false, successMessage }: Props = $props();
 </script>
 
 {#if submissionError}

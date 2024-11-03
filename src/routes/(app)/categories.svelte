@@ -6,7 +6,7 @@
         categorySummaries: CategorySummary[];
     }
 
-    let { categorySummaries }: Props = $props();
+    const { categorySummaries }: Props = $props();
 </script>
 
 <div class="mt-4 grid justify-items-center">

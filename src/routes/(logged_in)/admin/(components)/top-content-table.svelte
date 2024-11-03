@@ -11,8 +11,7 @@
         class?: $$Props['class'];
     }
 
-    let { class: className = undefined }: Props = $props();
-    
+    const { class: className = undefined }: Props = $props();
 
     const data = [
         { engagement: '8.2%', title: 'The Ultimate Guide to Web Development', views: '12.3K' },

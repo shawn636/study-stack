@@ -5,7 +5,7 @@
         linkText: string;
     }
 
-    let { href, tagline, linkText }: Props = $props();
+    const { href, tagline, linkText }: Props = $props();
 </script>
 
 <p class="py-2 text-center text-sm text-primary/70">

@@ -4,7 +4,7 @@
         headerTagline: string;
     }
 
-    let { headerText, headerTagline }: Props = $props();
+    const { headerText, headerTagline }: Props = $props();
 </script>
 
 <div class="py-5 text-center">

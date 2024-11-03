@@ -99,7 +99,7 @@
                 <Button
                     aria-label="Submit Email Address"
                     class="bg-white text-black hover:bg-gray-100"
-                    on:click={subscribe}
+                    onclick={subscribe}
                     type="button"
                     variant="secondary">Submit</Button
                 >
@@ -111,7 +111,7 @@
     <!-- Only for <= sm breakpoint -->
     <!-- Link Accordion (Below) -->
     <div class="block sm:hidden">
-        <Accordion.Root>
+        <Accordion.Root type="single">
             <Accordion.Item value="about">
                 <Accordion.Trigger>About</Accordion.Trigger>
                 <Accordion.Content>
@@ -120,7 +120,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to about us page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/about"
                                     role="link"
                                     variant="link">About Us</Button
@@ -129,7 +129,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to some page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/beliefs"
                                     role="link"
                                     variant="link">What We Believe</Button
@@ -147,7 +147,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to categories page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/"
                                     role="link"
                                     variant="link">Biblical Studies</Button
@@ -156,7 +156,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to categories page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/"
                                     role="link"
                                     variant="link">Theology & Doctrine</Button
@@ -165,7 +165,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to categories page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/"
                                     role="link"
                                     variant="link">Spiritual Formation & Discipleship</Button
@@ -174,7 +174,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to categories page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/"
                                     role="link"
                                     variant="link">Christian Ministry & Mission</Button
@@ -183,7 +183,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to categories page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/"
                                     role="link"
                                     variant="link">Worship and Creative Arts</Button
@@ -192,7 +192,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to categories page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/"
                                     role="link"
                                     variant="link">Biblical Languages</Button
@@ -201,7 +201,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to categories page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/"
                                     role="link"
                                     variant="link">Christian Counseling & Psychology</Button
@@ -210,7 +210,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to categories page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/"
                                     role="link"
                                     variant="link">Christian Missions & Outreach</Button
@@ -219,7 +219,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to categories page"
-                                    class="text-primary-foreground"
+                                    class="text-foreground decoration-foreground"
                                     href="/"
                                     role="link"
                                     variant="link">Church Administration & Management</Button
@@ -242,34 +242,100 @@
         <div class="row-start-1 row-end-2">
             <h4 class="h4 grid pb-2 uppercase">Categories</h4>
             <ul class="grid gap-y-1">
-                <li><a href="/">Biblical Studies</a></li>
-                <li><a href="/">Theology & Doctrine</a></li>
-                <li><a href="/">Discipleship</a></li>
-                <li><a href="/">Ministry & Mission</a></li>
-                <li><a href="/">Worship & Creative Arts</a></li>
-                <li><a href="/">Biblical Languages</a></li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Biblical Studies</a
+                    >
+                </li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Theology & Doctrine</a
+                    >
+                </li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Discipleship</a
+                    >
+                </li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Ministry & Mission</a
+                    >
+                </li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Worship & Creative Arts</a
+                    >
+                </li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Biblical Languages</a
+                    >
+                </li>
             </ul>
         </div>
         <!-- ABOUT -->
         <div class="row-start-1 row-end-2">
             <h4 class="h4 grid pb-2 uppercase">About</h4>
             <ul class="grid gap-y-1">
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/">Learner Stories</a></li>
-                <li><a href="/">Careers</a></li>
-                <li><a href="/">Press</a></li>
-                <li><a href="/">Leadership</a></li>
-                <li><a href="/meet-the-devs">Meet the Devs</a></li>
+                <li>
+                    <a href="/about" class="text-foreground decoration-foreground hover:underline"
+                        >About Us</a
+                    >
+                </li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Learner Stories</a
+                    >
+                </li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Careers</a
+                    >
+                </li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Press</a
+                    >
+                </li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Leadership</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="/meet-the-devs"
+                        class="text-foreground decoration-foreground hover:underline"
+                        >Meet the Devs</a
+                    >
+                </li>
             </ul>
         </div>
         <!-- SUPPORT -->
         <div class="row-start-1 row-end-2">
             <h4 class="h4 grid pb-2 uppercase">Support</h4>
             <ul class="grid gap-y-1">
-                <li><a href="/">Documentation</a></li>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/home">Dashboard</a></li>
-                <li><a href="/contact">Contact Us</a></li>
+                <li>
+                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                        >Documentation</a
+                    >
+                </li>
+                <li>
+                    <a href="/about" class="text-foreground decoration-foreground hover:underline"
+                        >About Us</a
+                    >
+                </li>
+                <li>
+                    <a href="/home" class="text-foreground decoration-foreground hover:underline"
+                        >Dashboard</a
+                    >
+                </li>
+                <li>
+                    <a href="/contact" class="text-foreground decoration-foreground hover:underline"
+                        >Contact Us</a
+                    >
+                </li>
             </ul>
         </div>
 
@@ -292,7 +358,7 @@
                     <Button
                         aria-label="Submit Email Address"
                         class="bg-white text-black hover:bg-gray-100"
-                        on:click={subscribe}
+                        onclick={subscribe}
                         type="button"
                         variant="secondary">Submit</Button
                     >

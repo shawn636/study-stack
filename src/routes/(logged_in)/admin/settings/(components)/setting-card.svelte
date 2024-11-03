@@ -1,6 +1,4 @@
 <script lang="ts">
-    import type { HTMLAttributes } from 'svelte/elements';
-
     import * as AlertDialog from '$lib/components/ui/alert-dialog';
     import * as Card from '$lib/components/ui/card';
 
@@ -10,19 +8,8 @@
 
     const dispatch = createEventDispatcher();
 
-    type $$Props = HTMLAttributes<HTMLDivElement> & {
-        alertDescription: string;
-        alertTitle: string;
-        class?: string;
-        description: string;
-        tag: string;
-        title: string;
-        value?: boolean;
-    };
-
-    
     interface Props {
-        class?: $$Props['class'];
+        class?: string | null | undefined;
         value?: boolean;
         title: string;
         description: string;
@@ -32,12 +19,13 @@
     }
 
     let {
+        // eslint-disable-next-line prefer-const
         class: className = undefined,
-        value = $bindable(false),
-        title,
-        description,
-        tag,
-        alertTitle,
+        value = $bindable(false), // eslint-disable-next-line prefer-const
+        title, // eslint-disable-next-line prefer-const
+        description, // eslint-disable-next-line prefer-const
+        tag, // eslint-disable-next-line prefer-const
+        alertTitle, // eslint-disable-next-line prefer-const
         alertDescription
     }: Props = $props();
 
@@ -55,7 +43,7 @@
     <Card.Content class="flex gap-2">
         <AlertDialog.Root>
             <AlertDialog.Trigger>
-                <Switch bind:checked={value} on:click={(e) => e.preventDefault()} />
+                <Switch bind:checked={value} onclick={(e) => e.preventDefault()} />
             </AlertDialog.Trigger>
             <AlertDialog.Content>
                 <AlertDialog.Header>
@@ -64,7 +52,7 @@
                 </AlertDialog.Header>
                 <AlertDialog.Footer>
                     <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-                    <AlertDialog.Action on:click={toggle}>Continue</AlertDialog.Action>
+                    <AlertDialog.Action onclick={toggle}>Continue</AlertDialog.Action>
                 </AlertDialog.Footer>
             </AlertDialog.Content>
         </AlertDialog.Root>

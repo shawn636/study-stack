@@ -8,7 +8,7 @@
     }
 
     let showEditPhotoOverlay = $state(false);
-    
+
     interface Props {
         initials?: string;
         photoUrl?: string | null;
@@ -21,7 +21,7 @@
         color?: string;
     }
 
-    let {
+    const {
         initials = 'AB',
         photoUrl = null,
         editFunction = null,
@@ -33,8 +33,12 @@
         color = '!bg-surface-200 !dark:bg-surface-500'
     }: Props = $props();
 
-    let containerBaseClass = $derived(`grid items-center ${width} ${height} ${textStyle} ${fontStyle} rounded-full justify-items-center ${color} ${classString}`);
-    let imageBaseClass = $derived(`object-cover ${width} ${height} border border-gray-200 rounded-full shadow-sm dark:border-gray-800`);
+    const containerBaseClass = $derived(
+        `grid items-center ${width} ${height} ${textStyle} ${fontStyle} rounded-full justify-items-center ${color} ${classString}`
+    );
+    const imageBaseClass = $derived(
+        `object-cover ${width} ${height} border border-gray-200 rounded-full shadow-sm dark:border-gray-800`
+    );
 </script>
 
 <div class="relative inline-block">

@@ -41,11 +41,7 @@
     </div>
 </div> -->
 
-<div
-    class="card-container perspective-1000 h-full w-full"
-    onclick={toggleFlip}
-    role="presentation"
->
+<div class="card-container perspective-1000 h-full w-full" onclick={toggleFlip} role="presentation">
     <div
         class="card transform-style-preserve-3d transition-transform-800 relative h-full w-full"
         class:rotate-y-180={isFlipped}

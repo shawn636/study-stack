@@ -4,7 +4,7 @@
         children?: import('svelte').Snippet;
     }
 
-    let { children }: Props = $props();
+    const { children }: Props = $props();
 
     const imageUrl =
         'https://imagedelivery.net/06fAhz9XSvNypOfNBz1x-Q/305548df-b9a7-4c4b-d252-44702a356d00/vertical';

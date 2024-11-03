@@ -13,8 +13,7 @@
         items: { href: string; icon: IconDefinition | undefined; title: string }[];
     }
 
-    let { class: className = undefined, items }: Props = $props();
-    
+    const { class: className = undefined, items }: Props = $props();
 
     const [send, receive] = crossfade({
         duration: 250,

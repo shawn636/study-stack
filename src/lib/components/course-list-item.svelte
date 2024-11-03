@@ -1,26 +1,24 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import type { CourseResult } from '$lib/api/types/courses';
-    import type { ToggleCourseFavoriteEvent } from '$lib/models/types/toggle-user-course-favorite-event';
+    import type { ToggleCourseFavoritePayload } from '$lib/models/types/toggle-user-course-favorite-event';
 
     import { Button } from '$lib/components/ui/button';
     import CourseRating from '$lib/components/course-rating.svelte';
-    import { createEventDispatcher } from 'svelte';
     import Fa from 'svelte-fa';
     import { faHeart } from '@fortawesome/free-solid-svg-icons';
     import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
+    import { onMount } from 'svelte';
     import { Separator } from '$lib/components/ui/separator';
 
     interface Props {
         courseResult: CourseResult;
+        toggleFavorite: (payload: ToggleCourseFavoritePayload) => void;
     }
 
-    let { courseResult }: Props = $props();
+    const { courseResult, toggleFavorite }: Props = $props();
 
-    const dispatch = createEventDispatcher<ToggleCourseFavoriteEvent>();
-    let toggled;
-    run(() => {
+    let toggled = $state(false);
+    onMount(() => {
         toggled = courseResult.course.isFavorite ?? false;
     });
 
@@ -33,7 +31,7 @@
             previous: !toggled
         };
 
-        dispatch('toggleCourseFavorite', payload);
+        toggleFavorite(payload);
     };
 </script>
 

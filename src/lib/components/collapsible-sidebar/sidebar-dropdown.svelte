@@ -14,22 +14,19 @@
         class?: string | null | undefined;
     }
 
-    let { items, class: className = undefined }: Props = $props();
-    let activeItem = $derived(items.find((item) => item.href === $page.url.pathname));
-    
+    const { items, class: className = undefined }: Props = $props();
+    const activeItem = $derived(items.find((item) => item.href === $page.url.pathname));
 </script>
 
 <DropdownMenu.Root>
-    <DropdownMenu.Trigger class="min-w-full">
-        <Button class={cn('w-full', className)} variant="default">
-            <div class="flex items-center justify-center gap-x-2">
-                {#if activeItem?.icon}
-                    <Fa icon={activeItem.icon} />
-                {/if}
-                {activeItem?.title ?? 'Select an Item'}
-                <Fa icon={faChevronDown} />
-            </div>
-        </Button>
+    <DropdownMenu.Trigger class={cn(className, 'min-w-full')}>
+        <div class="flex items-center justify-center gap-x-2">
+            {#if activeItem?.icon}
+                <Fa icon={activeItem.icon} />
+            {/if}
+            {activeItem?.title ?? 'Select an Item'}
+            <Fa icon={faChevronDown} />
+        </div>
     </DropdownMenu.Trigger>
     <DropdownMenu.Content>
         <DropdownMenu.Group>

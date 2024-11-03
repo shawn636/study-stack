@@ -8,8 +8,8 @@
         user?: User | null | undefined;
     }
 
-    let { user = null }: Props = $props();
-    let headerLinks = $derived(getHeaderLinks(user === null ? false : true));
+    const { user = null }: Props = $props();
+    const headerLinks = $derived(getHeaderLinks(user === null ? false : true));
 </script>
 
 <div class="flex h-full w-full flex-col">
