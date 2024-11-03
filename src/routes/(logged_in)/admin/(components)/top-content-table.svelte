@@ -7,8 +7,11 @@
 
     type $$Props = HTMLAttributes<HTMLDivElement>;
 
-    let className: $$Props['class'] = undefined;
-    export { className as class };
+    interface Props {
+        class?: $$Props['class'];
+    }
+
+    const { class: className = undefined }: Props = $props();
 
     const data = [
         { engagement: '8.2%', title: 'The Ultimate Guide to Web Development', views: '12.3K' },

@@ -12,17 +12,25 @@
     import * as Avatar from '$lib/components/ui/avatar/index';
     import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
 
-    import { Button } from '$lib/components/ui/button';
+    import { Button, buttonVariants } from '$lib/components/ui/button';
+    import { cn } from '$lib/utils';
     import Fa from 'svelte-fa';
     import { goto } from '$app/navigation';
     import { initials } from '$lib/client/util';
     import { navigating } from '$app/stores';
     import { UserRole } from '$lib/models/types/database.types';
 
-    export let user: User;
+    interface Props {
+        user: User;
+    }
 
-    let isOpen = false;
-    $: if ($navigating) isOpen = false;
+    const { user }: Props = $props();
+
+    let isOpen = $state(false);
+
+    $effect(() => {
+        if ($navigating) isOpen = false;
+    });
 
     const signOut = async () => {
         const res = await fetch('/auth/logout', {
@@ -35,21 +43,18 @@
 </script>
 
 <DropdownMenu.Root bind:open={isOpen}>
-    <DropdownMenu.Trigger asChild let:builder>
-        <Button
-            aria-label="Profile"
-            builders={[builder]}
-            class="grid grid-flow-col gap-x-2 bg-white hover:bg-gray-100"
-            data-testid="profile-button"
-        >
-            <Avatar.Root class="m-0 h-6 w-6 p-0">
-                <Avatar.Fallback class="bg-gray-200 text-black "
-                    >{initials(user.name)}</Avatar.Fallback
-                >
-            </Avatar.Root>
-            <span class="hidden text-black xs:block">{user.name}</span>
-            <Fa class="text-black" icon={faChevronDown} size="sm" />
-        </Button>
+    <DropdownMenu.Trigger
+        class={cn(
+            buttonVariants({ variant: 'default' }),
+            '"grid hover:bg-gray-100" grid-flow-col gap-x-2 bg-white'
+        )}
+        data-testid="profile-button"
+    >
+        <Avatar.Root class="m-0 h-6 w-6 p-0">
+            <Avatar.Fallback class="bg-gray-200 text-black ">{initials(user.name)}</Avatar.Fallback>
+        </Avatar.Root>
+        <span class="hidden text-black xs:block">{user.name}</span>
+        <Fa class="text-black" icon={faChevronDown} size="sm" />
     </DropdownMenu.Trigger>
     <DropdownMenu.Content>
         <div class="grid w-64 grid-flow-row rounded-xl p-4 shadow-xl">
@@ -112,7 +117,7 @@
                             aria-label="Sign Out"
                             class="flex items-center gap-2"
                             data-testid="sign-out-button"
-                            on:click={signOut}
+                            onclick={signOut}
                         >
                             <Fa class="text-primary-foreground" icon={faDoorOpen} />
                             <span>Sign Out</span>

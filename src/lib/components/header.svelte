@@ -12,12 +12,19 @@
     import { page } from '$app/stores';
     import ProfileMenu from '$lib/components/profile-menu.svelte';
 
-    export let user: User | undefined;
+    interface Props {
+        user: User | undefined;
+    }
 
-    $: headerLinks = getHeaderLinks(user === undefined ? false : true);
+    const { user }: Props = $props();
 
-    let sidebarOpen = false;
-    $: if ($navigating) sidebarOpen = false;
+    const headerLinks = $derived(getHeaderLinks(user === undefined ? false : true));
+
+    let sidebarOpen = $state(false);
+
+    $effect(() => {
+        if ($navigating) sidebarOpen = false;
+    });
 </script>
 
 <div
@@ -26,15 +33,10 @@
 >
     <div class="flex-flow-col flex items-center justify-self-start">
         <Sheet.Root bind:open={sidebarOpen}>
-            <Sheet.Trigger asChild let:builder>
-                <Button
-                    builders={[builder]}
-                    class="mx-0 flex border-none bg-transparent px-0 outline-none hover:bg-transparent focus:border-none focus:outline-none md:hidden"
-                    size="icon"
-                    variant="outline"
-                >
-                    <Fa class="text-white" icon={faBars} size="lg" />
-                </Button>
+            <Sheet.Trigger
+                class="mx-0 flex border-none bg-transparent px-0 outline-none hover:bg-transparent focus:border-none focus:outline-none md:hidden"
+            >
+                <Fa class="text-white" icon={faBars} size="lg" />
             </Sheet.Trigger>
             <Sheet.Content side="left">
                 <div class="flex h-full w-full flex-col gap-y-2">

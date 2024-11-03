@@ -101,7 +101,7 @@
         <!-- FREQUENTLY ASKED QUESTIONS -->
         <h2 class="h2 col-span-full text-center">Frequently Asked Questions</h2>
 
-        <Accordion.Root class="col-span-full w-full">
+        <Accordion.Root type="single" class="col-span-full w-full">
             {#each faqs as faq, i}
                 <Accordion.Item value={`faq-${i}`}>
                     <Accordion.Trigger>
@@ -120,12 +120,12 @@
         <section class="col-span-full grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2">
             <!-- LINK 1 -->
             <a
-                class="bg-surface-100/30 dark:bg-surface-800 relative h-48 w-64 overflow-hidden rounded-xl transition-transform hover:-translate-y-2 hover:shadow-md"
+                class="relative h-48 w-64 overflow-hidden rounded-xl bg-muted transition-transform hover:-translate-y-2 hover:shadow-md"
                 href="/beliefs"
             >
                 <div class="space-y-4 p-4">
                     <h6 class="h5 font-bold">What We Believe</h6>
-                    <p class="dark:text-surface-300 text-black">
+                    <p class="text-foreground">
                         Take a look at the core doctrines that we hold to and teach.
                     </p>
                 </div>
@@ -136,12 +136,12 @@
             </a>
             <!-- LINK 2 -->
             <a
-                class="bg-surface-100/30 dark:bg-surface-800 relative h-48 w-64 overflow-hidden rounded-xl transition-transform hover:-translate-y-2 hover:shadow-md"
+                class="relative h-48 w-64 overflow-hidden rounded-xl bg-muted transition-transform hover:-translate-y-2 hover:shadow-md"
                 href="/beliefs"
             >
                 <div class="space-y-4 p-4">
                     <h6 class="h5 font-bold">What We Believe</h6>
-                    <p class="dark:text-surface-300 text-black">
+                    <p class="dark:text-surface-300 text-foreground">
                         Take a look at the core doctrines that we hold to and teach.
                     </p>
                 </div>

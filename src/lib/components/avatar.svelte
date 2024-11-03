@@ -7,29 +7,47 @@
         (): void;
     }
 
-    let showEditPhotoOverlay = false;
-    export let initials = 'AB';
-    export let photoUrl: string | null = null;
-    export let editFunction: VoidFunction | null = null;
-    export let width = 'w-16';
-    export let height = 'h-16';
-    export let textStyle = 'text-xl';
-    export let fontStyle = 'font-bold';
-    let classString = '';
-    export { classString as class };
-    export let color = '!bg-surface-200 !dark:bg-surface-500';
+    let showEditPhotoOverlay = $state(false);
 
-    $: containerBaseClass = `grid items-center ${width} ${height} ${textStyle} ${fontStyle} rounded-full justify-items-center ${color} ${classString}`;
-    $: imageBaseClass = `object-cover ${width} ${height} border border-gray-200 rounded-full shadow-sm dark:border-gray-800`;
+    interface Props {
+        initials?: string;
+        photoUrl?: string | null;
+        editFunction?: VoidFunction | null;
+        width?: string;
+        height?: string;
+        textStyle?: string;
+        fontStyle?: string;
+        class?: string;
+        color?: string;
+    }
+
+    const {
+        initials = 'AB',
+        photoUrl = null,
+        editFunction = null,
+        width = 'w-16',
+        height = 'h-16',
+        textStyle = 'text-xl',
+        fontStyle = 'font-bold',
+        class: classString = '',
+        color = '!bg-surface-200 !dark:bg-surface-500'
+    }: Props = $props();
+
+    const containerBaseClass = $derived(
+        `grid items-center ${width} ${height} ${textStyle} ${fontStyle} rounded-full justify-items-center ${color} ${classString}`
+    );
+    const imageBaseClass = $derived(
+        `object-cover ${width} ${height} border border-gray-200 rounded-full shadow-sm dark:border-gray-800`
+    );
 </script>
 
 <div class="relative inline-block">
     <div
         class={containerBaseClass}
-        on:mouseenter={() => {
+        onmouseenter={() => {
             showEditPhotoOverlay = true;
         }}
-        on:mouseleave={() => {
+        onmouseleave={() => {
             showEditPhotoOverlay = false;
         }}
         role="button"
@@ -39,7 +57,7 @@
             <div
                 class="bg-surface-500/10 hover:bg-surface-500/80 dark:bg-surface-700 dark:hover:bg-surface-900/70 absolute inset-0 flex items-center justify-center rounded-full opacity-0 transition-all duration-200 ease-in-out hover:opacity-100"
             >
-                <Button class="w-full" on:click={editFunction}>
+                <Button class="w-full" onclick={editFunction}>
                     <Fa class="z-10 text-white" icon={faPenToSquare} size="lg" />
                 </Button>
             </div>

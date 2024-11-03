@@ -4,7 +4,11 @@
     import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
     import { slide } from 'svelte/transition';
 
-    export let error: string;
+    interface Props {
+        error: string;
+    }
+
+    const { error = $bindable() }: Props = $props();
 </script>
 
 {#if error}

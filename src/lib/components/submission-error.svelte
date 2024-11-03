@@ -5,9 +5,13 @@
     import Fa from 'svelte-fa';
     import { slide } from 'svelte/transition';
 
-    export let submissionError: string | null = null;
-    export let showSuccess = false;
-    export let successMessage: string;
+    interface Props {
+        submissionError?: string | null;
+        showSuccess?: boolean;
+        successMessage: string;
+    }
+
+    const { submissionError = null, showSuccess = false, successMessage }: Props = $props();
 </script>
 
 {#if submissionError}

@@ -2,7 +2,11 @@
     import type CategorySummary from '$lib/models/types/category-summary';
 
     import CategoryCard from '$lib/components/category-card.svelte';
-    export let categorySummaries: CategorySummary[];
+    interface Props {
+        categorySummaries: CategorySummary[];
+    }
+
+    const { categorySummaries }: Props = $props();
 </script>
 
 <div class="mt-4 grid justify-items-center">

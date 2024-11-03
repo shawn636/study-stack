@@ -143,6 +143,7 @@ export default [
             '**/.env.*',
             '!**/.env.example',
             'src/lib/models/types/database.types.ts',
+            'src/lib/components/ui/**/*',
             '**/*.nnb',
             'src/routes/+layout.svelte',
             '**/pnpm-lock.yaml',

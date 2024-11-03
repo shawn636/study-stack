@@ -1,6 +1,10 @@
 <script lang="ts">
-    export let headerText: string;
-    export let headerTagline: string;
+    interface Props {
+        headerText: string;
+        headerTagline: string;
+    }
+
+    const { headerText, headerTagline }: Props = $props();
 </script>
 
 <div class="py-5 text-center">

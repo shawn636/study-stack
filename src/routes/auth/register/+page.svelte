@@ -1,14 +1,14 @@
 <script lang="ts">
     import AuthFooter from '../auth-footer.svelte';
     import AuthHeader from '../auth-header.svelte';
-    import { createForm } from './submit-form';
+    import { createForm } from './submit-form.svelte';
     import Divider from '../divider.svelte';
     import OauthButtons from './oauth-buttons.svelte';
     import SignUpForm from './sign-up-form.svelte';
 
     // Controls
-    let showPassword1 = false;
-    let showPassword2 = false;
+    let showPassword1 = $state(false);
+    let showPassword2 = $state(false);
     const { errors, form, handleChange, handleSubmit } = createForm();
 </script>
 

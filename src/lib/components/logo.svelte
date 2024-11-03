@@ -1,8 +1,12 @@
 <script lang="ts">
-    export let colorClass = 'text-white';
-    export let layout: 'horizontal' | 'vertical' = 'horizontal';
+    interface Props {
+        colorClass?: string;
+        layout?: 'horizontal' | 'vertical';
+    }
 
-    $: baseClass = `text-lg font-medium ${colorClass}`;
+    const { colorClass = 'text-white', layout = 'horizontal' }: Props = $props();
+
+    const baseClass = $derived(`text-lg font-medium ${colorClass}`);
 </script>
 
 <div
@@ -10,6 +14,6 @@
         ? 'col'
         : 'row'} justify-items-center gap-x-2"
 >
-    <div class="h-8 w-8 rounded-md bg-slate-400" />
+    <div class="h-8 w-8 rounded-md bg-slate-400"></div>
     <p class={baseClass}>Equipped</p>
 </div>

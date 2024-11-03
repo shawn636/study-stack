@@ -10,6 +10,11 @@
     import { PUBLIC_AMPLITUDE_API_KEY } from '$env/static/public';
     import { ModeWatcher } from 'mode-watcher';
     import { Toaster } from '$lib/components/ui/sonner';
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
+
+    let { children }: Props = $props();
 
     onMount(() => {
         if (!dev) {
@@ -32,4 +37,4 @@
 
 <ModeWatcher />
 <Toaster />
-<slot />
+{@render children?.()}

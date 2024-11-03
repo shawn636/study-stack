@@ -1,21 +1,23 @@
 <script lang="ts">
-    import type { HTMLAttributes } from 'svelte/elements';
-
-    import { cn } from '$lib/utils.js';
     import Fa from 'svelte-fa';
-    import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+    import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+    import type { WithElementRef, WithoutChildren } from 'bits-ui';
+    import type { HTMLAttributes } from 'svelte/elements';
+    import { cn } from '$lib/utils.js';
 
-    type $$Props = HTMLAttributes<HTMLSpanElement>;
-
-    let className: $$Props['class'] = undefined;
-    export { className as class };
+    let {
+        ref = $bindable(null),
+        class: className,
+        ...restProps
+    }: WithoutChildren<WithElementRef<HTMLAttributes<HTMLSpanElement>>> = $props();
 </script>
 
 <span
-    aria-hidden
-    class={cn('flex h-9 w-9 items-center justify-center', className)}
-    {...$$restProps}
+    bind:this={ref}
+    aria-hidden="true"
+    class={cn('flex size-9 items-center justify-center', className)}
+    {...restProps}
 >
-    <Fa class="h-4 w-4" icon={faEllipsis} />
+    <Fa class="h-4 w-4" icon={faEllipsisH} />
     <span class="sr-only">More pages</span>
 </span>

@@ -4,8 +4,12 @@
     import { getHeaderLinks } from '$lib/stores/links';
     import Logo from '$lib/components/logo.svelte';
 
-    export let user: User | null | undefined = null;
-    $: headerLinks = getHeaderLinks(user === null ? false : true);
+    interface Props {
+        user?: User | null | undefined;
+    }
+
+    const { user = null }: Props = $props();
+    const headerLinks = $derived(getHeaderLinks(user === null ? false : true));
 </script>
 
 <div class="flex h-full w-full flex-col">

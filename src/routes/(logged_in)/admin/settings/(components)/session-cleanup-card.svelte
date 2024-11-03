@@ -12,8 +12,11 @@
         class?: string;
     };
 
-    let className: $$Props['class'] = undefined;
-    export { className as class };
+    interface Props {
+        class?: $$Props['class'];
+    }
+
+    const { class: className = undefined }: Props = $props();
 
     const deleteSessions = async () => {
         try {
@@ -39,6 +42,6 @@
         <Card.Description>Delete expired auth sessions from the database</Card.Description>
     </Card.Header>
     <Card.Content>
-        <Button on:click={deleteSessions} variant="destructive">Cleanup Sessions</Button>
+        <Button onclick={deleteSessions} variant="destructive">Cleanup Sessions</Button>
     </Card.Content>
 </Card.Root>

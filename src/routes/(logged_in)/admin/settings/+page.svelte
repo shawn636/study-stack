@@ -9,7 +9,11 @@
     import SessionCleanupCard from './(components)/session-cleanup-card.svelte';
     import SettingCard from './(components)/setting-card.svelte';
 
-    export let data: PageData;
+    interface Props {
+        data: PageData;
+    }
+
+    let { data = $bindable() }: Props = $props();
 
     const updateSiteSetting = async (settingName: string, newValue: boolean) => {
         try {

@@ -14,9 +14,13 @@
     import { Textarea } from '$lib/components/ui/textarea';
     import { toast } from 'svelte-sonner';
 
-    export let user: User;
+    interface Props {
+        user: User;
+    }
+
+    let { user = $bindable() }: Props = $props();
     let profilePhotoFile: File;
-    let isUpdating = false;
+    let isUpdating = $state(false);
 
     onMount(() => {
         phone.set(formatPhoneNumber((user?.areaCode ?? '') + (user?.phoneNumber ?? '')));
@@ -66,7 +70,7 @@
         <Input
             id="phone"
             maxlength={12}
-            on:input={updatePhoneNumber}
+            oninput={updatePhoneNumber}
             placeholder="123 456 7890"
             type="tel"
             value={$phone}
@@ -85,7 +89,7 @@
 
     <div class="grid w-full max-w-sm items-center gap-1.5">
         <Label for="picture">Picture</Label>
-        <Input id="picture" on:change={onFileChanged} type="file" />
+        <Input id="picture" onchange={onFileChanged} type="file" />
         {#if user.photoUrl}
             <img alt="Profile" class="mt-2 h-24 w-24 rounded-lg" src={user.photoUrl} />
         {/if}
@@ -96,7 +100,7 @@
         <Textarea bind:value={user.bio} id="bio" />
     </div>
 
-    <Button class="palce-items-center flex gap-x-2" disabled={isUpdating} on:click={saveChanges}>
+    <Button class="palce-items-center flex gap-x-2" disabled={isUpdating} onclick={saveChanges}>
         {#if isUpdating}
             <Fa class="animate-spin" icon={faSpinner} />
         {/if}

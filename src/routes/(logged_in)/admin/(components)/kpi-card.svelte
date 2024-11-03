@@ -5,13 +5,15 @@
     import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
     import Fa from 'svelte-fa';
 
-    export let value: string;
-    export let title: string;
-    export let icon: IconDefinition;
-    export let percentChange: number = 0;
     import { cn } from '$lib/utils.js';
+    interface Props {
+        value: string;
+        title: string;
+        icon: IconDefinition;
+        percentChange?: number;
+    }
 
-    $: arrowIcon = getArrowIcon(percentChange);
+    const { value, title, icon, percentChange = 0 }: Props = $props();
 
     const arrowTextColor = percentChange > 0 ? 'text-emerald-500' : 'text-yellow-500';
     const arrowBgColor =
@@ -29,6 +31,7 @@
     };
 
     // $: arrowContainerClass = `rounded-full ${percentChange > 0 ? 'bg-emerald-100' : 'bg-rose-100'} p-3 ${text-emerald-500}`;
+    const arrowIcon = $derived(getArrowIcon(percentChange));
 </script>
 
 <Card.Root>

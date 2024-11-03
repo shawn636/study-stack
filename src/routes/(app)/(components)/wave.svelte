@@ -4,12 +4,17 @@
     import { cn } from '$lib/utils.js';
     type $$Props = HTMLAttributes<HTMLDivElement> & { variantNumber: 1 | 2 | 3 };
 
-    let className: $$Props['class'] = undefined;
-    let styleProps: $$Props['style'] = undefined;
+    interface Props {
+        class?: $$Props['class'];
+        style?: $$Props['style'];
+        variantNumber?: 1 | 2 | 3;
+    }
 
-    export let variantNumber: 1 | 2 | 3 = 1;
-    export { className as class };
-    export { styleProps as style };
+    const {
+        class: className = undefined,
+        style: styleProps = undefined,
+        variantNumber = 1
+    }: Props = $props();
 </script>
 
 {#each Array.from({ length: 2 }) as _, index}

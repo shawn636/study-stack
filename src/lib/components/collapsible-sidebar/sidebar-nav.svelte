@@ -3,7 +3,11 @@
 
     import SidebarDropdown from './sidebar-dropdown.svelte';
     import SidebarList from './sidebar-list.svelte';
-    export let items: { href: string; icon: IconDefinition | undefined; title: string }[];
+    interface Props {
+        items: { href: string; icon: IconDefinition | undefined; title: string }[];
+    }
+
+    const { items }: Props = $props();
 </script>
 
 <SidebarList class="hidden sm:flex" {items} />

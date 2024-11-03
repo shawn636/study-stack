@@ -3,6 +3,11 @@
 
     import { Separator } from '$lib/components/ui/separator';
     import SidebarNav from '$lib/components/collapsible-sidebar/sidebar-nav.svelte';
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
+
+    const { children }: Props = $props();
 
     const sidebarNavItems = [
         {
@@ -45,7 +50,7 @@
         </aside>
         <div class="flex-grow lg:flex lg:justify-center">
             <div class="w-full max-w-7xl">
-                <slot />
+                {@render children?.()}
             </div>
         </div>
     </div>

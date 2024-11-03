@@ -13,11 +13,15 @@
     import SubmissionError from '$lib/components/submission-error.svelte';
     import { Textarea } from '$lib/components/ui/textarea';
 
-    let showSuccess = false;
-    let isSubmitting = false;
-    let submissionError: string | null = null;
+    let showSuccess = $state(false);
+    let isSubmitting = $state(false);
+    let submissionError: string | null = $state(null);
 
-    export let data: PageServerData;
+    interface Props {
+        data: PageServerData;
+    }
+
+    const { data }: Props = $props();
 
     const { errors, form, handleChange, handleSubmit, touched, validateField } = createForm({
         initialValues: {
@@ -57,18 +61,18 @@
         return null;
     };
 
-    $: emailClass = `input ${$errors.email ? 'border-error-500' : ''} 
+    const emailClass = $derived(`input ${$errors.email ? 'border-error-500' : ''} 
         ${!$errors.email && $touched.email ? 'border-success-700' : ''}
-    `;
+    `);
 
-    $: nameClass = `input ${$errors.name ? 'border-error-500' : ''} 
+    const nameClass = $derived(`input ${$errors.name ? 'border-error-500' : ''} 
         ${!$errors.name && $touched.name ? 'border-success-700' : ''}
-    `;
+    `);
 
-    $: messageClass = `input min-h-16
+    const messageClass = $derived(`input min-h-16
         ${$errors.message ? 'border-error-500' : ''} 
         ${!$errors.message && $touched.message ? 'border-success-700' : ''}
-    `;
+    `);
 </script>
 
 <div class="card mx-auto my-20 max-w-2xl p-8">
@@ -78,17 +82,17 @@
     <form
         class="mt-10 grid grid-flow-row grid-cols-2 gap-8"
         id="contact-form"
-        on:submit={handleSubmit}
+        onsubmit={handleSubmit}
     >
         <div>
-            <label aria-hidden class="label hidden" for="name">Name</label>
+            <label aria-hidden={true} class="label hidden" for="name">Name</label>
             <Input
                 bind:value={$form.name}
                 class={nameClass}
                 id="name-input"
                 name="name"
-                on:blur={handleChange}
-                on:change={handleChange}
+                onblur={handleChange}
+                onchange={handleChange}
                 placeholder="Name"
                 type="text"
             />
@@ -96,14 +100,14 @@
         </div>
 
         <div>
-            <label aria-hidden class="label hidden" for="email">Email</label>
+            <label aria-hidden={true} class="label hidden" for="email">Email</label>
             <Input
                 bind:value={$form.email}
                 class={emailClass}
                 id="email-input"
                 name="email"
-                on:blur={handleChange}
-                on:change={handleChange}
+                onblur={handleChange}
+                onchange={handleChange}
                 placeholder="Email"
                 type="email"
             />
@@ -111,14 +115,14 @@
         </div>
 
         <div class="col-span-2">
-            <label aria-hidden class="label hidden" for="message">Message</label>
+            <label aria-hidden={true} class="label hidden" for="message">Message</label>
             <Textarea
                 bind:value={$form.message}
                 class={messageClass}
                 id="message"
                 name="message"
-                on:blur={handleChange}
-                on:change={handleChange}
+                onblur={handleChange}
+                onchange={handleChange}
                 placeholder="Message"
             />
             <FormError bind:error={$errors.message} />

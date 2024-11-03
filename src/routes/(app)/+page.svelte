@@ -3,7 +3,11 @@
 
     import Categories from './categories.svelte';
     import HeroBanner from './hero-banner.svelte';
-    export let data: PageServerData;
+    interface Props {
+        data: PageServerData;
+    }
+
+    const { data }: Props = $props();
 </script>
 
 <svelte:head>

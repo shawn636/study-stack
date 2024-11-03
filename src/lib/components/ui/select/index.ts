@@ -1,38 +1,34 @@
 import { Select as SelectPrimitive } from 'bits-ui';
 
-import Content from './select-content.svelte';
+import GroupHeading from './select-group-heading.svelte';
 import Item from './select-item.svelte';
-import Label from './select-label.svelte';
-import Separator from './select-separator.svelte';
+import Content from './select-content.svelte';
 import Trigger from './select-trigger.svelte';
+import Separator from './select-separator.svelte';
+import ScrollDownButton from './select-scroll-down-button.svelte';
+import ScrollUpButton from './select-scroll-up-button.svelte';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const Root = SelectPrimitive.Root;
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const Group = SelectPrimitive.Group;
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const Input = SelectPrimitive.Input;
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const Value = SelectPrimitive.Value;
 
 export {
-    Content,
-    Content as SelectContent,
-    Group,
-    Group as SelectGroup,
-    Input,
-    Input as SelectInput,
-    Item,
-    Item as SelectItem,
-    Label,
-    Label as SelectLabel,
     Root,
+    Group,
+    GroupHeading,
+    Item,
+    Content,
+    Trigger,
+    Separator,
+    ScrollDownButton,
+    ScrollUpButton,
     //
     Root as Select,
-    Separator,
-    Separator as SelectSeparator,
-    Trigger,
+    Group as SelectGroup,
+    GroupHeading as SelectGroupHeading,
+    Item as SelectItem,
+    Content as SelectContent,
     Trigger as SelectTrigger,
-    Value,
-    Value as SelectValue
+    Separator as SelectSeparator,
+    ScrollDownButton as SelectScrollDownButton,
+    ScrollUpButton as SelectScrollUpButton
 };

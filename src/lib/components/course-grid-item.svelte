@@ -2,42 +2,53 @@
     import * as Avatar from '$lib/components/ui/avatar/index';
 
     import type { CourseResult } from '$lib/api/types/courses';
-    import type { ToggleCourseFavoriteEvent } from '$lib/models/types/toggle-user-course-favorite-event';
+    import type { ToggleCourseFavoritePayload } from '$lib/models/types/toggle-user-course-favorite-event';
 
     import { faClock, faFileLines } from '@fortawesome/free-regular-svg-icons';
 
     import { Button } from '$lib/components/ui/button';
     import CourseRating from '$lib/components/course-rating.svelte';
-    import { createEventDispatcher } from 'svelte';
     import Fa from 'svelte-fa';
     import { faHeart } from '@fortawesome/free-solid-svg-icons';
     import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
     import Image from '$lib/components/image.svelte';
     import { initials } from '$lib/client/util';
+    import { onMount } from 'svelte';
 
-    export let courseResult: CourseResult;
+    interface Props {
+        courseResult: CourseResult;
+        toggleFavorite: (payload: ToggleCourseFavoritePayload) => void;
+    }
+
+    const { courseResult, toggleFavorite }: Props = $props();
 
     // let toggled = false;
-    $: toggled = courseResult.course.isFavorite ?? false;
+    let toggled = $state(false);
 
-    const dispatch = createEventDispatcher<ToggleCourseFavoriteEvent>();
+    onMount(() => {
+        toggled = courseResult.course.isFavorite ?? false;
+    });
+
+    // const dispatch = createEventDispatcher<ToggleCourseFavoriteEvent>();
 
     const toggle = () => {
         toggled = !toggled;
 
-        const payload = {
+        const payload: ToggleCourseFavoritePayload = {
             courseId: courseResult.course.id,
             current: toggled,
             previous: !toggled
         };
 
-        dispatch('toggleCourseFavorite', payload);
+        toggleFavorite(payload);
     };
 
     const width = 'w-64';
     const height = 'h-40';
 
-    $: containerBaseClass = `grid grid-flow-row rounded-md p-1 gap-y-2 ${width} content-visibility-auto`;
+    const containerBaseClass = $derived(
+        `grid grid-flow-row rounded-md p-1 gap-y-2 ${width} content-visibility-auto`
+    );
 </script>
 
 <div class={containerBaseClass}>
@@ -94,7 +105,7 @@
 
     <div class="grid grid-rows-2 items-center">
         <div class="grid grid-cols-[auto_1fr_auto] items-center justify-items-end gap-x-2">
-            <button aria-label="Toggle Favorite" on:click={toggle}>
+            <button aria-label="Toggle Favorite" onclick={toggle}>
                 <Fa class="text-pink-500" icon={toggled ? faHeart : faHeartOutline} size="lg" />
             </button>
             {#if Number(courseResult.course.currentPrice) < Number(courseResult.course.originalPrice)}
