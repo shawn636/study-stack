@@ -52,7 +52,7 @@
         "@commitlint/config-conventional": "^19.5.0",
         "@eslint/eslintrc": "^3.1.0",
         "@eslint/js": "^9.14.0",
-        "@faker-js/faker": "^9.1.0",
+        "@faker-js/faker": "^9.2.0",
         "@floating-ui/dom": "^1.6.12",
         "@fortawesome/free-brands-svg-icons": "^6.6.0",
         "@fortawesome/free-regular-svg-icons": "^6.6.0",
@@ -73,11 +73,11 @@
         "@testing-library/svelte": "^5.2.4",
         "@types/bcryptjs": "^2.4.6",
         "@types/eslint__js": "^8.42.3",
-        "@types/node": "^22.8.6",
+        "@types/node": "^22.8.7",
         "@types/sanitize-html": "^2.13.0",
         "@types/uuid": "^10.0.0",
-        "@typescript-eslint/eslint-plugin": "^8.12.2",
-        "@typescript-eslint/parser": "^8.12.2",
+        "@typescript-eslint/eslint-plugin": "^8.13.0",
+        "@typescript-eslint/parser": "^8.13.0",
         "@vercel/analytics": "^1.3.2",
         "@vercel/node": "^3.2.24",
         "@vercel/speed-insights": "^1.0.14",
@@ -86,7 +86,7 @@
         "bcryptjs": "^2.4.3",
         "bits-ui": "1.0.0-next.35",
         "clsx": "^2.1.1",
-        "concurrently": "^9.0.1",
+        "concurrently": "^9.1.0",
         "dotenv": "^16.4.5",
         "dotenv-cli": "^7.4.2",
         "eslint": "^9.14.0",
@@ -96,7 +96,7 @@
         "eslint-plugin-prettier": "^5.2.1",
         "eslint-plugin-svelte": "^2.46.0",
         "eslint-plugin-vitest": "^0.5.4",
-        "globals": "^15.11.0",
+        "globals": "^15.12.0",
         "husky": "^9.1.6",
         "jsdom": "^25.0.1",
         "kysely": "^0.27.4",
@@ -131,7 +131,7 @@
         "tslib": "^2.8.1",
         "tsx": "^4.19.2",
         "typescript": "^5.6.3",
-        "typescript-eslint": "^8.12.2",
+        "typescript-eslint": "^8.13.0",
         "uuid": "^11.0.2",
         "vercel": "^37.14.0",
         "vite": "^5.4.10",
@@ -142,6 +142,6 @@
     "type": "module",
     "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228",
     "optionalDependencies": {
-        "@rollup/rollup-darwin-arm64": "^4.24.3"
+        "@rollup/rollup-darwin-arm64": "^4.24.4"
     }
 }
