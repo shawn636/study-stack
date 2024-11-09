@@ -24,7 +24,9 @@ const config: Config = {
                 'infinite-scroll': 'infinite-scroll linear 25s infinite',
                 'accordion-down': 'accordion-down 0.2s ease-out',
                 'accordion-up': 'accordion-up 0.2s ease-out',
-                'caret-blink': 'caret-blink 1.25s ease-out infinite'
+                'caret-blink': 'caret-blink 1.25s ease-out infinite',
+                'fade-in-out': 'fade-in-out 4s ease-in-out',
+                progress: 'progress 8s linear'
             },
 
             borderRadius: {
@@ -70,6 +72,11 @@ const config: Config = {
                     DEFAULT: 'hsl(var(--card) / <alpha-value>)',
                     foreground: 'hsl(var(--card-foreground) / <alpha-value>)'
                 },
+                // Shadcnblocks.com
+                muted2: {
+                    DEFAULT: 'hsl(var(--muted2))',
+                    foreground: 'hsl(var(--muted2-foreground))'
+                },
                 sidebar: {
                     DEFAULT: 'hsl(var(--sidebar-background))',
                     foreground: 'hsl(var(--sidebar-foreground))',
@@ -82,7 +89,8 @@ const config: Config = {
                 }
             },
             fontFamily: {
-                sans: [...fontFamily.sans]
+                sans: ['Inter Variable', 'Inter', ...fontFamily.sans],
+                mono: ['SFMono-Regular', ...fontFamily.mono]
             },
             keyframes: {
                 'accordion-down': {
@@ -101,6 +109,16 @@ const config: Config = {
                     '0%': { boxShadow: '0 0 15px 3px rgba(168, 85, 247, 0.5)' },
                     '50%': { boxShadow: '0 0 20px 5px rgba(59, 130, 246, 0.8)' },
                     '100%': { boxShadow: '0 0 15px 3px rgba(168, 85, 247, 0.5)' }
+                },
+                'fade-in-out': {
+                    '0%': { opacity: '0' },
+                    '20%': { opacity: '1' },
+                    '80%': { opacity: '1' },
+                    '100%': { opacity: '0' }
+                },
+                progress: {
+                    from: { width: '0%' },
+                    to: { width: '100%' }
                 },
                 'infinite-scroll': {
                     from: { transform: 'translateX(0)' },

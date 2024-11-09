@@ -21,7 +21,9 @@ export async function seedUser(client: PrismaClient) {
         const authUser: AuthUser = {
             email: email,
             id: authUserId,
-            recordType: 'SEED_RECORD'
+            recordType: 'SEED_RECORD',
+            createdAt: new Date(),
+            updatedAt: new Date()
         };
 
         const user: User = {
@@ -39,9 +41,11 @@ export async function seedUser(client: PrismaClient) {
             phoneNumber: faker.phone.number().slice(3, 10),
             photoUrl: faker.image.avatar(),
             recordType: 'SEED_RECORD',
-            role: 'USER',
+            platformRole: 'USER',
             photoImageId: faker.string.uuid(),
-            state: faker.location.state()
+            state: faker.location.state(),
+            createdAt: new Date(),
+            updatedAt: new Date()
         };
 
         authUsers.push(authUser);

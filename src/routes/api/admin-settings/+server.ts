@@ -17,9 +17,9 @@ import { RecordType } from '$lib/models/types/database.types';
 export const GET = (async ({ cookies, url }) => {
     try {
         const userId = undefined;
-        const userRole = 'ADMIN';
+        const platformRole = 'ADMIN';
 
-        await auth.validateApiSession(cookies, userId, userRole);
+        await auth.validateApiSession(cookies, userId, platformRole);
 
         const params = url.searchParams;
         const settingsToRetrieve = params.getAll('settings');

@@ -47,7 +47,9 @@ export async function seedCourse(client: PrismaClient) {
             ratingAverage: faker.number.float({ max: 5, min: 0 }),
             ratingCount: faker.number.int({ max: 1000, min: 0 }),
             recordType: 'SEED_RECORD',
-            title: faker.commerce.productName()
+            title: faker.commerce.productName(),
+            createdAt: new Date(),
+            updatedAt: new Date()
         };
 
         courses.push(course);

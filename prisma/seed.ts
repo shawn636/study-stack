@@ -3,8 +3,6 @@ import { PrismaClient } from '@prisma/client';
 import { deleteAll } from './seeds/delete';
 import { seedCategory } from './seeds/category';
 import { seedCourse } from './seeds/course';
-import { seedCourseContent } from './seeds/course-content';
-import { seedLesson } from './seeds/lesson';
 import { seedOrganization } from './seeds/organization';
 import { seedSiteSettings } from './seeds/site-setting';
 import { seedUser } from './seeds/user';
@@ -16,8 +14,6 @@ async function main() {
     await seedOrganization(prisma);
     await Promise.all([seedCategory(prisma), seedUser(prisma)]);
     await seedCourse(prisma);
-    await seedLesson(prisma);
-    await seedCourseContent(prisma);
 }
 main()
     .then(async () => {

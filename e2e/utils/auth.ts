@@ -1,6 +1,6 @@
 import { DB, KeyType } from '../../src/lib/models/types/database.types';
 import { Kysely, Transaction } from 'kysely';
-import { RecordType, UserRole } from '../../src/lib/models/types/database.types';
+import { PlatformRole, RecordType } from '../../src/lib/models/types/database.types';
 import { init } from '@paralleldrive/cuid2';
 import { PlanetScaleDialect } from 'kysely-planetscale';
 
@@ -61,7 +61,7 @@ const createUser = async (email: string, password: string, name: string): Promis
                 id: userId,
                 name: name,
                 recordType: RecordType.TEST_RECORD,
-                role: UserRole.USER
+                platformRole: PlatformRole.USER
             })
             .executeTakeFirst();
 

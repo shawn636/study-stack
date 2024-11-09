@@ -18,7 +18,7 @@
     import { goto } from '$app/navigation';
     import { initials } from '$lib/client/util';
     import { navigating } from '$app/stores';
-    import { UserRole } from '$lib/models/types/database.types';
+    import { PlatformRole } from '$lib/models/types/database.types';
 
     interface Props {
         user: User;
@@ -79,7 +79,7 @@
                 <hr />
 
                 <ul class="grid grid-flow-row gap-y-1">
-                    {#if user.role.toString() === UserRole.ADMIN}
+                    {#if user.platformRole.toString() === PlatformRole.ADMIN}
                         <div>
                             <p class="text-sm font-semibold">Admin</p>
                             <li class="rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-slate-800">

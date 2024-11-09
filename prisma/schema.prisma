@@ -1,21 +1,31 @@
 generator client {
-  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters", "fullTextIndex", "fullTextSearch"]
+  provider        = "prisma-client-js"
 }
 
 generator kyselyServerSide {
-  provider            = "prisma-kysely"
   camelCase           = true
-  output              = "../src/lib/models/types"
-  fileName            = "database.types.ts"
-  decimalTypeOverride = "number"
   bigIntTypeOverride  = "number"
+  decimalTypeOverride = "number"
+  fileName            = "database.types.ts"
+  output              = "../src/lib/models/types"
+  provider            = "prisma-kysely"
 }
 
 datasource db {
   provider     = "mysql"
-  url          = env("DATABASE_URL")
   relationMode = "prisma"
+  url          = env("DATABASE_URL")
+}
+
+enum KeyType {
+  CREDENTIAL_HASH
+  OAUTH_TOKEN
+}
+
+enum PlatformRole {
+  ADMIN
+  USER
 }
 
 enum RecordType {
@@ -24,161 +34,11 @@ enum RecordType {
   TEST_RECORD
 }
 
-model Category {
-  id String @id @default(cuid()) @db.VarChar(30)
-
-  courses Course[]
-
-  imgHref    String     @db.Text
-  title      String     @unique
-  recordType RecordType @default(PRODUCTION_RECORD)
-}
-
-model Course {
-  id String @id @default(cuid()) @db.VarChar(30)
-
-  category           Category         @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Restrict)
-  courseProgressions CourseProgress[]
-  instructor         User             @relation(fields: [instructorId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  lessons            Lesson[]
-  organization       Organization?    @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: SetNull)
-  courseFavorites    CourseFavorite[]
-
-  categoryId           String
-  currentPrice         Decimal
-  description          String     @db.Text
-  difficulty           String
-  estimatedTimeHours   Int
-  estimatedTimeMinutes Int
-  imgHref              String
-  instructorId         String
-  lessonCount          Int
-  organizationId       String?
-  originalPrice        Decimal
-  ratingAverage        Float
-  ratingCount          Int
-  title                String     @db.Text
-  recordType           RecordType @default(PRODUCTION_RECORD)
-
-  @@index([categoryId])
-  @@index([instructorId])
-  @@index([organizationId])
-  @@fulltext([title])
-  @@fulltext([title, description])
-}
-
-model CourseFavorite {
-  userId   String
-  courseId String
-
-  course Course @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-
-  recordType RecordType @default(PRODUCTION_RECORD)
-
-  @@id([userId, courseId])
-  @@index([courseId])
-  @@index([userId])
-}
-
-enum ContentType {
-  VIDEO
-  TEXT
-  QUIZ
-}
-
-model CourseContent {
-  id String @id @default(cuid()) @db.VarChar(30)
-
-  Lesson Lesson? @relation(fields: [lessonId], references: [id])
-
-  authorId    String
-  json        Json
-  lessonId    String?
-  recordType  RecordType  @default(PRODUCTION_RECORD)
-  contentType ContentType
-
-  @@index([authorId])
-  @@index([lessonId])
-}
-
-model CourseProgress {
-  userId   String
-  courseId String
-
-  course Course @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-
-  lessonsCompleted Int
-  recordType       RecordType @default(PRODUCTION_RECORD)
-
-  @@id([userId, courseId])
-  @@unique([userId, courseId])
-  @@index([courseId])
-  @@index([userId])
-}
-
-model Lesson {
-  id String @id @default(cuid()) @db.VarChar(30)
-
-  course         Course?         @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  courseContents CourseContent[]
-
-  courseId   String?
-  title      String
-  recordType RecordType @default(PRODUCTION_RECORD)
-
-  @@index([courseId])
-}
-
-model Organization {
-  id String @id @default(cuid()) @db.VarChar(30)
-
-  courses Course[]
-  User    User[]
-
-  description String?    @db.Text
-  name        String     @db.Text
-  recordType  RecordType @default(PRODUCTION_RECORD)
-}
-
-enum UserRole {
-  USER
+enum RoleType {
   ADMIN
-}
-
-model User {
-  id String @id @default(cuid()) @db.VarChar(30)
-
-  AuthUser           AuthUser?        @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  courses            Course[]
-  courseProgressions CourseProgress[]
-  organization       Organization?    @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: SetNull)
-  permissions        Permission[]
-
-  areaCode        String?          @db.VarChar(5)
-  authUserId      String?          @unique @db.VarChar(30)
-  bio             String?          @db.Text
-  city            String?          @db.Text
-  countryCode     String?          @db.VarChar(5)
-  email           String           @unique
-  name            String           @db.Text
-  organizationId  String?
-  phoneNumber     String?          @db.VarChar(15)
-  photoUrl        String?          @db.Text
-  photoImageId    String?          @db.VarChar(36)
-  role            UserRole         @default(USER)
-  state           String?
-  courseFavorites CourseFavorite[]
-  recordType      RecordType       @default(PRODUCTION_RECORD)
-
-  @@index([id])
-  @@index([organizationId])
-}
-
-enum KeyType {
-  CREDENTIAL_HASH
-  OAUTH_TOKEN
+  EDITOR
+  PUBLISHER
+  VIEWER
 }
 
 model AuthKey {
@@ -187,9 +47,11 @@ model AuthKey {
   authUser AuthUser @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   authUserId String     @db.VarChar(30)
-  value      String
-  type       KeyType
+  createdAt  DateTime   @default(now())
   recordType RecordType @default(PRODUCTION_RECORD)
+  type       KeyType
+  updatedAt  DateTime   @default(now()) @updatedAt
+  value      String
 
   @@index([authUserId])
 }
@@ -200,8 +62,10 @@ model AuthSession {
   authUser AuthUser @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   authUserId     String     @db.VarChar(30)
+  createdAt      DateTime   @default(now())
   expirationDate DateTime
   recordType     RecordType @default(PRODUCTION_RECORD)
+  updatedAt      DateTime   @default(now()) @updatedAt
 
   @@index([authUserId])
 }
@@ -213,38 +77,168 @@ model AuthUser {
   authSessions AuthSession[]
   user         User?
 
+  createdAt  DateTime   @default(now())
   email      String     @unique
   recordType RecordType @default(PRODUCTION_RECORD)
+  updatedAt  DateTime   @default(now()) @updatedAt
 }
 
-enum PermissionType {
-  READ
-  WRITE
-  DELETE
-}
-
-enum ResourceType {
-  COURSE
-  LESSON
-  USER
-}
-
-model Permission {
+model Category {
   id String @id @default(cuid()) @db.VarChar(30)
 
-  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  courses Course[]
 
-  type         PermissionType
-  resourceId   String // Eventually shift this to another table
-  resourceType ResourceType
-  userId       String
-  recordType   RecordType     @default(PRODUCTION_RECORD)
+  createdAt  DateTime   @default(now())
+  imgHref    String     @db.Text
+  recordType RecordType @default(PRODUCTION_RECORD)
+  title      String     @unique
+  updatedAt  DateTime   @default(now()) @updatedAt
+}
 
+model Course {
+  id String @id @default(cuid()) @db.VarChar(30)
+
+  category           Category         @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Restrict)
+  courseFavorites    CourseFavorite[]
+  courseProgressions CourseProgress[]
+  instructor         User             @relation(fields: [instructorId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  organization       Organization?    @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+
+  categoryId           String
+  createdAt            DateTime            @default(now())
+  currentPrice         Decimal
+  description          String              @db.Text
+  difficulty           String
+  estimatedTimeHours   Int
+  estimatedTimeMinutes Int
+  imgHref              String
+  instructorId         String
+  lessonCount          Int
+  organizationId       String?
+  originalPrice        Decimal
+  ratingAverage        Float
+  ratingCount          Int
+  recordType           RecordType          @default(PRODUCTION_RECORD)
+  title                String              @db.Text
+  updatedAt            DateTime            @default(now()) @updatedAt
+  CourseDetailsPage    CourseDetailsPage[]
+
+  @@index([categoryId])
+  @@index([instructorId])
+  @@index([organizationId])
+  @@fulltext([title])
+  @@fulltext([title, description])
+}
+
+model CourseDetailsPage {
+  courseId String @id @db.VarChar(30)
+
+  course Course @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  createdAt  DateTime   @default(now())
+  recordType RecordType @default(PRODUCTION_RECORD)
+  updatedAt  DateTime   @default(now()) @updatedAt
+}
+
+model CourseFavorite {
+  courseId String
+  userId   String
+
+  course Course @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  createdAt  DateTime   @default(now())
+  recordType RecordType @default(PRODUCTION_RECORD)
+  updatedAt  DateTime   @default(now()) @updatedAt
+
+  @@id([userId, courseId])
+  @@index([courseId])
+  @@index([userId])
+}
+
+model CourseProgress {
+  courseId String
+  userId   String
+
+  course Course @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  createdAt        DateTime   @default(now())
+  lessonsCompleted Int
+  recordType       RecordType @default(PRODUCTION_RECORD)
+  updatedAt        DateTime   @default(now()) @updatedAt
+
+  @@id([userId, courseId])
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@index([userId])
+}
+
+model Organization {
+  id String @id @default(cuid()) @db.VarChar(30)
+
+  courses          Course[]
+  OrganizationRole OrganizationRole[]
+  User             User[]
+
+  createdAt   DateTime   @default(now())
+  description String?    @db.Text
+  name        String     @db.Text
+  recordType  RecordType @default(PRODUCTION_RECORD)
+  updatedAt   DateTime   @default(now()) @updatedAt
+}
+
+model OrganizationRole {
+  organizationId String @db.VarChar(30)
+  userId         String @db.VarChar(30)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@id([userId, organizationId])
+  @@index([organizationId])
   @@index([userId])
 }
 
 model SiteSetting {
-  key        String     @id
-  value      String
+  key String @id
+
+  createdAt  DateTime   @default(now())
   recordType RecordType @default(PRODUCTION_RECORD)
+  updatedAt  DateTime   @default(now()) @updatedAt
+  value      String
+}
+
+model User {
+  id String @id @default(cuid()) @db.VarChar(30)
+
+  AuthUser           AuthUser?          @relation(fields: [authUserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  courses            Course[]
+  courseFavorites    CourseFavorite[]
+  courseProgressions CourseProgress[]
+  organization       Organization?      @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+  OrganizationRole   OrganizationRole[]
+
+  areaCode       String?      @db.VarChar(5)
+  authUserId     String?      @unique @db.VarChar(30)
+  bio            String?      @db.Text
+  city           String?      @db.Text
+  createdAt      DateTime     @default(now())
+  countryCode    String?      @db.VarChar(5)
+  email          String       @unique
+  name           String       @db.Text
+  organizationId String?
+  phoneNumber    String?      @db.VarChar(15)
+  photoUrl       String?      @db.Text
+  photoImageId   String?      @db.VarChar(36)
+  platformRole   PlatformRole @default(USER)
+  state          String?
+  recordType     RecordType   @default(PRODUCTION_RECORD)
+  updatedAt      DateTime     @default(now()) @updatedAt
+
+  @@index([id])
+  @@index([organizationId])
 }

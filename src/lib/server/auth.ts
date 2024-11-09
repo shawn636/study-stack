@@ -1,6 +1,6 @@
 import type { Cookies } from '@sveltejs/kit';
+import type { PlatformRole } from '$lib/models/types/database.types';
 import type { User } from '$lib/models/types/database.types';
-import type { UserRole } from '$lib/models/types/database.types';
 
 import { comparePassword, hashPassword } from '$lib/server/crypto';
 import { cuid, db, type Transaction } from '$lib/server/database';
@@ -151,7 +151,7 @@ const createUser = async (email: string, password: string, name: string): Promis
                 id: userId,
                 name: name,
                 recordType: inTestMode ? 'TEST_RECORD' : 'PRODUCTION_RECORD',
-                role: 'USER'
+                platformRole: 'USER'
             })
             .executeTakeFirst();
 
@@ -322,7 +322,7 @@ const validateCookies = async (cookies: Cookies): Promise<boolean> => {
 const validateApiSession = async (
     cookies: Cookies,
     requiredUserId?: string,
-    requiredRole?: UserRole
+    requiredRole?: PlatformRole
 ): Promise<void> => {
     const sessionId = getSession(cookies);
     if (!sessionId) {
@@ -339,7 +339,7 @@ const validateApiSession = async (
             throw new UnauthorizedError('AUTH_INVALID_USER');
         }
 
-        if (requiredRole && String(user.role) !== requiredRole) {
+        if (requiredRole && String(user.platformRole) !== requiredRole) {
             console.error('Invalid role');
             throw new UnauthorizedError('AUTH_INVALID_ROLE');
         }

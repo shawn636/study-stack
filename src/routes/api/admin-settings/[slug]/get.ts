@@ -17,9 +17,9 @@ import type { RequestHandler } from './$types';
 export const GET = (async ({ cookies, params }) => {
     try {
         const userId = undefined;
-        const userRole = 'ADMIN';
+        const platformRole = 'ADMIN';
 
-        await auth.validateApiSession(cookies, userId, userRole);
+        await auth.validateApiSession(cookies, userId, platformRole);
 
         const key = params.slug;
 

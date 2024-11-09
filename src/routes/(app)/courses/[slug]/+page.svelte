@@ -1,4 +1,5 @@
 <script lang="ts">
+    // src/routes/(app)/courses/[slug]/+page.svelte
     import type { PageData } from './$types';
 
     interface Props {
