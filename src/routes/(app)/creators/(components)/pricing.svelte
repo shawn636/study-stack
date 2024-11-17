@@ -8,7 +8,7 @@
     import { Separator } from '$lib/components/ui/separator';
     import { Switch } from '$lib/components/ui/switch';
 
-    let isYearly = $state(false);
+    let isYearly = $state(true);
 
     interface Props {
         class?: string;

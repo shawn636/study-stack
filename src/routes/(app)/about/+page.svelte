@@ -61,6 +61,8 @@
         <!-- HEADER IMAGE -->
         <img
             alt={aboutUsAlt}
+            fetchpriority="high"
+            loading="eager"
             class="col-span-full h-64 w-full justify-self-center rounded-md object-cover object-top"
             src={aboutUsLink}
         />

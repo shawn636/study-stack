@@ -60,3 +60,20 @@ export const getRecordDisplaySettings = async () => {
 
     return formattedSettings;
 };
+
+// types/memoize.d.ts
+export function memoizeFunction<T>(fn: () => T): () => T;
+export function memoizeFunction<T>(fn: () => Promise<T>): () => Promise<T>;
+export function memoizeFunction<T>(fn: () => Promise<T> | T): () => Promise<T> | T {
+    let result: Promise<T> | T;
+    let called = false;
+
+    return (): Promise<T> | T => {
+        if (called) {
+            return result;
+        }
+        result = fn();
+        called = true;
+        return result;
+    };
+}

@@ -2,6 +2,7 @@
 import { db } from '$lib/server/database';
 
 export const setDefaultSettings = async () => {
+    console.debug('Executing query to setDefaultSettings - site-config.ts');
     await db
         .insertInto('SiteSetting')
         .ignore()

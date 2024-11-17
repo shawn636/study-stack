@@ -43,8 +43,7 @@ const handleError = (e: unknown) => {
     error(500, 'An unknown error occurred. Please try again.');
 };
 
-export const load: PageServerLoad = async ({ cookies, parent }) => {
+export const load: PageServerLoad = async ({ cookies }) => {
     const signedIn = await auth.validateCookies(cookies);
-    await parent();
     if (signedIn) redirect(302, '/');
 };

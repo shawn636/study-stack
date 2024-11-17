@@ -13,6 +13,7 @@ export const POST = (async ({ cookies }) => {
     try {
         await auth.logout(sessionId);
         cookies = auth.deleteSessionCookie(cookies);
+        cookies.set('userCache', '', { path: '/', maxAge: 0 });
     } catch (e) {
         error(500, 'Unable to log out due to server error.');
     }

@@ -1,21 +1,21 @@
-import type { User } from '$lib/models/types/database.types';
-
-import { auth } from '$lib/server/auth';
-import { redirect } from '@sveltejs/kit';
-
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ cookies, parent }) => {
-    const sessionId = auth.getSession(cookies);
-    const isValid = await auth.validateSession(sessionId ?? '');
-    let user: User | undefined;
+import { error, redirect } from '@sveltejs/kit';
 
-    if (isValid && sessionId) {
-        user = await auth.getUser(sessionId);
-        await parent();
-    } else {
-        cookies = auth.deleteSessionCookie(cookies);
-        redirect(302, '/auth/login');
+import { auth } from '$lib/server/auth';
+import { PlatformRole } from '$lib/models/types/database.types';
+
+export const load = (async ({ parent, cookies }) => {
+    console.log('Admin Page Load');
+    const result = await auth.validateSessionWithPermissions(cookies, PlatformRole.ADMIN);
+    if (!result.valid && result.error === 'invalid_session') {
+        console.log('Invalid Session');
+        redirect(302, '/auth/login?redirect=/admin');
     }
-    return { user };
+
+    if (!result.valid) {
+        return error(403, 'Forbidden');
+    }
+
+    return await parent();
 }) satisfies PageServerLoad;

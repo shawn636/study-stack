@@ -17,5 +17,8 @@
     <meta content="Deepen your faith and study the Bible" name="twitter:description" />
     <meta content="Deepen your faith and study the Bible" name="Description" />
 </svelte:head>
-<HeroBanner />
-<Categories categorySummaries={data.categorySummaries} />
+
+<main>
+    <HeroBanner />
+    <Categories categorySummaries={data.categorySummaries} />
+</main>

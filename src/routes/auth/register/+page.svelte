@@ -4,12 +4,17 @@
     import { createForm } from './submit-form.svelte';
     import Divider from '../divider.svelte';
     import OauthButtons from './oauth-buttons.svelte';
+    import { page } from '$app/stores';
     import SignUpForm from './sign-up-form.svelte';
 
     // Controls
     let showPassword1 = $state(false);
     let showPassword2 = $state(false);
     const { errors, form, handleChange, handleSubmit } = createForm();
+
+    const loginHref = $page.url.searchParams.get('redirect')
+        ? `/auth/login?redirect=${$page.url.searchParams.get('redirect')}`
+        : '/auth/login';
 </script>
 
 <div class="mx-auto grid w-full max-w-xl items-center justify-items-stretch">
@@ -28,6 +33,6 @@
         />
         <Divider />
         <OauthButtons />
-        <AuthFooter href="/auth/login" linkText="Sign in" tagline="Already have an account?" />
+        <AuthFooter href={loginHref} linkText="Sign in" tagline="Already have an account?" />
     </div>
 </div>

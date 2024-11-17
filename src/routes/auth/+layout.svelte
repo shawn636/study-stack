@@ -16,7 +16,13 @@
 
 <div class="grid min-h-screen md:grid-cols-[1fr_1fr]" data-testid="app-shell">
     <div class="relative z-10 hidden bg-gray-500 md:block">
-        <img alt="Equipped" class="h-svh w-full object-cover" src={imageUrl} />
+        <img
+            fetchpriority="high"
+            loading="eager"
+            alt="Equipped"
+            class="h-svh w-full object-cover"
+            src={imageUrl}
+        />
         <div class="absolute top-0 z-20 p-10">
             <a href="/">
                 <Logo colorClass="text-white" />

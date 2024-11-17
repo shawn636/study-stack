@@ -3,6 +3,7 @@
     import { cn } from '$lib/utils';
     import Fa from 'svelte-fa';
     import { faCheck } from '@fortawesome/free-solid-svg-icons';
+    import { mode } from 'mode-watcher';
 
     interface Props {
         class?: string;
@@ -44,7 +45,9 @@
             <div class="rounded-lg border">
                 <div class="relative p-1">
                     <img
-                        src="/images/studying.svg"
+                        src={$mode === 'light'
+                            ? '/images/studying-light.svg'
+                            : '/images/studying-dark.svg'}
                         alt="Engaging Interactive Tools"
                         class="mx-auto max-h-96 w-full rounded-t-lg bg-muted object-cover md:max-h-64"
                     />
@@ -82,7 +85,9 @@
             <div class="rounded-lg border">
                 <div class="relative p-1">
                     <img
-                        src="/images/predictive-analytics.svg"
+                        src={$mode === 'light'
+                            ? '/images/predictive-analytics-light.svg'
+                            : '/images/predictive-analytics-dark.svg'}
                         alt="Support Tools"
                         class="max-h-96 w-full rounded-t-lg bg-muted object-cover object-top md:max-h-64"
                     />
@@ -121,7 +126,9 @@
             <div class="rounded-lg border">
                 <div class="relative p-1">
                     <img
-                        src="/images/building-blocks.svg"
+                        src={$mode === 'light'
+                            ? '/images/building-blocks-light.svg'
+                            : '/images/building-blocks-dark.svg'}
                         alt="Seamless Course Building"
                         class="max-h-96 w-full rounded-t-lg bg-muted object-cover object-top md:max-h-64"
                     />

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import Feature1 from './feature1.svelte';
-    import Hero from './hero.svelte';
-    import Pricing from './pricing.svelte';
-    import Testimonials from './testimonials.svelte';
+    import Feature1 from './(components)/feature1.svelte';
+    import Hero from './(components)/hero.svelte';
+    import Pricing from './(components)/pricing.svelte';
+    import Testimonials from './(components)/testimonials.svelte';
 </script>
 
 <main class="grid grid-flow-row gap-10 py-20 pt-5">

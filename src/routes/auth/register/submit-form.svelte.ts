@@ -1,5 +1,7 @@
 import { createForm as createSvelteForm } from 'svelte-forms-lib';
+import { get } from 'svelte/store';
 import { goto } from '$app/navigation';
+import { page } from '$app/stores';
 import { registrationForm } from '$lib/models/forms/registration';
 import { toast } from 'svelte-sonner';
 
@@ -35,6 +37,8 @@ const submitForm = async (
 };
 
 export const createForm = () => {
+    const currentPage = get(page);
+    const redirectPath = currentPage.url.searchParams.get('redirect') ?? '/';
     const result = createSvelteForm({
         initialValues: {
             email: '',
@@ -58,7 +62,7 @@ export const createForm = () => {
                 if (res?.status === 200) {
                     submissionState.value = 'idle';
                     toast.success('Account created successfully');
-                    goto('/');
+                    goto(redirectPath);
                 } else {
                     submissionState.value = 'error';
                     if (data.error.message.includes('already in use')) {

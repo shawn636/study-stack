@@ -1,6 +1,8 @@
 import { createForm as createSvelteForm } from 'svelte-forms-lib';
+import { get } from 'svelte/store';
 import { goto } from '$app/navigation';
 import { loginForm } from '$lib/models/forms/login';
+import { page } from '$app/stores';
 import { toast } from 'svelte-sonner';
 
 type SubmissionState = 'error' | 'idle' | 'submitting';
@@ -31,6 +33,8 @@ const submitForm = async (
 };
 
 export const createForm = () => {
+    const currentPage = get(page);
+    const redirectPath = currentPage.url.searchParams.get('redirect') ?? '/';
     const result = createSvelteForm({
         initialValues: {
             email: '',
@@ -50,7 +54,7 @@ export const createForm = () => {
                 if (res?.status === 200) {
                     submissionState.value = 'idle';
                     toast.success('You have successfully logged in.');
-                    goto('/');
+                    goto(redirectPath);
                 } else {
                     submissionState.value = 'error';
                     if (data.error.message.includes('Invalid credentials')) {

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Avatar, AvatarImage } from '$lib/components/ui/avatar';
+    import { mode } from 'mode-watcher';
 
     import { Button } from '$lib/components/ui/button';
     import { cn } from '$lib/utils';
@@ -16,7 +17,9 @@
     <div class="container grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
         <div class="flex justify-end">
             <img
-                src="/images/professor.svg"
+                src={$mode === 'light'
+                    ? '/images/professor-light.svg'
+                    : '/images/professor-dark.svg'}
                 alt="Build Your Future Here"
                 class="max-h-[600px] w-full rounded-md object-cover object-top lg:max-h-[800px]"
             />
@@ -79,8 +82,7 @@
                 </div>
             </div>
             <div class="flex w-full flex-col justify-center gap-2 sm:flex-row lg:justify-start">
-                <Button class="w-full sm:w-auto">Become a Creator</Button>
-                <Button variant="outline" class="w-full sm:w-auto">Learn More</Button>
+                <Button href="/creators/pricing" class="w-full sm:w-auto">Become a Creator</Button>
             </div>
         </div>
     </div>

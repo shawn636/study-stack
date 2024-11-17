@@ -353,6 +353,39 @@ const validateApiSession = async (
 };
 
 /**
+ * Validates the API session.
+ *
+ * @param cookies - The cookies object containing the session information.
+ * @param requiredRole - Optional setting if specifying a required user role when validating a session.
+ * @throws {UnauthorizedError} - If the session is invalid or the user role is not authorized.
+ * @returns {Promise<void>} - A promise that resolves when the session is validated.
+ */
+const validateSessionWithPermissions = async (
+    cookies: Cookies,
+    requiredUserId?: string,
+    requiredRole?: PlatformRole
+): Promise<{ valid: boolean; error: string }> => {
+    const sessionId = getSession(cookies);
+    if (!sessionId) return { valid: false, error: 'invalid_session' };
+
+    if (requiredRole || requiredUserId) {
+        const user = await getUser(sessionId);
+
+        if (requiredUserId && user.id !== requiredUserId) {
+            return { valid: false, error: 'invalid_user' };
+        }
+
+        if (requiredRole && String(user.platformRole) !== requiredRole) {
+            return { valid: false, error: 'invalid_role' };
+        }
+    }
+
+    const isValid = await validateSession(sessionId);
+
+    return { valid: isValid, error: isValid ? '' : 'invalid_session' };
+};
+
+/**
  * Sets the session ID as a cookie.
  *
  * @param {string} sessionId - The session ID to set as a cookie.
@@ -458,5 +491,6 @@ export const auth = {
     validateAndSetCookie,
     validateApiSession,
     validateCookies,
-    validateSession
+    validateSession,
+    validateSessionWithPermissions
 };

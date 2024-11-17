@@ -4,8 +4,8 @@
     import type { User } from '$lib/models/types/database.types';
 
     import { afterNavigate } from '$app/navigation';
-    import Footer from '$lib/components/footer.svelte';
-    import Header from '$lib/components/header.svelte';
+    import Footer from '../../lib/components/footer.svelte';
+    import Header from '../../lib/components/header.svelte';
 
     interface Props {
         data: LayoutData;

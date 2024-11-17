@@ -100,3 +100,27 @@ export class DatabaseError extends HandledError {
         this.statusCode = 500;
     }
 }
+
+export class ExternalServiceGenericError extends HandledError {
+    constructor(message: string) {
+        super(message);
+        this.statusCode = 500;
+        this.name = 'ExternalServiceGenericError';
+    }
+}
+
+export class ExternalServiceUnavailableError extends HandledError {
+    constructor(message: string) {
+        super(message);
+        this.statusCode = 503;
+        this.name = 'ExternalServiceUnavailableError';
+    }
+}
+
+export class ExternalServiceTimeoutError extends HandledError {
+    constructor(message: string) {
+        super(message);
+        this.statusCode = 504;
+        this.name = 'ExternalServiceTimeoutError';
+    }
+}

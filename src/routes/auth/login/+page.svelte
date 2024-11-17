@@ -5,8 +5,13 @@
     import Divider from '../divider.svelte';
     import LoginForm from './login-form.svelte';
     import OauthButtons from './oauth-buttons.svelte';
+    import { page } from '$app/stores';
 
     const { errors, form, handleChange, handleSubmit, touched } = createForm();
+
+    const registerHref = $page.url.searchParams.get('redirect')
+        ? `/auth/register?redirect=${$page.url.searchParams.get('redirect')}`
+        : '/auth/register';
 </script>
 
 <div class="mx-auto grid w-full max-w-xl items-center justify-items-stretch">
@@ -18,6 +23,6 @@
         <LoginForm {errors} {form} {handleChange} {handleSubmit} {touched} />
         <Divider />
         <OauthButtons />
-        <AuthFooter href="/auth/register" linkText="Sign up" tagline="Don't have an account?" />
+        <AuthFooter href={registerHref} linkText="Sign up" tagline="Don't have an account?" />
     </div>
 </div>

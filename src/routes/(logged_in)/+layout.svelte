@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { User } from '$lib/models/types/database.types';
 
-    import Header from '$lib/components/header.svelte';
+    import Header from '../../lib/components/header.svelte';
 
     import type { LayoutData } from './$types';
 

@@ -10,7 +10,8 @@ const headerLoggedOutLinks: Array<Link> = [
 
 const headerLoggedInLinks: Array<Link> = [
     { href: '/courses', icon: undefined, name: 'Find Courses' },
-    { href: '/creators', icon: undefined, name: 'Become a creator' }
+    { href: '/creators', icon: undefined, name: 'Become a creator' },
+    { href: '/about', icon: undefined, name: 'About' }
 ];
 
 const sidebarLinks: Array<Link> = [{ href: '/profile', icon: faCircleUser, name: 'Profile' }];
