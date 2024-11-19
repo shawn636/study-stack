@@ -84,7 +84,7 @@
             alt="Error illustration"
         />
         <div class="flex flex-col items-center sm:items-start">
-            <p class="text-9xl font-bold text-red-500">{errorDetails.title}</p>
+            <p class="text-9xl font-bold text-red-500">{$page.status}</p>
             <p class="mt-4 text-xl">{errorDetails.tagline}</p>
             <a href="/" class="mt-6 text-blue-500 hover:underline">Return to Homepage</a>
         </div>
