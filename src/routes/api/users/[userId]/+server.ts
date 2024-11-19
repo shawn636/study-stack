@@ -1,3 +1,4 @@
+import type { Updateable } from 'kysely';
 import type { User } from '$lib/models/types/database.types';
 import type { UserUpdateResponse } from '$lib/api/types/users';
 
@@ -14,7 +15,7 @@ export const PUT = (async ({ cookies, params, request }) => {
 
         await auth.validateApiSession(cookies, userIdSlug);
 
-        const userFromRequest: User = await request.json();
+        const userFromRequest: Updateable<User> = await request.json();
 
         const {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -26,7 +27,11 @@ export const PUT = (async ({ cookies, params, request }) => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             recordType,
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            role,
+            platformRole,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            createdAt,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            updatedAt,
             ...userFromRequestWithoutForeignKeys
         } = userFromRequest;
 

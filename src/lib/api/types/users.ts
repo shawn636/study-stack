@@ -15,9 +15,9 @@
  * Remove a course from the list of favorites for a specific user.
  */
 
-import type { User } from '$lib/models/types/database.types';
-
 import type { ApiResponse } from './common';
+import type { Updateable } from 'kysely';
+import type { User } from '$lib/models/types/database.types';
 
 type ImageUploadResult = {
     imageId: string;
@@ -34,7 +34,7 @@ type CreateFavoriteResult = {
     message: string;
 };
 
-export type UserUpdateResponse = ApiResponse<User>;
+export type UserUpdateResponse = ApiResponse<Updateable<User>>;
 export type UserPhotoCreateResponse = ApiResponse<ImageUploadResult>;
 export type CourseFavoritesCreateResponse = ApiResponse<CreateFavoriteResult>;
 export type CourseFavoritesDeleteResponse = ApiResponse<DeleteFavoriteResult>;

@@ -1,4 +1,6 @@
 <script lang="ts">
+    import type { PricesGetResponse } from '$lib/api/types/prices';
+
     import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '$lib/components/ui/card';
     import { faArrowRight, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,8 +14,47 @@
 
     interface Props {
         class?: string;
+        priceData: PricesGetResponse;
     }
-    const { class: className }: Props = $props();
+    const { class: className, priceData }: Props = $props();
+
+    const extractPrice = (price: string) => {
+        if (price === '') {
+            return 0;
+        }
+        return price ? Number(price) / 100 : 0;
+    };
+
+    const formatPrice = (price: number) => {
+        const formattedPrice = price.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: price % 1 === 0 ? 0 : 2,
+            maximumFractionDigits: 2
+        });
+        return formattedPrice;
+    };
+
+    const getPlanPrice = (plan: string) => {
+        const lookupKey = isYearly ? `${plan}-yearly` : `${plan}-monthly`;
+
+        return formatPrice(extractPrice(priceData.data[lookupKey]?.unit_amount_decimal ?? ''));
+    };
+
+    const getAnnualBillingTotal = (plan: string) => {
+        const lookupKey = isYearly ? `${plan}-yearly` : `${plan}-monthly`;
+
+        if (isYearly) {
+            return formatPrice(extractPrice(priceData.data[lookupKey]?.unit_amount_decimal ?? ''));
+        }
+
+        return formatPrice(extractPrice(priceData.data[lookupKey]?.unit_amount_decimal ?? '') * 12);
+    };
+
+    const getCheckoutLink = (plan: string) => {
+        const lookupKey = isYearly ? `${plan}-yearly` : `${plan}-monthly`;
+        return `/checkout/creators?lookup_key=${lookupKey}`;
+    };
 </script>
 
 <section class={cn(className)}>
@@ -34,7 +75,7 @@
                             <p>Free</p>
                         </CardTitle>
                         <p class="text-sm text-muted-foreground">Start teaching today</p>
-                        <span class="text-4xl font-bold">$0</span>
+                        <span class="text-4xl font-bold">{getPlanPrice('creators-free')}</span>
                         <p class="text-muted-foreground">No cost, no commitment</p>
                     </CardHeader>
                     <CardContent>
@@ -59,7 +100,7 @@
                         </ul>
                     </CardContent>
                     <CardFooter class="mt-auto">
-                        <Button class="w-full">
+                        <Button href={getCheckoutLink('creators-free')} class="w-full">
                             Get Started
                             <Fa icon={faArrowRight} class="ml-2 size-4" />
                         </Button>
@@ -73,11 +114,9 @@
                             <p>Pro</p>
                         </CardTitle>
                         <p class="text-sm text-muted-foreground">Unlock your full potential</p>
-                        <span class="text-4xl font-bold">
-                            {isYearly ? '$35' : '$49'}
-                        </span>
+                        <span class="text-4xl font-bold">{getPlanPrice('creators-pro')}</span>
                         <p class="text-muted-foreground">
-                            Billed {isYearly ? '$420' : '$588'} annually
+                            Billed {getAnnualBillingTotal('creators-pro')} annually
                         </p>
                     </CardHeader>
                     <CardContent>
@@ -107,7 +146,7 @@
                         </ul>
                     </CardContent>
                     <CardFooter class="mt-auto">
-                        <Button class="w-full">
+                        <Button href={getCheckoutLink('creators-pro')} class="w-full">
                             Get Started
                             <Fa icon={faArrowRight} class="ml-2 size-4" />
                         </Button>

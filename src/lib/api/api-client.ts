@@ -4,6 +4,7 @@ import ContactMessagesModule from './endpoints/contact-messages';
 import CoursesModule from './endpoints/courses';
 import CronJobsModule from './endpoints/cron-jobs';
 import NewsletterSubscriptionModule from './endpoints/newsletter-subscriptions';
+import PricesModule from './endpoints/prices';
 import TestRecordsModule from './endpoints/test-records';
 import UsersModule from './endpoints/users';
 
@@ -21,6 +22,7 @@ class ApiClient {
     courses = new CoursesModule(this);
     cronJobs = new CronJobsModule(this);
     newsletter = new NewsletterSubscriptionModule(this);
+    prices = new PricesModule(this);
     testRecords = new TestRecordsModule(this);
     users = new UsersModule(this);
 
