@@ -8,9 +8,7 @@ const config = {
             runtime: 'edge',
             split: true
         }),
-        csrf: {
-            checkOrigin: true
-        }
+        csrf: false
     },
 
     preprocess: [vitePreprocess()]

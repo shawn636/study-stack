@@ -48,8 +48,6 @@ export const POST: RequestHandler = (async ({ request }) => {
             return_url: `${origin}/checkout/creators/success`
         });
 
-        console.log(session);
-
         return new Response(JSON.stringify({ clientSecret: session.client_secret }), {
             headers: {
                 'content-type': 'application/json;charset=UTF-8'
