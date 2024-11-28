@@ -38,12 +38,12 @@ import { cuid, db } from '$lib/server/database';
 import { RecordType } from '$lib/models/types/database.types';
 
 /* Constants */
-interface CourseTestUtil extends TestUtil {
+interface CategoryTestUtil extends TestUtil {
     getCategory(): Promise<Category>;
 }
 
 /* Module */
-const module: CourseTestUtil = {
+const module: CategoryTestUtil = {
     // Required Clenup Method
     async cleanup(): Promise<number> {
         const result = await db
