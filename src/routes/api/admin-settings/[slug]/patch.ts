@@ -72,7 +72,6 @@ export const PATCH = (async ({ cookies, params, request }) => {
             status: settingUpdated ? 200 : 500
         });
     } catch (e) {
-        console.log(`Error in GET /api/settings: ${e}`);
         return handleErrors(e);
     }
 }) satisfies RequestHandler;

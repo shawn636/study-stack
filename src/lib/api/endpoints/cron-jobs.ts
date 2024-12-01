@@ -18,8 +18,6 @@ class CronJobsModule {
 
         const response = await fetchWithTimeout(url, { method: 'GET' }, timeout, fetchFn);
 
-        console.log('response', response);
-
         return handleApiResponse<SessionCleanupGetResponse>(response);
     }
 }

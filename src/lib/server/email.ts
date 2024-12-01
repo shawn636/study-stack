@@ -65,7 +65,6 @@ export const sendEmailFromTemplate = async <T>(
     if (!MAILERSEND_API_KEY) {
         throw new Error('Missing MailerSend API key');
     }
-    console.log(MAILERSEND_API_KEY);
 
     const body = JSON.stringify({
         from: sender,

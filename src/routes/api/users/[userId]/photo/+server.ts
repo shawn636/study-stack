@@ -98,10 +98,6 @@ export const POST = (async ({ cookies, params, request }) => {
                 console.error(
                     'ERROR: Unable to cleanup the uploaded image from the CDN after failure to update user in db.'
                 );
-            } else {
-                console.log(
-                    'Successfully cleaned up the uploaded image from the CDN after failure to update user in db.'
-                );
             }
 
             throw new DatabaseError(`Unable to update photo url for user: ${e}`);

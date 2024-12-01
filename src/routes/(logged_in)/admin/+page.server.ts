@@ -6,10 +6,8 @@ import { auth } from '$lib/server/auth';
 import { PlatformRole } from '$lib/models/types/database.types';
 
 export const load = (async ({ parent, cookies }) => {
-    console.log('Admin Page Load');
     const result = await auth.validateSessionWithPermissions(cookies, PlatformRole.ADMIN);
     if (!result.valid && result.error === 'invalid_session') {
-        console.log('Invalid Session');
         redirect(302, '/auth/login?redirect=/admin');
     }
 

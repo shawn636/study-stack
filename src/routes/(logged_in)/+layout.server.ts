@@ -10,7 +10,14 @@ const CACHE_EXPIRATION = 60 * 15; // 15 minutes in seconds
 
 export const load = (async ({ cookies, url }) => {
     const sessionId = auth.getSession(cookies);
-    const authRedirect = `/auth/login?redirect=${url.pathname}`;
+    let authRedirect = `/auth/login?redirect=${url.pathname}`;
+
+    const additionalParams = url.searchParams.entries();
+    for (const [key, value] of additionalParams) {
+        if (key !== 'redirect') {
+            authRedirect += `&${'redirect_' + key}=${value}`;
+        }
+    }
 
     if (!sessionId) redirect(302, authRedirect);
 

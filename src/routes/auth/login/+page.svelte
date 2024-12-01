@@ -9,9 +9,17 @@
 
     const { errors, form, handleChange, handleSubmit, touched } = createForm();
 
-    const registerHref = $page.url.searchParams.get('redirect')
+    let registerHref = $page.url.searchParams.get('redirect')
         ? `/auth/register?redirect=${$page.url.searchParams.get('redirect')}`
         : '/auth/register';
+
+    const paramsArray = $page.url.searchParams.entries().toArray();
+    const additionalParams = paramsArray
+        .filter((param) => param[0] !== 'redirect' && param[0].startsWith('redirect_'))
+        .map((param) => `${param[0]}=${param[1]}`)
+        .join('&');
+
+    registerHref = additionalParams ? `${registerHref}&${additionalParams}` : registerHref;
 </script>
 
 <div class="mx-auto grid w-full max-w-xl items-center justify-items-stretch">

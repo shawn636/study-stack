@@ -46,7 +46,6 @@ import { HandledError } from './handled-errors';
  *         });
  *
  *     } catch (e) {
- *         console.log(`Error in GET /api/myendpoint: ${e}`);
  *         return handleErrors(e);
  * }
  * ```

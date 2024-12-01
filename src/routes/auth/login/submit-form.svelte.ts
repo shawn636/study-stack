@@ -34,7 +34,21 @@ const submitForm = async (
 
 export const createForm = () => {
     const currentPage = get(page);
-    const redirectPath = currentPage.url.searchParams.get('redirect') ?? '/';
+    let redirectPath = currentPage.url.searchParams.get('redirect') ?? '/';
+    const paramsArray = currentPage.url.searchParams.entries().toArray();
+
+    const additionalParams = paramsArray.filter(
+        ([key]) => key !== 'redirect' && key.startsWith('redirect_')
+    );
+
+    let hasQueryFlag = false;
+    for (const [key, value] of additionalParams) {
+        const separator = hasQueryFlag ? '&' : '?';
+        const strippedKey = key.replace('redirect_', '');
+        redirectPath += `${separator}${strippedKey}=${value}`;
+        if (!hasQueryFlag) hasQueryFlag = true;
+    }
+
     const result = createSvelteForm({
         initialValues: {
             email: '',

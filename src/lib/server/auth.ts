@@ -335,7 +335,6 @@ const validateApiSession = async (
 
         if (requiredUserId && user.id !== requiredUserId) {
             console.error('Invalid user');
-            console.log(`Required: ${requiredUserId}, Found: ${user.id}`);
             throw new UnauthorizedError('AUTH_INVALID_USER');
         }
 
