@@ -1,12 +1,15 @@
 <script lang="ts">
     import * as Card from '$lib/components/ui/card';
     import { loadStripe, type StripeEmbeddedCheckout } from '@stripe/stripe-js';
-    import { onMount } from 'svelte';
-    import { page } from '$app/stores';
-    import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from '$env/static/public';
-
+    import {
+        PUBLIC_STRIPE_PUBLISHABLE_KEY,
+        PUBLIC_STRIPE_SANDBOX_PUBLISHABLE_KEY
+    } from '$env/static/public';
+    import { dev } from '$app/environment';
     import FallbackForm from './(components)/fallback-form.svelte';
     import FreeSignupForm from './(components)/free-signup-form.svelte';
+    import { onMount } from 'svelte';
+    import { page } from '$app/stores';
 
     let showErrorFallback = $state(false);
     let checkoutInstance = $state<StripeEmbeddedCheckout | null>(null);
@@ -16,8 +19,13 @@
     const lookupKey = $page.url.searchParams.get('lookup_key');
     const showFreePlanFallback = lookupKey?.startsWith('creators-free-');
 
+    const devEnv = dev || import.meta.env.MODE === 'test' || import.meta.env.MODE === 'development';
+    const stripePublishableKey = devEnv
+        ? PUBLIC_STRIPE_SANDBOX_PUBLISHABLE_KEY
+        : PUBLIC_STRIPE_PUBLISHABLE_KEY;
+
     const initializeCheckout = async () => {
-        const stripe = await loadStripe(PUBLIC_STRIPE_PUBLISHABLE_KEY);
+        const stripe = await loadStripe(stripePublishableKey);
 
         const lookupKey = $page.url.searchParams.get('lookup_key');
         if (!lookupKey) {

@@ -212,6 +212,21 @@ model SiteSetting {
   value      String
 }
 
+model StripeEvent {
+  id String @id @default(cuid()) @db.VarChar(30)
+
+  account          String
+  apiVersion       String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
+  data             Json?
+  livemode         Boolean
+  object           String
+  pending_webhooks Int
+  request          String
+  type             String
+}
+
 model User {
   id String @id @default(cuid()) @db.VarChar(30)
 

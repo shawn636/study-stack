@@ -34,7 +34,7 @@ const csrf = (allowedPaths: string[]): Handle => {
 export const handle: Handle = async ({ event, resolve }) => {
     await ready;
 
-    const whiteListedEndpoints: string[] = [];
+    const whiteListedEndpoints: string[] = ['/api/stripe-webhooks'];
     const csrfHandler = csrf(whiteListedEndpoints);
     return csrfHandler({ event, resolve });
 };

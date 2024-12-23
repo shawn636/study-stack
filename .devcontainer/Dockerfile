@@ -43,6 +43,11 @@ RUN version=$(curl -s https://api.github.com/repos/planetscale/cli/releases/late
     chmod +x /usr/local/bin/pscale && \
     rm pscale.tar.gz
 
+# Install 1Password CLI
+RUN curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | tee /usr/share/keyrings/stripe.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | tee -a /etc/apt/sources.list.d/stripe.list
+RUN apt update
+RUN apt install stripe
 
 # Install pnpm using corepack
 RUN corepack enable pnpm \

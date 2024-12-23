@@ -17,7 +17,8 @@ const module: PriceTestUtil = {
     },
 
     async getPriceData(): Promise<PriceTestData> {
-        const lookupKeys = ['test-112124-s01-monthly', 'test-112124-s01-yearly'];
+        // Lookup keys created in our Sandbox environment
+        const lookupKeys = ['test-sub-monthly', 'test-sub-yearly'];
 
         const prices = await stripe.prices.list({
             lookup_keys: lookupKeys

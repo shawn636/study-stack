@@ -98,15 +98,15 @@
     <div class="m-5 grid grid-flow-row gap-10 justify-self-start md:justify-self-center">
         <!-- Left Pane Header -->
         <div class="grid grid-flow-row">
-            <span>Subscribe to Creators Free Plan</span>
+            <span class="text-muted-foreground">Subscribe to Creators Free Plan</span>
             <div class="flex items-center gap-2">
                 <span class="text-4xl font-medium">$0.00</span>
-                <span class="flex flex-col leading-4">
+                <span class="flex flex-col leading-4 text-muted-foreground">
                     <span class="">per</span>
                     <span>{subFreq}</span>
                 </span>
             </div>
-            <span>This is the free plan for creators</span>
+            <span class="text-muted-foreground">This is the free plan for creators</span>
         </div>
 
         <!-- Left Pane Feature Block -->

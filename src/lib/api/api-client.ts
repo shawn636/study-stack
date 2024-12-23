@@ -5,6 +5,7 @@ import CoursesModule from './endpoints/courses';
 import CronJobsModule from './endpoints/cron-jobs';
 import NewsletterSubscriptionModule from './endpoints/newsletter-subscriptions';
 import PricesModule from './endpoints/prices';
+import StripeWebhooksModule from './endpoints/stripe-webhooks';
 import TestRecordsModule from './endpoints/test-records';
 import UsersModule from './endpoints/users';
 
@@ -23,6 +24,7 @@ class ApiClient {
     cronJobs = new CronJobsModule(this);
     newsletter = new NewsletterSubscriptionModule(this);
     prices = new PricesModule(this);
+    stripeWebhooks = new StripeWebhooksModule(this);
     testRecords = new TestRecordsModule(this);
     users = new UsersModule(this);
 

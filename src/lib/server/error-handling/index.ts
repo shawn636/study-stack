@@ -54,7 +54,7 @@ export const handleErrors = async (e: unknown) => {
     await errorPadding();
 
     // Check if in testing environment
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.NODE_ENV !== 'test' && import.meta.env.MODE !== 'test') {
         console.error(e);
     }
 
