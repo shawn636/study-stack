@@ -4,11 +4,11 @@ Equipped is an innovative web application designed for immersive learning experi
 
 ## Features
 
--   Engaging course and lesson interface.
--   Secure user authentication system.
--   Efficient database handling with Prisma.
--   Comprehensive testing suite with Playwright.
--   Responsive and modern UI with Tailwind CSS.
+- Engaging course and lesson interface.
+- Secure user authentication system.
+- Efficient database handling with Prisma.
+- Comprehensive testing suite with Playwright.
+- Responsive and modern UI with Tailwind CSS.
 
 ### Development Environment Setup
 
@@ -205,12 +205,12 @@ Equipped is an innovative web application designed for immersive learning experi
 
 ### Scripts
 
--   `pnpm run dev` - Starts a local development server.
--   `pnpm run build` - Builds the application for production.
--   `pnpm run test` - Runs Playwright tests.
--   `pnpm run lint` - Lints and formats the code.
--   `pnpm run check` - Checks the project for type and syntax errors.
--   Other specialized scripts for testing and development.
+- `pnpm run dev` - Starts a local development server.
+- `pnpm run build` - Builds the application for production.
+- `pnpm run test` - Runs Playwright tests.
+- `pnpm run lint` - Lints and formats the code.
+- `pnpm run check` - Checks the project for type and syntax errors.
+- Other specialized scripts for testing and development.
 
 ### Testing
 

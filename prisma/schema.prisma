@@ -248,3 +248,9 @@ model SiteSetting {
   value      String
   recordType RecordType @default(PRODUCTION_RECORD)
 }
+
+model Sandbox {
+  id      Int    @id @default(autoincrement())
+  name    String
+  funFact String //new field to add later
+}

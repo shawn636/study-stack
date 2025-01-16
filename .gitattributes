@@ -1,0 +1,11 @@
+# Handle line endings for cross-platform compatibility
+* text=auto
+
+#Force Unix-style (LF) line endings for shell scripts and other scripts
+*.sh eol=lf
+*.js eol=lf
+*.json eol=lf
+*.py eol=lf
+
+# Force Windows-style (CRLF) line endings for certain file types if needed
+*.bat eol=lf

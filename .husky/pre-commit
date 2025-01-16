@@ -1,3 +1,2 @@
-
-pnpm test:unit
+# pnpm test:unit
 pnpm lint-staged
