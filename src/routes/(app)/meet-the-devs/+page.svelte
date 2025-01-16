@@ -1,4 +1,5 @@
 <script lang="ts">
+    import BlakeDevCard from './(team-members)/(blake-mcallister)/blake-dev-card.svelte';
     import ShawnDevCard from './(team-members)/(shawn-long)/shawn-dev-card.svelte';
     import TeamMemberCard from './(components)/team-member-card.svelte';
 </script>
@@ -19,5 +20,9 @@
 
     <TeamMemberCard>
         <ShawnDevCard />
+    </TeamMemberCard>
+
+    <TeamMemberCard>
+        <BlakeDevCard />
     </TeamMemberCard>
 </main>

@@ -1,7 +1,3 @@
-<script lang="ts">
-    // type $$Props = AvatarPrimitive.Props;
-</script>
-
 <svg
     width="264px"
     height="280px"

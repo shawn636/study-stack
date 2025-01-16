@@ -1,7 +1,7 @@
 <script lang="ts">
     import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
-    import Avatar from './avatar.svelte';
+    import BlakeAvatar from './blake-avatar.svelte';
     import Fa from 'svelte-fa';
 
     const socials = [
@@ -35,7 +35,7 @@
                 class="h-full w-full rounded-xl border-white bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 p-4 text-white shadow-md transition-transform duration-300 ease-out hover:scale-105 hover:animate-glow hover:border-2"
             >
                 <div class="flex h-full w-full flex-col items-center justify-center">
-                    <Avatar class="mx-auto aspect-square w-3/4" />
+                    <BlakeAvatar class="mx-auto aspect-square w-3/4" />
                     <h2 class="mt-2 text-center text-2xl font-bold">Blake McAllister</h2>
                     <p class="text-center">Intern</p>
                     <div class="mt-4 flex space-x-4">
@@ -61,7 +61,9 @@
             >
                 <div class="flex h-full w-full flex-col items-center justify-center">
                     <h2 class="mt-2 text-center text-2xl font-bold">Back Side</h2>
-                    <p class="text-center">More info goes here</p>
+                    <p class="text-center">Husband and Father of 4</p>
+                    <p class="text-center">Crafter, life-long learner</p>
+                    <p class="text-center">Don't count the days, make the days count."</p>
                 </div>
             </div>
         </div>
