@@ -28,7 +28,7 @@
 </script>
 
 <div
-    class="grid grid-cols-[auto_1fr_auto] items-center bg-equipped-blue px-4"
+    class="grid grid-cols-[auto_1fr_auto] items-center bg-study-stack-blue px-4"
     data-testid="app-bar"
 >
     <div class="flex-flow-col flex items-center justify-self-start">

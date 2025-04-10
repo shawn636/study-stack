@@ -19,8 +19,8 @@ export const POST = (async ({ request }) => {
 
         await contactForm.validate(form, { abortEarly: true });
 
-        const sender: Sender = { email: 'info@equipped.co', name: 'Equipped Team' };
-        const recipient: Recipient = { email: 'admin@equipped.co', name: 'Equipped Team' };
+        const sender: Sender = { email: 'info@study-stack.com', name: 'Study Stack Team' };
+        const recipient: Recipient = { email: 'admin@study-stack.com', name: 'Study Stack Team' };
         const now = new Date();
         const dateOptions: Intl.DateTimeFormatOptions = {
             day: 'numeric',

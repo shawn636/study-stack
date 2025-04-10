@@ -2,10 +2,10 @@
     import type { FaqProps } from './faq-models';
 
     import {
-        faBookBible,
+        faBookOpen,
         faChalkboardTeacher,
-        faChurch,
-        faUpRightFromSquare
+        faTools,
+        faUsers
     } from '@fortawesome/free-solid-svg-icons';
 
     import * as Accordion from '$lib/components/ui/accordion/index';
@@ -17,24 +17,36 @@
         'https://imagedelivery.net/06fAhz9XSvNypOfNBz1x-Q/85137f90-0f2d-492f-ee79-0425c18e3e00/public';
     const aboutUsAlt = 'three people sitting in front of table laughing togeter';
 
-    const btmLink = 'https://www.bethemessagenow.com';
-    const pastorJeffLink = 'https://go.jeffcarver.com/';
-
     const faqs: FaqProps[] = [
         {
-            answer: '<p>Equipped is a platform that provides resources and tools to help people grow in their faith and deepen their relationship with God. We are passionate about helping people grow in their faith and equipping them to live out their faith in their everyday lives.</p>',
-            icon: faBookBible,
-            question: 'What is Equipped?'
+            question: 'What is StudyStack?',
+            icon: faBookOpen,
+            answer: `
+                <p>StudyStack is an open-source starter kit for building online learning platforms. It includes core features like course creation, lesson delivery, and user management — designed to give developers a strong foundation to build on.</p>
+                <p>It originally began as part of a private platform built for a now-dissolved project. Rather than let the work go to waste, it’s been restructured and de-branded as a public resource for the community.</p>
+            `
         },
         {
-            answer: `<p>We aren't directly affiliated with a specific church, though both of the founders belong to the same local body in Southern California. Pastor <a href="${pastorJeffLink}" style="text-decoration: underline; ">Jeff Carver</a> is the administrative leader of Equipped and a senior pastor at <a href="${btmLink}" style="text-decoration: underline">Be the Message Church</a>.</p>`,
-            icon: faChurch,
-            question: 'Is Equipped associated with a specific church?'
+            question: 'Is StudyStack tied to a specific organization?',
+            icon: faUsers,
+            answer: `
+                <p>No — StudyStack is a completely independent open-source project. It’s not affiliated with any company, church, or educational institution. It’s offered as-is, for anyone who wants to use it, fork it, or contribute to it.</p>
+            `
         },
         {
-            answer: "<p>We believe that the body of Christ is diverse and that there are many voices that have something to offer. We are open to having a variety of teachers and speakers on our platform, however we do require that teachers on our platform align with our statement of faith. We would like to be an inclusive platform that's open to as many teachers as possible, but we also want to be a platform that's committed to the truth of the Gospel as expressed in Scripture.</p>",
+            question: 'Who is StudyStack for?',
             icon: faChalkboardTeacher,
-            question: 'Who can teach on Equipped?'
+            answer: `
+                <p>StudyStack is for developers, educators, and creators who want to build their own learning platform without starting from scratch. Whether you're building an internal training tool, a course site for your audience, or experimenting with edtech ideas, this project gives you a flexible jumping-off point.</p>
+            `
+        },
+        {
+            question: 'Is this a fully maintained platform?',
+            icon: faTools,
+            answer: `
+                <p>Not quite — this is more of a proof-of-concept and codebase you can build on, rather than a full SaaS platform. It’s provided as a template and demo project, with no long-term roadmap or guaranteed updates.</p>
+                <p>That said, pull requests and contributions are welcome if you find it useful and want to help it grow!</p>
+            `
         }
     ];
 
@@ -73,12 +85,12 @@
 
         <section class="col-span-3">
             <p>
-                We at <span class="font-semibold">Equipped</span> are a team of individuals who firmly
-                believe in the transformative power of the Gospel. We are passionate about helping people
-                grow in their faith and equipping them to live out their faith in their everyday lives.
-                We strive to be a platform that provides resources and tools to help people grow in their
-                faith and deepen their relationship with God. We want to be part of leveraging technology
-                to equip the saints.
+                StudyStack started as part of a private platform, but after that project came to an
+                end, the work was reimagined as an open-source starter kit for learning platforms.
+                It’s maintained as a personal side project and is meant to serve as a flexible
+                foundation for others who want to build and customize their own educational tools.
+                The goal isn’t to run a full product — it’s to share something useful with the
+                community.
             </p>
         </section>
 
@@ -90,11 +102,10 @@
 
         <section class="col-span-3">
             <p>
-                We are for anyone who is looking to grow in their faith and deepen their
-                relationship with God. We are for anyone who is looking for resources and tools to
-                help them live out their faith in their everyday lives. We are for anyone who is
-                looking to be part of a community of believers who are passionate about growing in
-                their faith and equipping others to do the same.
+                StudyStack is built for developers, educators, and creators who want to build and
+                deliver educational content online. Whether you're creating internal training tools,
+                teaching a course to your audience, or exploring new ideas in edtech, this project
+                offers a flexible and modern foundation to start from.
             </p>
         </section>
 
@@ -115,44 +126,5 @@
                 </Accordion.Item>
             {/each}
         </Accordion.Root>
-
-        <!-- ADDITIONAL LINKS BAR -->
-        <section class="col-span-full grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2">
-            <!-- LINK 1 -->
-            <a
-                class="relative h-48 w-64 overflow-hidden rounded-xl bg-muted transition-transform hover:-translate-y-2 hover:shadow-md"
-                href="/beliefs"
-            >
-                <div class="space-y-4 p-4">
-                    <h6 class="h5 font-bold">What We Believe</h6>
-                    <p class="text-foreground">
-                        Take a look at the core doctrines that we hold to and teach.
-                    </p>
-                </div>
-                <Fa
-                    class="absolute bottom-0 right-0 m-4 text-gray-400"
-                    icon={faUpRightFromSquare}
-                />
-            </a>
-            <!-- LINK 2 -->
-            <a
-                class="relative h-48 w-64 overflow-hidden rounded-xl bg-muted transition-transform hover:-translate-y-2 hover:shadow-md"
-                href="/beliefs"
-            >
-                <div class="space-y-4 p-4">
-                    <h6 class="h5 font-bold">What We Believe</h6>
-                    <p class="dark:text-surface-300 text-foreground">
-                        Take a look at the core doctrines that we hold to and teach.
-                    </p>
-                </div>
-                <Fa
-                    class="absolute bottom-0 right-0 m-4 text-gray-400"
-                    icon={faUpRightFromSquare}
-                />
-            </a>
-        </section>
     </div>
 </div>
-
-<style>
-</style>

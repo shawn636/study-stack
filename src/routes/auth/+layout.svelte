@@ -9,14 +9,13 @@
     const imageUrl =
         'https://imagedelivery.net/06fAhz9XSvNypOfNBz1x-Q/305548df-b9a7-4c4b-d252-44702a356d00/vertical';
 
-    const quote =
-        "“We fail in our duty to study god's word not so much because it is difficult to understand, not so much because it is dull and boring, but because it is work”";
-    const quoteAuthor = 'R.C. Sproul';
+    const quote = `"Learning is not attained by chance, it must be sought for with ardor and attended to with diligence."`;
+    const quoteAuthor = 'Abigail Adams';
 </script>
 
 <div class="grid min-h-screen md:grid-cols-[1fr_1fr]" data-testid="app-shell">
     <div class="relative z-10 hidden bg-gray-500 md:block">
-        <img alt="Equipped" class="h-svh w-full object-cover" src={imageUrl} />
+        <img alt="StudyStack" class="h-svh w-full object-cover" src={imageUrl} />
         <div class="absolute top-0 z-20 p-10">
             <a href="/">
                 <Logo colorClass="text-white" />

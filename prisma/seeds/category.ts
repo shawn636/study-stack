@@ -6,47 +6,47 @@ export async function seedCategory(client: PrismaClient) {
             {
                 imgHref: 'images/book-open.svg',
                 recordType: 'SEED_RECORD',
-                title: 'Bible Study & Theology'
+                title: 'Reading & Research' // or "Learning Foundations"
             },
             {
                 imgHref: 'images/biblical-languages.svg',
                 recordType: 'SEED_RECORD',
-                title: 'Biblical Languages'
+                title: 'Language & Communication'
             },
             {
                 imgHref: 'images/shield-check.svg',
                 recordType: 'SEED_RECORD',
-                title: 'Apologetics'
+                title: 'Critical Thinking & Ethics'
             },
             {
                 imgHref: 'images/user-group.svg',
                 recordType: 'SEED_RECORD',
-                title: 'Leadership & Ministry'
+                title: 'Leadership & Teamwork'
             },
             {
                 imgHref: 'images/scale.svg',
                 recordType: 'SEED_RECORD',
-                title: 'Worldview & Philosophy'
+                title: 'Philosophy & Debate' // or "Ethics & Society"
             },
             {
                 imgHref: 'images/heart.svg',
                 recordType: 'SEED_RECORD',
-                title: 'Christian Counseling & Psychology'
+                title: 'Mental Health & Well-being'
             },
             {
                 imgHref: 'images/globe-africa.svg',
                 recordType: 'SEED_RECORD',
-                title: 'Evangelism'
+                title: 'Global Cultures & Communication'
             },
             {
                 imgHref: 'images/musical-note.svg',
                 recordType: 'SEED_RECORD',
-                title: 'Worship & Music'
+                title: 'Music & Creative Arts'
             },
             {
                 imgHref: 'images/gift.svg',
                 recordType: 'SEED_RECORD',
-                title: 'Ministry & Service'
+                title: 'Community & Collaboration'
             }
         ]
     });

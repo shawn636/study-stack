@@ -15,5 +15,5 @@
         : 'row'} justify-items-center gap-x-2"
 >
     <div class="h-8 w-8 rounded-md bg-slate-400"></div>
-    <p class={baseClass}>Equipped</p>
+    <p class={baseClass}>StudyStack</p>
 </div>

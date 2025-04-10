@@ -23,8 +23,8 @@ REQUIRED_ENV_VARS=(
     "PLANETSCALE_SERVICE_TOKEN_ID"
     "PLANETSCALE_SERVICE_TOKEN"
 )
-export PSCALE_DB_NAME="equipped-db"
-export PSCALE_ORG_NAME="equipped"
+export PSCALE_DB_NAME="study-stack-db"
+export PSCALE_ORG_NAME="study-stack"
 
 # --- ENVIRONMENT METHODS ---
 function check_for_required_env_vars() {

@@ -11,9 +11,9 @@
 </script>
 
 <svelte:head>
-    <title>Equipped Online Learning</title>
+    <title>StudyStack Online Learning</title>
 
-    <meta content="Equipped" name="twitter:title" />
+    <meta content="StudyStack" name="twitter:title" />
     <meta content="Deepen your faith and study the Bible" name="twitter:description" />
     <meta content="Deepen your faith and study the Bible" name="Description" />
 </svelte:head>

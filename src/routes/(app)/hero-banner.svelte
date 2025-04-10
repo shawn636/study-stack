@@ -12,7 +12,7 @@
 </script>
 
 <div
-    class="dark:bg-primary-700 z-10 grid justify-items-center border border-equipped-blue bg-equipped-blue text-white"
+    class="dark:bg-primary-700 z-10 grid justify-items-center border border-study-stack-blue bg-study-stack-blue text-white"
 >
     <div
         class="grid max-w-7xl grid-cols-1 justify-items-center gap-x-5 px-5 pb-7 pt-3 md:px-24 lg:grid-cols-[1fr_350px]"
@@ -75,7 +75,7 @@
         variantNumber={1}
     />
     <svg
-        class="z-negative h-10 w-full fill-equipped-blue md:h-14"
+        class="z-negative h-10 w-full fill-study-stack-blue md:h-14"
         preserveAspectRatio="none"
         viewBox="0 0 1024 56"
         xmlns="http://www.w3.org/2000/svg"

@@ -51,7 +51,7 @@ const config: Config = {
                     DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
                     foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)'
                 },
-                'equipped-blue': {
+                'study-stack-blue': {
                     DEFAULT: '#2678BD'
                 },
                 muted: {

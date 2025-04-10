@@ -27,16 +27,16 @@ jobs:
               uses: 1password/load-secrets-action@v2
               env:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-                  PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
-                  PEPPER: op://Equipped/Equipped Auth Pepper/credential
-                  MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
-                  VERCEL_TOKEN: op://Equipped/Vercel Token/token
-                  PLANETSCALE_SERVICE_TOKEN_ID: op://Equipped/PlanetScale Service Token/username
-                  PLANETSCALE_SERVICE_TOKEN: op://Equipped/PlanetScale Service Token/credential
-                  PSCALE_DB_NAME: op://Equipped/PlanetScale Service Token/database name
-                  PSCALE_ORG_NAME: op://Equipped/PlanetScale Service Token/organization name
-                  GH_TOKEN: op://Equipped/Github Access Token/password
-                  CLOUDFLARE_IMAGES_API_KEY: op://Equipped/CloudFlare Images API Key/credential
+                  PUBLIC_AMPLITUDE_API_KEY: op://StudyStack/Amplitude Public API Key/credential
+                  PEPPER: op://StudyStack/StudyStack Auth Pepper/credential
+                  MAILERSEND_API_KEY: op://StudyStack/MailerSend Api Key/credential
+                  VERCEL_TOKEN: op://StudyStack/Vercel Token/token
+                  PLANETSCALE_SERVICE_TOKEN_ID: op://StudyStack/PlanetScale Service Token/username
+                  PLANETSCALE_SERVICE_TOKEN: op://StudyStack/PlanetScale Service Token/credential
+                  PSCALE_DB_NAME: op://StudyStack/PlanetScale Service Token/database name
+                  PSCALE_ORG_NAME: op://StudyStack/PlanetScale Service Token/organization name
+                  GH_TOKEN: op://StudyStack/Github Access Token/password
+                  CLOUDFLARE_IMAGES_API_KEY: op://StudyStack/CloudFlare Images API Key/credential
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v4
@@ -60,16 +60,16 @@ jobs:
               uses: 1password/load-secrets-action@v2
               env:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-                  PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
-                  PEPPER: op://Equipped/Equipped Auth Pepper/credential
-                  MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
-                  VERCEL_TOKEN: op://Equipped/Vercel Token/token
-                  PLANETSCALE_SERVICE_TOKEN_ID: op://Equipped/PlanetScale Service Token/username
-                  PLANETSCALE_SERVICE_TOKEN: op://Equipped/PlanetScale Service Token/credential
-                  PSCALE_DB_NAME: op://Equipped/PlanetScale Service Token/database name
-                  PSCALE_ORG_NAME: op://Equipped/PlanetScale Service Token/organization name
-                  GH_TOKEN: op://Equipped/Github Access Token/password
-                  CLOUDFLARE_IMAGES_API_KEY: op://Equipped/CloudFlare Images API Key/credential
+                  PUBLIC_AMPLITUDE_API_KEY: op://StudyStack/yepwyd5vgzbdlkicnshfmsnssq/credential
+                  PEPPER: op://StudyStack/StudyStack Auth Pepper/credential
+                  MAILERSEND_API_KEY: op://StudyStack/MailerSend Api Key/credential
+                  VERCEL_TOKEN: op://StudyStack/Vercel Token/token
+                  PLANETSCALE_SERVICE_TOKEN_ID: op://StudyStack/PlanetScale Service Token/username
+                  PLANETSCALE_SERVICE_TOKEN: op://StudyStack/PlanetScale Service Token/credential
+                  PSCALE_DB_NAME: op://StudyStack/PlanetScale Service Token/database name
+                  PSCALE_ORG_NAME: op://StudyStack/PlanetScale Service Token/organization name
+                  GH_TOKEN: op://StudyStack/Github Access Token/password
+                  CLOUDFLARE_IMAGES_API_KEY: op://StudyStack/CloudFlare Images API Key/credential
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v4
@@ -98,16 +98,16 @@ jobs:
               uses: 1password/load-secrets-action@v2
               env:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-                  PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
-                  PEPPER: op://Equipped/Equipped Auth Pepper/credential
-                  MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
-                  VERCEL_TOKEN: op://Equipped/Vercel Token/token
-                  PLANETSCALE_SERVICE_TOKEN_ID: op://Equipped/PlanetScale Service Token/username
-                  PLANETSCALE_SERVICE_TOKEN: op://Equipped/PlanetScale Service Token/credential
-                  PSCALE_DB_NAME: op://Equipped/PlanetScale Service Token/database name
-                  PSCALE_ORG_NAME: op://Equipped/PlanetScale Service Token/organization name
-                  GH_TOKEN: op://Equipped/Github Access Token/password
-                  CLOUDFLARE_IMAGES_API_KEY: op://Equipped/CloudFlare Images API Key/credential
+                  PUBLIC_AMPLITUDE_API_KEY: op://StudyStack/yepwyd5vgzbdlkicnshfmsnssq/credential
+                  PEPPER: op://StudyStack/StudyStack Auth Pepper/credential
+                  MAILERSEND_API_KEY: op://StudyStack/MailerSend Api Key/credential
+                  VERCEL_TOKEN: op://StudyStack/Vercel Token/token
+                  PLANETSCALE_SERVICE_TOKEN_ID: op://StudyStack/PlanetScale Service Token/username
+                  PLANETSCALE_SERVICE_TOKEN: op://StudyStack/PlanetScale Service Token/credential
+                  PSCALE_DB_NAME: op://StudyStack/PlanetScale Service Token/database name
+                  PSCALE_ORG_NAME: op://StudyStack/PlanetScale Service Token/organization name
+                  GH_TOKEN: op://StudyStack/Github Access Token/password
+                  CLOUDFLARE_IMAGES_API_KEY: op://StudyStack/CloudFlare Images API Key/credential
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v4
@@ -138,16 +138,16 @@ jobs:
               uses: 1password/load-secrets-action@v2
               env:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-                  PUBLIC_AMPLITUDE_API_KEY: op://Equipped/yepwyd5vgzbdlkicnshfmsnssq/credential
-                  PEPPER: op://Equipped/Equipped Auth Pepper/credential
-                  MAILERSEND_API_KEY: op://Equipped/MailerSend Api Key/credential
-                  VERCEL_TOKEN: op://Equipped/Vercel Token/token
-                  PLANETSCALE_SERVICE_TOKEN_ID: op://Equipped/PlanetScale Service Token/username
-                  PLANETSCALE_SERVICE_TOKEN: op://Equipped/PlanetScale Service Token/credential
-                  PSCALE_DB_NAME: op://Equipped/PlanetScale Service Token/database name
-                  PSCALE_ORG_NAME: op://Equipped/PlanetScale Service Token/organization name
-                  GH_TOKEN: op://Equipped/Github Access Token/password
-                  CLOUDFLARE_IMAGES_API_KEY: op://Equipped/CloudFlare Images API Key/credential
+                  PUBLIC_AMPLITUDE_API_KEY: op://StudyStack/yepwyd5vgzbdlkicnshfmsnssq/credential
+                  PEPPER: op://StudyStack/StudyStack Auth Pepper/credential
+                  MAILERSEND_API_KEY: op://StudyStack/MailerSend Api Key/credential
+                  VERCEL_TOKEN: op://StudyStack/Vercel Token/token
+                  PLANETSCALE_SERVICE_TOKEN_ID: op://StudyStack/PlanetScale Service Token/username
+                  PLANETSCALE_SERVICE_TOKEN: op://StudyStack/PlanetScale Service Token/credential
+                  PSCALE_DB_NAME: op://StudyStack/PlanetScale Service Token/database name
+                  PSCALE_ORG_NAME: op://StudyStack/PlanetScale Service Token/organization name
+                  GH_TOKEN: op://StudyStack/Github Access Token/password
+                  CLOUDFLARE_IMAGES_API_KEY: op://StudyStack/CloudFlare Images API Key/credential
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v4

@@ -4,7 +4,7 @@ FROM node:lts
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
-RUN mkdir -p /equipped && chown node:node /equipped
+RUN mkdir -p /study-stack && chown node:node /study-stack
 RUN mkdir -p /setup && chown node:node /setup
 
 WORKDIR /setup
@@ -52,7 +52,7 @@ RUN corepack enable pnpm \
 RUN pnpm install -g vercel playwright
 RUN pnpm exec playwright install --with-deps
 
-WORKDIR /equipped
+WORKDIR /study-stack
 
 # Set up
 RUN chsh -s $(which zsh) root

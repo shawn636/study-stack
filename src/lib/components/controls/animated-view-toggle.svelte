@@ -79,7 +79,7 @@
 
 <Button
     aria-label={value === 'grid' ? 'Switch to list view' : 'Switch to grid view'}
-    class="m-0 h-10 w-10 bg-equipped-blue p-0 text-white transition-all hover:scale-105 hover:bg-equipped-blue"
+    class="m-0 h-10 w-10 bg-study-stack-blue p-0 text-white transition-all hover:scale-105 hover:bg-study-stack-blue"
     on:click={toggle}
     style="position: relative; overflow: hidden; width: 40px; height: 40px;"
 >

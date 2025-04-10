@@ -12,7 +12,7 @@ REQUIRED_ENV_VARS=(
     "MAILERSEND_API_KEY"
 )
 
-export VERCEL_SCOPE="equipped-team"
+export VERCEL_SCOPE="study-stack"
 
 if [ -f .env ]; then
     # Read the .env file, filter out OnePassword Secret References, and source the result
@@ -75,7 +75,7 @@ function deploy() {
             --build-env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --build-env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
             --build-env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
-            --scope "equipped-team" \
+            --scope "study-stack" \
             --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     else
         echo "Deploying preview..."
@@ -90,7 +90,7 @@ function deploy() {
             --build-env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --build-env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
             --build-env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
-            --scope "equipped-team" \
+            --scope "study-stack" \
             --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     fi
 

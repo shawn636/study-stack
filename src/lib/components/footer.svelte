@@ -126,15 +126,6 @@
                                     variant="link">About Us</Button
                                 >
                             </li>
-                            <li>
-                                <Button
-                                    aria-label="Navigate to some page"
-                                    class="text-foreground decoration-foreground"
-                                    href="/beliefs"
-                                    role="link"
-                                    variant="link">What We Believe</Button
-                                >
-                            </li>
                         </ul>
                     </div>
                 </Accordion.Content>
@@ -145,85 +136,22 @@
                     <div data-testid="categories-navlist">
                         <ul>
                             <li>
-                                <Button
-                                    aria-label="Navigate to categories page"
-                                    class="text-foreground decoration-foreground"
-                                    href="/"
-                                    role="link"
-                                    variant="link">Biblical Studies</Button
+                                <Button href="/" variant="link">Language & Communication</Button>
+                            </li>
+                            <li><Button href="/" variant="link">Science & Technology</Button></li>
+                            <li><Button href="/" variant="link">Health & Wellness</Button></li>
+                            <li>
+                                <Button href="/" variant="link">Leadership & Personal Growth</Button
                                 >
                             </li>
+                            <li><Button href="/" variant="link">Creative Arts</Button></li>
+                            <li><Button href="/" variant="link">History & Culture</Button></li>
                             <li>
-                                <Button
-                                    aria-label="Navigate to categories page"
-                                    class="text-foreground decoration-foreground"
-                                    href="/"
-                                    role="link"
-                                    variant="link">Theology & Doctrine</Button
-                                >
+                                <Button href="/" variant="link">Psychology & Counseling</Button>
                             </li>
+                            <li><Button href="/" variant="link">Community Engagement</Button></li>
                             <li>
-                                <Button
-                                    aria-label="Navigate to categories page"
-                                    class="text-foreground decoration-foreground"
-                                    href="/"
-                                    role="link"
-                                    variant="link">Spiritual Formation & Discipleship</Button
-                                >
-                            </li>
-                            <li>
-                                <Button
-                                    aria-label="Navigate to categories page"
-                                    class="text-foreground decoration-foreground"
-                                    href="/"
-                                    role="link"
-                                    variant="link">Christian Ministry & Mission</Button
-                                >
-                            </li>
-                            <li>
-                                <Button
-                                    aria-label="Navigate to categories page"
-                                    class="text-foreground decoration-foreground"
-                                    href="/"
-                                    role="link"
-                                    variant="link">Worship and Creative Arts</Button
-                                >
-                            </li>
-                            <li>
-                                <Button
-                                    aria-label="Navigate to categories page"
-                                    class="text-foreground decoration-foreground"
-                                    href="/"
-                                    role="link"
-                                    variant="link">Biblical Languages</Button
-                                >
-                            </li>
-                            <li>
-                                <Button
-                                    aria-label="Navigate to categories page"
-                                    class="text-foreground decoration-foreground"
-                                    href="/"
-                                    role="link"
-                                    variant="link">Christian Counseling & Psychology</Button
-                                >
-                            </li>
-                            <li>
-                                <Button
-                                    aria-label="Navigate to categories page"
-                                    class="text-foreground decoration-foreground"
-                                    href="/"
-                                    role="link"
-                                    variant="link">Christian Missions & Outreach</Button
-                                >
-                            </li>
-                            <li>
-                                <Button
-                                    aria-label="Navigate to categories page"
-                                    class="text-foreground decoration-foreground"
-                                    href="/"
-                                    role="link"
-                                    variant="link">Church Administration & Management</Button
-                                >
+                                <Button href="/" variant="link">Project & Team Management</Button>
                             </li>
                         </ul>
                     </div>
@@ -242,36 +170,12 @@
         <div class="row-start-1 row-end-2">
             <h4 class="h4 grid pb-2 uppercase">Categories</h4>
             <ul class="grid gap-y-1">
-                <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
-                        >Biblical Studies</a
-                    >
-                </li>
-                <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
-                        >Theology & Doctrine</a
-                    >
-                </li>
-                <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
-                        >Discipleship</a
-                    >
-                </li>
-                <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
-                        >Ministry & Mission</a
-                    >
-                </li>
-                <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
-                        >Worship & Creative Arts</a
-                    >
-                </li>
-                <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
-                        >Biblical Languages</a
-                    >
-                </li>
+                <li><a href="/" class="hover:underline">Language & Communication</a></li>
+                <li><a href="/" class="hover:underline">Science & Technology</a></li>
+                <li><a href="/" class="hover:underline">Health & Wellness</a></li>
+                <li><a href="/" class="hover:underline">Leadership & Personal Growth</a></li>
+                <li><a href="/" class="hover:underline">Creative Arts</a></li>
+                <li><a href="/" class="hover:underline">History & Culture</a></li>
             </ul>
         </div>
         <!-- ABOUT -->
@@ -368,6 +272,4 @@
         <!-- Contact Us Box (Above) -->
     </div>
     <!-- Link Columns (Above) -->
-
-    <p class="mt-8">© 2023 Equipped LLC.</p>
 </div>

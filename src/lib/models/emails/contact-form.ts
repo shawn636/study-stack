@@ -35,7 +35,7 @@ export type ContactFormEmail = {
  * @field templateId - The unique identifier for the template in the mailing service.
  */
 export const CONTACT_FORM_TEMPLATE: Template = {
-    description: 'A contact form submission from the Equipped website',
+    description: 'A contact form submission from the Study Stack website',
     name: 'Contact Form Submission',
     templateId: 'ynrw7gyvm3ng2k8e'
 };

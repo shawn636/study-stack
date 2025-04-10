@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 
 import { auth } from './utils/auth';
 
-const testEmailDomain = 'e2e-tests.equipped.co';
+const testEmailDomain = 'e2e-tests.study-stack.com';
 
 type Account = {
     email: string;

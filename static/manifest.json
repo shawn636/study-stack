@@ -1,9 +1,9 @@
 {
     "background_color": "#ffffff",
     "theme_color": "#0377BD",
-    "name": "Equipped",
-    "short_name": "Equipped",
-    "display": "equipped",
+    "name": "Study Stack",
+    "short_name": "StudyStack",
+    "display": "study-stack",
     "start_url": "/",
     "icons": [
         {
