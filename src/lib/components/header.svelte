@@ -40,7 +40,9 @@
             </Sheet.Trigger>
             <Sheet.Content side="left">
                 <div class="flex h-full w-full flex-col gap-y-2">
-                    <a class="flex" href="/"><Logo colorClass="text-primary" /></a>
+                    <a class="flex" href="/"
+                        ><Logo colorClass="text-primary" variant="color-dark" /></a
+                    >
                     <nav class="flex flex-col gap-y-2">
                         {#each headerLinks as link}
                             <a class="flex-auto px-2" href={link.href}>{link.name}</a>

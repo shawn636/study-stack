@@ -1,6 +1,9 @@
 <script lang="ts">
+    import { faChalkboardTeacher, faLightbulb, faUser } from '@fortawesome/free-solid-svg-icons';
     import { Button } from '$lib/components/ui/button';
+    import Fa from 'svelte-fa';
     import HeroCollage from '$lib/components/hero-collage.svelte';
+    import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
     import Wave from './(components)/wave.svelte';
 
     const cta = 'Learn New Skills Online With Top ';
@@ -8,7 +11,26 @@
     const subheading = `Build Skills With Courses, Certificates, 
                                             and Degrees Online From World-Class 
                                             Universities And Companies`;
-    const tags = ['Over 12 million students', 'More than 60,000 courses', 'Learn anything online'];
+
+    interface Tag {
+        icon: IconDefinition;
+        text: string;
+    }
+
+    const tags: Tag[] = [
+        {
+            icon: faUser,
+            text: 'Over 12 million students'
+        },
+        {
+            icon: faChalkboardTeacher,
+            text: 'More than 60,000 courses'
+        },
+        {
+            icon: faLightbulb,
+            text: 'Learn anything online'
+        }
+    ];
 </script>
 
 <div
@@ -48,8 +70,9 @@
                     <div
                         class="grid grid-cols-[auto_1fr] items-center justify-items-center gap-x-2 whitespace-nowrap"
                     >
-                        <div class="h-4 w-4 rounded bg-white"></div>
-                        <div>{tag}</div>
+                        <!-- <div class="h-4 w-4 rounded bg-white"></div> -->
+                        <Fa icon={tag.icon} class="h-4 w-4 text-white" />
+                        <div>{tag.text}</div>
                     </div>
                 {/each}
             </div>
