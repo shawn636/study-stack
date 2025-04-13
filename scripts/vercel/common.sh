@@ -69,7 +69,7 @@ function deploy() {
             --build-env DATABASE_URL="$DATABASE_URL" \
             --build-env PEPPER="$PEPPER" \
             --build-env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
-            --scope "study-stack" \
+            --scope "shawn-longs-projects" \
             --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     else
         echo "Deploying preview..."
@@ -80,7 +80,7 @@ function deploy() {
             --build-env DATABASE_URL="$DATABASE_URL" \
             --build-env PEPPER="$PEPPER" \
             --build-env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
-            --scope "study-stack" \
+            --scope "shawn-longs-projects" \
             --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     fi
 
