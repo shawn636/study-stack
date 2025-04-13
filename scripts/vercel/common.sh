@@ -10,7 +10,7 @@ REQUIRED_ENV_VARS=(
     "MAILERSEND_API_KEY"
 )
 
-export VERCEL_SCOPE="study-stack"
+export VERCEL_SCOPE="Shawn Long's Projects"
 
 if [ -f .env ]; then
     # Read the .env file, filter out OnePassword Secret References, and source the result
