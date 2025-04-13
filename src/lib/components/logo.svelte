@@ -20,6 +20,6 @@
         : 'row'} justify-items-center gap-x-2"
 >
     <!-- <div class="h-8 w-8 rounded-md bg-slate-400"></div> -->
-    <img src={`/images/logo-${variant}.svg`} alt="logo" class="h-10" />
+    <img src={`images/logo-${variant}.svg`} alt="logo" class="h-10" />
     <p class={baseClass}>StudyStack</p>
 </div>

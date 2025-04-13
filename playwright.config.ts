@@ -25,7 +25,7 @@ const config: PlaywrightTestConfig = defineConfig({
         }
     ],
     reporter: [['html', { open: 'true', outputFolder: 'e2e/test-results' }]],
-    retries: 3,
+    retries: 0,
     testDir: 'e2e',
     testMatch: /(.+\.)?(test|spec)\.[jt]s/,
     webServer: {
