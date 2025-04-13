@@ -26,14 +26,14 @@ jobs:
               uses: 1password/load-secrets-action@v2
               env:
                   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-                  PEPPER: op://StudyStack/StudyStack Auth Pepper/credential
-                  MAILERSEND_API_KEY: op://StudyStack/MailerSend Api Key/credential
-                  VERCEL_TOKEN: op://StudyStack/Vercel Token/token
-                  PLANETSCALE_SERVICE_TOKEN_ID: op://StudyStack/PlanetScale Service Token/username
-                  PLANETSCALE_SERVICE_TOKEN: op://StudyStack/PlanetScale Service Token/credential
-                  PSCALE_DB_NAME: op://StudyStack/PlanetScale Service Token/database name
-                  PSCALE_ORG_NAME: op://StudyStack/PlanetScale Service Token/organization name
-                  GH_TOKEN: op://StudyStack/Github Access Token/password
+                  PEPPER: op://StudyStack/StudyStack Secrets/Auth/PEPPER
+                  MAILERSEND_API_KEY: op://StudyStack/StudyStack Secrets/Mailersend/MAILERSEND_API_KEY
+                  VERCEL_TOKEN: op://StudyStack/StudyStack Secrets/Vercel/VERCEL_TOKEN
+                  PLANETSCALE_SERVICE_TOKEN_ID: op://StudyStack/StudyStack Secrets/PlanetScale/PLANETSCALE_SERVICE_TOKEN_ID
+                  PLANETSCALE_SERVICE_TOKEN: op://StudyStack/StudyStack Secrets/PlanetScale/PLANETSCALE_SERVICE_TOKEN
+                  PSCALE_DB_NAME: op://StudyStack/StudyStack Secrets/PlanetScale/PSCALE_DB_NAME
+                  PSCALE_ORG_NAME: op://StudyStack/StudyStack Secrets/PlanetScale/PSCALE_ORG_NAME
+                  GH_TOKEN: op://StudyStack/StudyStack Secrets/Github/GH_TOKEN
             - uses: actions/checkout@v4
             - uses: planetscale/setup-pscale-action@v1
             - uses: pnpm/action-setup@v4
