@@ -15,7 +15,7 @@ interface CourseSeed {
 
 const courseSeeds: CourseSeed[] = [
     {
-        image: 'images/course-image-1.webp',
+        image: '/images/course-image-1.webp',
         courses: [
             {
                 title: 'Introduction to Psychology',
@@ -117,7 +117,7 @@ const courseSeeds: CourseSeed[] = [
         ]
     },
     {
-        image: 'images/course-image-2.webp',
+        image: '/images/course-image-2.webp',
         courses: [
             {
                 title: 'Surgical Techniques and Procedures',
@@ -206,7 +206,7 @@ const courseSeeds: CourseSeed[] = [
         ]
     },
     {
-        image: 'images/course-image-3.webp',
+        image: '/images/course-image-3.webp',
         courses: [
             {
                 title: 'Anatomy and Physiology',
@@ -307,7 +307,7 @@ const courseSeeds: CourseSeed[] = [
         ]
     },
     {
-        image: 'images/course-image-4.webp',
+        image: '/images/course-image-4.webp',
         courses: [
             {
                 title: 'Introduction to Computer Science',
@@ -408,7 +408,7 @@ const courseSeeds: CourseSeed[] = [
         ]
     },
     {
-        image: 'images/course-image-5.webp',
+        image: '/images/course-image-5.webp',
         courses: [
             {
                 title: 'Trigonometry and Geometry',
@@ -509,7 +509,7 @@ const courseSeeds: CourseSeed[] = [
         ]
     },
     {
-        image: 'images/course-image-6.webp',
+        image: '/images/course-image-6.webp',
         courses: [
             {
                 title: 'Organic Chemistry',

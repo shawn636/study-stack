@@ -70,8 +70,8 @@
 
     <Button class="m-0 w-full p-0" href={`/courses/${courseResult.course.id}`} variant="link">
         <h3 class="w-full px-2 text-start text-lg font-medium">
-            {courseResult.course.title.length > 40
-                ? courseResult.course.title.substring(0, 40) + '...'
+            {courseResult.course.title.length > 25
+                ? courseResult.course.title.substring(0, 25) + '...'
                 : courseResult.course.title}
         </h3>
     </Button>
