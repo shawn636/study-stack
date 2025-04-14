@@ -24,7 +24,7 @@ REQUIRED_ENV_VARS=(
     "PLANETSCALE_SERVICE_TOKEN"
 )
 export PSCALE_DB_NAME="study-stack-db"
-export PSCALE_ORG_NAME="study-stack"
+export PSCALE_ORG_NAME="emmas-personal-projects"
 
 # --- ENVIRONMENT METHODS ---
 function check_for_required_env_vars() {

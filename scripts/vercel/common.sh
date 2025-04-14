@@ -5,14 +5,12 @@ source scripts/shared/github.sh
 
 REQUIRED_ENV_VARS=(
     "VERCEL_TOKEN"
-    "CLOUDFLARE_IMAGES_API_KEY"
     "DATABASE_URL" # Must already have been set to properly build and deploy
     "PEPPER"
-    "PUBLIC_AMPLITUDE_API_KEY"
     "MAILERSEND_API_KEY"
 )
 
-export VERCEL_SCOPE="study-stack"
+export VERCEL_SCOPE="shawn-longs-projects"
 
 if [ -f .env ]; then
     # Read the .env file, filter out OnePassword Secret References, and source the result
@@ -67,30 +65,22 @@ function deploy() {
         pnpm exec vercel --prod --yes \
             --env DATABASE_URL="$DATABASE_URL" \
             --env PEPPER="$PEPPER" \
-            --env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
-            --env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
             --build-env DATABASE_URL="$DATABASE_URL" \
             --build-env PEPPER="$PEPPER" \
-            --build-env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --build-env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
-            --build-env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
-            --scope "study-stack" \
+            --scope "shawn-longs-projects" \
             --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     else
         echo "Deploying preview..."
         pnpm exec vercel --yes \
             --env DATABASE_URL="$DATABASE_URL" \
             --env PEPPER="$PEPPER" \
-            --env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
-            --env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
             --build-env DATABASE_URL="$DATABASE_URL" \
             --build-env PEPPER="$PEPPER" \
-            --build-env PUBLIC_AMPLITUDE_API_KEY="$PUBLIC_AMPLITUDE_API_KEY" \
             --build-env MAILERSEND_API_KEY="$MAILERSEND_API_KEY" \
-            --build-env CLOUDFLARE_IMAGES_API_KEY="$CLOUDFLARE_IMAGES_API_KEY" \
-            --scope "study-stack" \
+            --scope "shawn-longs-projects" \
             --token "$VERCEL_TOKEN" > "$url_file" 2> "$log_file"
     fi
 

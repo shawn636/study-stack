@@ -120,7 +120,7 @@
                             <li>
                                 <Button
                                     aria-label="Navigate to about us page"
-                                    class="text-foreground decoration-foreground"
+                                    class="text-white decoration-foreground"
                                     href="/about"
                                     role="link"
                                     variant="link">About Us</Button
@@ -136,22 +136,49 @@
                     <div data-testid="categories-navlist">
                         <ul>
                             <li>
-                                <Button href="/" variant="link">Language & Communication</Button>
-                            </li>
-                            <li><Button href="/" variant="link">Science & Technology</Button></li>
-                            <li><Button href="/" variant="link">Health & Wellness</Button></li>
-                            <li>
-                                <Button href="/" variant="link">Leadership & Personal Growth</Button
+                                <Button href="/" variant="link" class="text-white"
+                                    >Language & Communication</Button
                                 >
                             </li>
-                            <li><Button href="/" variant="link">Creative Arts</Button></li>
-                            <li><Button href="/" variant="link">History & Culture</Button></li>
                             <li>
-                                <Button href="/" variant="link">Psychology & Counseling</Button>
+                                <Button href="/" variant="link" class="text-white"
+                                    >Science & Technology</Button
+                                >
                             </li>
-                            <li><Button href="/" variant="link">Community Engagement</Button></li>
                             <li>
-                                <Button href="/" variant="link">Project & Team Management</Button>
+                                <Button href="/" variant="link" class="text-white"
+                                    >Health & Wellness</Button
+                                >
+                            </li>
+                            <li>
+                                <Button href="/" variant="link" class="text-white"
+                                    >Leadership & Personal Growth</Button
+                                >
+                            </li>
+                            <li>
+                                <Button href="/" variant="link" class="text-white"
+                                    >Creative Arts</Button
+                                >
+                            </li>
+                            <li>
+                                <Button href="/" variant="link" class="text-white"
+                                    >History & Culture</Button
+                                >
+                            </li>
+                            <li>
+                                <Button href="/" variant="link" class="text-white"
+                                    >Psychology & Counseling</Button
+                                >
+                            </li>
+                            <li>
+                                <Button href="/" variant="link" class="text-white"
+                                    >Community Engagement</Button
+                                >
+                            </li>
+                            <li>
+                                <Button href="/" variant="link" class="text-white"
+                                    >Project & Team Management</Button
+                                >
                             </li>
                         </ul>
                     </div>
@@ -183,35 +210,30 @@
             <h4 class="h4 grid pb-2 uppercase">About</h4>
             <ul class="grid gap-y-1">
                 <li>
-                    <a href="/about" class="text-foreground decoration-foreground hover:underline"
+                    <a href="/about" class="text-white decoration-foreground hover:underline"
                         >About Us</a
                     >
                 </li>
                 <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                    <a href="/" class="text-white decoration-foreground hover:underline"
                         >Learner Stories</a
                     >
                 </li>
                 <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
-                        >Careers</a
-                    >
+                    <a href="/" class="text-white decoration-foreground hover:underline">Careers</a>
                 </li>
                 <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
-                        >Press</a
-                    >
+                    <a href="/" class="text-white decoration-foreground hover:underline">Press</a>
                 </li>
                 <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                    <a href="/" class="text-white decoration-foreground hover:underline"
                         >Leadership</a
                     >
                 </li>
                 <li>
                     <a
                         href="/meet-the-devs"
-                        class="text-foreground decoration-foreground hover:underline"
-                        >Meet the Devs</a
+                        class="text-white decoration-foreground hover:underline">Meet the Devs</a
                     >
                 </li>
             </ul>
@@ -221,22 +243,22 @@
             <h4 class="h4 grid pb-2 uppercase">Support</h4>
             <ul class="grid gap-y-1">
                 <li>
-                    <a href="/" class="text-foreground decoration-foreground hover:underline"
+                    <a href="/" class="text-white decoration-foreground hover:underline"
                         >Documentation</a
                     >
                 </li>
                 <li>
-                    <a href="/about" class="text-foreground decoration-foreground hover:underline"
+                    <a href="/about" class="text-white decoration-foreground hover:underline"
                         >About Us</a
                     >
                 </li>
                 <li>
-                    <a href="/home" class="text-foreground decoration-foreground hover:underline"
+                    <a href="/home" class="text-white decoration-foreground hover:underline"
                         >Dashboard</a
                     >
                 </li>
                 <li>
-                    <a href="/contact" class="text-foreground decoration-foreground hover:underline"
+                    <a href="/contact" class="text-white decoration-foreground hover:underline"
                         >Contact Us</a
                     >
                 </li>
